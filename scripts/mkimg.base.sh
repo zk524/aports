@@ -251,6 +251,8 @@ create_image_iso() {
 	if [ -e "${DESTDIR}/efi" -a -e "${DESTDIR}/boot/grub" ]; then
 		# Create the EFI boot partition image
 		mformat -i ${DESTDIR}/boot/grub/efi.img -C -f 1440 ::
+		# work around bug on old macs
+		dd if=/dev/zero of=${DESTDIR}/boot/grub/efi.img bs=1 seek=446 count=16
 		mcopy -i ${DESTDIR}/boot/grub/efi.img -s ${DESTDIR}/efi ::
 
 		# Enable EFI boot

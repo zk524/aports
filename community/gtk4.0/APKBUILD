@@ -2,14 +2,21 @@
 # Maintainer: Pablo Correa Gomez <ablocorrea@hotmail.com>
 pkgname=gtk4.0
 pkgver=4.12.3
-pkgrel=0
+pkgrel=1
 pkgdesc="The GTK Toolkit (v4)"
 url="https://www.gtk.org/"
 install="$pkgname.post-install $pkgname.post-upgrade $pkgname.post-deinstall"
 arch="all"
 options="!check" # Test suite is known to fail upstream
 license="LGPL-2.1-or-later"
-subpackages="$pkgname-dbg $pkgname-demo $pkgname-dev $pkgname-doc $pkgname-lang"
+subpackages="
+	$pkgname-demo
+	$pkgname-dev
+	$pkgname-doc
+	$pkgname-lang
+	$pkgname-media-gstreamer:_gstreamer
+	$pkgname-dbg
+	"
 depends="shared-mime-info gtk-update-icon-cache tzdata iso-codes"
 depends_dev="
 	at-spi2-core-dev
@@ -118,6 +125,13 @@ lang() {
 
 	# These are some localized emoji labels.
 	amove usr/share/gtk-4.0/emoji
+}
+
+_gstreamer() {
+	pkgdesc="GStreamer media backend for GTK Toolkit v4"
+	depends="$pkgname=$pkgver-r$pkgrel"
+
+	amove usr/lib/gtk-4.0/4.*/media/libmedia-gstreamer.so
 }
 
 sha512sums="

@@ -29,6 +29,7 @@ makedepends="
 	libxml2-dev
 	"
 subpackages="
+	$pkgname-dbg
 	$pkgname-static
 	$pkgname-dev
 	$pkgname-doc

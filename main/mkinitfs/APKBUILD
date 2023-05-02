@@ -3,7 +3,7 @@ pkgname=mkinitfs
 pkgver=3.8.1
 # shellcheck disable=SC2034 # used for git versions, keep around for next time
 _ver=${pkgver%_git*}
-pkgrel=0
+pkgrel=1
 pkgdesc="Tool to generate initramfs images for Alpine"
 url="https://gitlab.alpinelinux.org/alpine/mkinitfs"
 arch="all"
@@ -20,13 +20,11 @@ depends="
 	lddtree>=1.25
 	mdev-conf
 	"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc $pkgname-kernel-hooks:kernel_hooks"
 install="$pkgname.pre-upgrade $pkgname.post-install $pkgname.post-upgrade"
-triggers="$pkgname.trigger=/usr/share/kernel/*"
-source="https://gitlab.alpinelinux.org/alpine/mkinitfs/-/archive/$pkgver/mkinitfs-$pkgver.tar.gz"
-
-provides="initramfs-generator"
-provider_priority=900 # highest
+source="https://gitlab.alpinelinux.org/alpine/mkinitfs/-/archive/$pkgver/mkinitfs-$pkgver.tar.gz
+	mkinitfs.hook
+	"
 
 build() {
 	make VERSION=$pkgver-r$pkgrel
@@ -34,8 +32,19 @@ build() {
 
 package() {
 	make install DESTDIR="$pkgdir"
+	install -Dm755 "$srcdir/mkinitfs.hook" "$pkgdir/etc/kernel-hooks.d/40-mkinitfs.hook"
+}
+
+kernel_hooks() {
+	depends="$pkgname kernel-hooks"
+	install_if="$pkgname kernel-hooks"
+	provides="initramfs-generator"
+	provider_priority=900 # highest
+
+	amove etc/kernel-hooks.d/40-mkinitfs.hook
 }
 
 sha512sums="
 f30398875f07c2dafc98ff6bbf82e8414c0f275b7ee7e6b6ae485c482b4f9f01175916b73c853df7a5528164e7f9cca574c7a67a668bf41cf74314dc3111a857  mkinitfs-3.8.1.tar.gz
+c6daf1f4867ecaac0294ee274fc2f1547943d109fc447c5d512188b1d451b27100763dcb715257c2fc2087ea30cea43294cd54c676bfffc690df3fc3ce0ab7e7  mkinitfs.hook
 "

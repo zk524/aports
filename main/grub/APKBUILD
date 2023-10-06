@@ -78,7 +78,6 @@ source="https://ftp.gnu.org/gnu/grub/grub-$pkgver.tar.xz
 #   2.06-r13:
 #     - CVE-2021-3697
 #   2.06-r0:
-#     - CVE-2021-3418
 #     - CVE-2020-10713
 #     - CVE-2020-14308
 #     - CVE-2020-14309
@@ -94,6 +93,18 @@ source="https://ftp.gnu.org/gnu/grub/grub-$pkgver.tar.xz
 #     - CVE-2020-27779
 #     - CVE-2021-20225
 #     - CVE-2021-20233
+#     - CVE-2021-3418
+#     - CVE-2021-3695
+#     - CVE-2021-3696
+#     - CVE-2021-3981
+#     - CVE-2021-3981
+#     - CVE-2022-2601
+#     - CVE-2022-28733
+#     - CVE-2022-28734
+#     - CVE-2022-28735
+#     - CVE-2022-28736
+#     - CVE-2022-28737
+#     - CVE-2022-3775
 
 prepare() {
 	default_prepare

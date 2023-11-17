@@ -1,0 +1,40 @@
+# Contributor: Daniel Fancsali <fancsali@gmail.com>
+# Maintainer: Daniel Fancsali <fancsali@gmail.com>
+
+pkgname=posixovl
+pkgver=1.4
+pkgrel=0
+pkgdesc="A FUSE filesystem that provides POSIX functionality for filesystems that do not have such; a contemporary equivalent of UMSDOS."
+url="https://inai.de/projects/posixovl/"
+arch="all"
+license="GPL2"
+depends="fuse"
+makedepends="fuse-dev"
+checkdepends=""
+install=""
+subpackages="$pkgname-doc"
+source="https://inai.de/files/posixovl/posixovl-$pkgver.tar.xz"
+builddir="$srcdir/posixovl-$pkgver"
+
+build() {
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--localstatedir=/var
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+5d64871e2acb24a6f054563e8861f929a3daf66739ac3a933e60151613a142720ec6cfbefc868edf21de02872361840dbb6886246f9a471923fb38b97f0915ce  posixovl-1.4.tar.xz
+"

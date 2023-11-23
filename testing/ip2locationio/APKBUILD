@@ -1,0 +1,33 @@
+# Maintainer: IP2Location <support@ip2location.com>
+pkgname=ip2locationio
+pkgver=1.0.2
+pkgrel=0
+pkgdesc="An official CLI tool for IP2Location.io Geolocation API service."
+url="https://github.com/ip2location/ip2location-io-cli+"
+arch="all"
+license="MIT"
+makedepends="go"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ip2location/ip2location-io-cli/archive/refs/tags/v$pkgver.tar.gz"
+
+builddir="$srcdir/ip2location-io-cli-$pkgver"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+        cd ip2locationio
+        go build
+}
+
+package() {
+        install -Dm755 "$builddir"/ip2locationio/ip2locationio "$pkgdir"/usr/bin/ip2locationio
+}
+
+check() {
+        cd ./
+}
+
+sha512sums="
+e5a3e49b02516dfa378ba0a4e817af1815d1007a1f5ef8d6df06d10a84fed70362a8d1105555a2e35d7d4aefc328ed18a816dbf4b45b82f69bf4e8a96fbcf251  ip2locationio-1.0.2.tar.gz
+"

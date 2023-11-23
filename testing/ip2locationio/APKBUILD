@@ -16,16 +16,16 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-        cd ip2locationio
-        go build
+	cd ip2locationio
+	go build
 }
 
 package() {
-        install -Dm755 "$builddir"/ip2locationio/ip2locationio "$pkgdir"/usr/bin/ip2locationio
+	install -Dm755 "$builddir"/ip2locationio/ip2locationio "$pkgdir"/usr/bin/ip2locationio
 }
 
 check() {
-        cd ./
+	cd ./
 }
 
 sha512sums="

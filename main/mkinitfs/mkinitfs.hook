@@ -7,24 +7,24 @@ if [ -f "$CONFIG" ]; then
 	esac
 fi
 
-for i in "$@"; do
-	# get last element in path
-	flavor=${i##*/}
-	if ! [ -f "$i"/kernel.release ]; then
-		# kernel was uninstalled
-		rm -f $( readlink -f /boot/initramfs-$flavor ) \
-			/boot/initramfs-$flavor /boot/vmlinuz-$flavor \
-			/boot/$flavor /boot/$flavor.gz /$flavor /$flavor.gz
-		continue
-	fi
-	abi_release=$(cat "$i"/kernel.release)
+flavor=$1
+newver=$2
+# oldver=$3
+
+if [ $newver = "" ]; then
+	# kernel was uninstalled
+	rm -f $( readlink -f /boot/initramfs-$flavor ) \
+		/boot/initramfs-$flavor /boot/vmlinuz-$flavor \
+		/boot/$flavor /boot/$flavor.gz /$flavor /$flavor.gz
+else
+	abi_release="$newver-$flavor"
 	initfs=initramfs-$flavor
 	mkinitfs -o /boot/$initfs $abi_release || {
 		echo "  mkinitfs failed!" >&2
 		echo "  your system may not be bootable" >&2
 		exit 1
 	}
-done
+fi
 
 # extlinux will use path relative partition, so if /boot is on a
 # separate partition we want /boot/<kernel> resolve to /<kernel>

@@ -25,7 +25,7 @@ package() {
 }
 
 check() {
-	cd ./
+	go test ./...
 }
 
 sha512sums="

@@ -21,7 +21,7 @@ build() {
 }
 
 package() {
-	install -Dm755 "$builddir"/ip2locationio/ip2locationio "$pkgdir"/usr/bin/ip2locationio
+	install -Dm755 ip2locationio/ip2locationio "$pkgdir"/usr/bin/ip2locationio
 }
 
 check() {

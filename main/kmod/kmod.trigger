@@ -1,6 +1,7 @@
 #!/bin/sh
 
 for i in "$@"; do
+	[ -d "$i" ] || continue
 	if [ -e "$i"/modules.order ]; then
 		/sbin/depmod ${i#/lib/modules/}
 	else

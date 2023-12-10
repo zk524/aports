@@ -2,7 +2,7 @@
 # Maintainer: Conrad Hoffmann <ch@bitfehler.net>
 pkgname=dracut
 pkgver=060
-pkgrel=1
+pkgrel=2
 _commit=856e7acdb1462803c2517c8d64afb2e34c73c735
 pkgdesc="An event driven initramfs infrastructure"
 url="https://github.com/dracutdevs/dracut/wiki"

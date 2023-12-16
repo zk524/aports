@@ -2,7 +2,7 @@
 # Maintainer: Stuart Cardall <developer@it-offshore.co.uk>
 pkgname=apk-post-messages
 pkgver=0.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Print apk post-install messages"
 url="https://alpinelinux.org"
 arch="noarch"

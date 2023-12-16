@@ -2,7 +2,7 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=akms
 pkgver=0.2.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Alpine Kernel Module Support"
 url="https://github.com/jirutka/akms"
 arch="noarch"

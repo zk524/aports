@@ -2,6 +2,7 @@
 
 x=README.alpine
 for i; do
+	[ -d "$i" ] || continue
 	if [ -f "$i/$x" ]; then
 		msg="| $i: $x |"
 		msg_len=$(( $(echo $msg |wc -m) - 1))
@@ -13,4 +14,3 @@ for i; do
 		echo -e; break
 	fi
 done
-

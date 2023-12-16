@@ -14,6 +14,7 @@ case "$disable_trigger" in
 esac
 
 for srcdir in "$@"; do
+	[ -d "$srcdir" ] || continue
 	[ -f "$srcdir"/AKMBUILD ] || continue
 	akms install "$srcdir"
 done

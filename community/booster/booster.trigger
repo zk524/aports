@@ -2,6 +2,7 @@
 # adapted from main/mkinitfs/mkinitfs.trigger
 
 for i in "$@"; do
+	[ -d "$i" ] || continue
 	# get last element in path
 	flavor=${i##*/}
 	if ! [ -f "$i"/kernel.release ]; then

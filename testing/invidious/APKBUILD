@@ -1,0 +1,65 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=invidious
+pkgver=2.20250504.0
+pkgrel=0
+pkgdesc="Alternative front-end to YouTube"
+url="https://github.com/iv-org/invidious"
+arch="x86_64 aarch64"  # other arches: missing crystal
+license="AGPL-3.0-or-later"
+makedepends="
+	crystal
+	libevent-dev
+	libgcc
+	libssl3
+	libxml2-dev
+	openssl-dev
+	pcre2-dev
+	shards
+	sqlite-dev
+	tzdata
+	yaml-dev
+	zlib-dev
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/iv-org/invidious/archive/refs/tags/v$pkgver.tar.gz
+	absolute_paths.patch
+	$pkgname.initd
+	"
+install="$pkgname.pre-install"
+pkgusers="$pkgname"
+pkggroups="$pkgname"
+subpackages="$pkgname-doc $pkgname-openrc"
+options="!check net" # no tests, fetches network dependencies
+
+prepare() {
+	default_prepare
+	sed \
+		-e 's/^CURRENT_BRANCH =.*/CURRENT_BRANCH = "release"/' \
+		-e 's/^CURRENT_COMMIT  =.*/CURRENT_COMMIT  = "'$pkgver'"/' \
+		-e 's/^CURRENT_VERSION =.*/CURRENT_VERSION = "'$pkgver'"/' \
+		-e 's/^ASSET_COMMIT =.*/ASSET_COMMIT = "'$pkgver'"/' \
+		-i src/invidious.cr
+	# Note: ASSET_COMMIT is not entirely correct here, but would require manual tracking.
+}
+
+build() {
+	shards install --production
+	crystal build --release src/invidious.cr
+}
+
+package() {
+	install -Dm 755 invidious "$pkgdir/usr/bin/invidious"
+
+	find locales assets config/sql \
+		-exec install -Dm 644 {} "$pkgdir/usr/share/invidious/{}" \;
+
+	install -Dm 644 "config/config.example.yml" "$pkgdir/etc/invidious/config.yaml"
+	install -Dm 644 "config/config.example.yml" "$pkgdir/usr/share/doc/example/invidious.yaml"
+
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+}
+
+sha512sums="
+c6169ed12591065bff21630a4c18832534e199af028ed4af023dfe2cdfe1dcffcb999b5a9502a556a5690ca77cc1f3ccab0bbea31d24782ca8ff76b7bf7a5d29  invidious-2.20250504.0.tar.gz
+ede95076a8d4ff5968c1860d035260b47c9210aab1524722816c42eb3148157e7b6ecf94ac390dba2e4a115c703cef29093e01a678a4f8e95f50183dc5ff505c  absolute_paths.patch
+d14e8bd9ae79c4677fe89a5c303ae25e925abb3b879bf9bd11b395762a7e54683ddc45b73c9162f53c40de938f0213feddd0dcf5f91038367f128d2b3c9c8c1e  invidious.initd
+"

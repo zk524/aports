@@ -1,39 +1,56 @@
-# Maintainer: Hoang Nguyen <folliekazetani@protonmail.com>
+maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=usql
-pkgver=0.15.6
-pkgrel=8
+pkgver=0.19.16
+pkgrel=0
 pkgdesc="Universal command-line interface for SQL databases"
 url="https://github.com/xo/usql"
-# riscv64: not supported by go-ole (undefined: VARIANT)
-# loongarch64: not supported by go-ole (undefined: VARIANT)
-# x86, armhf, armv7: netezza and cockroachdb drivers fail to build on 32-bit
-# - https://github.com/xo/usql/issues/59
-# - https://github.com/IBM/nzgo/issues/38
-# - https://github.com/cockroachdb/pebble/issues/1575
-arch="all !loongarch64 !riscv64 !armhf !armv7 !x86"
+arch="all"
 license="MIT"
-makedepends="go unixodbc-dev icu-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/xo/usql/archive/refs/tags/v$pkgver.tar.gz"
+options="net"
+makedepends="go unixodbc-dev zstd-dev"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/xo/usql/archive/refs/tags/v$pkgver.tar.gz
+	pebble-loong64_patch
+	go-ole-riscv64-loong64_patch
+	"
 
-export CGO_ENABLED=1 # needed for godror and odbc drivers
+# duckdb package isn't available on these architectures
+case "$CARCH" in
+	loongarch64|ppc64le|riscv64|s390x) ;;
+	*) makedepends="$makedepends duckdb-dev" ;;
+esac
+
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
-export _GOTAGS="all sqlite_app_armor sqlite_fts5 sqlite_introspect sqlite_json1 sqlite_stat4 sqlite_userauth sqlite_vtable sqlite_icu"
+prepare() {
+	default_prepare
+
+	go mod vendor
+	patch -p1 -i "$srcdir"/pebble-loong64_patch
+	patch -p1 -i "$srcdir"/go-ole-riscv64-loong64_patch
+}
 
 build() {
-	export CGO_CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 	local _goldflags="
 	-X github.com/xo/usql/text.CommandName=$pkgname
 	-X github.com/xo/usql/text.CommandVersion=$pkgver
 	"
 
-	go build -v -ldflags "$_goldflags" -tags "$_GOTAGS" -o $pkgname
+	local _gotags="all sqlite_app_armor sqlite_fts5 sqlite_introspect sqlite_json1 sqlite_math_functions sqlite_stat4 sqlite_vtable external_libzstd"
+	case "$CARCH" in
+		loongarch64|ppc64le|riscv64|s390x) _gotags="$_gotags no_duckdb" ;;
+		*)
+			export CGO_LDFLAGS="$LDFLAGS -L/usr/lib"
+			_gotags="$_gotags duckdb_use_lib" ;;
+	esac
+
+	go build -v -ldflags "$_goldflags" -tags "$_gotags"
 }
 
 check() {
-	# Tests for specific drivers require docker
+	# Tests for specific drivers and testcli.go require docker
 	# shellcheck disable=2046
 	go test $(go list ./... | grep -v /drivers)
 }
@@ -43,5 +60,7 @@ package() {
 }
 
 sha512sums="
-e843f35c8b4c2ae9af4fdc3ac966b1412580268ce7ba3d837189251db9b89a5042458e5b21b2b2f952dcbad27250e6b91d19645a8831f6aa13dbee13624b8908  usql-0.15.6.tar.gz
+7911d578b62b4ff1c364c8c48367575c9e1bd584bdd1a145c37a23ce993a95cfc5a777a19d104e001c1902b37b45f5ccfeb8a24914db6486dcdf4c926946af6c  usql-0.19.16.tar.gz
+782ae5b21e52d09d22f95801f2766f1354e09d5ae5bf9db638f58aea8116c760906b148a04726a2155ecb5246b4d6cf2aad498d18fe2df5fba0a3b24035a2d51  pebble-loong64_patch
+ef209819fdce382c5b171e21838e3f6b16c7261a63d9a15e96e5b4212b05c44e473a3357c5bf8186e3eb27ac403c03555cebdccdce16425699bba111709f8e88  go-ole-riscv64-loong64_patch
 "

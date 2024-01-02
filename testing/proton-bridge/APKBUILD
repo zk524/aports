@@ -5,7 +5,9 @@ pkgver=3.6.1
 pkgrel=0
 pkgdesc="Proton Mail Bridge application"
 url="https://proton.me/mail/bridge"
-arch="all !s390x"
+# armhf/armv7: Temporarily disabled until sentry-native can be moved to a system package but that will require making a new aport first.
+# s390x: Temporarily disabled until the saferith dependency can be fixed on s390x, or a local workaround can be devised.
+arch="all !s390x !armhf !armv7"
 license="GPL-3.0-or-later"
 pkgusers="$pkgname"
 pkggroups="$pkgname"
@@ -37,10 +39,10 @@ prepare() {
 	rm -rf "$builddir"/extern/vcpkg/
 	mv "$srcdir"/vcpkg-$_vcpkgver/ "$builddir"/extern/vcpkg/
 
-	default_prepare 
+	default_prepare
 
 	# If we don't do this, proton-bridge will bring in qt6 libs into a subfolder and locally link to them instead of system qt6.
-	truncate -s0 "$builddir"/internal/frontend/bridge-gui/bridge-gui/DeployLinux.cmake 
+	truncate -s0 "$builddir"/internal/frontend/bridge-gui/bridge-gui/DeployLinux.cmake
 }
 
 build() {

@@ -1,6 +1,6 @@
 --- proton-bridge-3.6.1/internal/frontend/bridge-gui/bridge-gui/build.sh.orig
 +++ proton-bridge-3.6.1/internal/frontend/bridge-gui/bridge-gui/build.sh
-@@ -55,12 +55,13 @@
+@@ -55,15 +55,13 @@
  BUILD_CONFIG=${BRIDGE_GUI_BUILD_CONFIG:-Debug}
  BUILD_DIR=$(echo "./cmake-build-${BUILD_CONFIG}" | tr '[:upper:]' '[:lower:]')
  VCPKG_ROOT="${BRIDGE_REPO_ROOT}/extern/vcpkg"
@@ -11,13 +11,15 @@
  BRIDGE_BUILD_TIME=${BRIDGE_BUILD_TIME}
 -BRIDGE_BUILD_ENV= ${BRIDGE_BUILD_ENV:-"dev"}
 -git submodule update --init --recursive ${VCPKG_ROOT}
+-check_exit "Failed to initialize vcpkg as a submodule."
 +BRIDGE_BUILD_ENV='Alpine Linux'
 +ARCH=$(arch)
-+git clone https://github.com/microsoft/vcpkg.git -b 2023.08.09 ${VCPKG_ROOT}
- check_exit "Failed to initialize vcpkg as a submodule."
  
- echo submodule updated
-@@ -78,8 +79,15 @@
+-echo submodule updated
+ 
+ VCPKG_EXE="${VCPKG_ROOT}/vcpkg"
+ VCPKG_BOOTSTRAP="${VCPKG_ROOT}/bootstrap-vcpkg.sh"
+@@ -78,8 +76,15 @@
      ${VCPKG_EXE} install sentry-native:x64-osx-min-10-15 grpc:x64-osx-min-10-15 --overlay-triplets=vcpkg/triplets --clean-after-build
      check_exit "Failed installing gRPC for macOS / Intel x64"
  elif [[ "$OSTYPE" == "linux"* ]]; then

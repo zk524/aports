@@ -1,0 +1,74 @@
+# Contributor: Aemilia Scarlett <aemilia@ferret.town>
+# Maintainer: Aemilia Scarlett <aemilia@ferret.town>
+pkgname=pika-backup
+pkgver=0.6.2
+pkgrel=1
+pkgdesc="Doing backups the easy way. Plugin your USB drive and let the Pika do the rest for you."
+url="https://gitlab.gnome.org/World/pika-backup"
+arch="all"
+license="GPL-3.0-or-later"
+depends="borgbackup"
+makedepends="cargo gtk4.0-dev libadwaita-dev glib-dev gettext itstool meson"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://gitlab.gnome.org/World/pika-backup/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz
+	replace-open64-requirement-in-getrandom.patch.in
+	modify-meson-build-for-docs.patch
+	"
+builddir="$srcdir/$pkgname-v$pkgver"
+options="!check"
+
+
+export CARGO_PROFILE_RELEASE_INCREMENTAL=false
+export CARGO_PROFILE_RELEASE_DEBUG=false
+export CARGO_HOME="$srcdir/cargo"
+
+prepare() {
+	cargo fetch --locked
+
+	# Find the folder containing the version of getrandom we download from index.crates.io
+	REGISTRYDIR=$(find "$srcdir/cargo/registry/src" -type d -name "index.crates.io-*")
+	REGISTRYDIR=${REGISTRYDIR/"$srcdir"/}
+	REGISTRYDIR=${REGISTRYDIR:1}
+
+	# We apply the patch manually, as it exists outside the working directory of the actual application
+	mv ../replace-open64-requirement-in-getrandom.patch.in ../replace-open64-requirement-in-getrandom.patch
+	patch "../$REGISTRYDIR/getrandom-0.2.8/src/util_libc.rs" -i ../replace-open64-requirement-in-getrandom.patch 
+	mv ../replace-open64-requirement-in-getrandom.patch ../replace-open64-requirement-in-getrandom.patch.complete
+
+	default_prepare
+
+	mkdir build
+	meson setup build --prefix "$pkgdir/usr"
+}
+
+build() {
+	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+
+	cargo build \
+	    --release \
+	    --frozen
+}
+
+# We skip tests for now, as the test suite for pika-backup wants to test things like gtk window creation which we can't achieve on a headless setup.
+check() {
+	cargo test --frozen --workspace
+}
+
+package() {
+	# Use Meson to build all the help docs, desktop files, et al and ensure file references point to the right final directory.
+	cd build
+	meson compile
+	grep -lR "$pkgdir/usr" data | xargs sed -i "s|$pkgdir/usr|/usr|g"
+	meson install
+	cd ..
+
+	mv "$pkgdir/usr/etc" "$pkgdir/etc"
+
+	install -Dm755 target/release/pika-backup -t "$pkgdir/usr/bin/"
+	install -Dm755 target/release/pika-backup-monitor -t "$pkgdir/usr/bin/"
+}
+sha512sums="
+cc339c0ee56c4a8c2b7e84e06f11c7a68de6bc23c91da1a12044fa9d154839e220bba59c823a4efb2b29a6c445aeca3e30977f754da72c90b8fe85782d916dba  pika-backup-0.6.2.tar.gz
+1907f3006711ca0f80a6dd263912d474d120b3ee6aff4257d52bcc60afbfc01c07436cd8006d412b3578ba7293f5b760bba08045219addbce11b2cc1a28c74cf  replace-open64-requirement-in-getrandom.patch.in
+75da7004e9ac0ca51d6db0bebffbf42c81ec6e8b65389d541a15a4ed02c497aea5d494f22e1c8d87f96dff638462f630adc6f2606b9b96e803fd88da2b066c67  modify-meson-build-for-docs.patch
+"

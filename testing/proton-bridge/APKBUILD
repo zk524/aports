@@ -10,14 +10,14 @@ license="GPL-3.0-or-later"
 pkgusers="$pkgname"
 pkggroups="$pkgname"
 depends="proton-bridge-cli"
-makedepends="go libsecret-dev cmake ninja-build qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtsvg-dev protobuf-dev grpc-dev"
+makedepends="go libsecret-dev cmake ninja-build qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtsvg-dev protobuf-dev grpc-dev bash zip ninja perl"
 subpackages="$pkgname-cli"
 options="!check"
 source="$pkgname-$pkgver.tar.gz::https://github.com/ProtonMail/proton-bridge/archive/v$pkgver.tar.gz
-        fix-vcpkg-for-multi-arch.patch
-        fix-makefile.patch
-        proton-bridge.initd
-        "
+	fix-vcpkg-for-multi-arch.patch
+	fix-makefile.patch
+	proton-bridge.initd
+	"
 
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"

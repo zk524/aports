@@ -10,7 +10,7 @@ license="GPL-3.0-or-later"
 depends="borgbackup"
 makedepends="cargo gtk4.0-dev libadwaita-dev glib-dev gettext itstool meson"
 subpackages="$pkgname-doc"
-source="$pkgname-$pkgver.tar.gz::https://gitlab.gnome.org/World/pika-backup/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz
+source="$pkgname-$pkgver.tar.gz::https://gitlab.gnome.org/World/pika-backup/-/archive/v$pkgver/pika-backup-v$pkgver.tar.gz
 	replace-open64-requirement-in-getrandom.patch.in
 	modify-meson-build-for-docs.patch
 	"
@@ -32,7 +32,7 @@ prepare() {
 
 	# We apply the patch manually, as it exists outside the working directory of the actual application
 	mv ../replace-open64-requirement-in-getrandom.patch.in ../replace-open64-requirement-in-getrandom.patch
-	patch "../$REGISTRYDIR/getrandom-0.2.8/src/util_libc.rs" -i ../replace-open64-requirement-in-getrandom.patch 
+	patch "../$REGISTRYDIR/getrandom-0.2.8/src/util_libc.rs" -i ../replace-open64-requirement-in-getrandom.patch
 	mv ../replace-open64-requirement-in-getrandom.patch ../replace-open64-requirement-in-getrandom.patch.complete
 
 	default_prepare

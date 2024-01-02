@@ -1,0 +1,22 @@
+--- proton-bridge-3.6.1/internal/frontend/bridge-gui/BridgeSetup.cmake.orig
++++ proton-bridge-3.6.1/internal/frontend/bridge-gui/BridgeSetup.cmake
+@@ -15,7 +15,7 @@
+ # You should have received a copy of the GNU General Public License
+ # along with Proton Mail Bridge. If not, see <https://www.gnu.org/licenses/>.
+ 
+-
++include(CMakePrintHelpers)
+ include_guard()
+ 
+ 
+@@ -85,6 +85,10 @@
+ if  (WIN32)
+     message(STATUS "Building for Intel x64 Windows computers")
+     set(VCPKG_TARGET_TRIPLET x64-windows)
++endif()
++
++if (NOT DEFINED CMAKE_HOST_SYSTEM_PROCESSOR) # Apparently this doesn't get set by cmake on 32b ISAs? Okay then. I'll do it myself.
++    EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE CMAKE_HOST_SYSTEM_PROCESSOR )
+ endif()
+ 
+ set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "toolchain")

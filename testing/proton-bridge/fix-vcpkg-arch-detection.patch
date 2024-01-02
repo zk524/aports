@@ -1,0 +1,20 @@
+--- proton-bridge-3.6.1/extern/vcpkg/scripts/buildsystems/vcpkg.cmake.orig
++++ proton-bridge-3.6.1/extern/vcpkg/scripts/buildsystems/vcpkg.cmake
+@@ -315,13 +315,15 @@
+                CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR
+                CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "amd64")
+             set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
++        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(i386|i686)$")
++            set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
+         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+             set(Z_VCPKG_TARGET_TRIPLET_ARCH s390x)
+         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "ppc64le")
+             set(Z_VCPKG_TARGET_TRIPLET_ARCH ppc64le)
+-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
++        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(armv7l|armv7|armhf)$")
+             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
+-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
++        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64|armv8l)$")
+             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+ 	elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "riscv32")
+ 	    set(Z_VCPKG_TARGET_TRIPLET_ARCH riscv32)

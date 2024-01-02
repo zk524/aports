@@ -1,0 +1,71 @@
+# Contributor: Aemilia Scarlett <aemilia@ferret.town>
+# Maintainer: Aemilia Scarlett <aemilia@ferret.town>
+pkgname=proton-bridge
+pkgver=3.6.1
+pkgrel=0
+pkgdesc="Proton Mail Bridge application"
+url="https://proton.me/mail/bridge"
+arch="all"
+license="GPL-3.0-or-later"
+pkgusers="$pkgname"
+pkggroups="$pkgname"
+depends="proton-bridge-cli"
+makedepends="go libsecret-dev cmake ninja-build qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtsvg-dev protobuf-dev grpc-dev"
+subpackages="$pkgname-cli"
+options="!check"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ProtonMail/proton-bridge/archive/v$pkgver.tar.gz
+        fix-vcpkg-for-multi-arch.patch
+        fix-makefile.patch
+        proton-bridge.initd
+        "
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+export CGO_CFLAGS="-D_LARGEFILE64_SOURCE" # Musl 1.2.4 broke compatibility with Open64, this is a workaround.
+
+case "$CARCH" in
+arm*|aarch64|s390x|ppc64le|riscv) export VCPKG_FORCE_SYSTEM_BINARIES=1 ;;
+esac
+
+prepare() {
+	default_prepare
+	truncate -s0 "$builddir"/internal/frontend/bridge-gui/bridge-gui/DeployLinux.cmake
+}
+
+build() {
+	make build-nogui
+	cp "$builddir"/bridge "$builddir"/proton-bridge # I don't know why I have to do this but I do else it breaks.
+	make build-gui
+}
+
+check() {
+	make test
+}
+
+package() {
+	install -D -m755 "$builddir"/cmd/Desktop-Bridge/deploy/linux/bridge-gui "$pkgdir"/usr/bin/bridge-gui
+
+	install -D -m644 "$builddir"/cmd/Desktop-Bridge/deploy/linux/proton-bridge.desktop "$pkgdir"/usr/share/applications/proton-bridge.desktop
+	install -D -m644 "$builddir"/cmd/Desktop-Bridge/deploy/linux/logo.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/protonmail-bridge.svg
+	install -D -m644 "$builddir/LICENSE" "$pkgdir"/usr/share/licenses/$pkgname
+}
+
+cli() {
+	depends=""
+
+	mkdir $subpkgdir
+
+	install -D -m755 "$builddir"/cmd/Desktop-Bridge/deploy/linux/bridge "$subpkgdir"/usr/bin/bridge
+
+	install -D -m644 "$builddir/LICENSE" "$subpkgdir"/usr/share/licenses/$pkgname
+	install -D -m644 "$builddir"/doc/*.md "$subpkgdir"/usr/share/doc/protonmail/bridge
+
+	install -Dm755 "$srcdir"/proton-bridge.initd "$subpkgdir"/etc/init.d/proton-bridge
+}
+sha512sums="
+39e11815cdfdcd741ba04ee6776ce4bd959715d8d5bb8345b7f7b1a66b5fa5b66890ebc0353b1f5566a822e0ad1c4757fd022b67f4c66e91113b5e700db04abd  proton-bridge-3.6.1.tar.gz
+d415604b517dda7fac0de423eafff7df0ce7d98eb2f95af4169747cbb40ce502859ae9d0c1c4b480f5474cbfad1a412c5201fc1e7727feacdba461e5bb9f8527  fix-vcpkg-for-multi-arch.patch
+c83c77a16f66012abf55d0563af8c250477a0f621ec1750d67c8133dd25ed0bea93c5181873227e797c4c0b7f07cc441a86e1cd55e4a8049a540988408096ef0  fix-makefile.patch
+b21c5939a24913406f527d69e0878963e350be3dc8913aada9b0f21f05fea8f1597aed715ee4639a911881b63efaa30022a6cffadbf7b91f2066d6b28702100b  proton-bridge.initd
+"

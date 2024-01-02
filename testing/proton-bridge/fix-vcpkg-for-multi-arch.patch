@@ -1,0 +1,37 @@
+--- proton-bridge-3.6.1/internal/frontend/bridge-gui/bridge-gui/build.sh.orig
++++ proton-bridge-3.6.1/internal/frontend/bridge-gui/bridge-gui/build.sh
+@@ -55,12 +55,13 @@
+ BUILD_CONFIG=${BRIDGE_GUI_BUILD_CONFIG:-Debug}
+ BUILD_DIR=$(echo "./cmake-build-${BUILD_CONFIG}" | tr '[:upper:]' '[:lower:]')
+ VCPKG_ROOT="${BRIDGE_REPO_ROOT}/extern/vcpkg"
+-BRIDGE_REVISION=$(git rev-parse --short=10 HEAD)
++BRIDGE_REVISION=3.6.1
+ BRIDGE_TAG=${BRIDGE_TAG:-"NOTAG"}
+ BRIDGE_DSN_SENTRY=${BRIDGE_DSN_SENTRY}
+ BRIDGE_BUILD_TIME=${BRIDGE_BUILD_TIME}
+-BRIDGE_BUILD_ENV= ${BRIDGE_BUILD_ENV:-"dev"}
+-git submodule update --init --recursive ${VCPKG_ROOT}
++BRIDGE_BUILD_ENV='Alpine Linux'
++ARCH=$(arch)
++git clone https://github.com/microsoft/vcpkg.git -b 2023.08.09 ${VCPKG_ROOT}
+ check_exit "Failed to initialize vcpkg as a submodule."
+ 
+ echo submodule updated
+@@ -78,8 +79,15 @@
+     ${VCPKG_EXE} install sentry-native:x64-osx-min-10-15 grpc:x64-osx-min-10-15 --overlay-triplets=vcpkg/triplets --clean-after-build
+     check_exit "Failed installing gRPC for macOS / Intel x64"
+ elif [[ "$OSTYPE" == "linux"* ]]; then
+-    ${VCPKG_EXE} install sentry-native:x64-linux grpc:x64-linux --clean-after-build
+-    check_exit "Failed installing gRPC for Linux / Intel x64"
++    case "$ARCH" in
++        arm|arm32|aarch32|armv*) ${VCPKG_EXE} install sentry-native:arm-linux --clean-after-build ;;
++        aarch64|arm64) ${VCPKG_EXE} install sentry-native:arm64-linux --clean-after-build ;;
++        s390x) ${VCPKG_EXE} install sentry-native:s390x-linux --clean-after-build ;;
++        x86_64) ${VCPKG_EXE} install sentry-native:x64-linux --clean-after-build ;;
++        i686|x86) ${VCPKG_EXE} install sentry-native:x86-linux --clean-after-build ;;
++        *) ${VCPKG_EXE} install sentry-native:$ARCH-linux --clean-after-build ;;
++    esac
++    check_exit "Failed installing gRPC for Linux / $ARCH"
+ else
+     echo "For Windows, use the build.ps1 Powershell script."
+     exit 1

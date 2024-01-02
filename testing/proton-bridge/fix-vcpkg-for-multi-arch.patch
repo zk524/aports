@@ -26,12 +26,12 @@
 -    ${VCPKG_EXE} install sentry-native:x64-linux grpc:x64-linux --clean-after-build
 -    check_exit "Failed installing gRPC for Linux / Intel x64"
 +    case "$ARCH" in
-+        arm|arm32|aarch32|armv*) ${VCPKG_EXE} install sentry-native:arm-linux --clean-after-build ;;
++        arm|arm32|aarch32|armv*) ${VCPKG_EXE} install sentry-native[core,transport]:arm-linux --clean-after-build ;;
 +        aarch64|arm64) ${VCPKG_EXE} install sentry-native:arm64-linux --clean-after-build ;;
-+        s390x) ${VCPKG_EXE} install sentry-native:s390x-linux --clean-after-build ;;
++        s390x) ${VCPKG_EXE} install sentry-native[core,transport]:s390x-linux --clean-after-build ;;
 +        x86_64) ${VCPKG_EXE} install sentry-native:x64-linux --clean-after-build ;;
-+        i686|x86) ${VCPKG_EXE} install sentry-native:x86-linux --clean-after-build ;;
-+        *) ${VCPKG_EXE} install sentry-native:$ARCH-linux --clean-after-build ;;
++        i686|x86)  ${VCPKG_EXE} install sentry-native[core,transport]:x86-linux --clean-after-build ;;
++        *) ${VCPKG_EXE} install sentry-native[core,transport]:$ARCH-linux --clean-after-build ;;
 +    esac
 +    check_exit "Failed installing gRPC for Linux / $ARCH"
  else

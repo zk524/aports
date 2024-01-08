@@ -1,0 +1,197 @@
+#!/bin/sh
+
+# Find the disk device from given partition
+disk_from_part() {
+	local path="${1%/*}"
+	local dev="${1##*/}"
+	echo $path/$(basename "$(readlink -f "/sys/class/block/$dev/..")")
+}
+
+# Find which directory is the UEFI ESP mountpoint
+find_efi_directory() {
+	local dir=
+	for dir in /boot/efi /boot; do
+		case "$(find_mount_fs $dir)" in
+			vfat|fat|msdos)
+				echo $dir
+				return
+				;;
+		esac
+	done
+	return 1
+}
+
+# Find device for given mounted directory
+find_mount_dev() {
+	local mnt="$1"
+	awk "\$2 == \"$mnt\" { print \$1 }" /proc/mounts | tail -n 1
+}
+
+# Find filesystem type of given mounted directory
+find_mount_fs() {
+	local mount_point="$1"
+	awk "\$2 == \"$mount_point\" {print \$3}" /proc/mounts | tail -n 1
+}
+
+find_partitions() {
+	local dev="$1" type="$2" search=
+	case "$type" in
+		boot)
+			if [ -n "$USE_EFI" ]; then
+				search=$(partition_id esp)
+			elif [ "$DISKLABEL" = "gpt" ]; then
+				search="LegacyBIOSBootable"
+			else
+				search=bootable
+			fi
+			sfdisk -d "$dev" | awk '/'$search'/ {print $1}'
+			;;
+		*)
+			search=$(partition_id "$type")
+			sfdisk -d "$dev" | awk '/type='$search'/ {print $1}'
+			;;
+	esac
+}
+
+is_efi() {
+	[ -d "/sys/firmware/efi" ] && return 0
+	return 1
+}
+
+is_luks() {
+	cryptsetup status "$1" >/dev/null 2>&1
+}
+
+is_lvm() {
+	lvs "$1" >/dev/null 2>&1
+}
+
+# $1 partition type (swap,linux,raid,lvm,prep,esp)
+# return partition type id based on table type
+partition_id() {
+	local id
+	if [ "$DISKLABEL" = "gpt" ]; then
+		case "$1" in
+			swap)   id=0657FD6D-A4AB-43C4-84E5-0933C84B4F4F ;;
+                        linux)  id=0FC63DAF-8483-4772-8E79-3D69D8477DE4 ;;
+                        raid)   id=A19D880F-05FC-4D3B-A006-743F0F84911E ;;
+                        lvm)    id=E6D6D379-F507-44C2-A23C-238F2A3DF928 ;;
+                        prep)   id=9E1A2d38-C612-4316-AA26-8B49521E5A8B ;;
+                        esp)    id=C12A7328-F81F-11D2-BA4B-00A0C93EC93B ;;
+                        *)      die "Partition id \"$1\" is not supported!" ;;
+		esac
+	elif [ "$DISKLABEL" = "dos" ]; then
+		case "$1" in
+			swap)   id=82 ;;
+			linux)  id=83 ;;
+			raid)   id=fd ;;
+                        lvm)    id=8e ;;
+			prep)   id=41 ;;
+			esp)    id=EF ;;
+			vfat)   id=0c ;;
+			*)      die "Partition id \"$1\" is not supported!" ;;
+		esac
+	else
+		die "Partition label \"$DISKLABEL\" is not supported!"
+	fi
+	echo $id
+}
+
+setup_grub() {
+	local bootdev="$1"
+	# Install GRUB EFI mode
+	if is_efi; then
+		local target fwa
+		local efi_directory=$(find_efi_directory) || \
+			echo "WARNING: EFI directory was not found" >&2
+		case "$ARCH" in
+			x86_64)		target=x86_64-efi ; fwa=x64 ;;
+			x86)		target=i386-efi ; fwa=ia32 ;;
+			arm*)		target=arm-efi ; fwa=arm ;;
+			aarch64)	target=arm64-efi ; fwa=aa64 ;;
+			riscv64)	target=riscv64-efi ; fwa=riscv64 ;;
+		esac
+
+		# currently disabling nvram so grub doesnt call efibootmgr
+		# installing to alpine directory so other distros dont overwrite it
+		grubcmdline="grub-install --target=$target --efi-directory=$efi_directory --bootloader-id=alpine --boot-directory=/boot --no-nvram"
+		# fallback mode will use boot/boot${fw arch}.efi
+		grubueficpcmd="install -D $efi_directory/EFI/alpine/grub$fwa.efi $efi_directory/EFI/boot/boot$fwa.efi"
+	# Install GRUB for ppc64le
+	elif [ "$ARCH" = "ppc64le" ]; then
+		shift
+		local disks="${@}"
+		for disk in $disks; do
+			prep=$(find_partitions "$disk" "prep")
+			grubcmdline="${grubcmdline:+; }grub-install --boot-directory=/boot $prep"
+		done
+	# Install GRUB in BIOS mode
+	else
+		local bootdisk="$(disk_from_part $bootdev)"
+		case "$ARCH" in
+			x86|x86_64)	grubcmdline="grub-install --boot-directory=/boot --target=i386-pc $bootdisk" ;;
+			*)		printf '\n\nGRUB cannot be used in BIOS mode for %s\n\n' "$ARCH"; exit 1 ;;
+		esac
+	fi
+}
+
+
+ARCH=$(apk --print-arch)
+DISKLABEL="dos"
+
+bootdev=$(find_mount_dev /boot)
+if [ -z "$bootdev" ]; then
+	# "/boot" is not on a separate device so determine the 
+	# device for "/".
+	bootdev=$(find_mount_dev /)
+fi
+# If the bootdev is a /dev/mapper devices then work out
+# the name of the underlying parent device.
+case $bootdev in
+	/dev/mapper/* )
+		if is_lvm "$bootdev"; then
+			vgname="$(lvs --no-headings -o vg_name $bootdev | awk '{print $1}')"
+			bootdev="$(pvs --no-headings -o vg_name,pvname | grep $vgname | awk '{print $2}')"
+			case $bootdev in
+				/dev/mapper/* )
+					# Could be LVM on top of LUKS
+					if is_luks "$bootdev"; then
+						bootdev="$(cryptsetup status $bootdev | grep "device:" | awk '{print $2}')"
+					fi
+					;;
+			esac
+		elif is_luks "$bootdev"; then
+			bootdev="$(cryptsetup status $bootdev | grep "device:" | awk '{print $2}')"
+		fi
+		;;
+esac
+
+setup_grub "$bootdev" $disks
+
+printf '\nWARNING!\n\n'
+printf 'IT IS POSSIBLE AFTER THIS UPDATE OF GRUB YOU MAY NEED TO MANUALLY RE-INSTALL\n'
+printf 'GRUB ONTO YOUR BOOT DISK. IF YOU DO NOT DO SO THEN THERE IS A *POSSIBLE* RISK\n'
+printf 'THAT YOUR ALPINE INSTALLATION MAY BECOME UNBOOTABLE!\n\n'
+
+printf 'You may need to manually run grub-install *before* you reboot but the\n'
+printf '*appropriate* arguments need to be passed to grub-install. As these can differ\n'
+printf 'for individual systems you must determine the correct arguments yourself.\n\n'
+
+printf '*If* you installed Alpine originally via 'setup-disk' and you did NOT:\n\n'
+
+printf '  - manually setup the disk layout before running setup-disk\n'
+printf '  - change OS or Grub aspects affecting boot at any time after you\n'
+printf '    originally ran setup-disk\n'
+printf '  - install any additional Operating Systems\n\n'
+
+printf 'then the following *might* update your Grub installation appropriately:\n\n'
+
+if [ -n "$grubcmdline" ]; then
+	printf '\t%s\n' "$grubcmdline"
+else
+	printf '\t%s\n' "Unable to determine grub-install command!"
+fi
+if [ -n "$grubueficpcmd" ]; then
+	printf '\t%s\n' "$grubueficpcmd"
+fi
+printf '\nIf you are unsure what to do you should seek help *before* rebooting!\n\n'

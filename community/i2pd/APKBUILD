@@ -2,7 +2,7 @@
 # Maintainer: r4sas <r4sas@i2pmail.org>
 pkgname=i2pd
 pkgver=2.56.0
-pkgrel=1
+pkgrel=2
 pkgdesc="I2P Router written in C++"
 url="https://i2pd.website"
 arch="all"
@@ -15,14 +15,19 @@ source="https://github.com/PurpleI2P/i2pd/archive/$pkgver/i2pd-$pkgver.tar.gz
 	i2pd.initd
 	i2pd.confd
 	"
-subpackages="$pkgname-dbg $pkgname-openrc"
+subpackages="
+	lib$pkgname
+	lib$pkgname-dev:libi2pddev
+	$pkgname-openrc
+	$pkgname-doc
+	$pkgname-dbg
+"
 
 build() {
 	make USE_UPNP=yes
 }
 
 package() {
-
 	install -D -m 755 i2pd "$pkgdir"/usr/sbin/i2pd
 
 	install -dm755 -o $pkgusers \
@@ -37,10 +42,26 @@ package() {
 	cp -r contrib/certificates/ "$pkgdir"/usr/share/$pkgname/certificates
 	ln -s /usr/share/$pkgname/certificates "$pkgdir"/var/lib/$pkgname/certificates
 
+	install -Dm644 debian/i2pd.1 -t "$pkgdir"/usr/share/man/man1
+
 	install -m755 -D "$srcdir"/$pkgname.initd \
 		"$pkgdir"/etc/init.d/$pkgname
 	install -m644 -D "$srcdir"/$pkgname.confd \
 		"$pkgdir"/etc/conf.d/$pkgname
+}
+
+libi2pd() {
+	pkgdesc="$pkgdesc - libraries"
+	amove usr/lib
+}
+
+libi2pddev() {
+	pkgdesc="$pkgdesc - libraries (development files)"
+	depends="lib$pkgname=$pkgver-r$pkgrel"
+	for i in i18n libi2pd libi2pd_client libi2pd_wrapper
+	do
+		install -Dm644 "$builddir"/"$i"/*.h* -t "$subpkgdir"/usr/include/libi2pd/"$i"
+	done
 }
 
 sha512sums="

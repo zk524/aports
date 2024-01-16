@@ -2,11 +2,12 @@
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=swaylock
 pkgver=1.8.3
-pkgrel=0
+pkgrel=1
 pkgdesc="Screen locker for Wayland"
 url="https://swaywm.org/"
 license="MIT"
 arch="all"
+pkggroups="shadow"
 makedepends="cairo-dev
 	gdk-pixbuf-dev
 	libxkbcommon-dev
@@ -24,9 +25,12 @@ subpackages="
 	$pkgname-bash-completion
 	$pkgname-fish-completion
 	$pkgname-zsh-completion
+	$pkgname-suid
 	"
 source="https://github.com/swaywm/swaylock/archive/v$pkgver/swaylock-$pkgver.tar.gz"
-options="!check" # no test suite
+# !check: no test suite
+# suid: -suid subpackage
+options="!check $pkgname-suid::suid"
 
 # secfixes:
 #   1.6-r0:
@@ -54,10 +58,22 @@ prepare() {
 build() {
 	abuild-meson . output
 	meson compile -C output
+
+	abuild-meson -Dpam=disabled . output-suid
+	ninja -C output-suid swaylock
 }
 
 package() {
 	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+suid() {
+	pkgdesc="$pkgdesc (suid backend)"
+	provides="$pkgname"
+	# Never select this backend automatically
+	provider_priority=0
+
+	install -D -m2755 -g shadow "$builddir"/output-suid/swaylock "$subpkgdir"/usr/bin/swaylock
 }
 
 sha512sums="

@@ -9,10 +9,13 @@ url="https://sites.google.com/a/android.com/tools/"
 arch="all !s390x !ppc64le !loongarch64"
 license="Apache-2.0 MIT"
 options="!check" # upstream doesn't have a test suite
-depends="python3"
 makedepends="pcre2-dev linux-headers gtest-dev go perl cmake protobuf-dev
-	brotli-dev zstd-dev lz4-dev samurai abseil-cpp-dev fmt-dev"
-subpackages="$pkgname-doc $pkgname-bash-completion:bashcomp:noarch"
+	brotli-dev zstd-dev lz4-dev samurai abseil-cpp-dev fmt-dev python3"
+subpackages="
+	$pkgname-doc
+	$pkgname-bash-completion:bashcomp:noarch
+	$pkgname-python:_python:noarch
+	"
 source="https://github.com/nmeum/android-tools/releases/download/$pkgver/android-tools-$pkgver.tar.xz
 	0001-Fix-libusb-enumeration.patch"
 
@@ -37,6 +40,17 @@ package() {
 bashcomp() {
 	default_bashcomp
 	amove usr/share/android-tools/completions
+}
+
+_python() {
+	pkgdesc="$pkgdesc that require python"
+	depends="python3"
+	install_if="$pkgname=$pkgver-r$pkgrel"
+
+	amove \
+		usr/bin/avbtool usr/bin/mkbootimg usr/bin/mkdtboimg \
+		usr/bin/repack_bootimg usr/bin/unpack_bootimg \
+		usr/share/android-tools/mkbootimg
 }
 
 sha512sums="

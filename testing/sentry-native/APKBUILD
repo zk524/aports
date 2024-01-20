@@ -1,0 +1,72 @@
+# Contributor: Aemilia Scarlett <aemilia@ferret.town>
+# Maintainer: Aemilia Scarlett <aemilia@ferret.town>
+pkgname=sentry-native
+pkgver=0.6.7
+pkgrel=0
+pkgdesc="Sentry SDK for C, C++ and native applications. "
+url="https://sentry.io/"
+arch="all"
+license="MIT"
+checkdepends="py3-pytest py3-msgpack"
+makedepends="cmake curl-dev"
+subpackages="$pkgname-static $pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/getsentry/sentry-native/archive/$pkgver.tar.gz
+	fix-elf-size-check.patch
+	"
+# Right now tests break quite severely when not using breakpad or crashpad,
+# as the tests make strong assumptions, despite options being available.
+options="!check"
+
+prepare() {
+	default_prepare
+	truncate -s0 "$builddir"/external/CMakeLists.txt
+}
+
+build() {
+	cmake -S . -B build \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-Wno-dev \
+		-DSENTRY_BUILD_SHARED_LIBS=ON \
+		-DSENTRY_BUILD_TESTS=OFF \
+		-DSENTRY_BACKEND=inproc
+
+	cmake --build build
+
+	cmake -S . -B build-static \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-Wno-dev \
+		-DSENTRY_BUILD_SHARED_LIBS=OFF \
+		-DSENTRY_BUILD_TESTS=OFF \
+		-DSENTRY_BACKEND=inproc
+
+	cmake --build build-static
+}
+
+check() {
+	cp build/tests/unit/sentry_test_unit sentry_test_unit
+	cp build/sentry_example tests/sentry_example
+
+	./sentry_test_unit --skip \
+		unwinder \
+		value_set_stacktrace
+
+	python -m pytest \
+		--ignore="tests/test_build_static.py" \
+		--ignore="tests/test_integration_crashpad.py" \
+		--ignore="tests/test_integration_http.py" \
+		--ignore="tests/test_integration_ratelimits.py"
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	DESTDIR="$pkgdir" cmake --install build-static
+
+	install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname LICENSE
+}
+
+sha512sums="
+8c5ec1fff2f99acddac8964c415b470a8e5a53967de9fa84444d78d49ed05f592a2c5373688cf87a86ec7cb4c2fe076f9d50443b6ddb9f479713655664d330fb  sentry-native-0.6.7.tar.gz
+e2f1342d3b22e961224ba215ab72feabd858d7055eecd008b13a23ee5afdeb41b560d03f1d815e9e43b89efd67f5d5fa80547043ef478b90f8ff040a2c39c078  fix-elf-size-check.patch
+"

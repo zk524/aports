@@ -2,7 +2,7 @@
 # Maintainer: Timo Teräs <timo.teras@iki.fi>
 pkgname=grub
 pkgver=2.12
-pkgrel=0
+pkgrel=1
 pkgdesc="Bootloader with support for Linux, Multiboot and more"
 url="https://www.gnu.org/software/grub/"
 arch="all !s390x"
@@ -39,6 +39,7 @@ done
 
 source="https://ftp.gnu.org/gnu/grub/grub-$pkgver.tar.xz
 	update-grub
+	warn-about-grub-install
 	grub-xen-host_grub.cfg
 
 	0001-Fix-grub-mkconfig-detection-of-linux-edge-virt.patch
@@ -196,6 +197,8 @@ package() {
 	mv "$pkgdir"/etc/bash_completion.d "$pkgdir"/usr/share/bash-completion/completions
 
 	install -D -m755 "$srcdir"/update-grub "$pkgdir"/usr/sbin/update-grub
+	install -D -m755 "$srcdir"/warn-about-grub-install \
+		"$pkgdir"/usr/sbin/warn-about-grub-install
 }
 
 bios() {
@@ -267,6 +270,7 @@ bashcomp() {
 sha512sums="
 761c060a4c3da9c0e810b0ea967e3ebc66baa4ddd682a503ae3d30a83707626bccaf49359304a16b3a26fc4435fe6bea1ee90be910c84de3c2b5485a31a15be3  grub-2.12.tar.xz
 85b3c56670fb0aaaf831cc6d7ca45faeb68b844cb17cfd6f9b51c2473f0b153cfa7b26ff8bf00a88b2ed3e0ae69a1e8f735256e6cecc91e959169606e2abf887  update-grub
+dc75f2f409afe2cf0fef21421f965c2db9310e58567725d8f4882285d80998d8f944c4c6cbdf32036976126716f0f1965125ce36beac86cceaf9669e6850c51d  warn-about-grub-install
 4e7394e0fff6772c89683039ccf81099ebbfe4f498e6df408977a1488fd59389b6e19afdbf0860ec271e2b2aea0df7216243dcc8235d1ca3af0e7f4d0a9d60a4  grub-xen-host_grub.cfg
 d45f416f7308f338cd187909207cd8329dcb21e22ab0573ae932110c3e108e4bafe6411ae22b5f87809bea39544660dcb03e3fea2c1c33492cd230fa6d3b2760  0001-Fix-grub-mkconfig-detection-of-linux-edge-virt.patch
 e1612f34d14644b30a63d9dc18a0eaf9617ef9f4aa6787c386e6304e15b4573f5149758936cac1ceffdb4e39f6a83e7e7c01a7ef3ed2f7bc974971ae0e2c644c  0002-ensure-grub-mkconfig-ignores-.apk-new-files.patch

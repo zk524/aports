@@ -2,7 +2,7 @@
 pkgname=openrc
 pkgver=0.54
 _ver=${pkgver/_git*/}
-pkgrel=2
+pkgrel=3
 pkgdesc="OpenRC manages the services, startup and shutdown of a host"
 url="https://github.com/OpenRC/openrc"
 arch="all"
@@ -20,6 +20,7 @@ subpackages="
 	agetty-openrc:_agetty_openrc:noarch
 	$pkgname-bash-completion
 	$pkgname-zsh-completion
+	$pkgname-inittab::noarch
 	"
 install="$pkgname.post-install $pkgname.post-upgrade"
 source="$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgver.tar.gz
@@ -50,6 +51,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgve
 	test-networking.sh
 
 	modules.7.scd
+	inittab
 	"
 options="!check" # not updated to meson build system, require makefile build
 provides="ifupdown-ng-openrc=0.12.1-r4"
@@ -149,6 +151,8 @@ package() {
 	install -Dm644 "$srcdir/$pkgname.logrotate" "$pkgdir/etc/logrotate.d/$pkgname"
 	install -d "$pkgdir"/etc/local.d "$pkgdir"/run
 
+	install -Dm644 "$srcdir"/inittab "$pkgdir"/etc/inittab
+
 	# openrc upstream removed service(8) for whatever reason, put it back
 	ln -s /sbin/rc-service "$pkgdir"/sbin/service
 
@@ -173,6 +177,16 @@ _agetty_openrc() {
 
 	amove etc/init.d/agetty
 	amove etc/conf.d/agetty
+}
+
+inittab() {
+	pkgdesc="$pkgdesc (inittab)"
+	depends="$pkgname=$pkgver-r$pkgrel"
+	replaces="alpine-baselayout<=3.6.3-r0"
+	provides="/etc/inittab"
+	provider_priority=100
+
+	amove etc/inittab
 }
 
 sha512sums="
@@ -201,4 +215,5 @@ d76c75c58e6f4b0801edac4e081b725ef3d50a9a8c9bbb5692bf4d0f804af7d383bf71a73d5d03ed
 a60129f4bed134a27773c61994d114b3a5d1ab9f20097b096956f5bb696c056f4a608577cabb34c32b51899c69dce3bd0d8ffa61f5b66fd00fc5085d1ebba54f  machine-id.initd
 af17947aa3954e317dc06580da829200e0b0f2ddc37ce842c3fc7fc0d8ca2f40220e4f4665f61b4b5ec47c96416db0127e2ed979b9421bf21df89d4c4f998b7f  test-networking.sh
 edf23bbec3c67457f3039d193cd3a756a079ab080e5e3d87e724a1a0d9be86b82797bf2bf5280fbf33d1c60b98e3859d9d9c265f8119a84ccdcaa9937ab72296  modules.7.scd
+de2692ba4609f839b50e9933cb31cace8fe35daf20f375efb655e58a77ddce6ac4fc63a3c8d57007dcf523c91789d03ca8d115a09ead7bad24e4b1b62fd77be6  inittab
 "

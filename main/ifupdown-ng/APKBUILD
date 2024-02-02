@@ -1,7 +1,7 @@
 # Maintainer: Ariadne Conill <ariadne@dereferenced.org>
 pkgname=ifupdown-ng
 pkgver=0.12.1
-pkgrel=4
+pkgrel=5
 pkgdesc="tools for managing network configuration"
 url="https://github.com/ifupdown-ng/ifupdown-ng"
 arch="all"
@@ -21,6 +21,8 @@ subpackages="
 "
 source="https://distfiles.ariadne.space/ifupdown-ng/ifupdown-ng-$pkgver.tar.xz
 	01-add-onlink-to-default-route.patch
+	02-libifupdown-stop-executor-evaluation-after-an-execut.patch
+	03-ifupdown-continue-bringing-up-interfaces-if-state-ch.patch
 	"
 provides="ifupdown-any"
 provider_priority=900
@@ -117,4 +119,6 @@ wifi() {
 sha512sums="
 c2c1e27fbd53eeb4150e544a893352f13845b491850e982a5880160c3be03b628794f7989c802ff823ac3e8c6c34dc4ab97c0abcefdda85f06fcd64ced8ac60c  ifupdown-ng-0.12.1.tar.xz
 5a4900356cf4ea48d5088d98328cf3f8a821a52a3b9518987a6432fc1349c3a314bbe20d46736ec8781e2a675398e15183c1ab8c0ba617c3e49b164fbbb48baf  01-add-onlink-to-default-route.patch
+2d24c099023057168777d608208f06d1a7dc9b48ecd7df41ddd605ee6671781ae3f5a158e6c235e13bb26a411b03e7f3c4a633b47790895cbee6c84813804ace  02-libifupdown-stop-executor-evaluation-after-an-execut.patch
+349c14ffa90a2583098d8562707c97a97c972272b2f137d126150660b6ced08f588d6ca0555869bcd1d6cbe341a4eb6d15ef694d8a4bfcc63e62b058535d6553  03-ifupdown-continue-bringing-up-interfaces-if-state-ch.patch
 "

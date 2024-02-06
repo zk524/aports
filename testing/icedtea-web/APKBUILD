@@ -1,0 +1,69 @@
+# Contributor: Antoine Martin (ayakael) <dev@ayakael.net>
+# Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
+pkgname=icedtea-web
+pkgver=2.0.0_alpha29
+_pkgver=2.0.0-alpha29
+pkgrel=0
+pkgdesc='Additional components for OpenJDK - Browser plug-in and Web Start implementation'
+url='https://github.com/AdoptOpenJDK/IcedTea-Web'
+# riscv64 blocked by java-jdk
+arch="all !riscv64"
+license="GPL-2.0-only"
+depends="openjdk8-jre"
+# optdepend: rhino
+makedepends="
+	autoconf
+	automake
+	bash
+	bc
+	cargo
+	epiphany
+	glib-dev
+	junit
+	libxtst-dev
+	maven
+	npapi-sdk
+	openjdk8
+	rust
+	zip
+"
+source="https://github.com/AdoptOpenJDK/IcedTea-Web/archive/icedtea-web-$_pkgver.tar.gz"
+builddir="$srcdir"/IcedTea-Web-icedtea-web-$_pkgver
+options="!check" # TODO: investigate failures
+
+export MAVEN_ARGS="--batch-mode -Duser.home=$srcdir/.home"
+
+build() {
+	mvn install -DskipTests
+	(
+		cd launchers
+		JRE=/usr/lib/jvm/default-jvm bash ./build.sh
+	)
+}
+
+check() {
+	mvn test
+}
+
+package() {
+	install -dm 755 \
+		"$pkgdir"/usr/share/applications \
+		"$pkgdir"/usr/share/pixmaps \
+		"$pkgdir"/usr/lib/mozilla/plugins/ \
+		"$pkgdir"/usr/bin
+
+	cp -R launchers/target "$pkgdir"/usr/lib/icedtea-web
+	install -Dm 644 launchers/javaws.png -t "$pkgdir"/usr/share/pixmaps
+
+	for i in javaws.desktop.in itweb-settings.desktop.in policyeditor.desktop.in; do
+		sed 's|PATH_TO_JAVAWS|/usr/bin/javaws|' launchers/xdesktop.in/$i > "$pkgdir"/usr/share/applications/${i/.in/}
+	done
+
+	## link binaries into /usr/bin + jre/bin
+	for file in "$builddir"/launchers/target/bin/*; do
+		ln -sf "/usr/lib/icedtea-web/bin/$(basename "$file")" "$pkgdir"/usr/bin
+	done
+}
+sha512sums="
+453cb206ea0d2e488c0709962e96f03e3658cf050c10242046e6a89dfa24a3351904650cf09398d0cc6caab56c22aa3ccde50e348dd5a8fb863cbe329881bc53  icedtea-web-2.0.0-alpha29.tar.gz
+"

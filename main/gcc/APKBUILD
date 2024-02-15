@@ -417,6 +417,17 @@ package() {
 	ln -s gcc "$pkgdir"/usr/bin/cc
 	ln -s ${CTARGET}-gcc "$pkgdir"/usr/bin/${CTARGET}-cc
 
+	# Replace hard links with symlinks
+	local name
+	for name in "$pkgdir"/usr/bin/${CTARGET}-*; do
+		name=${name#"$pkgdir"/usr/bin/"$CTARGET"-}
+		if [ -e "$pkgdir"/usr/bin/$name ]; then
+			ln -s -f ${CTARGET}-$name "$pkgdir"/usr/bin/$name
+		fi
+	done
+
+	ln -s -f ${CTARGET}-gcc-$_pkgbase "$pkgdir"/usr/bin/${CTARGET}-gcc
+
 	if $LANG_JIT; then
 		make -C "$_builddir"/libgccjit-build/gcc DESTDIR="$pkgdir" jit.install-common
 	fi

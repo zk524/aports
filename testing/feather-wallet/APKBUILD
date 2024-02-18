@@ -1,0 +1,48 @@
+# Maintainer: Cowington Post <cowingtonpost@gmail.com>
+pkgname=feather-wallet
+pkgver=2.6.7
+pkgrel=0
+pkgdesc="Free and open-source Monero desktop wallet"
+url="https://featherwallet.org"
+arch="all"
+license="BSD-3-Clause"
+makedepends="
+	boost-dev
+	cmake
+	hidapi-dev
+	libqrencode-dev
+	libsodium-dev
+	libzip-dev
+	protobuf-dev
+	qt6-qtbase-dev
+	qt6-qtmultimedia-dev
+	qt6-qtsvg-dev
+	qt6-qtwebsockets-dev
+	samurai
+	unbound-dev
+	zbar-dev
+	zxing-cpp-dev
+	"
+source="https://featherwallet.org/files/releases/source/feather-$pkgver.tar.gz"
+builddir="$srcdir/feather-$pkgver"
+options="!check" # no tests
+
+build() {
+	if [ "$CBUILD" != "$CHOST" ]; then
+		local crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+	fi
+	cmake -B build \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_BUILD_TYPE=None \
+		$crossopts
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+c304a45f3a6a5ec89805012d8c5a6b906387db329e58969d88f45a4743eba5875e1f5ba76fc3f2be14764efc28b0e63c7641378e20fe312deed53900c35c939d  feather-2.6.7.tar.gz
+"

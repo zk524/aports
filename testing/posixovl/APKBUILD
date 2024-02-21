@@ -7,7 +7,7 @@ pkgrel=0
 pkgdesc="A FUSE filesystem that provides POSIX functionality for filesystems that do not have such; a contemporary equivalent of UMSDOS."
 url="https://inai.de/projects/posixovl/"
 arch="all"
-license="GPL-2.0-or-later" # TODO Confirm this
+license="GPL-2.0-or-later AND MIT" # TODO Confirm this
 depends="fuse"
 makedepends="fuse-dev"
 subpackages="$pkgname-doc"
@@ -31,6 +31,11 @@ check() {
 
 package() {
 	make DESTDIR="$pkgdir" install
+}
+
+doc() {
+	license="CC-BY-SA-4.0"
+	default_doc
 }
 
 sha512sums="

@@ -8,26 +8,26 @@ url="https://www.gpxsee.org/"
 arch="all"
 license="GPL-3.0-or-later"
 makedepends="
-        qt6-qtsvg-dev
-        qt6-qtbase-dev
-        qt6-qttools-dev
-        qt6-qtserialport-dev
-        qt6-qtpositioning-dev
-        qt6-qtimageformats-dev
+	qt6-qtsvg-dev
+	qt6-qtbase-dev
+	qt6-qttools-dev
+	qt6-qtserialport-dev
+	qt6-qtpositioning-dev
+	qt6-qtimageformats-dev
 	"
 
-source="https://downloads.sourceforge.net/$pkgname/GPXSee-$pkgver.tar.gz"
+source="https://downloads.sourceforge.net/gpxsee/GPXSee-$pkgver.tar.gz"
 
 build() {
-        cd $_pkgname-$pkgver
-        /usr/lib/qt6/bin/lrelease gpxsee.pro
-        qmake6 gpxsee.pro PREFIX=/usr
-        make
+	cd $_pkgname-$pkgver
+	/usr/lib/qt6/bin/lrelease gpxsee.pro
+	qmake6 gpxsee.pro PREFIX=/usr
+	make
 }
 
 package() {
-        cd src/$_pkgname-$pkgver
-        make INSTALL_ROOT="$pkgdir" install
+	cd src/$_pkgname-$pkgver
+	make INSTALL_ROOT="$pkgdir" install
 }
 
 sha512sums="

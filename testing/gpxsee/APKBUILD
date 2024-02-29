@@ -1,0 +1,35 @@
+# Maintainer: Yan Cao <yguo@posteo.net>
+pkgname=gpxsee
+_pkgname=GPXSee
+pkgver=13.16
+pkgrel=0
+pkgdesc="GPS log file viewer and analyzer"
+url="https://www.gpxsee.org/"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+        qt6-qtsvg-dev
+        qt6-qtbase-dev
+        qt6-qttools-dev
+        qt6-qtserialport-dev
+        qt6-qtpositioning-dev
+        qt6-qtimageformats-dev
+	"
+
+source="https://downloads.sourceforge.net/$pkgname/GPXSee-$pkgver.tar.gz"
+
+build() {
+        cd $_pkgname-$pkgver
+        /usr/lib/qt6/bin/lrelease gpxsee.pro
+        qmake6 gpxsee.pro PREFIX=/usr
+        make
+}
+
+package() {
+        cd src/$_pkgname-$pkgver
+        make INSTALL_ROOT="$pkgdir" install
+}
+
+sha512sums="
+8fe462d3ec9c25ea40df47c23bfe072ec44ee4a90d4e780cca955babeeffc7b53e3cc376a00ac49accac15fa88ae456b2aaf41235793da4db0e513932e173b74  GPXSee-13.16.tar.gz
+"

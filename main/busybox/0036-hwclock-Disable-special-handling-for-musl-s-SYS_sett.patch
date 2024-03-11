@@ -1,0 +1,43 @@
+From 34b4919419a79bf35ee303313eab278d2bc35f72 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Sun, 3 Mar 2024 05:38:01 +0100
+Subject: [PATCH] hwclock: Disable special handling for musl's SYS_settimeofday
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This is essentially a revert of the following BusyBox upstream
+commit: 9e262f13c2e53490d69d3112ffd718c27de04d1f [1]. As per
+Rich Felker, musl has not been designed to not use the kernel
+timezone functionality and using it may break fatfs timestamps???
+
+See: https://www.openwall.com/lists/musl/2024/03/03/3
+
+[1]: https://git.busybox.net/busybox/commit/util-linux/hwclock.c?id=9e262f13c2e53490d69d3112ffd718c27de04d1f
+
+Signed-off-by: Sören Tempel <soeren+git@soeren-tempel.net>
+---
+ util-linux/hwclock.c | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/util-linux/hwclock.c b/util-linux/hwclock.c
+index e6f0043d0..b8ac3dbc3 100644
+--- a/util-linux/hwclock.c
++++ b/util-linux/hwclock.c
+@@ -38,16 +38,7 @@
+ #include "rtc_.h"
+ 
+ 
+-//musl has no __MUSL__ or similar define to check for,
+-//but its <sys/types.h> has these lines:
+-// #define __NEED_fsblkcnt_t
+-// #define __NEED_fsfilcnt_t
+-#if defined(__linux__) && defined(__NEED_fsblkcnt_t) && defined(__NEED_fsfilcnt_t)
+-# define LIBC_IS_MUSL 1
+-# include <sys/syscall.h>
+-#else
+ # define LIBC_IS_MUSL 0
+-#endif
+ 
+ 
+ /* diff code is disabled: it's not sys/hw clock diff, it's some useless

@@ -1,0 +1,36 @@
+# Maintainer: sewn <sewn@disroot.org>
+pkgname=font-go
+_fontname=${pkgname#font-}
+pkgver=0.15.0
+pkgrel=0
+pkgdesc="Go font family"
+url="https://golang.org/x/image"
+arch="noarch"
+options="!check" # no testsuite
+license="BSD-3-Clause"
+depends="fontconfig"
+subpackages="$pkgname-sans $pkgname-mono"
+source="$pkgname-$pkgver.tar.gz::https://github.com/golang/image/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/image-$pkgver"
+
+package() {
+	depends="$pkgname-sans=$pkgver-r$pkgrel $pkgname-mono=$pkgver-r$pkgrel"
+
+	install -Dm644 "$builddir"/font/gofont/ttfs/*.ttf -t "$pkgdir"/usr/share/fonts/$_fontname
+}
+
+sans() {
+	pkgdesc="$pkgdesc (Sans)"
+	# shellcheck disable=SC2102
+	amove usr/share/fonts/$_fontname/Go-[!Mono]*.ttf
+}
+
+mono() {
+	pkgdesc="$pkgdesc (Mono)"
+	amove usr/share/fonts/$_fontname/Go-Mono*.ttf
+}
+
+
+sha512sums="
+35b0f40ef53240616b04bca9916a070475c4c05fca0169a11f306cebb398460010f550e09fff23c5079f3b4b61109d30ae708cdd4662e330f6a8770901ad0d9b  font-go-0.15.0.tar.gz
+"

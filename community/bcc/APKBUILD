@@ -9,7 +9,9 @@ arch="all"
 license="Apache-2.0"
 _llvmver=17
 makedepends="
+	argp-standalone
 	bison
+	bpftool
 	clang$_llvmver-dev
 	cmake
 	elfutils-dev
@@ -27,6 +29,7 @@ makedepends="
 	libxml2-dev
 	"
 subpackages="
+	$pkgname-dbg
 	$pkgname-static
 	$pkgname-dev
 	$pkgname-doc
@@ -34,13 +37,22 @@ subpackages="
 	py3-$pkgname-pyc
 	py3-$pkgname:_py:noarch
 	"
-source="$pkgname-$pkgver.tar.gz::https://github.com/iovisor/bcc/archive/v$pkgver.tar.gz"
+source="https://github.com/iovisor/bcc/archive/v$pkgver/bcc-$pkgver.tar.gz
+	libbpf-tools-app-prefix.patch
+	"
 
 case "$CARCH" in
 	ppc64le | riscv64) ;;
 	*) makedepends="$makedepends luajit-dev"
 	   subpackages="$subpackages $pkgname-lua:_lua"
 	   ;;
+esac
+
+_with_libbpf_tools=false
+case "$CARCH" in
+	aarch64 | s390x | x86_64)  # others fail to build
+		_with_libbpf_tools=true
+		subpackages="$subpackages libbpf-tools:_libbpf_tools"
 esac
 
 prepare() {
@@ -67,6 +79,15 @@ build() {
 		-DPYTHON_CMD=python3 \
 		-DREVISION="$pkgver"
 	cmake --build build
+
+	if $_with_libbpf_tools; then
+		# NOTE: Fails to build without -g or with -Os instead of -O2 in CFLAGS.
+		make -C libbpf-tools \
+			APP_PREFIX='bpf-' \
+			BPFTOOL='/usr/sbin/bpftool' \
+			LIBBPF_OBJ= \
+			LDFLAGS="$LDFLAGS -largp -lbpf"
+	fi
 }
 
 check() {
@@ -77,6 +98,13 @@ check() {
 
 package() {
 	DESTDIR="$pkgdir" cmake --install build
+
+	if $_with_libbpf_tools; then
+		make -C libbpf-tools install \
+			APP_PREFIX='bpf-' \
+			DESTDIR="$pkgdir" \
+			bindir=/usr/sbin
+	fi
 }
 
 doc() {
@@ -108,6 +136,14 @@ _lua() {
 	amove usr/bin/bcc-lua
 }
 
+_libbpf_tools() {
+	pkgdesc="Command line libbpf tools for BPF Compiler Collection (BCC)"
+	depends=""
+
+	amove usr/sbin/bpf-*
+}
+
 sha512sums="
 9e60130ea602e19e6c6f88a8c17023cea5daf4c5bcc7af8816e9f5c662341136eb449a3fdf870ffad215495ac3bf895115c0d968d92ce79ebe2899b3e2464d24  bcc-0.29.1.tar.gz
+04bc8e0f2cf28c41a3576b5c32aa29055fa893937c9e224733c4ac469ec046e168825c401832b4f254c507a501b193c143cc1d6511168d782dc654de5a24911c  libbpf-tools-app-prefix.patch
 "

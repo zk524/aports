@@ -1,0 +1,45 @@
+# Contributor: Marcel Steinbeck <msteinbeck@posteo.net>
+# Maintainer: Marcel Steinbeck <msteinbeck@posteo.net>
+pkgname=7kaa
+pkgver=2.15.6
+pkgrel=0
+pkgdesc="Real-time strategy game designed by Trevor Chan"
+url="https://7kfans.com"
+arch="all"
+license="GPL-2.0-only"
+depends="$pkgname-data"
+makedepends="
+	curl-dev
+	enet-dev
+	openal-soft-dev
+	sdl2-dev
+	"
+subpackages="$pkgname-lang $pkgname-data::noarch"
+source="https://downloads.sourceforge.net/project/skfans/7KAA%202.15.6/7kaa-2.15.6.tar.gz"
+
+build() {
+	LIBS=-lintl \
+	./configure \
+		--host=$CHOST \
+		--build=$CBUILD \
+		--prefix=/usr
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	rm -rf "$pkgdir"/usr/share/doc
+}
+
+data() {
+	pkgdesc="$pkgdesc (data files)"
+	amove usr/share/7kaa
+}
+
+sha512sums="
+8387680b39a203a50bcf466424a4401416d9f60aa00078e4e78a44b89e7afc722a62e81a1f3b5cdb20e323983e4a6506919340261fb6b2829e3ca275e648a64f  7kaa-2.15.6.tar.gz
+"

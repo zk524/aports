@@ -90,7 +90,6 @@ source="https://busybox.net/downloads/busybox-$pkgver.tar.bz2
 	busyboxconfig
 	busyboxconfig-extras
 	bbsuid.c
-	dad.if-up
 	ssl_client.c
 	default.script
 	udhcpc.conf
@@ -238,16 +237,6 @@ package() {
 	cd "$_dyndir"
 	install -Dm755 busybox "$pkgdir"/bin/busybox
 	install -Dm644 docs/busybox.1 "$pkgdir"/usr/share/man/man1/busybox.1
-
-	#ifupdown needs those dirs to be present
-	install -d \
-		"$pkgdir"/etc/network/if-down.d \
-		"$pkgdir"/etc/network/if-post-down.d \
-		"$pkgdir"/etc/network/if-post-up.d \
-		"$pkgdir"/etc/network/if-pre-down.d \
-		"$pkgdir"/etc/network/if-pre-up.d \
-		"$pkgdir"/etc/network/if-up.d
-	install -Dm775 "$srcdir"/dad.if-up "$pkgdir"/etc/network/if-up.d/dad
 
 	install -Dm644 "$srcdir"/acpid.logrotate \
 		"$pkgdir/etc/logrotate.d/acpid"
@@ -407,7 +396,6 @@ aa93095e20de88730f526c6f463cef711b290b9582cdbd8c1ba2bd290019150cbeaa7007c2e15f03
 93f0fa512a394a07f760b13bd70a28424d3ad1a6c283b77fd4894114c5b472cfbe65f3441afa28596771d75527aaa9794706a3b329b4898e5d83bce799169929  busyboxconfig
 9b399cf4bb9dc438c238d7294aef8a7452d9a2b74ff4c09a1349e74e457523329b32042ce86e7dedb99906011022dfd631074a836c897082cbe88c9ae19fe1d4  busyboxconfig-extras
 0becc2186d6c32fb0c401cf7bc0e46268b38ce8892db33be1daf40273024c1c02d518283f44086a313a2ccef34230a1d945ec148cc173f26e6aa9d88a7426e54  bbsuid.c
-afc27da5f95bec3e3ccb5b1fcb5bd80a8317d8753e6c70cc0750d0875313e44bf2e487472c8499d7bbe5afba3e583c75548ccdcff4dcadc94bb791f53fb77ba3  dad.if-up
 1c7c78afb274d1316725b22585452efd7de9a80ad326f099f25e34d0877c5d81ced579e2dc795314221e316f58071374f61ee22c6ffd34072266525f65d3614c  ssl_client.c
 e56f9d74f7d471893ff9c3fde319b989e1854c9b12f06c1b6739694b07165ae256b5c555bc75c92986265df7f0a276001aba73853855c7a0fb3404a091a92c86  default.script
 5f9ff70f99a970e88460c0de81a6637d8a82252fba6715e259833f16ed8cbfc3440972b1fa454eb77dbbcd1e244774c96b4eef96f71a2b67a9039a0dd5e6fc1e  udhcpc.conf

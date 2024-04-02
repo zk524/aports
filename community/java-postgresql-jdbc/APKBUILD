@@ -2,13 +2,13 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=java-postgresql-jdbc
 _pkgname=postgresql-jdbc
-pkgver=42.6.0
-pkgrel=1
+pkgver=42.7.3
+pkgrel=0
 pkgdesc="Java JDBC 4.2 (JRE 8+) driver for PostgreSQL database"
 url="https://jdbc.postgresql.org/"
-# riscv64 blocked by java-jdk
+# armhf,armv7,x86: requires Java >8 which dropped support for 32-bit
 # aarch64: jdk segfaults building it
-arch="noarch !aarch64 !riscv64"
+arch="noarch !aarch64 !armhf !armv7 !x86"
 license="BSD-3-Clause"
 makedepends="java-jdk gradle"
 source="$pkgname-$pkgver.tar.gz::https://github.com/pgjdbc/pgjdbc/archive/REL$pkgver.tar.gz
@@ -44,6 +44,6 @@ package() {
 }
 
 sha512sums="
-e3e7bec0255a5d1cdbd82332a0dec1c518c5bc6caef91f6a4347e4653f5203bb252d8cc649ee66bc6aa00653536683818862be19a3fc0825186c93607affc8e1  java-postgresql-jdbc-42.6.0.tar.gz
+bf4cbe30af7193a9d477739bb286351b9a8def93b5f0550396fb1d212afcd4307dffc3c679ed055934819509fdc4835368f1d90e404cd3965098dcf38b71c847  java-postgresql-jdbc-42.7.3.tar.gz
 5f761b43c5350e178e1f49e03625f01c61200033c220b93dded04069e96160d03bb7ca9ace9d733c7d14a9569d853772cc9df97e284da8e3daed4fcaf8313c8b  increase-max-memory.patch
 "

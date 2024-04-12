@@ -1,0 +1,20 @@
+diff --git a/bin/FvwmPrompt/Makefile.am b/bin/FvwmPrompt/Makefile.am
+index 724f7089f..c507247c0 100644
+--- a/bin/FvwmPrompt/Makefile.am
++++ b/bin/FvwmPrompt/Makefile.am
+@@ -1,7 +1,7 @@
+ if FVWM_BUILD_GOLANG
+ GOCMD=go
+ GOBUILD=$(GOCMD) build
+-GOFLAGS=-ldflags="-s -w"
++#GOFLAGS=-ldflags="-s -w"
+ GOCLEAN=$(GOCMD) clean
+ BINARY_NAME=FvwmPrompt
+ 
+@@ -22,4 +22,4 @@ install:
+ 
+ uninstall:
+ 	rm -f $(DESTDIR)$(bindir)/$(BINARY_NAME)
+-endif
++endif
+\ No newline at end of file

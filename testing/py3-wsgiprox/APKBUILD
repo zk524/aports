@@ -2,7 +2,7 @@
 # Maintainer: Oleg Titov <oleg.titov@gmail.com>
 pkgname=py3-wsgiprox
 pkgver=1.5.2
-pkgrel=0
+pkgrel=1
 pkgdesc="Python WSGI Middleware for adding HTTP/S proxy support to any WSGI Application"
 url="https://github.com/webrecorder/wsgiprox"
 arch="noarch"

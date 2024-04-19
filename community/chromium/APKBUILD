@@ -4,7 +4,7 @@
 # Maintainer: lauren n. liberda <lauren@selfisekai.rocks>
 pkgname=chromium
 pkgver=123.0.6312.122
-pkgrel=0
+pkgrel=1
 # https://source.chromium.org/chromium/chromium/src/+/main:third_party/test_fonts/test_fonts.tar.gz.sha1
 # (for the given version, when it changes)
 _testfonts=336e775eec536b2d785cc80eff6ac39051931286

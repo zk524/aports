@@ -2,7 +2,7 @@
 pkgname=electron
 pkgver=29.3.0
 _semver="${pkgver/_beta/-beta.}"
-pkgrel=1
+pkgrel=2
 _chromium=122.0.6261.156
 _depot_tools=b5509953468edd0906f2dc297886939abbd2bed5
 pkgdesc="Electron cross-platform desktop toolkit"

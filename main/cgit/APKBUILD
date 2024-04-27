@@ -1,19 +1,21 @@
 # Contributor: Sören Tempel <soeren+alpine@soeren-tempel.net>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=cgit
-pkgver=1.2.3
-pkgrel=5
-_gitver=2.25.1
+pkgver=1.2.3_git20240802
+_commit=09d24d7cd0b7e85633f2f43808b12871bb209d69
+pkgrel=0
+_gitver=2.46.0
 pkgdesc="A fast webinterface for git"
 url="https://git.zx2c4.com/cgit/"
 arch="all"
 license="GPL-2.0-or-later"
 makedepends="openssl-dev>3 zlib-dev lua5.3-dev asciidoc"
 subpackages="$pkgname-doc"
-source="http://git.zx2c4.com/cgit/snapshot/cgit-$pkgver.tar.xz
+source="https://git.zx2c4.com/cgit/snapshot/cgit-$_commit.tar.xz
 	https://www.kernel.org/pub/software/scm/git/git-$_gitver.tar.gz
 	"
 options="!check"
+builddir="$srcdir/$pkgname-$_commit"
 
 _makeopts="NO_ICONV=YesPlease
 	NO_GETTEXT=YesPlease
@@ -48,5 +50,7 @@ package() {
 	ln -s cgit.cgi "$pkgdir"/usr/share/webapps/cgit/cgit
 }
 
-sha512sums="58f9bb644b07be49dc51f3ef30a3d0e53699cede3c06b1d6920f3874fe846c83dd2589632aa84357b70ea2d60272448409aa1b892f405d14dd6745f5559b4504  cgit-1.2.3.tar.xz
-1c955f25da190c78750542a2fc81710aed3cd1fa4933b8734c81b00c07bfbf5b1379b555001340d55cdb2b996dd79b116bbfcfc0106940f06676f017907a599c  git-2.25.1.tar.gz"
+sha512sums="
+1847f06c9e695ca61967730fa8aef3ab68fb538d1b5d15c3f97afbd878d9ee993cf8d1400d48ec369a94b20e1a76368ee229b40d64ebfbc833f5e75d2b513a62  cgit-09d24d7cd0b7e85633f2f43808b12871bb209d69.tar.xz
+08478c376865f2401744be825517a188440f1a8115424c48f6458e150a5762f3e78686427d6f1cb3cb1357450c6f732af5e0ae545a2d055b359efd2871b16cbc  git-2.46.0.tar.gz
+"

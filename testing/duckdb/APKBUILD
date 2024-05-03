@@ -1,0 +1,137 @@
+maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
+pkgname=duckdb
+pkgver=1.1.3
+pkgrel=0
+pkgdesc="High-performance in-process analytical database"
+url="https://www.duckdb.org/"
+# loongarch64: Error: no match insn: pause
+# ppc64le, riscv64, s390x: Error: unrecognized opcode `pause'
+arch="all !loongarch64 !ppc64le !riscv64 !s390x"
+license="MIT"
+makedepends="
+	cmake
+	samurai
+	openssl-dev
+	unixodbc-dev
+
+	python3-dev
+	py3-pybind11-dev
+	py3-build
+	py3-installer
+	py3-wheel
+	py3-setuptools
+	py3-setuptools_scm
+	py3-numpy
+	"
+checkdepends="
+	py3-pytest
+	py3-pandas
+	py3-typing-extensions
+	"
+depends_dev="$pkgname-libs=$pkgver-r$pkgrel"
+subpackages="
+	$pkgname-libs:_lib
+	$pkgname-dev
+	$pkgname-doc
+	py3-$pkgname-pyc
+	py3-$pkgname:_python
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/duckdb/duckdb/archive/refs/tags/v$pkgver.tar.gz"
+
+export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
+
+build() {
+	# arm64, amd64 and i686 are the only detected architectures (see src/include/duckdb/common/platform.hpp source file)
+	local _cmake_args=""
+	case "$CARCH" in
+		x86) _cmake_args="$_cmake_args -DFORCE_32_BIT=1" ;;
+		armhf|armv7) _cmake_args="$_cmake_args -DDUCKDB_EXPLICIT_PLATFORM=linux_i686" ;;
+	esac
+
+	# TODO: unvendor thirdparty source files
+	# TODO: build `delta` (requires rust) and `httpfs` extensions as subpackages (not included in the bundled extension config)
+	# shellcheck disable=2086
+	cmake -B build -G Ninja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DOVERRIDE_GIT_DESCRIBE="v$pkgver" \
+		-DDUCKDB_EXTENSION_CONFIGS="$builddir"/.github/config/bundled_extensions.cmake \
+		$_cmake_args
+	cmake --build build
+
+	# build DuckDB Python package
+	cd tools/pythonpkg/
+	BUILD_HTTPFS=1 DUCKDB_BUILD_UNITY=1 \
+		python3 -m build --wheel --no-isolation
+}
+
+check() {
+	# Test TPCH arrow roundtrip: stuck on aarch64 / x86_64.
+	# Test using a remote optimizer pass in case thats important to someone: stuck on 32-bit platforms.
+	# test/sql/aggregate/aggregates/histogram_table_function.test: fails on aarch64
+	# The other tests simply segfault (no error output).
+	build/test/unittest "*" \
+		exclude:'Test TPCH arrow roundtrip' \
+		exclude:'Test Parquet Files round-trip' \
+		exclude:'Test using a remote optimizer pass in case thats important to someone' \
+		exclude:'test/sql/aggregate/group/test_group_by_nested.test' \
+		exclude:'test/sql/aggregate/aggregates/histogram_table_function.test' \
+		exclude:'test/sql/aggregate/aggregates/test_list_aggregate_function.test_slow' \
+		exclude:'test/sql/types/list/nested_list_extract.test' \
+		exclude:'test/sql/types/nested/array/array_sort.test_slow' \
+		exclude:'test/sql/join/test_nested_payloads.test_slow' \
+		exclude:'test/sql/join/test_nested_keys.test' \
+		exclude:'test/sql/order/issue_11936.test' \
+		exclude:'test/sql/order/test_order_variable_size_payload.test_slow' \
+		exclude:'test/sql/order/test_order_nested.test_slow' \
+		exclude:'test/fuzzer/duckfuzz/array_group_by_sample.test'
+	pytest tools/shell/tests --shell-binary build/duckdb
+
+	# Remove duckdb directory to prevent import confusion by pytest
+	cd tools/pythonpkg/ && rm -rf duckdb
+
+	# tests/stubs/test_stubs depends on py3-mypy (and isn't worth the effort)
+	# tests/fast/udf/test_transactionality.py: memory allocation error on 32-bit platforms
+	# tests/fast/spark/test_spark_to_parquet.py: bus error on armhf
+	_skip_tests="--ignore=tests/stubs/test_stubs.py"
+	case "$CARCH" in
+		x86|armv7|armhf) _skip_tests="$_skip_tests --ignore=tests/fast/udf/test_transactionality.py" ;;
+	esac
+	if [ "$CARCH" = "armhf" ]; then
+		_skip_tests="$_skip_tests --ignore=tests/fast/spark/test_spark_to_parquet.py"
+	fi
+
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer dist/*.whl
+	# shellcheck disable=2086
+	.testenv/bin/python3 -m pytest tests $_skip_tests
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+
+	cd tools/pythonpkg/ && python3 -m installer --destdir="$pkgdir" dist/*.whl
+
+	# We don't need these source files
+	rm -rf "$pkgdir"/usr/duckdb_build "$pkgdir"/usr/includes.list "$pkgdir"/usr/sources.list
+}
+
+_lib() {
+	pkgdesc="$pkgdesc (libraries)"
+
+	# There is no versioning
+	amove usr/lib/libduckdb.so
+}
+
+_python() {
+	pkgdesc="$pkgdesc (Python3 module)"
+	depends="python3"
+
+	amove usr/lib/python3.*
+}
+
+sha512sums="
+ecd036ff975e90c4e9cc3a25784169f5938db19eacd2abc201719d329ec1055608bb2270de22bf409d828196ede6ffe95369154c916916e13a7a14071b05652e  duckdb-1.1.3.tar.gz
+"

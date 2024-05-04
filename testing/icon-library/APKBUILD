@@ -1,0 +1,35 @@
+maintainer="Alexey Yerin <yyp@disroot.org>"
+pkgname=icon-library
+pkgver=0.0.21
+pkgrel=0
+pkgdesc="Symbolic icons for your apps"
+url="https://gitlab.gnome.org/World/design/icon-library"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	cargo
+	desktop-file-utils
+	gtk4.0-dev
+	gtksourceview5-dev
+	libadwaita-dev
+	meson
+	"
+options="!check" # No tests
+subpackages="$pkgname-lang"
+source="
+	$pkgname-$pkgver.tar.gz::https://gitlab.gnome.org/World/design/icon-library/-/archive/$pkgver/icon-library-$pkgver.tar.gz
+	"
+
+build() {
+	abuild-meson \
+		. output
+	meson compile -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+f90f108144e94230a9b91d438b593a97c726c7821dabad453d5df21374eabc0417f91e4d36baa46aea69d4e4c20e6ce101e0221979736c6bbb59a160cf32dc48  icon-library-0.0.21.tar.gz
+"

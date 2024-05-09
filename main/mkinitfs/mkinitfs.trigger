@@ -11,33 +11,27 @@ for i in "$@"; do
 	# get last element in path
 	abi_release=${i##*/}
 
-	suffix="$(cat "$i"/kernel-suffix 2>/dev/null)" || {
-		# clean up on uninstall
-		suffix="$(cat "$i/initramfs-suffix" 2>/dev/null)" || {
-			# fallback suffix
-			flavor="${abi_release##*[0-9]-}"
-			if [ "$flavor" != "$abi_release" ]; then
-				suffix="-$flavor"
-			fi
-		}
+	# Strip version to get flavor name
+	# abi_release = $pkgver-$pkgrel-$flavor
+	flavor=${abi_release#[0-9]*-}
+	flavor=${flavor#[0-9]*-}
 
-		rm -f "$i"/initramfs-suffix
-		rmdir "$i" 2>/dev/null
-		if ! [ -e "/boot/vmlinuz$suffix" ]; then
-			# kernel was removed
-			rm -v "/boot/initramfs$suffix"
-			continue
-		fi
+	# Remove old files
+	rm -f "$i/initramfs-suffix"
+	rmdir "$i" 2>/dev/null
 
+	if ! [ -e "/boot/vmlinuz-$flavor" ]; then
+		# Kernel removed
+		rm -f "/boot/initramfs-$flavor"
+		continue
+	fi
+
+	if ! [ -d "$i" ]; then
 		# upgrading
-		if ! [ -e "$i"/modules.order ]; then
-			continue
-		fi
-	}
+		continue
+	fi
 
-	# store the initramfs suffix for removal
-	echo "$suffix" > "$i"/initramfs-suffix
-	initramfs="/boot/initramfs$suffix"
+	initramfs="/boot/initramfs-$flavor"
 	mkinitfs -o "$initramfs" "$abi_release" || {
 		echo "  mkinitfs failed!" >&2
 		echo "  your system may not be bootable" >&2

@@ -7,6 +7,8 @@ if [ -f "$CONFIG" ]; then
 	esac
 fi
 
+failed=""
+
 for i in "$@"; do
 	# get last element in path
 	abi_release=${i##*/}
@@ -32,11 +34,8 @@ for i in "$@"; do
 	fi
 
 	initramfs="/boot/initramfs-$flavor"
-	mkinitfs -o "$initramfs" "$abi_release" || {
-		echo "  mkinitfs failed!" >&2
-		echo "  your system may not be bootable" >&2
-		exit 1
-	}
+	mkinitfs -o "$initramfs" "$abi_release" ||
+		failed="${failed:+$failed }$flavor"
 done
 
 # extlinux will use path relative partition, so if /boot is on a
@@ -47,4 +46,11 @@ fi
 
 # sync only the filesystem on /boot as that is where we are writing the initfs.
 sync -f /boot
+
+if [ -n "$failed" ]; then
+	echo "  mkinitfs failed! ($failed)" >&2
+	echo "  your system may not be bootable" >&2
+	exit 1
+fi
+
 exit 0

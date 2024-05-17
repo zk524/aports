@@ -1,0 +1,56 @@
+From cbb1c1a1c870905ad8d4e0e39c0d2070e35b2233 Mon Sep 17 00:00:00 2001
+From: omni <omni+vagant@hack.org>
+Date: Thu, 1 Jun 2023 10:06:03 +0000
+Subject: [PATCH] hostip: add CURL_ALLOW_DOT_ONION to allow .onion lookups
+
+RFC 7686 states that:
+
+> Applications that do not implement the Tor protocol SHOULD generate
+> an error upon the use of .onion and SHOULD NOT perform a DNS lookup.
+
+RFC 2119 states that:
+
+> SHOULD NOT   This phrase, or the phrase "NOT RECOMMENDED" mean that
+> there may exist valid reasons in particular circumstances when the
+> particular behavior is acceptable or even useful, but the full
+> implications should be understood and the case carefully weighed
+> before implementing any behavior described with this label.
+---
+ lib/hostip.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/lib/hostip.c b/lib/hostip.c
+index 4b7ac2577..99616ab36 100644
+--- a/lib/hostip.c
++++ b/lib/hostip.c
+@@ -686,13 +686,20 @@ enum resolve_t Curl_resolv(struct Curl_easy *data,
+   CURLcode result;
+   enum resolve_t rc = CURLRESOLV_ERROR; /* default to failure */
+   struct connectdata *conn = data->conn;
+-  /* We should intentionally error and not resolve .onion TLDs */
+-  size_t hostname_len = strlen(hostname);
+-  if(hostname_len >= 7 &&
+-     (curl_strequal(&hostname[hostname_len - 6], ".onion") ||
+-      curl_strequal(&hostname[hostname_len - 7], ".onion."))) {
+-    failf(data, "Not resolving .onion address (RFC 7686)");
+-    return CURLRESOLV_ERROR;
++
++  /* We should intentionally error and not resolve .onion TLDs, however,
++   * there are cases where a user may knowingly want to do so. */
++  char *allow_dot_onion = curl_getenv("CURL_ALLOW_DOT_ONION");
++  if(allow_dot_onion)
++    curl_free(allow_dot_onion);
++  else {
++    size_t hostname_len = strlen(hostname);
++    if(hostname_len >= 7 &&
++       (curl_strequal(&hostname[hostname_len - 6], ".onion") ||
++        curl_strequal(&hostname[hostname_len - 7], ".onion."))) {
++      failf(data, "Not resolving .onion address (RFC 7686)");
++      return CURLRESOLV_ERROR;
++    }
+   }
+   *entry = NULL;
+ #ifndef CURL_DISABLE_DOH
+-- 
+2.45.1
+

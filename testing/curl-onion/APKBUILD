@@ -71,6 +71,7 @@ package() {
 	# depends on exactly the same build of libcurl
 	depends="libcurl-onion=$pkgver-r$pkgrel !curl"
 	provides="curl"
+	replaces="curl"
 
 	make install DESTDIR="$pkgdir"
 	if [ -z "$BOOTSTRAP" ]; then
@@ -85,6 +86,7 @@ libcurl() {
 	pkgdesc="The multiprotocol file transfer library with CURL_ALLOW_DOT_ONION env var"
 	depends="$depends !libcurl"
 	provides="libcurl"
+	replaces="libcurl"
 
 	amove usr/lib
 }

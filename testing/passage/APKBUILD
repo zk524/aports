@@ -1,0 +1,32 @@
+# Contributor: Beau Trepp <beautrepp@gmail.com>
+# Maintainer: Beau Trepp <beautrepp@gmail.com>
+pkgname=passage
+pkgver=1.7.4_git20221231
+_gitrev=42cb195fa4298e6e030da122c4e0104a546e87c7
+pkgrel=0
+pkgdesc="passage is a fork of password-store that uses age as a backend instead of GnuPG."
+url="https://github.com/FiloSottile/passage"
+arch="noarch"
+license="GPL-2.0-or-later"
+depends="bash tree cmd:age"
+makedepends="age"
+checkdepends="git"
+# Source doesn't contain test suite
+options="!check"
+subpackages="
+	$pkgname-bash-completion
+	$pkgname-fish-completion
+	$pkgname-zsh-completion
+	"
+source="https://github.com/FiloSottile/passage/archive/$_gitrev.tar.gz
+	"
+
+builddir="$srcdir/passage-$_gitrev"
+
+package() {
+	make DESTDIR="$pkgdir" WITH_ALLCOMP=yes install
+}
+
+sha512sums="
+dc8beb84075ab0d26900f7c0adfb2fa2665e8e38334e5f43fd9d34ab86c594d5b682f1c5f26d3638d0016c1b0167916a4a4983105c97685278132143f5a8eddf  42cb195fa4298e6e030da122c4e0104a546e87c7.tar.gz
+"

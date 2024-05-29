@@ -5,14 +5,17 @@ pkgver=2.1.0
 pkgrel=1
 pkgdesc="Simple and fast GTK image viewer with basic image manipulation tools"
 url="https://github.com/weclaw1/image-roll"
-arch="x86_64 armv7 armhf aarch64 x86 ppc64le"  # limited by rust/cargo
+arch="x86_64 armv7 armhf aarch64 x86 ppc64le loongarch64"  # limited by rust/cargo
 license="MIT"
 makedepends="cargo gtk4.0-dev cargo-auditable"
-source="https://github.com/weclaw1/image-roll/archive/$pkgver/image-roll-$pkgver.tar.gz"
+source="https://github.com/weclaw1/image-roll/archive/$pkgver/image-roll-$pkgver.tar.gz
+	cargo-update.patch"
 options="!check"  # no tests provided
 
 
 prepare() {
+	set -ex
+
 	default_prepare
 
 	# This build script just installs glib schema to ~/.
@@ -42,4 +45,5 @@ package() {
 
 sha512sums="
 675c14d8c0c25be511ad6dc7dee6df0188d9ad61b96b55bbe76c172cf1f555b1fb98323c91b9710fdf17271a0aaff04eac52a09acd63b59ae98f607f1c27b35b  image-roll-2.1.0.tar.gz
+fa88cefe769257bd773401341a937eae0bbe8492c9ef0eb49d16abeb9f257d47c0f86ab8d83f9208b52fb3155fd01e229f2347bfc42a21a99060b72664e0748b  cargo-update.patch
 "

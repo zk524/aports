@@ -1,0 +1,22 @@
+diff --git a/test_prctl.py b/test_prctl.py
+index df84986..d082511 100644
+--- a/test_prctl.py
++++ b/test_prctl.py
+@@ -12,7 +12,7 @@ import sys
+ import subprocess
+ import unittest
+ 
+-so = '.so'
++so = f'.cpython-312-{distutils.util.get_platform().split('-')[1]}-linux-musl.so'
+ try:
+     import sysconfig
+     so = sysconfig.get_config_var('EXT_SUFFIX') or sysconfig.get_config_var('SO')
+@@ -20,7 +20,7 @@ except ImportError:
+     pass
+ 
+ curdir = os.path.dirname(__file__)
+-builddir = os.path.join(curdir, 'build', 'lib.%s-%s' % (distutils.util.get_platform(), sys.version[0:3]))
++builddir = os.path.join(curdir, 'build', 'lib.%s-%s' % (distutils.util.get_platform(), 'cpython-312'))
+ 
+ # Always run from the builddir
+ if not os.path.exists(builddir) or \

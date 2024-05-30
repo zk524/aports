@@ -1,0 +1,43 @@
+# Contributor: Zach DeCook <zachdecook@librem.one>
+# Maintainer: Zach DeCook <zachdecook@librem.one>
+pkgname=py3-python-prctl
+_pyname=python-prctl
+pkgver=1.8.1
+pkgrel=0
+pkgdesc="Wrapping prctl for python"
+url="http://packages.python.org/python-prctl/"
+arch="all"
+license="GPL"
+source="
+	https://github.com/seveas/python-prctl/archive/v$pkgver/python-prctl-v$pkgver.tar.gz
+	fix_test_so.patch
+"
+depends="python3"
+makedepends="py3-gpep517 py3-setuptools py3-wheel python3-dev libcap-dev"
+options="!check" # Tests don't work in the runner
+subpackages="$pkgname-doc"
+builddir="$srcdir/$_pyname-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --system-site-packages testenv
+	testenv/bin/python3 -m installer dist/*.whl
+	testenv/bin/python3 test_prctl.py
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		dist/*.whl
+	install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
+}
+
+
+sha512sums="
+a251b0aefbd6a16d69fd664cadf87ba16af87e7551ae474846858876007028c13b619e227518688e876f95726d327eb4793c37a34317ec8a1bf2c6ea02a31b21  python-prctl-v1.8.1.tar.gz
+b56a6a824885049273e3ba6e0bac49059c1b4a2221e3041e4853566edacac9f6eb8f299414400db034da9442f9a0b3a8dc59f046a3515e81edc56d1fb7dde9fb  fix_test_so.patch
+"

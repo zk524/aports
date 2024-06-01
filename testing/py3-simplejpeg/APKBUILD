@@ -1,0 +1,43 @@
+# Contributor: Zach DeCook <zachdecook@librem.one>
+# Maintainer: Zach DeCook <zachdecook@librem.one>
+pkgname=py3-simplejpeg
+_pyname=simplejpeg
+pkgver=1.7.5
+pkgrel=0
+pkgdesc="Simple python package for fast JPEG encoding and decoding"
+url="https://gitlab.com/jfolz/simplejpeg"
+arch="all"
+license="MIT"
+source="
+	https://gitlab.com/jfolz/simplejpeg/-/archive/$pkgver/simplejpeg-$pkgver.tar.gz
+	no-static-libs.patch
+"
+makedepends="py3-gpep517 py3-setuptools py3-wheel python3-dev cmake py3-numpy-dev libjpeg-turbo-dev yasm-dev cython"
+checkdepends="py3-pytest py3-pillow"
+subpackages="$pkgname-doc $pkgname-pyc"
+builddir="$srcdir/$_pyname-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --system-site-packages testenv
+	testenv/bin/python3 -m installer dist/*.whl
+	cd test
+	../testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		dist/*.whl
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+
+sha512sums="
+d671d95ff198a102b0659369ec40abe7209ae140a9eadaf699501faff3624bf20cdca139e0e090cebf0038f72d0c242d92ef7731957475229b8da6c3167af875  simplejpeg-1.7.5.tar.gz
+52a349134cb1f5e459b35c45f7eee549ee4d6da66a679f3f74eecf217697e8e921f9929139c04928e8caea000e49259799c7bc23cd8a90aaa996a63b64b8d73a  no-static-libs.patch
+"

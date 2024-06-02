@@ -16,7 +16,9 @@ arch="aarch64 ppc64le x86_64 x86"
 license="GPL-3.0-or-later"
 source="
 	https://mirrors.kernel.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz
+
 	newlib-getentropy.patch
+	xtensa-fix-specs.patch
 	"
 options="!check"
 builddir="$srcdir/gcc-$pkgver"
@@ -32,6 +34,11 @@ _targets_exotic="
 	msp430-elf
 	or1k-elf
 	aarch64-none-elf
+	xtensa-none-elf
+	xtensa-esp32-elf
+	xtensa-esp32s2-elf
+	xtensa-esp32s3-elf
+	xtensa-esp8266-elf
 	"
 
 # This specifies the supported RISC-V multilib ISA extensions.
@@ -55,6 +62,7 @@ case "$CARCH" in
 x86_64|aarch64)
 	# support all targets on typical workstation / notebook / CI servers
 	_targets="$_targets_mainstream $_targets_exotic"
+	makedepends="$makedepends xtensa-dynconfig"
 	;;
 *)
 	# support only mainstream targets on exotic hosts
@@ -78,12 +86,13 @@ prepare() {
 	done
 }
 
-_build_gcc() {
+_configure_gcc() {
+	local target_specific_flags
 	case "$target" in
 		# Support M and R architecture profiles for ARM
-		arm-none-eabi) _target_specific_flags="--with-multilib-list=rmprofile" ;;
-		riscv-none-elf) _target_specific_flags="--with-multilib-generator=$_riscv_multilib" ;;
-		*) _target_specific_flags="" ;;
+		arm-none-eabi) target_specific_flags="--with-multilib-list=rmprofile" ;;
+		riscv-none-elf) target_specific_flags="--with-multilib-generator=$_riscv_multilib" ;;
+		*) target_specific_flags="" ;;
 	esac
 
 	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100431
@@ -130,29 +139,52 @@ _build_gcc() {
 		--with-newlib \
 		--with-system-zlib \
 		--with-pkgversion='Alpine Linux' \
-		$_target_specific_flags
-
-	msg "Running make for $target"
-	make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
+		$target_specific_flags
 }
 
 build() {
-	for target in $_targets; do
+	local target
+	local realtarget
+	for realtarget in $_targets; do
+		target=$realtarget
+		local workingdir
+		local mcu
+		mcu=""
 		# Build "regular" variant
-		workingdir="$srcdir/build-$target"
-		mkdir "$workingdir"
+		workingdir="$srcdir/build-$realtarget"
+		mkdir -p "$workingdir"
 		cd "$workingdir"
+		case "$realtarget" in
+		xtensa-esp*-elf)
+			mcu="${realtarget#xtensa-}"
+			mcu="${mcu%-elf}"
+			export XTENSA_GNU_CONFIG="/usr/lib/xtensa-dynconfig/xtensa_$mcu.so"
+			target=xtensa-none-elf
+			;;
+		*)
+			unset XTENSA_GNU_CONFIG
+			;;
+		esac
 		export CFLAGS_FOR_TARGET='-pipe -Os -ffunction-sections -fdata-sections'
 		export CXXFLAGS_FOR_TARGET='-pipe -Os -ffunction-sections -fdata-sections -fno-use-cxa-atexit'
-		_build_gcc
+		_configure_gcc
+
+		msg "Running make for $realtarget (regular)"
+		if [ -z "$mcu" ]; then
+			make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
+		else
+			make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0' all-target-libstdc++-v3
+		fi
 
 		# Rebuild without exceptions to generate nano variant of libstc++
-		workingdir="$srcdir/build-$target-nano"
-		mkdir "$workingdir"
+		workingdir="$srcdir/build-$realtarget-nano"
+		mkdir -p "$workingdir"
 		cd "$workingdir"
 		export CFLAGS_FOR_TARGET='-pipe -Os -ffunction-sections -fdata-sections  -fno-exceptions'
 		export CXXFLAGS_FOR_TARGET='-pipe -Os -ffunction-sections -fdata-sections  -fno-exceptions -fno-use-cxa-atexit'
-		_build_gcc
+		_configure_gcc
+		msg "Running make for $realtarget (nano)"
+		make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0' all-target-libstdc++-v3
 	done
 }
 
@@ -164,37 +196,59 @@ package() {
 }
 
 _install_subpkg() {
-	target="${subpkgname#g++-}"
+	local target
+	local realtarget
+	local workingdir
+	local multilibs
+	realtarget="${subpkgname#g++-}"
+	target="$realtarget"
 	pkgdesc="C++ compiler from the GNU Compiler Collection for $target targets"
 	depends="$depends binutils-$target newlib-$target gcc-$target~$pkgver"
 	workingdir="$srcdir/build-$target"
 	cd "$workingdir"
-	# install regular folder into temporary folder
-	make install DESTDIR="$subpkgdir-regular" -j1
-	# now pick only C++ related stuff and move it into the subpkg folder
-	mkdir -p \
-		"$subpkgdir"/usr/bin \
-		"$subpkgdir"/usr/lib/gcc/"$target"/"$pkgver"
 
-	mv "$subpkgdir"-regular/usr/bin/"$target"-c++ \
-		"$subpkgdir"-regular/usr/bin/"$target"-g++ \
-		"$subpkgdir"/usr/bin/
-	mv "$subpkgdir"-regular/usr/lib/gcc/"$target"/"$pkgver"/cc1plus \
-		"$subpkgdir"/usr/lib/gcc/"$target"/"$pkgver"
-	mv "$subpkgdir"-regular/usr/share "$subpkgdir"/usr/
-	mv "$subpkgdir"-regular/usr/"$target" "$subpkgdir"/usr/
+	case "$target" in
+	xtensa-esp*-elf)
+		target=xtensa-none-elf
+		# we share the host tools and headers for all xtensa targets
+		depends="$depends g++-xtensa-none-elf~$pkgver"
+
+		# install regular libstdc++
+		make install-target-libstdc++-v3 DESTDIR="$subpkgdir-regular" -j1
+		mkdir -p "$subpkgdir/usr/$realtarget"
+		mv "$subpkgdir-regular/usr/$target/lib" "$subpkgdir/usr/$realtarget/"
+		multilibs=".;"
+		;;
+	*)
+		# install regular folder into temporary folder
+		make install DESTDIR="$subpkgdir-regular" -j1
+		# now pick only C++ related stuff and move it into the subpkg folder
+		mkdir -p \
+			"$subpkgdir"/usr/bin \
+			"$subpkgdir"/usr/lib/gcc/"$target"/"$pkgver"
+
+		mv "$subpkgdir"-regular/usr/bin/"$target"-c++ \
+			"$subpkgdir"-regular/usr/bin/"$target"-g++ \
+			"$subpkgdir"/usr/bin/
+		mv "$subpkgdir"-regular/usr/lib/gcc/"$target"/"$pkgver"/cc1plus \
+			"$subpkgdir"/usr/lib/gcc/"$target"/"$pkgver"
+		mv "$subpkgdir"-regular/usr/share "$subpkgdir"/usr/
+		mv "$subpkgdir"-regular/usr/"$target" "$subpkgdir"/usr/
+
+		multilibs=$("$subpkgdir"/usr/bin/"$target"-g++ -print-multi-lib 2>/dev/null)
+		;;
+	esac
 
 	# install nano-variant into temporary folder to obtain libstdc++ from there
 	workingdir="$srcdir/build-$target-nano"
 	cd "$workingdir"
-	make install DESTDIR="$subpkgdir-nano" -j1
+	make install-target-libstdc++-v3 DESTDIR="$subpkgdir-nano" -j1
 
 	# Fetch libstdc++ from nano variant
-	multilibs=$("$subpkgdir"/usr/bin/"$target"-g++ -print-multi-lib 2>/dev/null)
 	for multilib in $multilibs; do
 		dir="${multilib%%;*}"
 		from_dir="$subpkgdir-nano/usr/$target/lib/$dir"
-		to_dir="$subpkgdir/usr/$target/lib/$dir"
+		to_dir="$subpkgdir/usr/$realtarget/lib/$dir"
 		cp -f "$from_dir"/libstdc++.a "$to_dir"/libstdc++_nano.a
 		cp -f "$from_dir"/libsupc++.a "$to_dir"/libsupc++_nano.a
 	done
@@ -205,13 +259,40 @@ _install_subpkg() {
 	rm -f "$subpkgdir"/usr/lib/libcc1.so*
 
 	# Strip libs using target binutils
-	find "$subpkgdir"/usr/"$target"/lib -type f -name "*.a" -exec /usr/bin/"$target"-strip --strip-debug '{}' \;
+	find "$subpkgdir"/usr/"$realtarget"/lib -type f -name "*.a" -exec /usr/bin/"$realtarget"-strip --strip-debug '{}' \;
 
-	# Strip executables using host binutils
-	find "$subpkgdir"/usr/bin -type f -executable -exec strip '{}' \;
+	case "$realtarget" in
+	xtensa-esp*-elf)
+		# install command wrappers
+		local cmd
+		local mcu
+		mcu="${realtarget#xtensa-}"
+		mcu="${mcu%-elf}"
+		mkdir -p "$subpkgdir/usr/bin"
+		for cmd in g++ c++; do
+			cat > "$subpkgdir/usr/bin/$realtarget-$cmd" << EOF
+#!/bin/sh
+env XTENSA_GNU_CONFIG=/usr/lib/xtensa-dynconfig/xtensa_$mcu.so xtensa-none-elf-$cmd --sysroot=/usr/$target "\$@"
+EOF
+			chmod +x "$subpkgdir/usr/bin/$realtarget-$cmd"
+		done
+		;;
+	xtensa-none-elf)
+		# for xtensa-none-elf, we only want the headers. The libraries have
+		# to be compiled for the real target CPU
+		rm -rf "$subpkgdir/usr/$target/lib"
+		# Strip executables using host binutils
+		find "$subpkgdir"/usr/bin -type f -executable -exec strip '{}' \;
+		;;
+	*)
+		# Strip executables using host binutils
+		find "$subpkgdir"/usr/bin -type f -executable -exec strip '{}' \;
+		;;
+	esac
 }
 
 sha512sums="
 e9e224f2b26646fcf038d28dfa08b94c623bc57941f99894a321d01c600f7c68aff6b8837fd25e73e540de1f8de5606e98694a62cdcdfb525ce768b3ef6879ea  gcc-14.1.0.tar.xz
 52e45ba12be74ce6f740eff3a79e3da87c80b06275fd00b2a1193b052fd0891e7c4c09fd6a9c204a82178c135318d69db3e250f12c37eca72edb1e3c0b0be2db  newlib-getentropy.patch
+ce9873d26ea4ab6fd9a50b8d5ac55c88abbad18fb16a79a9f6ac3d1ae3a1c7a9b876bfa9fcba11bec16672ef7a10ffaf3923ce361fc530f0f811858dcc9da9eb  xtensa-fix-specs.patch
 "

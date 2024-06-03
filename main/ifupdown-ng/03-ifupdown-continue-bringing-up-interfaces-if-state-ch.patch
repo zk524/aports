@@ -1,0 +1,46 @@
+From 7d0b209cf407a975b51687428d593d80011308af Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Wed, 13 Jul 2022 04:35:41 +0200
+Subject: [PATCH] ifupdown: continue bringing up interfaces if state change
+ failed
+
+Without this patch, `ifup -a` would stop bringing up interfaces
+if a single interface state change failed. Combined with the
+previous commit this may cause `ifup -a` to leave the machine
+in an offline state if a single up executor failed for any given
+interface. With this commit, `ifup -a` will continue attempting
+to bring up other interfaces.
+---
+ cmd/ifupdown.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/cmd/ifupdown.c b/cmd/ifupdown.c
+index 618d023..29394d8 100644
+--- a/cmd/ifupdown.c
++++ b/cmd/ifupdown.c
+@@ -198,6 +198,7 @@ static bool
+ change_auto_interfaces(struct lif_dict *collection, struct lif_dict *state, struct match_options *opts)
+ {
+ 	struct lif_node *iter;
++	bool ret = true;
+ 
+ 	LIF_DICT_FOREACH(iter, collection)
+ 	{
+@@ -215,11 +216,14 @@ change_auto_interfaces(struct lif_dict *collection, struct lif_dict *state, stru
+ 		    fnmatch(opts->include_pattern, iface->ifname, 0))
+ 			continue;
+ 
+-		if (!change_interface(iface, collection, state, iface->ifname, false))
+-			return false;
++		if (!change_interface(iface, collection, state, iface->ifname, false)) {
++			ret = false;
++			fprintf(stderr, "%s: failed to change state for interface %s\n", argv0, iface->ifname);
++			continue;
++		}
+ 	}
+ 
+-	return true;
++	return ret;
+ }
+ 
+ static int

@@ -1,0 +1,41 @@
+From c42c69e69b77504a3b062993e92fcf91c1ad4e29 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Wed, 1 Jun 2022 09:39:39 +0200
+Subject: [PATCH] libifupdown: stop executor evaluation after an executor fails
+
+Without this commit, all executors of a given phase will be executed
+even if one of them fails. This commit adjusts handle_executors_for_phase
+to stop execution if a single executor for a given phase exits with a
+non-zero exit status.
+
+This is a follow-up to 6f52157335aee39b6fc25a1dfb0a86dadd6b5c5d.
+---
+ libifupdown/lifecycle.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libifupdown/lifecycle.c b/libifupdown/lifecycle.c
+index 7d555c7..e338756 100644
+--- a/libifupdown/lifecycle.c
++++ b/libifupdown/lifecycle.c
+@@ -72,15 +72,19 @@ handle_executors_for_phase(const struct lif_execute_opts *opts, char *const envp
+ 	if (up)
+ 	{
+ 		LIF_DICT_FOREACH(iter, &iface->vars) {
+-			if (!handle_single_executor_for_phase(iter->data, opts, envp, phase, iface->ifname))
++			if (!handle_single_executor_for_phase(iter->data, opts, envp, phase, iface->ifname)) {
+ 				ret = false;
++				break;
++			}
+ 		}
+ 	}
+ 	else
+ 	{
+ 		LIF_DICT_FOREACH_REVERSE(iter, &iface->vars) {
+-			if (!handle_single_executor_for_phase(iter->data, opts, envp, phase, iface->ifname))
++			if (!handle_single_executor_for_phase(iter->data, opts, envp, phase, iface->ifname)) {
+ 				ret = false;
++				break;
++			}
+ 		}
+ 	}
+ 

@@ -1,0 +1,48 @@
+# Contributor: Zach DeCook <zachdecook@librem.one>
+maintainer="Zach DeCook <zachdecook@librem.one>"
+pkgname=kms++
+pkgver=0_git20241209
+pkgrel=0
+_commit="aaab406251540429522c5ef7808ee049c65a06d2"
+pkgdesc="C++17 library for Linux kernel mode setting"
+url="https://github.com/tomba/kmsxx"
+arch="all"
+license="MPL-2.0"
+source="https://github.com/tomba/kmsxx/archive/$_commit/kmsxx-$_commit.tar.gz"
+makedepends="meson libdrm-dev fmt-dev mesa-dev libxcb-dev python3-dev py3-pybind11-dev libevdev-dev libx11-dev wayland-dev"
+builddir="$srcdir/kmsxx-$_commit"
+subpackages="py3-pykms:py3 $pkgname-dev $pkgname-utils"
+
+build() {
+	abuild-meson . output
+	meson compile ${JOBS:+-j ${JOBS}} -C output
+}
+
+check() {
+	meson test --no-rebuild -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+py3() {
+	pkgdesc="Python library for Linux kernel mode setting"
+	mkdir -p "$subpkgdir"/usr/lib
+	mv "$pkgdir"/usr/lib/python* "$subpkgdir"/usr/lib/
+}
+
+utils() {
+	pkgdesc="Utilities for Linux kernel mode setting"
+	amove usr/bin/fbtest
+	amove usr/bin/kmsblank
+	amove usr/bin/kmsprint
+	amove usr/bin/kmstest
+	# Utilities which are not (yet?) installed by meson
+	# amove usr/bin/kmscapture
+	# amove usr/bin/kmsview
+	# amove usr/bin/kmstouch
+}
+sha512sums="
+6624cb954874ac86742727bea9809a9c7466c2e3ffa6b508a937b5343dd198fb0eb3bdbae899e5996f005bd26f0353dfa5fbd0598f0dcfcd848cf80897a1478a  kmsxx-aaab406251540429522c5ef7808ee049c65a06d2.tar.gz
+"

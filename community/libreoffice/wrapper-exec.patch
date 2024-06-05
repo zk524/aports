@@ -1,0 +1,13 @@
+Use exec in wrapper scripts.
+
+--- a/bin/distro-install-desktop-integration
++++ b/bin/distro-install-desktop-integration
+@@ -28,7 +28,7 @@
+         mkdir -p "$DESTDIR$BINDIR"
+         cat <<EOT >"$DESTDIR$BINDIR/$1"
+ #!/bin/sh
+-$INSTALLDIR/program/$2 $3 "\$@"
++exec $INSTALLDIR/program/$2 $3 "\$@"
+ EOT
+         chmod 755 "$DESTDIR$BINDIR/$1"
+     fi

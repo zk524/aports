@@ -24,7 +24,6 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 build() {
 	go mod vendor
 	go build \
-		-trimpath \
 		-mod=vendor \
 		-ldflags "-extldflags \"$LDFLAGS\""
 }

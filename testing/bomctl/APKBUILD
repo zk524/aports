@@ -28,7 +28,6 @@ build() {
 
 	mkdir build
 	go build -o build/ \
-		-trimpath \
 		-ldflags="-s -w
 			-X=github.com/bomctl/bomctl/cmd.VersionMajor=$major
 			-X=github.com/bomctl/bomctl/cmd.VersionMinor=$minor

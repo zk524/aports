@@ -23,13 +23,13 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 build() {
 	PKG=github.com/docker/buildx
 	local ldflags="-X $PKG/version.Version=v$pkgver -X $PKG/version.Revision=$_commit -X $PKG/version.Package=$PKG"
-	go build -v -modcacherw -ldflags "$ldflags" -o docker-buildx ./cmd/buildx
+	go build -v -ldflags "$ldflags" -o docker-buildx ./cmd/buildx
 }
 
 check() {
 	# bake and gitutil tests do not succeed inside abuild environment
-	local pkgs="$(go list -modcacherw ./... | grep -Ev '(bake|gitutil)')"
-	go test -modcacherw -short $pkgs
+	local pkgs="$(go list ./... | grep -Ev '(bake|gitutil)')"
+	go test -short $pkgs
 	./docker-buildx version
 }
 

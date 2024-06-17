@@ -15,7 +15,6 @@ export GOPATH="$srcdir/go"
 export GOCACHE="$srcdir/go-build"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export GOFLAGS="$GOFLAGS -modcacherw"
 
 build() {
 	make

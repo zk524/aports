@@ -21,7 +21,6 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
 	go build \
-		-trimpath \
 		-ldflags "\
 			-X github.com/hetznercloud/cli/internal/version.Version=$pkgver \
 			-X github.com/hetznercloud/cli/internal/version.versionPrerelease= \

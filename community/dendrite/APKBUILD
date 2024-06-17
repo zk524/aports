@@ -40,7 +40,7 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
 	for cmd in dendrite generate-keys create-account; do
-		go build -trimpath -v -o bin/$cmd ./cmd/$cmd
+		go build -v -o bin/$cmd ./cmd/$cmd
 	done
 }
 

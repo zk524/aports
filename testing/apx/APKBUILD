@@ -23,7 +23,7 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	go build -trimpath -v -o apx
+	go build -v -o apx
 }
 
 package() {

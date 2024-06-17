@@ -15,7 +15,6 @@ options="!check chmod-clean net" # no testsuite provided
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export GOFLAGS="$GOFLAGS -buildvcs=false"
 
 build() {
 	go build -o flarectl

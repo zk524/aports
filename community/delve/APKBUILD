@@ -18,7 +18,7 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
 	mkdir bin
-	go build -v -trimpath -o bin ./cmd/dlv/...
+	go build -v -o bin ./cmd/dlv/...
 }
 
 check() {

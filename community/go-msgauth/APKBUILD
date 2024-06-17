@@ -25,7 +25,6 @@ build() {
 	go mod vendor
 	local bin; for bin in $_bins; do
 		go build \
-			-trimpath \
 			-mod=vendor \
 			-ldflags "-extldflags \"$LDFLAGS\"" \
 			./cmd/$bin

@@ -10,7 +10,6 @@ makedepends="go"
 source="https://github.com/natsukagami/mpd-mpris/archive/v$pkgver/mpd-mpris-v$pkgver.tar.gz"
 options="!check" # no tests
 
-export GOFLAGS="$GOFLAGS -modcacherw -trimpath"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

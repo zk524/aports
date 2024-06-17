@@ -36,7 +36,7 @@ prepare() {
 }
 
 build() {
-	go build -o bin/adguardhome -trimpath -ldflags "-s -w
+	go build -o bin/adguardhome -ldflags "-s -w
 		-X github.com/AdguardTeam/AdGuardHome/internal/version.version=v$pkgver
 		-X github.com/AdguardTeam/AdGuardHome/internal/version.channel=release
 		-X github.com/AdguardTeam/AdGuardHome/internal/version.committime=${SOURCE_DATE_EPOCH:-$(date +%s)}

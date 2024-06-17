@@ -26,7 +26,7 @@ build() {
 	go mod tidy
 
 	rm -f pkg/website/generated.go
-	go build -trimpath -ldflags="$ldflags" -o ytt ./cmd/ytt/...
+	go build -ldflags="$ldflags" -o ytt ./cmd/ytt/...
 	./ytt version
 
 	(
@@ -47,7 +47,7 @@ build() {
 
 	# Rebuild ytt with website assets
 	rm -f ./ytt
-	go build -trimpath -ldflags="$ldflags" -o ytt ./cmd/ytt/...
+	go build -ldflags="$ldflags" -o ytt ./cmd/ytt/...
 }
 
 check() {

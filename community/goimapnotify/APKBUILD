@@ -21,7 +21,7 @@ build() {
 	export CGO_CFLAGS="$CFLAGS"
 	export CGO_CXXFLAGS="$CXXFLAGS"
 	export CGO_LDFLAGS="$LDFLAGS"
-	export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+	export GOFLAGS="$GOFLAGS -mod=readonly"
 
 	go build -ldflags "-linkmode=external \"-extldflags=$LDFLAGS\""
 }

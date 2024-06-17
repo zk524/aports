@@ -18,7 +18,7 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	go build -trimpath
+	go build
 }
 
 check() {

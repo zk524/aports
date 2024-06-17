@@ -21,7 +21,6 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 build() {
 	go get github.com/muesli/duf
 	go build \
-		-trimpath \
 		-ldflags "-X main.Version=$pkgver -extldflags \"$LDFLAGS\"" \
 		-o duf
 }

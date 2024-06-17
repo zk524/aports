@@ -18,7 +18,7 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	make browserpass configure GOFLAGS="$GOFLAGS -trimpath"
+	make browserpass configure GOFLAGS="$GOFLAGS"
 }
 
 check() {

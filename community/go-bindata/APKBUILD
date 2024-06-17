@@ -11,7 +11,7 @@ makedepends="go"
 options="!check" # No test suite
 source="go-bindata-$pkgver.tar.gz::https://github.com/go-bindata/go-bindata/archive/v$pkgver.tar.gz"
 
-export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+export GOFLAGS="$GOFLAGS -mod=readonly"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

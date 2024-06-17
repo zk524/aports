@@ -15,7 +15,7 @@ source="https://github.com/anatol/tang.go/archive/$_gitrev/tang.go-$pkgver.tar.g
 	"
 builddir="$srcdir/tang.go-$_gitrev"
 
-export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+export GOFLAGS="$GOFLAGS -mod=readonly"
 export GOPATH="$srcdir"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"

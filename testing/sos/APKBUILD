@@ -20,7 +20,6 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
 	go build -v \
-		-trimpath \
 		-ldflags="-X main.version=$pkgver" \
 		-o ./bin/sos
 }

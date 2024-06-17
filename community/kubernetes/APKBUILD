@@ -83,7 +83,7 @@ export KUBE_CGO_OVERRIDES="$_agent $_cli $_services"
 
 build() {
 	for _pkgs in $_agent $_cli $_services ; do
-		make -j1 GOFLAGS="$GOFLAGS -buildmode=pie -v -tags=providerless" GOLDFLAGS="-extldflags=-static" WHAT=cmd/$_pkgs
+		make -j1 GOFLAGS="$GOFLAGS -v -tags=providerless" GOLDFLAGS="-extldflags=-static" WHAT=cmd/$_pkgs
 	done
 }
 

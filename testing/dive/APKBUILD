@@ -18,7 +18,6 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
 	go build \
-		-trimpath \
 		-ldflags "
 			-X main.version=$pkgver
 			" \

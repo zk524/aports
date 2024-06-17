@@ -29,7 +29,6 @@ build() {
 	for cmd in amtool alertmanager
 	do
 		go build \
-			-trimpath \
 			-mod=vendor \
 			-ldflags "-extldflags \"$LDFLAGS\" \
 				-X github.com/prometheus/common/version.Version=$pkgver \

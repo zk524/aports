@@ -16,7 +16,7 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+	export GOFLAGS="$GOFLAGS -mod=readonly"
 	mkdir build
 	go build -o build ./cmd/desync
 }

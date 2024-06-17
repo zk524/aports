@@ -13,7 +13,7 @@ source="https://github.com/github/git-sizer/archive/v$pkgver/git-sizer-$pkgver.t
 	$pkgname-fix-test-new-git.patch::https://github.com/github/git-sizer/commit/2c988fab54cadec8281786dec63c54d74bb159b9.patch
 	"
 
-export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+export GOFLAGS="$GOFLAGS -mod=readonly"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

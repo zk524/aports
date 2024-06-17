@@ -59,9 +59,6 @@ build() {
 check() {
 	cd "$builddir"/pkg
 
-	# TestGenerateProgram/empty-list-property executes `go mod edit` command in the test directory
-	export GOFLAGS="$GOFLAGS -modcacherw"
-
 	# PULUMI_ACCEPT=true is required for TestProgressEvents test
 	# PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION is set to work around GitHub API's rate limit (ref: https://github.com/pulumi/pulumi/issues/15900)
 	# TestProjectNameOverrides, TestProjectNameDefaults, TestPulumiNewOrgTemplate tests depend on pulumi-language-yaml

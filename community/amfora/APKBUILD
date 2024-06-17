@@ -12,7 +12,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/makeworld-the-better-one/amf
 	fix-mutex-crash.patch
 	"
 
-export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+export GOFLAGS="$GOFLAGS -mod=readonly"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

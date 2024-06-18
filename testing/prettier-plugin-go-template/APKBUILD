@@ -1,0 +1,43 @@
+# Contributor: Dakota Walsh <kota@nilsu.org>
+# Maintainer: Dakota Walsh <kota@nilsu.org>
+pkgname=prettier-plugin-go-template
+pkgver=0.0.15
+pkgrel=0
+pkgdesc="Fixes prettier formatting for go templates"
+url="https://github.com/NiklasPor/prettier-plugin-go-template"
+license="MIT"
+# armhf, armv7, x86, riscv64, s390x: prettier dependency does not build on these
+arch="noarch !armhf !armv7 !x86 !riscv64 !s390x"
+depends="nodejs prettier"
+makedepends="npm"
+checkdepends="npm"
+# The git repo is not tagged, but the npm release uses this commit.
+_commithash=b7fe3eeeeeef69587cca96b85473882a7f52c1c7
+source="https://github.com/NiklasPor/prettier-plugin-go-template/archive/$_commithash.tar.gz"
+
+builddir="$srcdir/prettier-plugin-go-template-$_commithash/"
+
+check() {
+	npm test
+}
+
+build() {
+	npm install
+ 	npm run build
+}
+
+package() {
+	local destdir=/usr/lib/node_modules/prettier-plugin-go-template
+
+	install -d \
+		"$pkgdir"/$destdir \
+		"$pkgdir"/usr/share/licenses/prettier-plugin-go-template
+
+	cp -a lib node_modules package*.json "$pkgdir"/"$destdir"
+
+	mv LICENSE "$pkgdir"/usr/share/licenses/prettier-plugin-go-template/LICENSE
+}
+
+sha512sums="
+965d587b7dd8f2477f7cec4619123cc15f74d4dbc6b6229c5b6b128595197d67a8bdb8c5da80d3fc3706c9c04ec1734963cdf5a3493efcf77a4c95967e357bf6  b7fe3eeeeeef69587cca96b85473882a7f52c1c7.tar.gz
+"

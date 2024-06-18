@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cat >&2 <<-EOF
+*
+* You must import the plugin with the full path:
+* /usr/lib/node_modules/prettier-plugin-go-template/lib/index.js
+* in your .prettierrc
+*
+EOF

@@ -1,0 +1,13 @@
+Allow libname alias like *.so.1.2.3
+
+--- a/common/common.c
++++ b/common/common.c
+@@ -3282,6 +3282,8 @@ static char * get_libname_in_dir(const char* base_libname, size_t base_libname_l
+ 
+ 	if (libname_alias) {
+ 		if (!libname_path) {
++			if (libname_alias[base_libname_length] == '.')
++				return libname_alias;
+ 			upsdebugx(1, "Got no strong candidate path for lib %s in %s"
+ 				", but saw seemingly related names (are you missing"
+ 				" a symbolic link, perhaps?) e.g.: %s",

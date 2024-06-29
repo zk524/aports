@@ -1,12 +1,17 @@
 # Maintainer: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
 pkgname=highway
-pkgver=1.0.7
+pkgver=1.2.0
 pkgrel=0
 pkgdesc="Performance-portable, length-agnostic SIMD with runtime dispatch"
 url="https://github.com/google/highway"
 arch="all"
 license="Apache-2.0"
-makedepends="cmake gtest-dev samurai"
+makedepends="
+	cmake
+	gtest-dev
+	linux-headers
+	samurai
+	"
 subpackages="
 	$pkgname-dev
 	libhwy
@@ -66,5 +71,5 @@ libhwy_test() {
 }
 
 sha512sums="
-6ee5007ec13ac20b5d816b38a1b31c31a06678ca6d2ea090dd75e364f04cb2cf7ad8a82d1bdfff51079efa54b9a95fb554d62e6cc1bbf7d7e794cb272032d8f5  highway-1.0.7.tar.gz
+e94b9cc51c81157ccd6bf4d6163445b1acc1a2667dc2650d1c4aea0a5021989c08dafcb92564fcbecb9445ab2f1779051260be2f5b29c3932803b8a42ed2f824  highway-1.2.0.tar.gz
 "

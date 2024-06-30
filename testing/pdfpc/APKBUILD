@@ -1,0 +1,45 @@
+# Maintainer: Liam Hurwitz <lgh@e.email>
+# Contributor: Liam Hurwitz <lgh@e.email>
+pkgname=pdfpc
+pkgver=4.6.0_git20240901
+pkgrel=0
+pkgdesc="Presenter console with multi-monitor support for PDF files"
+arch="all"
+url="https://pdfpc.github.io/"
+license="GPL-3.0-or-later"
+depends="libsoup"
+makedepends="
+	discount-dev
+	gst-plugins-base-dev
+	gstreamer-dev
+	gtk+3.0-dev
+	json-glib-dev
+	libgee-dev
+	libqrencode-dev
+	poppler-dev
+	vala
+	webkit2gtk-dev
+	cmake
+	"
+subpackages="$pkgname-doc"
+_commit=d7785577a02bd8ad6688e958672f69e43d64e642
+source="$pkgname-$pkgver.tar.gz::https://github.com/pdfpc/pdfpc/archive/$_commit.tar.gz
+				Allow-compiling-with-markdown3.patch"
+builddir="$srcdir/$pkgname-$_commit"
+options="!check"
+
+build() {
+
+	cmake -B build \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+sha512sums="
+70257da16932051c102ea53d438acc361f3b3fea6762866d9901ce8525761e81cb730d1c6596b64a6311c12f26773b385b783aa22883cbf1c98d97fd20c87638  pdfpc-4.6.0_git20240901.tar.gz
+5b6fb066518d45850831e35f8d5bec5c3b7ea3492cd3fbf342c40b481bd5dc935771e5840cbf85a36d0eba354a2abc0aae7fc001e5b2fee5efb0f8607d687b39  Allow-compiling-with-markdown3.patch
+"

@@ -5,7 +5,7 @@
 # Maintainer: Sören Tempel <soeren+alpine@soeren-tempel.net>
 pkgname=busybox
 pkgver=1.36.1
-pkgrel=31
+pkgrel=32
 pkgdesc="Size optimized toolbox of many common UNIX utilities"
 url="https://busybox.net/"
 arch="all"
@@ -26,6 +26,7 @@ subpackages="
 	ssl_client
 	$pkgname-ifupdown::noarch
 	$pkgname-binsh::noarch
+	$pkgname-init::noarch
 	$pkgname-openrc
 	$pkgname-mdev-openrc:mdev_openrc
 	$pkgname-extras
@@ -334,6 +335,21 @@ binsh() {
 	install -d "$subpkgdir"/bin
 
 	ln -s /bin/busybox "$subpkgdir"/bin/sh
+}
+
+init() {
+	pkgdesc="busybox init /sbin/init"
+	provides="/sbin/init"
+	provider_priority=100
+	depends="$pkgname=$pkgver-r$pkgrel /etc/inittab"
+	# Backwords compatibility:
+	install_if="$pkgname=$pkgver-r$pkgrel"
+
+	mkdir -p "$subpkgdir"/sbin
+	ln -s /bin/busybox "$subpkgdir"/sbin/init
+	ln -s /bin/busybox "$subpkgdir"/sbin/poweroff
+	ln -s /bin/busybox "$subpkgdir"/sbin/halt
+	ln -s /bin/busybox "$subpkgdir"/sbin/reboot
 }
 
 _helper_openrc() {

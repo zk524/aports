@@ -1,0 +1,82 @@
+# Contributor: Anri Dellal <anridellal@gmail.com>
+# Maintainer: Anri Dellal <anridellal@gmail.com>
+pkgname=kotlin
+pkgver=2.1.0
+_pkgver="$pkgver-dev-735"
+pkgrel=0
+pkgdesc="Statically typed multiplatform programming language"
+url="https://kotlinlang.org"
+arch="noarch !riscv64" # blocked by openjdk8
+license="Apache-2.0"
+case "$CARCH" in
+	arm*|x86) depends="openjdk8" ;; # OpenJDK 11+ doesn't support 32-bit architectures
+	*) depends="openjdk21" ;;
+esac
+makedepends="gradle openjdk8 openjdk11 openjdk17 openjdk21"
+source="
+	kotlin-v$_pkgver.tar.gz::https://github.com/JetBrains/kotlin/archive/refs/tags/build-$_pkgver.tar.gz
+"
+builddir="$srcdir/$pkgname-build-$_pkgver"
+
+prepare() {
+	default_prepare
+	rm -f "$builddir"/gradle/verification-metadata.xml
+}
+
+build() {
+	export GRADLE_USER_HOME="$builddir"/.gradle_home
+	export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+
+	gradle dist \
+		--no-daemon \
+		--no-watch-fs \
+		--no-build-cache \
+		--stacktrace \
+		--warning-mode=none \
+		-PdeployVersion="$pkgver" \
+		-Pkotlin.build.isObsoleteJdkOverrideEnabled=true \
+		-Pkotlin.daemon.parallel=false \
+		-Pkotlin.build.disableWerror=true \
+		-Porg.gradle.java.installations.auto-detect=false \
+		-Porg.gradle.java.installations.paths=/usr/lib/jvm/java-8-openjdk,/usr/lib/jvm/java-11-openjdk,/usr/lib/jvm/java-17-openjdk,/usr/lib/jvm/java-21-openjdk \
+		-PcacheRedirectorEnabled=false \
+		-Pteamcity=true \
+		-Ptest.disable_update=true
+}
+
+check() {
+	gradle coreLibsTest gradlePluginTest compilerTest \
+		--no-daemon \
+		--no-watch-fs \
+		--no-build-cache \
+		--stacktrace \
+		--warning-mode=none \
+		-PdeployVersion="$pkgver" \
+		-Pkotlin.build.isObsoleteJdkOverrideEnabled=true \
+		-Pkotlin.daemon.parallel=false \
+		-Pkotlin.build.disableWerror=true \
+		-Porg.gradle.java.installations.auto-detect=false \
+		-Porg.gradle.java.installations.paths=/usr/lib/jvm/java-8-openjdk,/usr/lib/jvm/java-11-openjdk,/usr/lib/jvm/java-17-openjdk,/usr/lib/jvm/java-21-openjdk \
+		-PcacheRedirectorEnabled=false \
+		-Pteamcity=true \
+		-Ptest.disable_update=true
+}
+
+package() {
+	install -dm 644 "$pkgdir/usr/share/kotlin/lib"
+	install -Dm 644 "$builddir/dist/kotlinc/lib/*" "$pkgdir/usr/share/kotlin/lib"
+
+	rm "$builddir/dist/kotlinc/bin/*.bat"
+
+	install -dm 755 "$pkgdir/usr/share/kotlin/bin"
+	install -Dm 755 "$builddir/dist/kotlinc/bin/*" "$pkgdir/usr/share/kotlin/bin"
+
+	install -dm 755 "$pkgdir/usr/bin"
+	for FILE in $(basename -a "$pkgdir/usr/share/kotlin/bin/*"); do
+		ln -s "$pkgdir/usr/share/kotlin/bin/$FILE" "$pkgdir/usr/bin/$FILE"
+	done
+}
+
+sha512sums="
+3c0108ea5aca8f15d10da4b1e258e612ffed9ee4de03c6faad821c1f1455de9d6a96785bc0476c12971060b97ddf032e6bfa662dcaa126002cd9aca5c44aedde  kotlin-v2.1.0-dev-735.tar.gz
+"

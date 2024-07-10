@@ -46,6 +46,7 @@ build() {
 
 check() {
 	gradle coreLibsTest gradlePluginTest compilerTest \
+		--no-configuration-cache \
 		--no-daemon \
 		--no-watch-fs \
 		--no-build-cache \

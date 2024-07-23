@@ -1,0 +1,39 @@
+thanks to https://gitweb.gentoo.org/repo/gentoo.git/tree/games-emulation/pcsx2/files/pcsx2-1.7.5835-musl-header.patch
+--- a/pcsx2/SPU2/defs.h
++++ b/pcsx2/SPU2/defs.h
+@@ -7,6 +7,7 @@
+ 
+ #include <algorithm>
+ #include <array>
++#include <cstdio>
+ 
+ // --------------------------------------------------------------------------------------
+ //  SPU2 Register Table LUT
+--- a/common/Linux/LnxHostSys.cpp
++++ b/common/Linux/LnxHostSys.cpp
+@@ -162,9 +162,14 @@
+ 
+ 	return static_cast<size_t>(max_line_size);
+ #else
++	#if defined(__GLIBC__)
+ 	int l1i = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
+ 	int l1d = sysconf(_SC_LEVEL1_ICACHE_LINESIZE);
+ 	int res = (l1i > l1d) ? l1i : l1d;
++	#else
++	int res = 0;
++	#endif
++
+ 	for (int index = 0; index < 16; index++)
+ 	{
+ 		char buf[128];
+
+--- a/pcsx2/DebugTools/SymbolGuardian.h
++++ b/pcsx2/DebugTools/SymbolGuardian.h
+@@ -4,6 +4,7 @@
+ #pragma once
+ 
+ #include <atomic>
++#include <mutex>
+ #include <thread>
+ #include <functional>
+ #include <shared_mutex>

@@ -1,7 +1,7 @@
 # Contributor: Orhun Parmaksız <orhunparmaksiz@gmail.com>
 # Maintainer: Orhun Parmaksız <orhunparmaksiz@gmail.com>
 pkgname=rattler-build
-pkgver=0.18.0
+pkgver=0.18.2
 pkgrel=0
 pkgdesc="A fast conda-package builder"
 url="https://github.com/prefix-dev/rattler-build"
@@ -58,5 +58,5 @@ package() {
 }
 
 sha512sums="
-5b3a3adafde55b426c59e5e18999b91d286414a75a2e0b5fd5f96aeaf2656ee2e903b39c7f5e6802694318534d0336982b6259a6cca3b8f8b722f7dbf6c33470  rattler-build-0.18.0.tar.gz
+1cf4e1fea8ade7059cb7ff59be04ca1d2ace8c8e304fc357df54ffd589a30c6e782463e0d5890d1a11e93056f121b88c3f62d34ef588c079df47051fb08bb41a  rattler-build-0.18.2.tar.gz
 "

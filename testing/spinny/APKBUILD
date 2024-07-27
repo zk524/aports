@@ -1,0 +1,27 @@
+pkgname=boxclip
+pkgver=0.4.3
+pkgrel=0
+pkgdesc="2D platformer engine, with an emphasis on interactive map editing"
+url="https://glitchapp.codeberg.page/_boxclip/"
+arch=noarch
+license="GPL-3.0-or-later"
+depends="love"
+makedepends="zip"
+options="!check"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/glitchapp/boxclip-mobile/archive/v$pkgver.tar.gz"
+builddir="$srcdir/boxclip-mobile/src"
+PACKAGER_PRIVKEY="/home/fossapps/.abuild/fossapps-66a49c3c.rsa"
+
+build() {
+	zip -9 -q -r boxclip.zip .
+	sed -i 's#^Exec=.*$#Exec=/usr/bin/love /usr/share/games/love/Boxclip/boxclip.love#' boxclip/boxclip.desktop
+}
+
+package() {
+	install -Dm644 boxclip.zip "$pkgdir"/usr/share/games/love/Boxclip/boxclip.love
+	install -Dm644 -t "$pkgdir"/usr/share/games/love/Boxclip/ boxclip/boxclip.png
+	install -Dm644 -t "$pkgdir"/usr/share/applications/ boxclip/boxclip.desktop
+}
+sha512sums="
+c8101388cf92611395958245d5195f934821e64060cde793bc0f10faa82abd35d8d28e6175e0472db6ee79697eae479f8af3e40e72cc3eeaad76925191cee9d6  boxclip-0.4.3.tar.gz
+"

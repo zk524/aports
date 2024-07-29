@@ -42,6 +42,52 @@ riscv64)
 	;;
 esac
 
+#
+# This function reads python dependency information for $_dep from $_dep_file,
+# using $_dep_regex, and compares the minimum required version with the
+# installed version of $_dep_pkg.
+#
+# The $_dep_regex must:
+#  1. be compatible with busybox sed's extended regex syntax
+#  2. match the entire line containing the needed version info
+#  3. capture the version number in capture group 1
+#
+_check_dep() {
+	if [ ! -f "$_dep_file" ]; then
+		echo "cant read python dependency info for $_dep from $_dep_file!"
+		exit 1
+	fi
+	_dep_need=$(sed -rn 's/'"$_dep_regex"'/\1/p' "$_dep_file")
+	if [ -z "$_dep_need" ]; then
+		echo "didnt find py dependency info for $_dep in $_dep_file!"
+		exit 1
+	fi
+	_dep_have=$(apk list --installed "$_dep_pkg" | head -n1 | \
+	    sed -rn 's/'"$_dep_pkg"'-(([[:digit:]]+\.?){1,3}).*/\1/p')
+	_dep_cmp=$(apk version -t "$_dep_have" "$_dep_need")
+	if [ $? != 0 ] || [ "$_dep_cmp" = "<" ]; then
+		echo "Fails $_dep version requirement: $_dep_have $_dep_cmp $_dep_need!"
+		exit 1
+	fi
+	echo "Satisfies $_dep version requirement: $_dep_have $_dep_cmp $_dep_need"
+}
+
+prepare() {
+	default_prepare
+
+	_dep=sip
+	_dep_file="$builddir/pyproject.toml"
+	_dep_regex='.*sip ?>= ?(([[:digit:]]+\.?){1,3}).*'
+	_dep_pkg=py3-sip
+	_check_dep
+
+	_dep=qt6-sip-module
+	_dep_file="$builddir/PKG-INFO"
+	_dep_regex='.*PyQt6-sip ?\(>=(([[:digit:]]+\.?){1,3}).*'
+	_dep_pkg=py3-pyqt6-sip
+	_check_dep
+}
+
 build() {
 	export CFLAGS="$CFLAGS -O2 -flto=auto"
 	export CXXFLAGS="$CXXFLAGS -O2 -flto=auto"

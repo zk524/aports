@@ -1,0 +1,40 @@
+# Maintainer: Daniel Fancsali <fancsali@gmail.com>
+pkgname=viking
+pkgver=1.10
+pkgrel=0
+pkgdesc="Viking is a free/open source GTK program to manage GPS data"
+url="https://sourceforge.net/projects/viking/"
+arch="all"
+license="GPL2"
+depends="curl libmagic gpsd gtk+3.0 gexiv2 mapnik geoclue liboauth libzip json-glib nettle"
+makedepends="boost-dev docbook-xsl intltool itstool curl-dev file-dev gpsd-dev gtk+3.0-dev gexiv2-dev mapnik-dev geoclue-dev liboauth-dev json-glib-dev nettle-dev"
+checkdepends="yelp-tools"
+install=""
+subpackages="$pkgname-doc"
+source="https://downloads.sourceforge.net/viking/viking-$pkgver.tar.gz"
+builddir="$srcdir/viking-$pkgver"
+
+build() {
+	export CXXFLAGS="$CXXFLAGS -I/usr/include/mapnik/"
+
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--localstatedir=/var
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+5375317f6188774959e67527091c52ff51e421d46f3b5cc910d475168fea76ad1e52a14664502b74443bf1bf79a46bf8aaab29a89dce607cef48f4557fb39351  viking-1.10.tar.gz
+"

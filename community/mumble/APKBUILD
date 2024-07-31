@@ -3,6 +3,7 @@
 # Contributor: Johannes Matheis <jomat+alpinebuild@jmt.gr>
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=mumble
+_srvname="mumble-server"
 pkgver=1.5.634
 pkgrel=0
 pkgdesc="Low-latency, high quality voice chat software"
@@ -29,17 +30,18 @@ makedepends="
 	qt5-qttools-dev
 	speexdsp-dev
 	"
-install="murmur.pre-install"
+install="$_srvname.pre-install"
 pkgusers="murmur"
 pkggroups="murmur"
 subpackages="
 	$pkgname-doc
-	murmur
-	murmur-openrc:murmur_openrc:noarch
-	murmur-doc:murmur_doc:noarch
+	$_srvname:murmur
+	$_srvname-openrc:murmur_openrc:noarch
+	$_srvname-doc:murmur_doc:noarch
+	murmur-compat
 	"
 source="https://github.com/mumble-voip/mumble/releases/download/v$pkgver/mumble-$pkgver.tar.gz
-	murmur.initd
+	$_srvname.initd
 
 	libgen.patch
 	musl-1.2.3.patch
@@ -84,67 +86,73 @@ package() {
 	DESTDIR="$pkgdir" cmake --install build
 
 	# Unused systemd scripts
-	rm -r "$pkgdir"/etc
-	# server binary is in the murmur package
-	rm "$pkgdir"/usr/bin/mumble-server*
-	rm "$pkgdir"/usr/share/man/man1/mumble-server*
+	rm -r "${pkgdir:?}"/etc
+	rm "$pkgdir"/usr/share/man/man1/$_srvname*
 
 	# license
 	install -Dm644 ./LICENSE \
 		"$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 	# openrc service
-	install -Dm755 "$srcdir"/murmur.initd "$pkgdir"/etc/init.d/murmur
+	install -Dm755 "$srcdir"/$_srvname.initd "$pkgdir"/etc/init.d/$_srvname
 }
 
 murmur() {
-	pkgdesc="Murmur is the server component of Mumble"
+	pkgdesc="Mumble Server (formerly Murmur) is the server component of Mumble"
+	provides="murmur=$pkgver-r$pkgrel"
 	cd "$builddir"
 
-	# Regarding the murmurd <-> mumble-server naming
-	# See: https://github.com/mumble-voip/mumble
-	# Currently, we continue using murmurd everywhere
-	# but provide a mumble-server -> murmurd symlink.
-	install -o murmur -g murmur -dm755 \
-		"$subpkgdir"/var/lib/murmur
-	install -Dm755 ./build/mumble-server \
-		"$subpkgdir"/usr/bin/murmurd
-	ln -s /usr/bin/murmurd "$subpkgdir"/usr/bin/mumble-server
-	install -Dm644 ./auxiliary_files/mumble-server.ini \
-		"$subpkgdir"/etc/murmur.ini
-	install -Dm755 ./build/auxiliary_files/mumble-server-user-wrapper \
-		"$subpkgdir"/usr/bin/mumble-server-user-wrapper
+	# Regarding the murmurd rename
+	# See: https://github.com/mumble-voip/mumble/discussions/4699
+	install -o $pkgusers -g $pkggroups -dm755 \
+		"$subpkgdir"/var/lib/$_srvname
+	install -Dm644 ./auxiliary_files/$_srvname.ini \
+		"$subpkgdir"/etc/$_srvname.ini
+	amove "usr/bin/$_srvname*"
 
-	sed 's/^database=$/database=\/var\/lib\/murmur\/murmur.sqlite/;\
-		s/^;uname=$/uname=murmur/;\
-		s/^;logfile=murmur.log$/logfile=\/var\/log\/murmur.log/;\
-		s/^;pidfile=$/pidfile=\/var\/run\/murmur\/murmur.pid/'\
-		-i "$subpkgdir"/etc/murmur.ini
+	sed -e "/^;\\?database=/c database=/var/lib/$_srvname/$_srvname.sqlite" \
+	    -e "/^;\\?uname=/c uname=$pkgusers" \
+	    -e "/^;\\?logfile=/c logfile=/var/log/$_srvname.log" \
+	    -e "/^;\\?pidfile=/c pidfile=/var/run/$_srvname.pid" \
+	    -i "$subpkgdir/etc/$_srvname.ini"
 }
 
 murmur_doc() {
 	pkgdesc="Documentation for the server component of Mumble"
+	provides="murmur-doc=$pkgver-r$pkgrel"
 	cd "$builddir"
 
-	install -Dm644 ./auxiliary_files/man_files/mumble-server.1 \
-		"$subpkgdir"/usr/share/man/man1/murmurd.1
-	ln -s /usr/share/man/man1/murmurd.1 \
-		"$subpkgdir"/usr/share/man/man1/mumble-server.1
-	install -Dm644 ./auxiliary_files/man_files/mumble-server-user-wrapper.1 \
-		"$subpkgdir"/usr/share/man/man1/mumble-server-user-wrapper.1
+	install -Dm644 ./auxiliary_files/man_files/$_srvname.1 \
+		"$subpkgdir"/usr/share/man/man1/$_srvname.1
+	install -Dm644 ./auxiliary_files/man_files/$_srvname-user-wrapper.1 \
+		"$subpkgdir"/usr/share/man/man1/$_srvname-user-wrapper.1
 	install -Dm644 ./LICENSE \
-		"$subpkgdir"/usr/share/licenses/murmur/LICENSE
-
+		"$subpkgdir"/usr/share/licenses/$_srvname/LICENSE
 	default_doc
 }
 
 murmur_openrc() {
+	provides="murmur-openrc=$pkgver-r$pkgrel"
+	install_if="$_srvname=$pkgver-r$pkgrel openrc"
 	default_openrc
-	install_if="murmur=$pkgver-r$pkgrel openrc"
+}
+
+compat() {
+	pkgdesc="Symlinks from old murmur -> $_srvname"
+	depends="$_srvname"
+	mkdir -p "$subpkgdir"/etc/init.d \
+		"$subpkgdir"/var/lib \
+		"$subpkgdir"/usr/bin \
+		"$subpkgdir"/usr/share/man/man1
+	ln -nfs $_srvname "$subpkgdir"/etc/init.d/murmurd
+	ln -nfs $_srvname.ini "$subpkgdir"/etc/murmur.ini
+	ln -nfs $_srvname "$subpkgdir"/var/lib/murmur
+	ln -nfs $_srvname "$subpkgdir"/usr/bin/murmurd
+	ln -nfs $_srvname.1 "$subpkgdir"/usr/share/man/man1/murmurd.1
 }
 
 sha512sums="
 5fa9479dd836b87cb84fb6c067019f75aac335aa201baa34939f1c73dd7c67279aed6079aecdab74a14cb6c285b69cb82798de8801b2140ccf99c764b3a84b59  mumble-1.5.634.tar.gz
-1edccadd87446a6b9f5b87f19405f92e3450c48334c79fba4bc2c31224be767be084488c4352f14e64b7506b5963d1d6f3d8d4c7ea8e8276104d19a4a03892c6  murmur.initd
+aa384ea8977c983d573162df65656eff165a12accc04b9a124dc122d43189a673aae4e99ebf609da3595bd5b1607e3840bc74aada90b904c2c5c67da4f5fd35d  mumble-server.initd
 2dac9e8e321c7a9837a0e4e2b368c39ffa525012316063e02ae5286c215967e88007a4d89590c251e11020e3d50f8f08eb050a3a02526f758d128b7b061580d2  libgen.patch
 2cc0a17a31bf9a436ea97447f958b7a93e96b0fcd020e5389ccfc413b6498b5176294d2b9c788a68cdfac47dabca8e6e28699f5ad184dcde4d30feb88d2e99b3  musl-1.2.3.patch
 "

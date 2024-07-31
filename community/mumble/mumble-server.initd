@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+
+description="Mumble VoIP Server"
+command="/usr/bin/${RC_SVCNAME}"
+command_args="-ini ${INI_CONFIG:-/etc/${RC_SVCNAME}.ini}"
+pidfile="/var/run/${RC_SVCNAME}.pid"
+
+depend() {
+	need localmount net
+	after firewall
+}
+
+# uses the openrc templates for start()/stop()

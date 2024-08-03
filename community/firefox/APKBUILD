@@ -5,7 +5,7 @@
 pkgname=firefox
 pkgver=128.0.3
 _releasedate=2024-07-26
-pkgrel=0
+pkgrel=1
 pkgdesc="Firefox web browser"
 url="https://www.firefox.com/"
 # s390x blocked by lld
@@ -33,6 +33,7 @@ makedepends="
 	dbus
 	dbus-dev
 	gettext
+	gnome-keyring
 	gtk+3.0-dev
 	hunspell-dev
 	icu-dev
@@ -53,6 +54,7 @@ makedepends="
 	m4
 	mesa-dev
 	mesa-dri-gallium
+	mutter
 	nasm
 	nodejs
 	nspr-dev
@@ -67,7 +69,6 @@ makedepends="
 	sed
 	wasi-sdk
 	wireless-tools-dev
-	xvfb-run
 	zip
 	"
 subpackages="$pkgname-intl"
@@ -655,20 +656,40 @@ build() {
 
 		msg "profiling firefox"
 
+		export XDG_RUNTIME_DIR="$(mktemp -d "$builddir/pgo-runtime-XXXXXX")"
+
+		# Turn off the screen saver and screen locking
+		gsettings set org.gnome.desktop.screensaver idle-activation-enabled false
+		gsettings set org.gnome.desktop.screensaver lock-enabled false
+		gsettings set org.gnome.desktop.screensaver lock-delay 3600
+
+		export DESKTOP_SESSION=gnome
+		export XDG_CURRENT_DESKTOP=GNOME
+		export XDG_SESSION_TYPE=wayland
+		export LIBGL_ALWAYS_SOFTWARE=true
+
+		dbus-run-session -- sh <<-EOF
+		eval $(echo '' | /usr/bin/gnome-keyring-daemon -r -d --unlock --components=secrets)
+
+		mutter --headless --virtual-monitor 1920x1080 --wayland-display wayland-0 --no-x11 &
+		sleep 15
+
 		LLVM_PROFDATA=llvm-profdata \
 		JARLOG_FILE="$PWD"/jarlog \
-		GDK_BACKEND=x11 \
+		GDK_BACKEND=wayland \
 		LD_LIBRARY_PATH="$PWD"/obj/dist/firefox \
-		XDG_RUNTIME_DIR="$(mktemp -d "$builddir/pgo-runtime-XXXXXX")" \
-		MOZ_ENABLE_WAYLAND=0 \
-		xvfb-run -a -s "-screen 0 1920x1080x24 -nolisten local" \
-		dbus-run-session -- \
+		MOZ_ENABLE_WAYLAND=1 \
+		WAYLAND_DISPLAY=wayland-0 \
 		./mach python build/pgo/profileserver.py
 
 		test -s merged.profdata
 		test -s jarlog
 
 		./mach clobber
+		killall mutter
+		rm -rf ~/.config/dconf ~/.local/share/keyrings
+		exit
+		EOF
 
 		msg "building optimised firefox"
 		cat > .mozconfig base-mozconfig - <<-EOF
@@ -678,6 +699,8 @@ build() {
 		ac_add_options --with-pgo-jarlog="$PWD"/jarlog
 		EOF
 		./mach build
+
+		unset XDG_RUNTIME_DIR
 		;;
 	armv7|x86|riscv64)
 		# others: no pgo here as it uses too much memory/broken on riscv

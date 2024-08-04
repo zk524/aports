@@ -1,0 +1,18 @@
+--- a/00_sleepproxyclient
++++ b/00_sleepproxyclient
+@@ -24,13 +24,11 @@
+ TAG="sleepproxyclient"
+ SCRIPTDIR="/usr/share/sleepproxyclient/scripts"
+ 
++avahi-daemon --check || { echo "Aborting since Avahi is not enabled"; exit 1; }
++
+ case $1 in
+ pre|suspend|hibernate)
+ ## RUN BEFORE SUSPEND OR HIBERNATE
+-	# Restart avahi to ensure it is alive and usable
+-	service avahi-daemon restart
+-	# avahi might need some additional time to fully start up
+-	sleep 2
+ 
+ 	logger -t $TAG "running sleepproxyclient"
+ 	bash $SCRIPTDIR/sleepproxyclient.sh

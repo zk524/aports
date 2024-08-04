@@ -1,0 +1,13 @@
+--- a/sleepproxyclient.sh
++++ b/sleepproxyclient.sh
+@@ -52,9 +52,7 @@ if [ "$SPC_DEBUG" != "" ] ; then
+	DEBUG_OPT="--debug"
+ fi
+ 
+-SCRIPTDIR=`dirname $0`
+-
+ if [ "$SPC_DEBUG" != "" ] ; then
+	set -x
+ fi
+-python3 $SCRIPTDIR/sleepproxyclient.py ${IF_OPT[@]} ${PREFERRED_PROXIES_OPT[@]} "${LEASE_TIME_OPT[@]}" "${LOGFILE_OPT[@]}" $DEBUG_OPT
++python3 -m sleepproxyclient ${IF_OPT[@]} ${PREFERRED_PROXIES_OPT[@]} "${LEASE_TIME_OPT[@]}" "${LOGFILE_OPT[@]}" $DEBUG_OPT

@@ -1,7 +1,7 @@
 # Maintainer: Miles Alan <m@milesalan.com>
 pkgname=mepo
 pkgver=1.2.1
-pkgrel=1
+pkgrel=2
 _pkgdescbase="Fast, simple, and hackable OSM map viewer for Linux"
 pkgdesc="$_pkgdescbase (base SDL application)"
 url="https://git.sr.ht/~mil/mepo"
@@ -50,7 +50,7 @@ package() {
 
 scripts() {
 	pkgdesc="$_pkgdescbase (including base SDL application & scripts)"
-	depends="$pkgname=$pkgver-r$pkgrel zenity curl findutils xwininfo geoclue jq ncurses font-hack-nerd"
+	depends="$pkgname=$pkgver-r$pkgrel zenity curl findutils xwininfo geoclue jq ncurses font-nerd-fonts-symbols"
 	mkdir -p "$subpkgdir"
 	amove usr/bin/mepo_*
 }

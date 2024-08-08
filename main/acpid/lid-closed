@@ -3,7 +3,7 @@
 # 10 if /proc/acpi/button/lid/LID/state does not exist or is not readable.
 set -u
 
-STATE_FILE='/proc/acpi/button/lid/LID/state'
+STATE_FILE='/proc/acpi/button/lid/LID0/state'
 
 verbose=false
 [ "${1:-}" = '-v' ] && verbose=true

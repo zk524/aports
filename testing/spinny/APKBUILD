@@ -9,6 +9,3 @@ package() {
 	install -Dm644 -t "$pkgdir"/usr/share/games/love/Boxclip/ boxclip/boxclip.png
 	install -Dm644 -t "$pkgdir"/usr/share/applications/ boxclip/boxclip.desktop
 }
-sha512sums="
-c8101388cf92611395958245d5195f934821e64060cde793bc0f10faa82abd35d8d28e6175e0472db6ee79697eae479f8af3e40e72cc3eeaad76925191cee9d6  boxclip-0.4.3.tar.gz
-"

@@ -1,0 +1,38 @@
+# Maintainer: Lassebq <lassebq.mine@gmail.com>
+pkgname=gpu-screen-recorder-gtk
+_pkgver=r360.e271f3d # printf "r%s.%s\n" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+pkgver=4.1.0
+pkgrel=0
+pkgdesc="Gtk frontend to gpu-screen-recorder, a shadowplay-like screen recorder for Linux."
+url="https://git.dec05eba.com/gpu-screen-recorder-gtk"
+arch="all"
+license="GPL-3.0-or-later"
+depends="gpu-screen-recorder"
+makedepends="
+	libx11-dev
+	gtk+3.0-dev
+	pulseaudio-dev
+	libayatana-appindicator-dev
+	meson
+	desktop-file-utils
+	"
+source="$pkgname-$pkgver.tar.gz::https://dec05eba.com/snapshot/gpu-screen-recorder-gtk.git.$_pkgver.tar.gz"
+builddir="$srcdir"
+
+build() {
+	abuild-meson \
+		output .
+	meson compile -C output
+}
+
+check() {
+	meson test --no-rebuild --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+ba5af570e952160bac1db18a37841f4b899bb8e512efa05741dab928f07ad8e2f07453f11fc8f38fa06c640e89b1bbf366a8420741b20e1d3f06eb946d94d59a  gpu-screen-recorder-gtk-4.1.0.tar.gz
+"

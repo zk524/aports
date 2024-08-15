@@ -1,6 +1,6 @@
 # Maintainer: Dekedro <dekedro@protonmail.com>
 pkgname=openjfx
-pkgver=21.0.3_p1 # latest LTS
+pkgver=21.0.5_p0 # latest LTS
 pkgrel=0
 pkgdesc="Client application platform for desktop, mobile and embedded systems built on Java"
 url="https://openjfx.io/"
@@ -47,7 +47,7 @@ demos() {
 }
 
 sha512sums="
-9ef6540e316e461a8cddcc6b99c3659663d3d6911204214afe5330fd238b7112431b70e5d2bc7ad548d41f1d8e22fa8d5342f6135901ae8404a8a4e9fdd718cf  openjfx-21.0.3_p1.tar.gz
+cd66e4311786b924544800cc6cd473bdb27362df485963563d37444398f65e727c9da8b3c532bab2f1b58a37f5632c17e4cdf03a4614897105ada1fb064c752e  openjfx-21.0.5_p0.tar.gz
 41cf37116f748269e74a3333b718a854962088b83c6c56cc2860a21c0d0e24673184cea60502afc5d4cb222de368535c417d93ebe841a75c91c6a88dbb0a5041  openjfx.profile
 3757ec908449891567150bc4e0a5b301b0b238d17095c0829f6e1f1dae59260d9b162df031a25a31d4836a200a3e045ca9d79e656e4f1b2165649005345ee7a4  remove-version-suffix-check.patch
 "

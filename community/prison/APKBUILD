@@ -38,11 +38,7 @@ build() {
 }
 
 check() {
-	# prison-datamatrixtest and prison-qrtest are broken on s390x
-	case "$CARCH" in
-		s390x) ctest --test-dir build --output-on-failure -E "prison-(datamatrix|qr)test" ;;
-		*) ctest --test-dir build --output-on-failure ;;
-	esac
+	ctest --test-dir build --output-on-failure
 }
 
 package() {

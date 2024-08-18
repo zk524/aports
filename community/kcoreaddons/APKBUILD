@@ -36,13 +36,7 @@ build() {
 
 check() {
 	# klistopenfilesjobtest_unix requires >8000 open files
-	local disabled_tests="klistopenfilesjobtest_unix|kdirwatch_qfswatch_unittest|kdirwatch_stat_unittest|knetworkmountstestpaths"
-	case "$CARCH" in
-		s390x) disabled_tests="$disabled_tests|kdirwatch_inotify_unittest" ;;
-		x86_64) disabled_tests="$disabled_tests|kfileutilstest" ;; # Only fails on builders
-	esac
-
-	xvfb-run -a ctest --test-dir build --output-on-failure -E "($disabled_tests)"
+	xvfb-run -a ctest --test-dir build --output-on-failure -E "klistopenfilesjobtest_unix"
 }
 
 package() {

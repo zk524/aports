@@ -38,8 +38,7 @@ build() {
 }
 
 check() {
-	# sonnet-test_autodetect fails to detect a speller backend
-	xvfb-run -a ctest --test-dir build --output-on-failure -E "sonnet-test_autodetect"
+	xvfb-run -a ctest --test-dir build --output-on-failure
 }
 
 package() {

@@ -1,0 +1,52 @@
+# Contributor: mekyt <hello@mek.yt>
+# Maintainer: mekyt <hello@mek.yt>
+pkgname=shiori
+pkgver=1.7.4
+pkgrel=0
+pkgdesc="Simple bookmark manager cli and web"
+url="https://github.com/go-shiori/shiori"
+license="MIT"
+arch="all"
+makedepends="go"
+subpackages="$pkgname-openrc"
+pkgusers="$pkgname"
+pkggroups="$pkgname"
+install="$pkgname.pre-install"
+subpackages="
+	$pkgname-doc
+	$pkgname-openrc
+"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/go-shiori/shiori/archive/refs/tags/v$pkgver.tar.gz
+	$pkgname.confd
+	$pkgname.initd
+"
+options="!check net" # Need database and go package dependancies
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	go build -ldflags "-s -w -X main.version=$pkgver"
+}
+
+check() {
+	# Mysql database need
+	go test ./...
+}
+
+package() {
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+	install -Dm755 shiori -t "$pkgdir"/usr/bin/
+
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+	install -Dm755 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+}
+
+
+sha512sums="
+3b880810a33fcb5760dbfba437835bb654c3452096c089ca88c2a1d0a80889753bdd4ebe6e25db68f9af4b03a1791218dc707c3546e2a4416928bce15176e8c9  shiori-1.7.4.tar.gz
+be313cad80631d5b356da6a4532768cf6508bd8fff987fa21f3399f7ff04516a763958f3ec0d312d807d62eba9138125c62ff868999b0ddc3d1331372f2eac77  shiori.confd
+6199f2619187c8f7235a483b4ac5fde460286ad159e28443d8f41241de93c3a041aba50f1c3897d5fcbfa87dabba7a0c97e27e09d8ab0c9ed59962a8943d9f1b  shiori.initd
+"

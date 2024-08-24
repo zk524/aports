@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name=shiori
+
+command="/usr/bin/shiori"
+command_user="shiori:shiori"
+command_args="server"
+
+export SHIORI_DIR="/var/lib/shiori"
+export SHIORI_HTTP_PORT="$http_port"
+export SHIORI_HTTP_ADDRESS="$http_address"
+export SHIORI_DATABASE_URL="$database_url"
+export SHIORI_HTTP_SECRET_KEY="$http_secret_key"
+
+depend() {
+  need net
+  after firewall mysql postgresql
+}
+

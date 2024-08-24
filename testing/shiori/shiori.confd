@@ -1,0 +1,16 @@
+# Configuration for /etc/init.d/shiori
+
+# Port number for the HTTP service
+http_port=8080
+
+# Address for the HTTP service
+http_address=127.0.0.1:
+
+# Default to sqlite /var/lib/shiori/shiori.db
+database_url=sqlite:///var/lib/shiori/shiori.db
+
+# For postgresql socket
+# database_url=postgres://shiori@/shiori?host=/var/run/postgresql
+
+# Session secret key (without value, sessions will be invalidated on server restart)
+http_secret_key=

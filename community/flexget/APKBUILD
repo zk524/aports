@@ -1,7 +1,7 @@
-# Contributor: Anjandev Momi <anjan@momi.ca>
+# Contributor: Alex Seleznyov <aseleznyov@gmail.com>
 # Maintainer: Anjandev Momi <anjan@momi.ca>
 pkgname=flexget
-pkgver=3.3.37
+pkgver=3.11.43
 pkgrel=3
 pkgdesc="Multipurpose automation tool for downloading media content from different sources"
 url="https://flexget.com/"

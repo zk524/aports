@@ -20,6 +20,9 @@ export staticroutes
 export router
 export subnet
 
+# intended to be set from a parent calling udhcpc (e.g. ifupdown).
+export VRF
+
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 run_scripts() {
@@ -64,9 +67,9 @@ route_add() {
 	# (they can never be sent to local subnet - there is no local subnet for /32).
 	# Used in datacenters, avoids the need for private ip-addresses between two hops.
 	if [ "$subnet" = "255.255.255.255" ]; then
-		ip -4 route add $gw dev $interface
+		ip -4 route add $gw dev $interface ${VRF:+vrf } $VRF
 	fi
-	ip -4 route add $to via $gw dev $interface \
+	ip -4 route add $to via $gw dev $interface ${VRF:+vrf } $VRF \
 		metric $(( $num + ${IF_METRIC:-$(calc_metric)} ))
 }
 
@@ -75,7 +78,7 @@ routes() {
 	for i in $NO_GATEWAY; do
 		[ "$i" = "$interface" ] && return
 	done
-	while ip -4 route del default via dev $interface 2>/dev/null; do
+	while ip -4 route del default via dev $interface ${VRF:+vrf } $VRF 2>/dev/null; do
 		:
 	done
 	local num=0
@@ -138,7 +141,7 @@ renew() {
 
 	local i
 	for i in $router; do
-		if ! ip -4 route show | grep ^default | grep $i; then
+		if ! ip -4 route show ${VRF:+vrf } $VRF | grep ^default | grep $i; then
 			routes
 			break
 		fi

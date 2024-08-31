@@ -1,8 +1,9 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=libheif
-pkgver=1.19.2
+pkgver=1.19.5
 pkgrel=0
+pkgdesc="ISO/IEC 23008-12 HEIF file format decoder and encoder"
 url="https://www.libde265.org/"
 arch="all"
 license="LGPL-3.0-or-later"
@@ -27,6 +28,8 @@ subpackages="
 	$pkgname-tools
 	$pkgname-doc
 	$pkgname-pixbuf-loader
+	$pkgname-openjpeg
+	$pkgname-jpeg
 	"
 source="https://github.com/strukturag/libheif/releases/download/v$pkgver/libheif-$pkgver.tar.gz"
 
@@ -89,7 +92,22 @@ loader() {
 		usr/share/thumbnailers
 }
 
+openjpeg() {
+	pkgdesc="$pkgdesc (OpenJPEG JPEG-2000 plugin)"
+	depends="openjpeg"
+	amove usr/lib/libheif/libheif-j2kdec.so
+	amove usr/lib/libheif/libheif-j2kenc.so
+}
+
+jpeg() {
+	pkgdesc="$pkgdesc (JPEG plugin)"
+	depends="libjpeg-turbo"
+	amove usr/lib/libheif/libheif-jpegdec.so
+	amove usr/lib/libheif/libheif-jpegenc.so
+}
+
+
 sha512sums="
-fdb4753b57087c3dd8241b6d1378f36ea6c529e22a4b2bef3f87207676ca3aa85e123f49a8f286b15c5d8c6a7d4f38d82a1c75363e555bf2a75a81e4ce6635ab  libheif-1.19.2.tar.gz
+3cad96dea5e40ab6182ed9dd577c6cdb06993aad2c7a4ba10e11a9407e4a0378729ecb71dc74cdd57b3493aace4390ace9ae1a96d9e983ce07fb07bc51ac4904  libheif-1.19.5.tar.gz
 "
 

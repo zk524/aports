@@ -1,0 +1,68 @@
+# Maintainer: Sertonix <sertonix@posteo.net>
+pkgname=libcupsfilters
+pkgver=2.1.0
+pkgrel=0
+pkgdesc="OpenPrinting CUPS Filters - contains all the code of the filters of the former cups-filters package as library functions"
+url="https://github.com/OpenPrinting/libcupsfilters"
+arch="all"
+license="Apache-2.0 WITH LLVM-exception"
+# For compatibility
+provides="cups-filters-libs=$pkgver-r$pkgrel"
+# textopdf requires a monospace font. Using FreeMono here
+depends="font-freefont"
+makedepends="
+	cups-dev
+	dbus-dev
+	font-dejavu
+	fontconfig-dev
+	ghostscript
+	lcms2-dev
+	libexif-dev
+	libjpeg-turbo-dev
+	libpng-dev
+	linux-headers
+	mupdf-tools
+	poppler-dev
+	qpdf-dev
+	tiff-dev
+	"
+subpackages="$pkgname-dev $pkgname-doc"
+source="https://github.com/OpenPrinting/libcupsfilters/releases/download/$pkgver/libcupsfilters-$pkgver.tar.xz
+	bash.patch
+	"
+
+
+# secfixes:
+#   2.1.0-r0:
+#     - CVE-2024-47076
+
+build() {
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--localstatedir=/var \
+		--disable-static \
+		--enable-poppler \
+		--enable-dbus \
+		--with-test-font-path=/usr/share/fonts/dejavu/DejaVuSans.ttf
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make -j1 DESTDIR="$pkgdir" install
+	#the pdf.utf-8 symlink isn't quite good enough
+	ln -s pdf.utf-8.simple "$pkgdir"/usr/share/cups/charsets/pdf.UTF-8
+}
+
+sha512sums="
+2c15180a49f211215a13dac5b198a4f8d11fbc67c49d2112ec0c9a9cfd34f012867780bcf23dba81fae7bfaa7f05d4241b222dc6ad8dd83fc8ae29ce2869b235  libcupsfilters-2.1.0.tar.xz
+1460acafb40967c061631b5dbcbe65f3bc71a8100d3069928fca6af263bd2afe89a23b8aeb56eefc2213432a00e770146fa76a44cb5be7e6e2ad582207f348b7  bash.patch
+"

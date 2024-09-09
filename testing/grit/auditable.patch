@@ -1,0 +1,46 @@
+https://github.com/rust-secure-code/cargo-auditable/issues/124
+
+diff --git a/crates/cli/Cargo.toml b/crates/cli/Cargo.toml
+index 64e22e0..5f3bdd7 100644
+--- a/crates/cli/Cargo.toml
++++ b/crates/cli/Cargo.toml
+@@ -123,11 +123,11 @@ server = [
+ ]
+ updater = []
+ grit_tracing = [
+-  "dep:opentelemetry-otlp",
+-  "dep:opentelemetry",
+-  "dep:opentelemetry_sdk",
+-  "dep:tracing-opentelemetry",
+-  "dep:tracing-subscriber",
++  "opentelemetry-otlp",
++  "opentelemetry",
++  "opentelemetry_sdk",
++  "tracing-opentelemetry",
++  "tracing-subscriber",
+   "marzano-core/grit_tracing",
+ ]
+ external_functions = ["marzano-core/external_functions"]
+diff --git a/crates/core/Cargo.toml b/crates/core/Cargo.toml
+index 07bdc98..caf2adc 100644
+--- a/crates/core/Cargo.toml
++++ b/crates/core/Cargo.toml
+@@ -84,7 +84,7 @@ wasm_core = [
+   "external_functions_ffi",
+   "marzano-util/external_functions_ffi",
+ ]
+-grit_tracing = ["dep:tracing-opentelemetry"]
++grit_tracing = ["tracing-opentelemetry"]
+ language-parsers = ["marzano-language/builtin-parser"]
+ grit-parser = ["marzano-language/grit-parser"]
+ absolute_filename = []
+diff --git a/crates/lsp/Cargo.toml b/crates/lsp/Cargo.toml
+index 63c0980..42ef539 100644
+--- a/crates/lsp/Cargo.toml
++++ b/crates/lsp/Cargo.toml
+@@ -44,4 +44,4 @@ project_diagnostics = ["caching"]
+ grit_alpha = []
+ # Run these features in testing
+ test_ci = []
+-grit_tracing = ["dep:tracing-opentelemetry"]
++grit_tracing = ["tracing-opentelemetry"]

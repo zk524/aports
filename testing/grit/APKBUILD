@@ -1,0 +1,53 @@
+# Contributor: George Hopkins <george-hopkins@null.net>
+# Maintainer: George Hopkins <george-hopkins@null.net>
+pkgname=grit
+pkgver=0.1.0_alpha1725546100
+_pkgver=v${pkgver/_alpha/-alpha.}
+pkgrel=0
+pkgdesc="Search and transform source code using GritQL"
+url="https://grit.io/"
+arch="all"
+license="MIT"
+makedepends="cargo cargo-auditable perl"
+source="https://dev.alpinelinux.org/archive/grit/grit-$pkgver.tar.gz
+	auditable.patch
+	updater.patch"
+_disturl="dev.alpinelinux.org:/archive/grit/"
+
+export CARGO_PROFILE_RELEASE_OPT_LEVEL="z"
+
+snapshot() {
+	clean
+	makedepends="git rsync tar" deps
+	mkdir -p "$srcdir" && cd "$srcdir"
+	git clone --filter=tree:0 -b $_pkgver https://github.com/getgrit/gritql $pkgname-$pkgver
+	git -C $pkgname-$pkgver submodule update --init --depth=1
+	tar -czvf $SRCDEST/$pkgname-$pkgver.tar.gz \
+		--owner=0 --group=0 --mtime='1970-01-02' \
+		--exclude-vcs \
+		$pkgname-$pkgver
+	rsync --progress -La $SRCDEST/$pkgname-$pkgver.tar.gz $_disturl
+}
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build -p marzano --frozen --release
+}
+
+check() {
+	cargo test -p marzano --frozen
+}
+
+package() {
+	install -D -m755 target/release/marzano "$pkgdir"/usr/bin/grit
+}
+
+sha512sums="
+3c6c011a6da460fdb2f511afc1331a76863ce7070868cbf6f22fcbd1bd7ea29b8fcfb17b1ac062603b950b029169b81c0cdd378c4e10841efed04acc615fda96  grit-0.1.0_alpha1725546100.tar.gz
+1b98988bf13d46600bfda6dc0b54565cfd34c602af9b6d0ae60d2737f80ce28cbbff086c36e79aa74db282cca07892be1ccd0c66f207e37ff141b0e3af868808  auditable.patch
+031a77e477c7e906a5465ed1ddf5a4ba0f4529b14387012677716896486dbc791dc3809c87a4f902c923f5979e562c38c6b51f42614579abfda821f0ea7b548b  updater.patch
+"

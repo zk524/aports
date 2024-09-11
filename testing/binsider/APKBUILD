@@ -1,0 +1,36 @@
+# Contributor: Orhun Parmaksız <orhunparmaksiz@gmail.com>
+# Maintainer: Orhun Parmaksız <orhunparmaksiz@gmail.com>
+pkgname=binsider
+pkgver=0.2.1
+pkgrel=0
+pkgdesc="A TUI for analyzing binaries like a boss"
+url="https://github.com/orhun/binsider"
+arch="all !s390x"
+license="MIT OR Apache-2.0"
+makedepends="cargo cargo-auditable"
+subpackages="$pkgname-doc"
+options="net" # cargo crates
+source="$pkgname-$pkgver.tar.gz::https://github.com/orhun/binsider/archive/v$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release --no-default-features
+}
+
+check() {
+	cargo test --frozen --no-default-features --lib
+}
+
+package() {
+	install -Dm 755 "target/release/$pkgname" -t "$pkgdir/usr/bin"
+	install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}
+
+sha512sums="
+f7b122be78b46ec480849c4bb4c4e36dd1cdbeec562cd6bb9a43826b06a80d482cfa424ff74c206fb230efe0c5b97b10244ddac7f312ae97370b76e014c6b8c1  binsider-0.2.1.tar.gz
+"

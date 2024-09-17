@@ -1,0 +1,46 @@
+# Maintainer: omni <omni+alpine@hack.org>
+pkgname=ptouch-driver
+pkgver=1.7
+pkgrel=0
+_pkgname=printer-driver-ptouch
+pkgdesc="Brother PT- and QT-series printer driver for Linux (under CUPS)"
+url="https://github.com/philpem/printer-driver-ptouch"
+arch="all"
+license="GPL-2.0-or-later"
+depends="ghostscript"
+makedepends="autoconf
+	automake
+	cups-dev
+	foomatic-db-engine
+	libpng-dev
+	perl-xml-libxml
+	"
+#subpackages="$pkgname-foomatic"
+source="$pkgname-$pkgver.tar.gz::https://github.com/philpem/printer-driver-ptouch/archive/refs/tags/v$pkgver.tar.gz
+	fix-brother-ql-600.patch
+	"
+builddir="$srcdir/$_pkgname-$pkgver"
+options="!check" # no tests
+
+prepare() {
+	default_prepare
+
+	autoreconf -vif
+}
+
+build() {
+	./configure --prefix=/usr
+
+	make
+
+	#FOOMATIC="$builddir"/generated foomatic-compiledb -t ppd -d "$builddir"/ppd
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+09240d89566683e195d36ee37ef672ef13706208a846fdff83562c71df8e050d7e2668ccb7702c78cd6d5df2b4274fd992c250b6d06d6cdc7511e7395913b16c  ptouch-driver-1.7.tar.gz
+0c776836daeacb5b8075a6c7d57f26ad083f124433a31620aeffb7a5dae38befa2072a7969487ed034b5a9850fd03cd7d36bd94e341b407130195802454b0ab2  fix-brother-ql-600.patch
+"

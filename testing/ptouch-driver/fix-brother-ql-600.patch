@@ -1,0 +1,23 @@
+From b3c53b3bc4dd98ed172f2c79405c7c09b3b3836a Mon Sep 17 00:00:00 2001
+From: Thomas Rohloff <v10lator@myway.de>
+Date: Sun, 17 Sep 2023 12:46:28 +0200
+Subject: [PATCH] Fix Brother-QL-600.xml
+
+Signed-off-by: Thomas Rohloff <v10lator@myway.de>
+---
+ printer/Brother-QL-600.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/printer/Brother-QL-600.xml b/printer/Brother-QL-600.xml
+index a660b05..90c991b 100644
+--- a/printer/Brother-QL-600.xml
++++ b/printer/Brother-QL-600.xml
+@@ -33,7 +33,7 @@ USA
+       </dpi>
+     </resolution>
+   </mechanism>
+-  <url>https://support.brother.com/g/b/downloadhowto.aspx?c=us&lang=en&prod=lpql600eus&os=130&dlid=dlfp100718_000&flang=178&type3=10309</url>
++  <url>https://support.brother.com/g/b/downloadhowto.aspx?c=us&amp;lang=en&amp;prod=lpql600eus&amp;os=130&amp;dlid=dlfp100718_000&amp;flang=178&amp;type3=10309</url>
+   <lang>
+     <proprietary />
+   </lang>

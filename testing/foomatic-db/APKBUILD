@@ -1,0 +1,32 @@
+# Maintainer: omni <omni+alpine@hack.org>
+pkgname=foomatic-db
+pkgver=4.0
+pkgrel=0
+_pkgdate=20240917
+pkgdesc="Foomatic"
+url="https://openprinting.github.io/projects/02-foomatic/"
+arch="all"
+license="GPL-2.0-or-later"
+depends="cups-filters perl"
+makedepends="cups
+	cups-dev
+	ghostscript-dev
+	libxml2-dev
+	perl-dev
+	"
+source="https://www.openprinting.org/download/foomatic/foomatic-db-$pkgver-$_pkgdate.tar.xz"
+builddir="$srcdir/$pkgname-$_pkgdate"
+
+build() {
+	./configure --prefix=/usr
+
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+78a2f941678dac6f860f56aa7698f0d663ecbb00373fc2b8b01fa661cbf16fdf635976ad52bb20321b06a041b6f54935c7148b50498caf8452144f0f537683b2  foomatic-db-4.0-20240917.tar.xz
+"

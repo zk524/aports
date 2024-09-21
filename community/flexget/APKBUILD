@@ -1,7 +1,7 @@
 # Contributor: Alex Seleznyov <aseleznyov@gmail.com>
 # Maintainer: Anjandev Momi <anjan@momi.ca>
 pkgname=flexget
-pkgver=3.11.43
+pkgver=3.11.46
 pkgrel=3
 pkgdesc="Multipurpose automation tool for downloading media content from different sources"
 url="https://flexget.com/"
@@ -66,5 +66,5 @@ package() {
 }
 
 sha512sums="
-f58a8dc2de66c5d8f50c2b643a336567c4355f9458103089f0f5279b1fd2719bd9e9edb4a92778f7726e2b060cac248d8fa568d76de56e3b20dc041aedcfef4a  flexget-3.11.43.tar.gz
+85400e1797d290131227edd02a4732537354e4944b30fad5a6b952e262ef66093a186785655d5eaeda320282c72bfccb64174850a75d836b4bea4f0d88ca2545  flexget-3.11.46.tar.gz
 "

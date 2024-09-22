@@ -1,0 +1,46 @@
+# Contributor: Micheal Smith <xulfer@cheapbsd.net>
+# Maintainer: Micheal Smith <xulfer@cheapbsd.net>
+pkgname=libgourou
+pkgver=0.8.6
+pkgrel=0
+pkgdesc="Free implementation of Adobe's ADEPT protocol used to add DRM on ePub/PDF files."
+url="http://forge.soutade.fr/soutade/libgourou"
+arch="all"
+# No checks are provided
+options="!check"
+license="GPL-3.0-or-later"
+makedepends="curl-dev libzip-dev openssl-dev pugixml-dev"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-utils"
+_updfparser_rev="6060d123441a06df699eb275ae5ffdd50409b8f3"
+source="$pkgname-$pkgver.tar.gz::http://forge.soutade.fr/soutade/libgourou/archive/v$pkgver.tar.gz
+	updfparser-$_updfparser_rev.tar.gz::http://forge.soutade.fr/soutade/uPDFParser/archive/$_updfparser_rev.tar.gz"
+builddir="$srcdir/$pkgname"
+
+prepare() {
+	default_prepare
+
+	mkdir lib
+	mv "$srcdir"/updfparser lib/
+}
+
+build() {
+	cd lib/updfparser
+	make BUILD_SHARED=0 BUILD_STATIC=1
+	cd ../..
+	make
+}
+
+utils() {
+	mkdir -p "$subpkgdir"/usr
+	amove usr/bin
+}
+
+package() {
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+	make DESTDIR="$pkgdir" PREFIX=/usr install_headers
+}
+
+sha512sums="
+86f306b3ef6711840905bd08cc608bb7ed8d82a9f4c675aabb04af86347ce13b67324f462157c3cfd2681829b0d4da6bd72fb56c0595c1a693db691c9972cf56  libgourou-0.8.6.tar.gz
+fe90e45aebbe1f60010778002191be53955d6608d37dba05778eb43dc5d8933d0daf57d49635d97405cefefaf5ddd5916b9895cafd90367a22f4a9fdbcb3526a  updfparser-6060d123441a06df699eb275ae5ffdd50409b8f3.tar.gz
+"

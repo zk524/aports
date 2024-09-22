@@ -1,7 +1,7 @@
 # Contributor: omni <omni+alpine@hack.org>
 # Maintainer: omni <omni+alpine@hack.org>
 pkgname=py3-psycopg
-pkgver=3.1.20
+pkgver=3.2.3
 pkgrel=0
 pkgdesc="PostgreSQL adapter for python"
 options="!check" # Requires running database
@@ -80,8 +80,8 @@ _c_pyc() {
 }
 
 sha512sums="
-8441d365bea3147f14f9c9da2fa04a4dc4ff167c89c506e225fe16d1987d58bab18f1c40910d03da2181927468ac9fc49f15690e84afa886f98b8d577f0782d3  psycopg-3.1.20.tar.gz
-d61e8d6a32ad43e439e906738d1046cf839a9b6576c339b342c46be3565b8863fa0a13205c98f24e8378a8b81939f8eb7465f290264ffd736736508dcb3e2331  fix-missing-type-imports.patch
-f11a4be8d70117f63bc24a658f53df96be4e71f9c6eb7a515ec7a39f328ecdfc84cc299a5a4d68f61a44e0e3796ec15e54c9347e0f4be7fb3cc806f633a8c592  typing-ext.patch
-630ae96920d23826db387dc65f0af3f79aff2af933e207db717061d6acfffa220e2e4e9770a663319c0e25974d5434908b7c6340d63a59ce1471dbd182a36263  psycopg-binary.patch
+cf543652cfd27cf1cad3b1e3b8b50802562cc49f8fbd9ae5bd85ffdf26e30dc470f1f3380261c8cad418945ade8dc4f199ebcba08968cb87fd0b6c241fd8040d  psycopg-3.2.3.tar.gz
+767f55859a0675ef58eada28f5f7ba4ad6b570a1c8dd4f2d3ea5823813f026be6c92b650d3a86a0e1c829846f600421e6300d51fe3761ec8c51292330e6f9358  fix-missing-type-imports.patch
+de29d1a5e068437b37f4a6d0c425a4a871be33eae9e76b5bf9ccc156a4f29fa94312814daf9b1ace3e66086421b9a1ec350a2c5a60d9c79dc5441ba3388588c1  typing-ext.patch
+63e2e472eff9dcb48327c1286ffa370a7502a066a84a3adc12d26aaad47282bdb3dfb1b5d3893458643261b157f17aa607b4eec1a6d239af8133183680936b62  psycopg-binary.patch
 "

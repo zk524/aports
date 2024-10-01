@@ -1,0 +1,38 @@
+# Contributor: memorysafety <security@abetterinternet.org>
+# Maintainer: hash <hash@hcrypt.net>
+pkgname=rav1d
+pkgver=1.0.0
+pkgrel=0
+pkgdesc="An AV1 decoder in Rust."
+url="https://github.com/memorysafety/rav1d"
+arch="all"
+license="BSD-2-Clause"
+makedepends="cargo cargo-auditable nasm"
+source="https://github.com/memorysafety/rav1d/archive/v$pkgver/rav1d-$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+	cargo fetch --target="x86_64-alpine-linux-musl" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/librav1d.d "$pkgdir"/usr/lib/librav1d.d
+	install -Dm755 target/release/dav1d.d "$pkgdir"/usr/lib/dav1d.d
+	install -Dm644 target/release/librav1d.a "$pkgdir"/usr/lib/librav1d.a
+	install -Dm644 target/release/librav1d.rlib "$pkgdir"/usr/lib/librav1d.rlib
+	install -Dm644 target/release/seek_stress.d "$pkgdir"/usr/lib/seek_stress.d
+	install -Dm755 target/release/dav1d "$pkgdir"/usr/bin/dav1d
+	install -Dm755 target/release/seek_stress "$pkgdir"/usr/bin/seek_stress
+}
+
+sha512sums="
+80586f9a363d9dea81c5cb500ccd4612141c83b06478703c497e4b24366821ce662c1f59354e6e3cd1c132fba88e15dd7b27fcf82d343077b8bc597ebebfe27a  rav1d-1.0.0.tar.gz
+"

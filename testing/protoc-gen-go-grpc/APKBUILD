@@ -1,0 +1,35 @@
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+pkgname=protoc-gen-go-grpc
+pkgver=1.67.1
+pkgrel=0
+pkgdesc="Protocol Buffers Go generator for gRPC"
+url="https://github.com/grpc/grpc-go"
+arch="all"
+license="BSD-3-Clause"
+depends="protoc"
+makedepends="go"
+options="net"
+source="$pkgname-$pkgver.tar.gz::https://github.com/grpc/grpc-go/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir"/grpc-go-$pkgver
+
+build() {
+	export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+	export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+	export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+	cd cmd/protoc-gen-go-grpc
+	go build -v .
+}
+
+check() {
+	cd cmd/protoc-gen-go-grpc
+	go test ./...
+}
+
+package() {
+	install -Dm755 cmd/protoc-gen-go-grpc/protoc-gen-go-grpc -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+d95408b00797c052e393d7d75a5104200b9025509baf5a8ac2e184d9576f5266d558a088c0397b28dfd6202c23ba5199a561747dc154ec4f3b825c58d2212e6a  protoc-gen-go-grpc-1.67.1.tar.gz
+"

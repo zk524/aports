@@ -1,0 +1,33 @@
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+pkgname=konnectivity-server
+pkgver=0.30.3
+pkgrel=0
+pkgdesc="Connectivity proxy server for kubernetes control plane"
+url="https://github.com/kubernetes-sigs/apiserver-network-proxy"
+arch="all"
+license="Apache-2.0"
+depends=""
+makedepends="go protoc mockgen protoc-gen-go protoc-gen-go-grpc"
+source="https://github.com/kubernetes-sigs/apiserver-network-proxy/archive/v$pkgver/apiserver-network-proxy-$pkgver.tar.gz"
+builddir="$srcdir/apiserver-network-proxy-$pkgver"
+
+build() {
+	export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+	export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+	export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+#	make gen
+	make bin/proxy-server
+}
+
+check() {
+	go test ./cmd/server/...
+}
+
+package() {
+	install -D -m755 bin/proxy-server "$pkgdir"/usr/bin/konnectivity-server
+}
+
+sha512sums="
+16552e0911f1894f04e10ffca36aa375ab447f660d52b9176f97589e4f5cf7a752280929e4bc615b4962f1a7b85a2f3f27d1551be8c487ea19e0f01ee5fe8244  apiserver-network-proxy-0.30.3.tar.gz
+"

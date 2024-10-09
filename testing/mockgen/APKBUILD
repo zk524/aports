@@ -1,0 +1,28 @@
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+pkgname=mockgen
+pkgver=0.4.0
+pkgrel=0
+pkgdesc="mocking framework for Go"
+url="https://github.com/uber-go/mock"
+arch="all"
+license="Apache-2.0"
+makedepends="go"
+options="!check net"
+source="https://github.com/uber-go/mock/archive/v$pkgver/mock-$pkgver.tar.gz"
+builddir="$srcdir/mock-$pkgver"
+
+build() {
+	export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+	export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+	export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+	cd mockgen && go build
+}
+
+package() {
+	install -D -m755 mockgen/mockgen "$pkgdir"/usr/bin/mockgen
+}
+
+sha512sums="
+b8b895f01fa06bae2fed78c9a08ac678d83c6e646ff633245186f73007376fb173d306077fbced6216081ba0f7c1d67d421f07a83194739ae42d122685d21a2b  mock-0.4.0.tar.gz
+"

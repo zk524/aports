@@ -1,13 +1,13 @@
 # Contributor: Oliver Smith <ollieparanoid@postmarketos.org>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=linux-firmware
-pkgver=20240909
-pkgrel=2
+pkgver=20241017
+pkgrel=0
 pkgdesc="firmware files for linux"
 url="https://git.kernel.org/?p=linux/kernel/git/firmware/linux-firmware.git;a=summary"
 arch="all"
 license="custom"
-makedepends="libarchive-tools coreutils rdfind zstd"
+makedepends="libarchive-tools coreutils python3 rdfind zstd"
 provides="linux-firmware-any"
 provider_priority=2
 options="!strip !check !archcheck !spdx"
@@ -52,6 +52,7 @@ package() {
 	## install upstream linux-firmare files
 	export ZSTD_NBTHREADS=4 ZSTD_CLEVEL=19
 	make DESTDIR="$pkgdir" FIRMWAREDIR="/lib/firmware" install-zst
+	make DESTDIR="$pkgdir" FIRMWAREDIR="/lib/firmware" dedup
 
 	find "$pkgdir" \( -name '*.S' -or -name '*.asm' -or \
 		-name '*.c' -or -name '*.h' -or -name '*.pl' -or \
@@ -224,7 +225,7 @@ s5p_mfc() {
 }
 
 sha512sums="
-27df561de4612016e7f5e5cf1c200f0d84b376d790b5df372608a8896fb6387de2c2da41ef1178ee2bec2e065e811db7a00a7bb7800fb689c738004128b04dc9  linux-firmware-20240909.tar.gz
+2c94f04a9a334e7be5640f70b81b68862e4c02059c833c380483731977c2df3599a70f8f1a77d29b1cd9475022a249cd64731f378e67b02fe9698114c593f50a  linux-firmware-20241017.tar.gz
 d5182840ba3c1a12e5d8afa078fa334d8c1a2e0e5ca33fa675e64ac1ac26f732a588ac2c7451a4ccf739121268bc56b2f7f22d66cc5344ff108e39e410886419  bluez-firmware-78d6a07730e2d20c035899521ab67726dc028e1c.tar.gz
 790ac2a68fef50fe01969e7269f9f9ee024b4b26bf3e1ffe5d5ced11d1c8bc995858f7acae3c80d8d212812cd208f112c00e159038f5ba92eeaa23384963ba8b  brcm-firmware-4b356e134e8333d073bd3802d767a825adec3807.tar.gz
 "

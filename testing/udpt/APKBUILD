@@ -1,5 +1,5 @@
 # Contributor: Thomas Kienlen <kommander@laposte.net>
-# Maintainer: Thomas Kienlen <kommander@laposte.net>
+maintainer="Thomas Kienlen <kommander@laposte.net>"
 pkgname=udpt
 pkgver=3.1.2
 pkgrel=0

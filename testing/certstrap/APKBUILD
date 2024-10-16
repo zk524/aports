@@ -1,5 +1,5 @@
 # Contributor: Thomas Kienlen <kommander@laposte.net>
-# Maintainer: Thomas Kienlen <kommander@laposte.net>
+maintainer="Thomas Kienlen <kommander@laposte.net>"
 pkgname=certstrap
 pkgver=1.3.0
 pkgrel=18

@@ -1,5 +1,5 @@
 # Contributor: Thomas Kienlen <kommander@laposte.net>
-# Maintainer: Thomas Kienlen <kommander@laposte.net>
+maintainer="Thomas Kienlen <kommander@laposte.net>"
 pkgname=gcompris-qt
 pkgver=4.2
 pkgrel=0

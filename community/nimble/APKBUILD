@@ -1,7 +1,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=nimble
-pkgver=0.14.2
+pkgver=0.18.2
 pkgrel=0
 pkgdesc="Package manager for the Nim programming language"
 url="https://github.com/nim-lang/nimble"
@@ -9,12 +9,25 @@ arch="all !s390x" # blocked by nim
 license="BSD-3-Clause"
 depends="nim libssl3"
 subpackages="$pkgname-bash-completion $pkgname-zsh-completion"
-source="https://github.com/nim-lang/nimble/archive/v$pkgver/nimble-$pkgver.tar.gz"
+_nimbleReleaseCommit="6ba10a435bac800f5fd18bd4afa2870b0bfb7f14"
+_checksumsStableCommit="3fa15df7d27ecef624ed932d60f63d6a8949618d"
+_satStableCommit="faf1617f44d7632ee9601ebc13887644925dcc01"
+_zippyStableCommit="a99f6a7d8a8e3e0213b3cad0daf0ea974bf58e3f"
+source="https://github.com/nim-lang/nimble/archive/v$pkgver/nimble-$pkgver.tar.gz
+	https://github.com/nim-lang/checksums/archive/$_checksumsStableCommit.tar.gz
+	https://github.com/nim-lang/sat/archive/$_satStableCommit.tar.gz
+	https://github.com/guzba/zippy/archive/$_zippyStableCommit.tar.gz
+"
+
 # TODO: Fix tests
 options="!check"
 
 prepare() {
 	default_prepare
+
+	cp -r ../sat-$_satStableCommit/* vendor/sat
+	cp -r ../checksums-$_checksumsStableCommit/* vendor/checksums
+	cp -r ../zippy-$_zippyStableCommit/* vendor/zippy
 
 	# XXX: This is a workaround for missing option in unittest to skip/exclude
 	# particular suite(s).
@@ -30,7 +43,7 @@ prepare() {
 }
 
 build() {
-	nim compile -d:release src/nimble
+	nim compile -d:git_revision_override="$_nimbleReleaseCommit" -d:release src/nimble
 }
 
 check() {
@@ -48,7 +61,9 @@ package() {
 	install -D -m 644 nimble.bash-completion \
 		"$pkgdir"/usr/share/bash-completion/completions/nimble
 }
-
 sha512sums="
-cbfb0274fb8644f4b1e453275c3544718958370c7cde0d0a60d3bd1ce5e3a3ec980f9a330c9755d02833134be5898da964dfe71e9a3f8aea9a88230391187a63  nimble-0.14.2.tar.gz
+4f8d7984e60a1f82f7e98a5d9302890dac10b48f85841f67cb75b2553fd810f878df61ffc0831b39ff62a7e6da1b9854ea8b7118ac334561617d909bda60df5a  nimble-0.18.2.tar.gz
+fd89b3d4e413b887fb1af606a07bb3dad4ad0abe2609de4491f0ebacf05ee63a04d7ce15345b924351f63fc36571b12ba66693fba84d0b50c2393f49c6b03ca7  3fa15df7d27ecef624ed932d60f63d6a8949618d.tar.gz
+1450f01fd4952aab2365aa28333c283d68e878416dd8f807d1d00b855fd6473a475517eaa36dc7d2b616b247168ef31eb7ba3c6ee6e035e86f63a5399e91a0a0  faf1617f44d7632ee9601ebc13887644925dcc01.tar.gz
+1233364573bcbc5932be8516d9e04cdf72dfa7af9f82d8aab57c57624507c048bdfd579362824005c25323ec939c8ab6baf9918e457e0095a7e4bd1d11022402  a99f6a7d8a8e3e0213b3cad0daf0ea974bf58e3f.tar.gz
 "

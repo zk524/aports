@@ -2,7 +2,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=linux-firmware
 pkgver=20241017
-pkgrel=0
+pkgrel=1
 pkgdesc="firmware files for linux"
 url="https://git.kernel.org/?p=linux/kernel/git/firmware/linux-firmware.git;a=summary"
 arch="all"
@@ -53,10 +53,6 @@ package() {
 	export ZSTD_NBTHREADS=4 ZSTD_CLEVEL=19
 	make DESTDIR="$pkgdir" FIRMWAREDIR="/lib/firmware" install-zst
 	make DESTDIR="$pkgdir" FIRMWAREDIR="/lib/firmware" dedup
-
-	find "$pkgdir" \( -name '*.S' -or -name '*.asm' -or \
-		-name '*.c' -or -name '*.h' -or -name '*.pl' -or \
-		-name 'Makefile' \) -exec rm -- {} \;
 
 	## replace Pi bluez and wifi firmware files by original from Pi Foundation's
 	rm -f "$pkgdir"/lib/firmware/brcm/*aspberry*

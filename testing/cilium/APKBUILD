@@ -1,0 +1,115 @@
+maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
+pkgname=cilium
+pkgver=1.18.0
+pkgrel=0
+pkgdesc="eBPF-based networking, security and observability dataplane"
+url="https://cilium.io/"
+# 32-bit: pkg/datapath/linux/linux_defaults fails to build
+arch="all !x86 !armhf !armv7"
+license="Apache-2.0"
+makedepends="go"
+checkdepends="clang"
+subpackages="
+	$pkgname-doc
+	$pkgname-bash-completion
+	$pkgname-fish-completion
+	$pkgname-zsh-completion
+
+	hubble-cli:_hubble
+	hubble-cli-bash-completion:_hubble_bashcomp
+	hubble-cli-fish-completion:_hubble_fishcomp
+	hubble-cli-zsh-completion:_hubble_zshcomp
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/cilium/cilium/archive/refs/tags/v$pkgver.tar.gz
+	byteorder-add-s390x-support.patch
+	"
+
+# TODO: add OpenRC services and setup for cilium-agent / cilium-dbg
+# Upstream setup script: https://github.com/cilium/cilium/blob/07b6d6713ef87fa0681c12f7c35178b56f35d538/cilium-cli/clustermesh/clustermesh.go#L1102
+# Ref: https://docs.cilium.io/en/v1.17.0/network/external-workloads/
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	mkdir "$builddir"/bin
+
+	go build -v \
+		-o bin/cilium-agent \
+		-ldflags "-X github.com/cilium/cilium/pkg/version.ciliumVersion=$pkgver" \
+		./daemon/
+
+	go build -v \
+		-o bin/cilium-dbg \
+		-ldflags "-X github.com/cilium/cilium/pkg/version.ciliumVersion=$pkgver" \
+		./cilium-dbg/
+
+	go build -v \
+		-o bin/hubble \
+		-ldflags "-X github.com/cilium/cilium/hubble/pkg.GitBranch=main -X github.com/cilium/cilium/hubble/pkg.GitHash=AlpineLinux -X github.com/cilium/cilium/hubble/pkg.Version=v$pkgver" \
+		./hubble/
+
+	mkdir "$builddir"/man
+	./bin/cilium-dbg cmdman -d man
+
+	for binary in hubble cilium-agent cilium-dbg; do
+		for shell in bash fish zsh; do
+			./bin/$binary completion $shell > $binary.$shell
+		done
+	done
+}
+
+check() {
+	# TestSystemConfigProbes test fails in CI (kernel config file not found)
+	go test -skip TestSystemConfigProbes ./...
+}
+
+package() {
+	install -Dm755 "$builddir"/bin/* -t "$pkgdir"/usr/bin/
+	install -Dm644 "$builddir"/man/*.1 -t "$pkgdir"/usr/share/man/man1/
+
+	for binary in cilium-dbg cilium-agent; do
+		install -Dm644 "$binary".bash \
+			"$pkgdir"/usr/share/bash-completion/completions/$binary
+		install -Dm644 "$binary".fish \
+			"$pkgdir"/usr/share/fish/vendor_completions.d/"$binary".fish
+		install -Dm644 "$binary".zsh \
+			"$pkgdir"/usr/share/zsh/site-functions/_$binary
+	done
+}
+
+_hubble() {
+	pkgdesc="CLI for the distributed networking and security observability platform"
+
+	amove usr/bin/hubble
+}
+
+_hubble_bashcomp() {
+	pkgdesc="Bash completions for hubble-cli"
+	install_if="hubble-cli=$pkgver-r$pkgrel bash-completion"
+
+	install -Dm644 "$builddir"/hubble.bash \
+		"$subpkgdir"/usr/share/bash-completion/completions/hubble
+}
+
+_hubble_fishcomp() {
+	pkgdesc="Fish completions for hubble-cli"
+	install_if="hubble-cli=$pkgver-r$pkgrel fish"
+
+	install -Dm644 "$builddir"/hubble.fish \
+		"$subpkgdir"/usr/share/fish/vendor_completions.d/hubble.fish
+}
+
+_hubble_zshcomp() {
+	pkgdesc="Zsh completions for hubble-cli"
+	install_if="hubble-cli=$pkgver-r$pkgrel zsh"
+
+	install -Dm644 "$builddir"/hubble.zsh \
+		"$subpkgdir"/usr/share/zsh/site-functions/_hubble
+}
+
+sha512sums="
+aef6b3566deccade80334ea4cc3b69c97450c1daf97cce2414b70bdea1e91ab71b88eac8d08644c47bc204ce10b7708a7a2ef1ff3c0e7db25403aaa1e051d3bd  cilium-1.18.0.tar.gz
+db4d5cfcfc0205eebeabf4fe0272b3443e3814a4443280d709ac092dbeacf6f5ab7542630656b1a783c70027acba83e45151a0456a5e93679c7a384b2a2f3d3b  byteorder-add-s390x-support.patch
+"

@@ -1,0 +1,15 @@
+They want to use _PATH_MOUNTED, which is defined in paths.h. On glibc, paths.h
+is included in mntent.h, so it happens to work on glibc. This is not the case
+for musl.
+
+diff -Nurp VirtualBox-7.1.0.orig/src/VBox/Runtime/r3/posix/RTFsMountpointsEnum-posix.cpp VirtualBox-7.1.0/src/VBox/Runtime/r3/posix/RTFsMountpointsEnum-posix.cpp
+--- VirtualBox-7.1.0.orig/src/VBox/Runtime/r3/posix/RTFsMountpointsEnum-posix.cpp	2024-09-06 15:00:55.000000000 +0000
++++ VirtualBox-7.1.0/src/VBox/Runtime/r3/posix/RTFsMountpointsEnum-posix.cpp	2024-09-11 19:51:59.981796952 +0000
+@@ -43,6 +43,7 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #ifdef RT_OS_LINUX
++# include <paths.h>
+ # include <mntent.h>
+ #endif
+ #if defined(RT_OS_DARWIN) || defined(RT_OS_FREEBSD)

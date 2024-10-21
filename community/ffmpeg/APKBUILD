@@ -3,8 +3,8 @@
 # Contributor: Jakub Skrzypnik <j.skrzypnik@openmailbox.org>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=ffmpeg
-pkgver=6.1.1
-pkgrel=9
+pkgver=6.1.2
+pkgrel=0
 pkgdesc="Complete and free Internet live audio and video broadcasting solution for Linux/Unix"
 url="https://ffmpeg.org/"
 arch="all"
@@ -40,6 +40,7 @@ makedepends="
 	libxml2-dev
 	lilv-dev
 	nasm
+	openjpeg-dev
 	openssl-dev
 	opus-dev
 	perl-dev
@@ -73,7 +74,11 @@ subpackages="
 	$pkgname-libs
 	"
 source="https://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz
+	0001-avcodec-pcm-bluray-dvd-Use-correct-pointer-types-on-.patch
+	0001-avutil-hwcontext_vaapi-use-the-correct-type-for-VASu.patch
 	0001-ffbuild-libversion.sh-add-shebang.patch
+	0001-libavcodec-arm-mlpdsp_armv5te-fix-label-format-to-wo.patch
+	0001-libavcodec-fix-Wint-conversion-in-vulkan.patch
 	add-av_stream_get_first_dts-for-chromium.patch
 	v4l-ioctl.patch
 	riscv-compliant-rvv.patch
@@ -226,6 +231,7 @@ build() {
 		--enable-libfribidi \
 		--enable-libharfbuzz \
 		--enable-libmp3lame \
+		--enable-libopenjpeg \
 		--enable-libopenmpt \
 		--enable-libopus \
 		--enable-libplacebo \
@@ -358,10 +364,14 @@ ffplay() {
 }
 
 sha512sums="
-fca3f8635f29182e3ae0fe843a8a53614e4b47e22c11508df3ff7cdbafbb4b5ee0d82d9b3332871f7c1032033b1cad2f67557d7c5f7f7d85e2adadca122965d5  ffmpeg-6.1.1.tar.xz
+3a009184d971fc3168e1322d1d724aae787ed0e9c152d8d1813ea0b9099bda3b35c41fcabbd7b140560e7a8fa9fa1ffd7f0938432d5d498c43829fc6cc3d9e08  ffmpeg-6.1.2.tar.xz
+1fceb4f84cac4054c5a870ba82a6d3fda94962c1bd349ca4fee566ede3c722409b0ad0f9d18c62eb06b30e5558231e154ba747e403820f1311aab7bd9f21ea69  0001-avcodec-pcm-bluray-dvd-Use-correct-pointer-types-on-.patch
+c153d4828a0913592236903cf5f45a0ad1c7059113b758f2439c2615c6897db0f6d53558961331104e79b06b6a038251f621e6d38e2f84715741fc7595076bdd  0001-avutil-hwcontext_vaapi-use-the-correct-type-for-VASu.patch
 38443b570cf32b2ba8ffa9ecc5480425c7da9f93f9773fbb3f9ec5f603b369b6225f4329a1b1f34d0ef30b2c9730f25ff9cff31315ed0a89a600df8e53bd54bf  0001-ffbuild-libversion.sh-add-shebang.patch
+007ee5e6878ca4c0193321da6cfe16f0a4b6bcd7ac3748e8f9df40cca14537f90769b4a3c0ac6fecd5da8672d0894565d3418f8aa10ca0be010dc55ef864bee2  0001-libavcodec-arm-mlpdsp_armv5te-fix-label-format-to-wo.patch
+c2bf32931f6b2890c1b528525a97c6960cd12268ab996f87842ae33de49f270d12da1e6bbff9d9971220c47c7172532f233a33da60a7861eb0809fab583ff129  0001-libavcodec-fix-Wint-conversion-in-vulkan.patch
 2804a3317a9c5fbc793af1dc7b9c13113bf8fd232f14a580ad98f25d848edf93015fd08c0aad0316e3a5439aef88ef15be3520dcbfe844791a5f03490a4c7f0b  add-av_stream_get_first_dts-for-chromium.patch
-c73d751e5d2a8214f0beb1b48fac6829903d46ad7db0dddddf47013193efce487825de495a24408d9a8e3c7f78f15fe62a6c14b54efc80e63dde9903cf08e918  v4l-ioctl.patch
+0d5bbc02c57c1dfc0db441d51e40c1807662438f7b29dd224985e12b52ec614803425cdce12728e2010b7c8251610ce081780bd5b0fb48b439610137bb92fc9b  v4l-ioctl.patch
 f3d824511a880bf6971f35271c8f8e7001053a93be212a732b49738e990d3d4ac99a302f28002f588e2cb5a2c01d22db159c1990853f3a201bca56a32ba6924e  riscv-compliant-rvv.patch
 d536f253f97b3c406c31f1eb7016194180f581968c4c0cb0135d199df20850784e38428e2c87da923179723278624da351343d1e1015363d2554cc15d5fa6401  FFmpeg-devel-v2-1-2-lavc-vaapi_decode-Make-it-possible-to-send-multiple-slice-params-buffers.patch
 3750d6c00bf0114161fbf373c7dac8c5ad56022820d0b32f3e077b61f8b334b6732a42141df853ac4d7dcc5b18113cb1538c3b99ccbaab30facd9c835fb4bf4e  FFmpeg-devel-v2-2-2-lavc-vaapi_av1-Avoid-sending-the-same-slice-buffer-multiple-times.patch

@@ -4,7 +4,9 @@
 pkgname=blender
 pkgver=4.2.3
 _pkgver=${pkgver%.[0-9]}
-pkgrel=0
+# See https://projects.blender.org/blender/blender/src/tag/v$pkgver/tests
+_test_data_commit=84f8d8b7f4fd71f2bced9b283fd93b9eecb69b16
+pkgrel=1
 pkgdesc="3D Creation/Animation/Publishing System"
 url="https://www.blender.org/"
 arch="x86_64 aarch64" # limited by openvdb
@@ -64,6 +66,7 @@ makedepends="
 	"
 subpackages="$pkgname-doc $pkgname-shared::noarch $pkgname-headless py3-$pkgname:python"
 source="https://download.blender.org/source/blender-$pkgver.tar.xz
+	blender-test-data-$_test_data_commit.tar.gz::https://projects.blender.org/blender/blender-test-data/archive/$_test_data_commit.tar.gz
 	0001-musl-fixes.patch
 	0002-fix-includes.patch
 	"
@@ -73,6 +76,11 @@ source="https://download.blender.org/source/blender-$pkgver.tar.xz
 #     - CVE-2022-2831
 #     - CVE-2022-2832
 #     - CVE-2022-2833
+
+prepare() {
+	default_prepare
+	ln -s ../../blender-test-data tests/data
+}
 
 build() {
 	# Headless
@@ -100,9 +108,25 @@ _build() {
 		-DWITH_SYSTEM_EIGEN3=ON \
 		-DWITH_SYSTEM_LZO=ON \
 		-DWITH_LZMA=OFF \
+		-DWITH_GTESTS="$(want_check && echo ON || echo OFF)" \
 		-DPYTHON_VERSION=$py_version
 
 	cmake --build "$outdir"
+}
+
+check() {
+	# FIXME io_alembic/io_alembic_export_tests/ffmpeg TEST_INSTALL_DIR
+	# FIXME others: Unrecognized file format
+	local exclude='blenkernel|blenloader|io_common|io_wavefront|io_ply|io_stl|io_alembic'
+	ctest --test-dir build-headless -E "$exclude"
+	ctest --test-dir build-full -E "$exclude"
+
+	# FIXME !IsGoogleLoggingInitialized() You called InitGoogleLogging() twice!
+#	PYTHONPATH="$PWD/build-py/bin:$PWD/scripts/modules" \
+#	LD_LIBRARY_PATH="$PWD/build-py/lib" \
+#	BLENDER_SYSTEM_DATAFILES="$PWD/release/datafiles" \
+#	BLENDER_SYSTEM_SCRIPTS="$PWD/scripts" \
+#	ctest --test-dir build-py
 }
 
 package() {
@@ -147,6 +171,7 @@ python() {
 
 sha512sums="
 5b12d56ab2b4c793bdb767b60aedc3de2e90d1b7ada795b6456a9bc1e27376ff17908151995c7b06b6c3d3ee77592701af2b2710ad8e01e5ca1825b1cbd2c8e9  blender-4.2.3.tar.xz
+c59411113255d10d8bf907ec1dbaad9702a3feb2014b08d95c6202378e2cb07affb596e9c5240ef3a58c5a0bcf57f209e752f54c31b87a2e5762fe0265cf8882  blender-test-data-84f8d8b7f4fd71f2bced9b283fd93b9eecb69b16.tar.gz
 8b0b6353d863a1854a77e10f0014a89cae91109cf52314b1bd223399cc1562e8000e5865313a21988becbde4b3fe99def9ad303ebdeb8468e6603c91598e25bd  0001-musl-fixes.patch
 832103f6c1ed82a324a4324e4fb10bfb84d396cc7ec90907ecaa87e42331c93e36cb60b5be642bab9f0775f9da581529db123f5e76c2fb1c81dc73babe54a733  0002-fix-includes.patch
 "

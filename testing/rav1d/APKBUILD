@@ -12,7 +12,7 @@ source="https://github.com/memorysafety/rav1d/archive/v$pkgver/rav1d-$pkgver.tar
 
 prepare() {
 	default_prepare
-	cargo fetch --target="x86_64-alpine-linux-musl" --locked
+	cargo fetch --target=$CTARGET --locked
 }
 
 build() {

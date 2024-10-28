@@ -2,7 +2,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=davfs2
 pkgver=1.6.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Linux FUSE (or coda) driver that allows you to mount a WebDAV resource"
 url="http://savannah.nongnu.org/projects/davfs2"
 options="suid"
@@ -16,6 +16,7 @@ source="https://download.savannah.gnu.org/releases/davfs2/davfs2-$pkgver.tar.gz
 	010-main_code_fix.patch
 	100-musl-compat.patch
 	200-newer-neon.patch
+	1a1c44b8a81118774b3b3de50213e506e7d66c55.patch
 	"
 
 prepare() {
@@ -51,4 +52,5 @@ sha512sums="
 1d839b1435ae67209aae2501c1188880e991adece7b34b6b91d1fcba7390fd9d72d2aa7e057d03ed9f1519e682d0f0a8472c47ed64f78a25fe0f67c54a847ce3  010-main_code_fix.patch
 66dd968d85a18d281d8a41e15b17f0344accfe44951fa17d1d5c9f9bb67442f4d1410adda144562fa45bd561837c486d24f98ac2a0da4800a1e7dd79126caec7  100-musl-compat.patch
 6ca4e702c1778d659c4ba079252b0308a806ca607aa32c1a7390181831b7595c6633185b70639260fbfd1a13f89ddaf57e3f50c0fa69862f3fa087fc876c8651  200-newer-neon.patch
+529af90e0772429a495079fc606ae6ccab67f948dad5f169ace811933622df66ce604e611a6ce55d6e5b7accc1321059be8a71ee8a94e81003aa949d8ce6e01b  1a1c44b8a81118774b3b3de50213e506e7d66c55.patch
 "

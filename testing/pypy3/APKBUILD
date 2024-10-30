@@ -1,7 +1,6 @@
 # Maintainer: Thomas Liske <thomas@fiasko-nw.net>
 pkgname=pypy3
-pkgver=7.3.12
-_pkgver=${pkgver/_/}
+pkgver=7.3.17
 _pyver=3.10
 pkgrel=0
 pkgdesc="Fast, compliant alternative implementation of Python $_pyver"
@@ -25,11 +24,11 @@ makedepends="
 	zlib-dev
 	"
 subpackages="$pkgname-dev $pkgname-tests $pkgname-tkinter $pkgname-pyc"
-source="https://downloads.python.org/pypy/pypy$_pyver-v$_pkgver-src.tar.bz2
+source="https://downloads.python.org/pypy/pypy$_pyver-v$pkgver-src.tar.bz2
 	0001-time.patch
 	0002-extern-stdio.patch
 	"
-builddir="$srcdir/pypy$_pyver-v$_pkgver-src"
+builddir="$srcdir/pypy$_pyver-v$pkgver-src"
 options="!check" # todo
 
 [ "$CARCH" = "x86" ] && options="$options textrels" # on x86 has textrels
@@ -129,7 +128,7 @@ tkinter() {
 }
 
 sha512sums="
-080520c7de267e17a2823f06cd0a15c108a2c32fc296d6e24782050eb546fa74852d948ede2c381dba110774121b20efc3a07b553acd0ac0db4a844dfc09069e  pypy3.10-v7.3.12-src.tar.bz2
+46e30845bbc73cf56f5033a24d3583253ce198522f3a28ae4e789884063ba167d401fc08ae7fc8c7769feed9cd942a8ab38961c8b8794d7fae8f9955479faa96  pypy3.10-v7.3.17-src.tar.bz2
 42abc8c67c249ff012010aec568579cd738ed2d74ffdf93755c9427117e85cd859390266c7431fcb4d2fcfd82b61d5ba0c58bd0ceda44e5d12bf22df5935bb24  0001-time.patch
 b648204914072e74367b94065d65b423324bcbabc0e2199ad195ab9822ccc6c51ec552c8c17ed22c26caf73b04d16d6f4c3e14a8d1af0e378d76d6c3b587b784  0002-extern-stdio.patch
 "

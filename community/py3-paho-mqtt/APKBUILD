@@ -1,4 +1,4 @@
-# Contributor: Fabian Affolter <fabian@affolter-engineering.ch>
+# Contributor: Guy Godfroy <guy.godfroy@gugod.fr>
 # Maintainer: Fabian Affolter <fabian@affolter-engineering.ch>
 pkgname=py3-paho-mqtt
 pkgver=2.1.0
@@ -19,6 +19,13 @@ replaces=py-paho-mqtt # Backwards compatibility
 provides=py-paho-mqtt=$pkgver-r$pkgrel # Backwards compatibility
 
 build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	PYTHONPATH="$builddir"/src py.test-3
 	gpep517 build-wheel \
 		--wheel-dir .dist \
 		--output-fd 3 3>&1 >&2

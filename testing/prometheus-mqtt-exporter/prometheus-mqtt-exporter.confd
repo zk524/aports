@@ -1,0 +1,9 @@
+# Configuration for /etc/init.d/mqtt-exporter
+
+output_log=/var/log/mqtt-exporter.log
+error_log=/var/log/mqtt-exporter.log
+
+# Configuration is done with environment variables.
+# See https://github.com/kpetremann/mqtt-exporter?tab=readme-ov-file#configuration
+
+export MQTT_ADDRESS=127.0.0.1

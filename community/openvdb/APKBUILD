@@ -1,29 +1,32 @@
 # Contributor: Leon Marz <main@lmarz.org>
 # Maintainer: Leon Marz <main@lmarz.org>
 pkgname=openvdb
-pkgver=11.0.0
-pkgrel=2
+pkgver=12.0.0
+pkgrel=0
 pkgdesc="Sparse volume data structure and tools"
 url="https://www.openvdb.org/"
-arch="aarch64 x86_64" # tests fail on all other arches
-license="MPL-2.0"
-makedepends="cmake clang onetbb-dev blosc-dev boost-dev python3-dev py3-pybind11-dev gtest-dev samurai"
-subpackages="$pkgname-static $pkgname-nanovdb:nanovdb:noarch $pkgname-tools:tools $pkgname-dev py3-$pkgname:python"
-source="$pkgname-$pkgver.tar.gz::https://github.com/AcademySoftwareFoundation/openvdb/archive/v$pkgver.tar.gz"
-
-# deadlocked unit tests on builders
-[ "$CARCH" = "aarch64" ] && options="$options !check"
+# armhf/armv7/x86:  static assertion failed due to requirement '88U == 60U'
+# s390x: tests segfault
+# ppc64le/aarch64: TypeError: signedFloodFill is supported only for signed value grids
+arch="x86_64 armhf armv7 x86"
+license="Apache-2.0"
+makedepends="cmake clang18 onetbb-dev blosc-dev boost-dev python3-dev gtest-dev samurai"
+subpackages="$pkgname-static $pkgname-nanovdb:nanovdb:noarch $pkgname-tools:tools $pkgname-dev" # FIXME py3-$pkgname:python
+source="$pkgname-$pkgver.tar.gz::https://github.com/AcademySoftwareFoundation/openvdb/archive/v$pkgver.tar.gz
+	32-bit.patch
+	"
 
 build() {
-	export CC=clang
-	export CXX=clang++
+	export CC=clang-18
+	export CXX=clang++-18
 
+	# FIXME package py3-nanobind and re-enable python module
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=True \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DOPENVDB_BUILD_PYTHON_MODULE=ON \
+		-DOPENVDB_BUILD_PYTHON_MODULE=OFF \
 		-DOPENVDB_BUILD_UNITTESTS=ON \
 		-DOPENVDB_BUILD_NANOVDB=ON \
 		-DOPENVDB_ENABLE_RPATH=OFF
@@ -33,7 +36,7 @@ build() {
 
 check() {
 	cd build
-	CTEST_OUTPUT_ON_FAILURE=1 ctest
+	ctest
 }
 
 package() {
@@ -56,5 +59,6 @@ python() {
 }
 
 sha512sums="
-f2c90ca8435ecbacefda429341000ecb555385c746a3e0233220cd78540cee2a26cc17df7b560fdfe2dc03f2b2e960a2fa226a85980189c3e018164ccc037bd4  openvdb-11.0.0.tar.gz
+7ea2997afa99ed1ed23422eb8b8420c7127c913432f94043ccf559b6720bba2f6e19376e955d8d9055ab765a821749936966f6e5925b9d36febaa724d866b90a  openvdb-12.0.0.tar.gz
+57f4df8674584de2b37d0b7e15aebdc75d877746951efa5c852a588559c872052250e3f1c3f77c5637172ce1f31486bef1310b8d61dc3f53ebf97de378dbcce5  32-bit.patch
 "

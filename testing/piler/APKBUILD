@@ -2,7 +2,7 @@
 # Maintainer: Noel Kuntze <noel.kuntze@thermi.consulting>
 pkgname=piler
 pkgver=1.4.7
-pkgrel=0
+pkgrel=1
 pkgdesc="Open source email archiving solution with all the necessary features for your enterprise"
 url="https://www.mailpiler.org/"
 arch="x86_64 aarch64" # libmanticore-columnar is only supported on x86_64 and aarch64
@@ -39,6 +39,7 @@ pkgusers="piler"
 pkggroups="piler"
 source="https://github.com/jsuto/piler/archive/refs/tags/piler-$pkgver.tar.gz
 	0001-manticore-conf.patch
+	0002-piler-usr.patch
 
 	piler.initd
 	piler-smtp.initd
@@ -48,6 +49,7 @@ source="https://github.com/jsuto/piler/archive/refs/tags/piler-$pkgver.tar.gz
 builddir="$srcdir/piler-piler-$pkgver"
 
 build() {
+	# For some reason localstatedir is used to determine where to install files too...
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \
@@ -64,9 +66,12 @@ build() {
 }
 
 package() {
-
 	make installdirs DESTDIR="$pkgdir"
 	make install DESTDIR="$pkgdir"
+
+	mkdir -p "$pkgdir"/usr/share/webapps
+	mv "$pkgdir"/var/piler/www "$pkgdir"/usr/share/webapps/piler
+	mkdir -p "$pkgdir"/var/piler/www/tmp
 
 	# service files
 	rm -rf "$pkgdir"/etc/init.d
@@ -97,7 +102,7 @@ package() {
 	# Fix directory permissions
 	chmod -R a-s "$pkgdir"/usr/bin
 	chmod 644 "$pkgdir"/etc/piler/*
-	chmod 770 "$pkgdir"/var/piler/www/tmp "$pkgdir"/var/piler/www/images
+	chmod 770 "$pkgdir"/var/piler/www/tmp "$pkgdir"/usr/share/webapps/piler/images
 	chown piler:www-data "$pkgdir"/var/piler/www/tmp
 
 	install -d "$pkgdir"/var/log/$pkgname
@@ -109,6 +114,7 @@ package() {
 sha512sums="
 0794b3d7e88a164c356bfc643594cb6ffb860be4a3bf26fa1a2dd1c4e3bf26442a08334a1ee7eb63fc2801a0bb27881f2bbe0f98cf9a26619b964bb3531d1166  piler-1.4.7.tar.gz
 918c2809db685f676cf3319d687568d380eba3dd43e8c36b00648abb420fe35d036aa1b21d51fe43497aa297546341c1fbdd79ab643bfed4a9f80874a027c446  0001-manticore-conf.patch
+f47dbfa9472fe6536d81fa5f2a5b32fe1633d23aac9c6761e2e03bfd399b933ab8114120de074b92ae0684a1c862c1cf8e5f60419a82ad352a896a6417efb1b7  0002-piler-usr.patch
 89f4f2136fbe5a7d5106f79533d4b3487ef67d7f8c1added31193114bf4471cff63d1c99bfde23aafb4915e5c00292907b7fd568964ceb8b32da7009f3d4e59b  piler.initd
 3cf50479a0a8b79c1d41f4c4eaa7393630a03f6b007cd8d62b3538bd85d44bc68b949134ad671600073a35428aa0fef7ea2b03ff881f9dc5fdcf444f5e282a01  piler-smtp.initd
 c4ad4742c3bd899d8f8004f16252b4862e19683cba6d3d4a7c86d9ed90942c7b3878fc713915aa299b28852f798fedee5ae73e28844d653383d6c7a07698fde4  searchd.initd

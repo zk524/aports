@@ -1,17 +1,16 @@
 # Maintainer: Thomas Aldrian <aldrian.thom@proton.me>
 pkgname=plots
-pkgver=0.7.0
+pkgver=0.8.5
 pkgrel=0
 pkgdesc="A graph plotting app for GNOME"
 url="https://github.com/alexhuntley/Plots"
 # loongarch64: blocked by py3-pyglm
 arch="noarch !loongarch64"
 license="GPL-3.0-or-later"
-# >=0.8.0 requires adwaita & gtk4 instead of libhandy & gtk3
 depends="
 	freeglut
-	gtk+3.0
-	libhandy1
+	gtk4.0
+	libadwaita
 	py3-freetype-py
 	py3-gobject3
 	py3-jinja2
@@ -20,25 +19,27 @@ depends="
 	py3-opengl
 	py3-pyglm
 	"
-makedepends="py3-setuptools"
+makedepends="py3-gpep517 py3-setuptools py3-wheel"
 checkdepends="py3-pytest mesa-osmesa"
 source="$pkgname-$pkgver.tar.gz::https://github.com/alexhuntley/Plots/archive/refs/tags/v$pkgver.tar.gz"
 builddir="$srcdir/Plots-$pkgver"
 
 build() {
-	python3 setup.py build
+	gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2
 }
 
 check() {
 	# Required for headless
 	export PYOPENGL_PLATFORM="osmesa"
-	pytest
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest
 }
 
 package() {
-	python3 setup.py install --prefix=/usr --root="$pkgdir"
+	python3 -m installer -d "$pkgdir" .dist/*.whl
 }
 
 sha512sums="
-d72576873b728ab4d02375462912c970f1c52524e80bd0690d79c04b117af7d9d60f150dc29f70ac198074aa338e21eef94cf8d28e9062540401564de3a4b88b  plots-0.7.0.tar.gz
+d9fc9e9f0c5e0e5a3d828e6eeb59aebe68a121c16db7c424239776384a52905dd4c366570a5a37aa43e418767380cd15cae9e11e4e2efd4d632fbc2c8f363e42  plots-0.8.5.tar.gz
 "

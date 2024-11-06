@@ -1,0 +1,51 @@
+# Contributor: Guy Godfroy <guy.godfroy@gugod.fr>
+# Maintainer: Guy Godfroy <guy.godfroy@gugod.fr>
+pkgname=planify
+pkgver=4.11.6
+pkgrel=0
+pkgdesc="GTK4 task manager with Todoist & Nextcloud support"
+url="https://useplanify.com"
+arch="all"
+license="GPL-3.0-or-later"
+depends="libportal-gtk4"
+makedepends="
+	meson
+	vala
+	glib-dev
+	libgee-dev
+	gtk4.0-dev
+	libsoup3-dev
+	sqlite-dev
+	libadwaita-dev
+	webkit2gtk-6.0-dev
+	gtksourceview5-dev
+	granite7-dev
+	json-glib-dev
+	evolution-data-server-dev
+	libportal-dev
+	libsecret-dev
+	gxml-dev
+	desktop-file-utils"
+subpackages="$pkgname-dev $pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/alainm23/planify/archive/refs/tags/$pkgver.tar.gz
+	01-time_t.patch
+	"
+
+build() {
+	abuild-meson \
+		. output
+	meson compile -C output
+}
+
+check() {
+	meson test --no-rebuild --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+536c8a0746d9198271d3fa9b4c46fab011504732fe00d3c90fdbbe313d3b2f4a18e62bbf4b1a8d907c1aa28ea4048461c924ed0f5dc392c5c1a827cc6e2c9cb6  planify-4.11.6.tar.gz
+543cf6555b644472233f5c50268c1dc76cf60ac2c83db145e93110c58edd379837f0c4351abae33decb7fc37e7b1e5c942a680cbd1409a4d6f8cd702a5160797  01-time_t.patch
+"

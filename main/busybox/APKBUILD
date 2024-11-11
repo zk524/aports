@@ -81,6 +81,7 @@ source="https://busybox.net/downloads/busybox-$pkgver.tar.bz2
 	0033-lineedit-use-stdout-for-shell-history-builtin.patch
 	0034-adduser-remove-preconfigured-GECOS-full-name-field.patch
 	0035-cpio-map-F-to-file-long-option.patch
+	0036-find-flush-exec-plus-recursively.patch
 
 	0001-hexdump-fix-regression-with-n4-e-u.patch
 	0001-awk-fix-handling-of-literal-backslashes-in-replaceme.patch
@@ -399,6 +400,7 @@ ac56a170a31f4329d00155a2a7d3950c4fe365e69e2e6b773a28fe3faa214a1330f0dd910bf07124
 82c328921c4034b561f31fe5da77fd1a03033911bb6f50383b59885b184e010bbf66065ce0d90e0bc138a7608a4a5b51cab5d3598f974ee600d06eb161d5b0c3  0033-lineedit-use-stdout-for-shell-history-builtin.patch
 04ed80099092bf6cafa293d13039184307197d5b71e2052a7b5650eed4364845cca3910e701e01c67a23dff7c9552506b682d553d6bdd7dfcbc7724e98595c4d  0034-adduser-remove-preconfigured-GECOS-full-name-field.patch
 8ea1f59ad19c4dc42d95af3a1e590180483689536dbd6932fd500e1f6bcbc1eb12b50e81b6ea26ea93297ce527d1aa850fbe0b23210a3db79039409392935242  0035-cpio-map-F-to-file-long-option.patch
+14f92e74143a07fd01c1226c759ae02b41ec110fce74f506340b9225e8cb129decabd6717aafa8a0d49b7a42a9507303ddab71de46f7ba8485710fde170ef396  0036-find-flush-exec-plus-recursively.patch
 ac026f8b289d1431c46d51a8c512eb0184aa81de1c41971a87c99bcdc5c63c2d9abed412cad20d3032b480d87a52ee2602411149eb5f271fa9d051165a7b8188  0001-hexdump-fix-regression-with-n4-e-u.patch
 7165661f3972f1800faf8d263126e3f238bb26bb7891230dbaad2d085e49e2ababc555294ecefed9d8ff00d93c8c3963e786db796cf3d03d68bf9e0492305d0c  0001-awk-fix-handling-of-literal-backslashes-in-replaceme.patch
 9548603cbadf690ab31354642ab3f7bef1b9f696df6b661ea644548fb831b2f78a47a9b09b5489aa43da7061dcc6808864d130d053906f44090983f5cb3dc169  0001-tunctl-fix-segfault-on-ioctl-failure.patch

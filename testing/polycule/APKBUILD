@@ -4,7 +4,7 @@ pkgname=polycule
 # git due to https://gitlab.com/polycule_client/polycule/-/issues/23
 pkgver=0.2.5_git20250604
 _rev=b1b3422c3eadddef2d87c53bc74f710e49d9d813
-pkgrel=1
+pkgrel=2
 pkgdesc="A geeky and efficient [matrix] client for power users."
 url="https://gitlab.com/polycule_client/polycule"
 arch="aarch64 x86_64"	# flutter
@@ -85,9 +85,7 @@ build() {
 		--dart-define=POLYCULE_IS_STABLE=true \
 		--dart-define=POLYCULE_VERSION=v$pkgver
 
-	local rpath="/usr/lib/$pkgname"
-
-	patchelf --set-rpath "$rpath/lib" build/linux/"$_flutter_arch"/release/bundle/$_pkgexec
+	patchelf --set-rpath '$ORIGIN/lib' build/linux/"$_flutter_arch"/release/bundle/$_pkgexec
 	for _elf in build/linux/"$_flutter_arch"/release/bundle/lib/lib*.so; do
 		# running patchelf on libapp (the AOT snapshot of the whole Dart codebase)
 		# breaks it with "[FATAL:flutter/runtime/dart_vm_initializer.cc(89)]
@@ -96,7 +94,7 @@ build() {
 		# it has no rpath and only links to libc soname anyway. 🤷‍♀️
 		[ "$(basename "$_elf")" != "libapp.so" ] || continue
 
-		patchelf --set-rpath "$rpath" "$_elf"
+		patchelf --set-rpath '$ORIGIN' "$_elf"
 	done
 }
 

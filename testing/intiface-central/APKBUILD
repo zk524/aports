@@ -2,7 +2,7 @@
 maintainer="lauren n. liberda <lauren@selfisekai.rocks>"
 pkgname=intiface-central
 pkgver=2.6.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Frontend application for the Buttplug Sex Toy Control Library"
 url="https://intiface.com/central/"
 arch="aarch64 x86_64"	# flutter
@@ -35,18 +35,6 @@ case "$CARCH" in
 	x86_64) _flutter_arch="x64" ;;
 	aarch64) _flutter_arch="arm64" ;;
 esac
-
-# FIXME: i'm sorry. workarounds https://gitlab.alpinelinux.org/alpine/aports/-/issues/16556
-real_so_path() {
-	local so="$1"
-	shift
-	while [ $# -gt 0 ]; do
-		[ -e "$1"/$so ] && realpath "$1/$so" && return 0
-		shift
-	done
-	error "$so: path not found"
-	return 0
-}
 
 prepare() {
 	default_prepare

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Progman
+Comment=Windows for workgroups 3.11
+Exec=/usr/bin/progman
+Type=Application

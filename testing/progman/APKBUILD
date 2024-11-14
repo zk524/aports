@@ -1,0 +1,29 @@
+# Maintainer: Hakan Erduman <hakan@erduman.de>
+pkgname=progman
+pkgver=1.0
+pkgrel=0
+pkgdesc="Window manager for X emulating Windows 3.x Program Manager"
+url="https://github.com/jcs/progman"
+arch="all"
+license="BSD-3-Clause"
+makedepends="libxft-dev libx11-dev libxext-dev libxpm-dev pkgconfig gdk-pixbuf-xlib-dev freetype-dev"
+source="
+$pkgname-$pkgver.tar.gz::https://github.com/jcs/progman/archive/refs/tags/v$pkgver.tar.gz
+progman.desktop
+"
+# tests require manual interaction with X11
+options="!check"
+subpackages="$pkgname-doc"
+build() {
+	make
+}
+
+package() {
+	make PREFIX="$pkgdir" install
+	install -Dm644 LICENSE README.md progman.ini -t "$pkgdir/usr/share/doc/$pkgname"
+	install -Dm644 "$srcdir"/progman.desktop -t "$pkgdir/usr/share/xsessions"
+}
+sha512sums="
+bfc329277b39b500ae829a2e97e2c4d6058b2c6a8fdb2c453073c32b526c582c6e6a4632ec4df1f98ae3d7b072c8744370e1017f2bc5e757c9bd9f78e5add5dd  progman-1.0.tar.gz
+f6e083266bb0c054e28857ca82a5a5255c5945d2ffe2b9dabc2de54895dd1dce39f7de8ff886d06e57c12e164b6b98eb0e80285ef36b5da66fc63a8008bd41da  progman.desktop
+"

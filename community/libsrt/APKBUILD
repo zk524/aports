@@ -1,8 +1,8 @@
-# Contributor: Yohann DANELLO <yohann.danello@crans.org>
-# Maintainer: Yohann DANELLO <yohann.danello@crans.org>
+# Contributor: Emmy D'Anello <emmy@luemy.eu>
+# Maintainer: Emmy D'Anello <emmy@luemy.eu>
 pkgname=libsrt
-pkgver=1.5.3
-pkgrel=1
+pkgver=1.5.4
+pkgrel=0
 pkgdesc="Secure Reliable Transport (SRT)"
 url="https://www.srtalliance.org/"
 arch="all"
@@ -17,7 +17,7 @@ build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
 		CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
 	fi
-	cmake -B build -G Ninja -Wno-dev \
+	cmake3.5 -B build -G Ninja -Wno-dev \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DCMAKE_BUILD_TYPE=MinSizeRel \
@@ -45,5 +45,5 @@ progs() {
 }
 
 sha512sums="
-5b576d6fd325515e05074e4568e3b65d1ae265e3e971db6e6242e5138243fc1594df1e3a7d90962385dac38abc34c4c4b0a567439050f8c0ff818b3b3d497efc  libsrt-1.5.3.tar.gz
+ec4e5923531a8a7fd7778c739cb52208d24a91c569f31f3995d6e0695dffd83492e5eca2530b2e112ca37f1fd4520061d89ef42d1ded95e2516a9acda009bcaf  libsrt-1.5.4.tar.gz
 "

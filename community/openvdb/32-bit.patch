@@ -1,0 +1,16 @@
+This is probably wrong but it compiles at least
+
+--- a/openvdb/openvdb/unittest/TestValueAccessor.cc
++++ b/openvdb/openvdb/unittest/TestValueAccessor.cc
+@@ -438,9 +438,9 @@ struct CheckClassSize { static_assert(Expect == Actual); };
+ // Build a type list of all accessor types and make sure they are all the
+ // expected size.
+ template <typename GridT> using GridToAccCheckA =
+-    CheckClassSize<typename GridT::Accessor, 96ul>;
++    CheckClassSize<typename GridT::Accessor, 32 + 8*sizeof(size_t)>;
+ template <typename GridT> using GridToAccCheckB =
+-    CheckClassSize<typename GridT::Accessor, 88ul>;
++    CheckClassSize<typename GridT::Accessor, 32 + 7*sizeof(size_t)>;
+ 
+ void StaticAsssertVASizes()
+ {

@@ -1,0 +1,49 @@
+# Contributor: Jakub Jirutka <jakub@jirutka.cz>
+# Maintainer: Jakub Jirutka <jakub@jirutka.cz>
+pkgname=node-undici
+_npmname=undici
+# Keep in sync with the version required by main/nodejs.
+pkgver=6.21.0
+pkgrel=0
+pkgdesc="HTTP/1.1 client, written from scratch for Node.js"
+url="https://github.com/nodejs/undici"
+# s390x: blocked by cmd:wasm-opt (binaryen), lld
+arch="noarch !s390x"
+license="MIT"
+makedepends="
+	clang
+	cmd:wasm-opt
+	lld
+	nodejs
+	wasi-sdk
+	"
+checkdepends="npm"
+source="https://github.com/nodejs/undici/archive/v$pkgver/node-undici-$pkgver.tar.gz"
+builddir="$srcdir/$_npmname-$pkgver"
+options="!check"  # FIXME: some tests seem to be broken
+
+build() {
+	WASM_CC=clang \
+	WASM_CFLAGS="--target=wasm32-wasi --sysroot=/usr/share/wasi-sysroot" \
+	WASM_LDFLAGS="-nodefaultlibs" \
+	WASM_LDLIBS="-lc" \
+	WASM_OPT=/usr/bin/wasm-opt \
+	EXTERNAL_PATH="/usr/lib/node_modules/$_npmname" \
+	node build/wasm.js
+}
+
+check() {
+	npm install --no-fund --no-scripts
+	npm run test --offline
+}
+
+package() {
+	local destdir="$pkgdir/usr/lib/node_modules/$_npmname"
+
+	install -D -m644 package.json ./*.js -t "$destdir"/
+	cp -r lib "$destdir"/
+}
+
+sha512sums="
+cfb37ea1b6a94782510692be4deb3c1d3a76f1bc60868bf5cf10f60695194a79185c4d2e4c4c2b007b68713d37927692873b796f0fb2b7863a2b5035729c0cb7  node-undici-6.21.0.tar.gz
+"

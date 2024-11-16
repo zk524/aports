@@ -1,0 +1,58 @@
+# Contributor: Jakub Jirutka <jakub@jirutka.cz>
+# Maintainer: Jakub Jirutka <jakub@jirutka.cz>
+pkgname=node-cjs-module-lexer
+_npmname=cjs-module-lexer
+# Keep in sync with the version required by main/nodejs.
+pkgver=1.4.1
+pkgrel=0
+pkgdesc="Fast lexer to extract named exports via analysis from CommonJS modules"
+url="https://github.com/nodejs/cjs-module-lexer"
+# s390x: blocked by cmd:wasm-opt (binaryen), lld
+arch="noarch !s390x"
+license="MIT"
+makedepends="
+	clang
+	cmd:wasm-opt
+	lld
+	nodejs
+	npm
+	wasi-libc
+	"
+source="https://github.com/nodejs/cjs-module-lexer/archive/$pkgver/nodejs-cjs-module-lexer-$pkgver.tar.gz"
+builddir="$srcdir/$_npmname-$pkgver"
+options="!net"  # npm ci
+
+prepare() {
+	default_prepare
+
+	# Remove prebuilt blob.
+	rm lib/lexer.wasm
+
+	# Install build dependencies from npmjs.com.
+	npm ci --no-fund --no-scripts
+}
+
+build() {
+	make -j1 \
+		WASM_CC=clang \
+		WASM_CFLAGS="--target=wasm32-wasi --sysroot=/usr/share/wasi-sysroot" \
+		WASM_LDFLAGS="-nostartfiles -nodefaultlibs -lc" \
+		WASM_OPT=/usr/bin/wasm-opt \
+		clean lib/lexer.wasm optimize
+	npm run build --offline
+}
+
+check() {
+	npm run test --offline
+}
+
+package() {
+	local destdir="$pkgdir/usr/lib/node_modules/$_npmname"
+
+	install -D -m644 lexer.js package.json -t "$destdir"/
+	install -D -m644 dist/*.js -t "$destdir"/dist/
+}
+
+sha512sums="
+36886023fd1b0fadfcdbce13cce3867614594a7edc0defee465f1c9887edc9e60838a33eca5b806384579f44cce81dce774799bcabadbd47e40ba2baefb816ec  nodejs-cjs-module-lexer-1.4.1.tar.gz
+"

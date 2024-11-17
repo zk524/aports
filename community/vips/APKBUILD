@@ -63,6 +63,14 @@ armhf)
 	;;
 esac
 
+case "$CARCH" in
+riscv64)
+	# libhwy
+	export CFLAGS="$CFLAGS -march=rv64gcv1p0"
+	export CXXFLAGS="$CXXFLAGS -march=rv64gcv1p0"
+	;;
+esac
+
 # secfixes:
 #   8.9.0-r0:
 #     - CVE-2020-20739
@@ -75,6 +83,7 @@ build() {
 	abuild-meson \
 		-Db_ndebug=true \
 		-Db_lto=true \
+		-Db_lto_mode=true \
 		. output
 	meson compile -C output
 }

@@ -23,7 +23,6 @@ subpackages="
 	$pkgname-c:_c
 	"
 source="https://github.com/psycopg/psycopg/archive/$pkgver/psycopg-$pkgver.tar.gz
-	typing-ext.patch
 	psycopg-binary.patch
 	"
 builddir="$srcdir/psycopg-$pkgver"
@@ -32,7 +31,7 @@ prepare() {
 	default_prepare
 
 	# Check if we need to update typing-ext.patch
-	if grep -r typing_extensions $builddir; then return 1; fi
+#	if grep -r typing_extensions $builddir; then return 1; fi
 }
 
 build() {
@@ -80,6 +79,5 @@ _c_pyc() {
 
 sha512sums="
 cf543652cfd27cf1cad3b1e3b8b50802562cc49f8fbd9ae5bd85ffdf26e30dc470f1f3380261c8cad418945ade8dc4f199ebcba08968cb87fd0b6c241fd8040d  psycopg-3.2.3.tar.gz
-de29d1a5e068437b37f4a6d0c425a4a871be33eae9e76b5bf9ccc156a4f29fa94312814daf9b1ace3e66086421b9a1ec350a2c5a60d9c79dc5441ba3388588c1  typing-ext.patch
 63e2e472eff9dcb48327c1286ffa370a7502a066a84a3adc12d26aaad47282bdb3dfb1b5d3893458643261b157f17aa607b4eec1a6d239af8133183680936b62  psycopg-binary.patch
 "

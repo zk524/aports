@@ -1,0 +1,37 @@
+From f4ca6d27947917df4ef62c5ef178a1a658d2aa37 Mon Sep 17 00:00:00 2001
+From: Niels Dossche <7771979+nielsdos@users.noreply.github.com>
+Date: Sun, 24 Nov 2024 19:40:23 +0100
+Subject: [PATCH] Fix GH-16902: Set of opcache tests fail zts+aarch64 (8.4+)
+
+Accompanying IR PR: https://github.com/dstogov/ir/pull/95
+
+Closes GH-16924.
+---
+ ext/opcache/jit/zend_jit_ir.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/ext/opcache/jit/zend_jit_ir.c b/ext/opcache/jit/zend_jit_ir.c
+index 6245852c7b84..9a10a23b2148 100644
+--- a/ext/opcache/jit/zend_jit_ir.c
++++ b/ext/opcache/jit/zend_jit_ir.c
+@@ -3233,6 +3233,20 @@ static void zend_jit_setup(void)
+ 		/* Index is offset by 1 on FreeBSD (https://github.com/freebsd/freebsd-src/blob/22ca6db50f4e6bd75a141f57cf953d8de6531a06/lib/libc/gen/tls.c#L88) */
+ 		tsrm_tls_index = (tlsdesc->index + 1) * 8;
+ 	}
++# elif defined(__MUSL__)
++	if (tsrm_ls_cache_tcb_offset == 0) {
++		size_t **where;
++
++		__asm__(
++			"adrp %0, :tlsdesc:_tsrm_ls_cache\n"
++			"add %0, %0, :tlsdesc_lo12:_tsrm_ls_cache\n"
++			: "=r" (where));
++		/* See https://github.com/ARM-software/abi-aa/blob/2a70c42d62e9c3eb5887fa50b71257f20daca6f9/aaelf64/aaelf64.rst */
++		size_t *tlsdesc = where[1];
++
++		tsrm_tls_offset = tlsdesc[1];
++		tsrm_tls_index = tlsdesc[0] * 8;
++	}
+ # else
+ 	ZEND_ASSERT(tsrm_ls_cache_tcb_offset != 0);
+ # endif

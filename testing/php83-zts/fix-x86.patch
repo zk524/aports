@@ -1,0 +1,34 @@
+From 18674e39ad12918ebbcd835df4e9f4c92eb7dc82 Mon Sep 17 00:00:00 2001
+From: Niels Dossche <7771979+nielsdos@users.noreply.github.com>
+Date: Mon, 25 Nov 2024 21:24:38 +0100
+Subject: [PATCH] Fix is_zend_ptr() huge block comparison
+
+We should compare the block memory, not the block metadata (See
+zend_mm_add_huge_block).
+This caused random test failure for ext/ffi/tests/gh14626.phpt when the
+malloc() performed by the FFI code lies close to the block metadata, and
+the size of the block is large enough.
+
+This was reported by https://github.com/php/php-src/issues/16902#issuecomment-2498310452
+
+Closes GH-16938.
+---
+ NEWS              | 1 +
+ Zend/zend_alloc.c | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Zend/zend_alloc.c b/Zend/zend_alloc.c
+index e86f2961cfac9..b4db2f0b03cb7 100644
+--- a/Zend/zend_alloc.c
++++ b/Zend/zend_alloc.c
+@@ -2457,8 +2457,8 @@ ZEND_API bool is_zend_ptr(const void *ptr)
+ 
+ 	zend_mm_huge_list *block = AG(mm_heap)->huge_list;
+ 	while (block) {
+-		if (ptr >= (void*)block
+-				&& ptr < (void*)((char*)block + block->size)) {
++		if (ptr >= block->ptr
++				&& ptr < (void*)((char*)block->ptr + block->size)) {
+ 			return 1;
+ 		}
+ 		block = block->next;

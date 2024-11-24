@@ -1,0 +1,12 @@
+Busybox doesn't have the --color=auto option
+--- a/ufw-docker
++++ b/ufw-docker
+@@ -338,7 +338,7 @@ function ufw-docker--check-install() {
+ 	# END UFW AND DOCKER
+ 	EOF
+ 
+-	diff -u --color=auto "$after_rules" "$after_rules_tmp"
++	diff -u "$after_rules" "$after_rules_tmp"
+ }
+ 
+ function ufw-docker--install() {

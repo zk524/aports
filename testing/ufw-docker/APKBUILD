@@ -1,0 +1,27 @@
+# Maintainer: revsuine <pid1@revsuine.xyz>
+
+pkgname=ufw-docker
+pkgver=210925
+pkgrel=0
+pkgdesc="To fix the Docker and UFW security flaw without disabling iptables"
+options="!check" # no test suite
+url="https://github.com/chaifeng/ufw-docker"
+arch="noarch" # shell script
+license="GPL-3.0-or-later"
+depends="bash ufw"
+subpackages="$pkgname-doc"
+source="
+	$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz
+	busybox_compat.patch
+"
+install="$pkgname.post-deinstall"
+
+package() {
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/"$pkgname"/
+	install -Dm755 ufw-docker -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+58a42340cb74f6311680ab337c4b2c702ecb442c5f0ef7e274f690a0b5d96eed4eb86fe7029502301ec738de43570e1b773a7586e7030a0a35beed8aa91275fa  ufw-docker-210925.tar.gz
+8e5651be601508ed09b3da00cb6a61794bd8238f0d6970d7e5bd396187cfb29cc32698c042ab0fe00be7aa29f826403ace4a3930deff4ca7b945c7b7ab150e7c  busybox_compat.patch
+"

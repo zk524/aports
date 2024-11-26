@@ -1,6 +1,7 @@
 # Contributor: Michael Pirogov <vbnet.ru@gmail.com>
 # Contributor: Łukasz Jendrysik <scadu@yandex.com>
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
+# Contributor: Thomas Böhler <witcher@wiredspace.de>
 # Maintainer: Jeff Bilyk <jbilyk@gmail.com>
 pkgname=nagios-plugins
 pkgver=2.4.12
@@ -18,6 +19,7 @@ _depends_log="grep"
 _depends_rcp="rpcbind"
 _depends_sensors="grep lm-sensors"
 _depends_snmp="net-snmp-tools"
+_depends_ssl_validity="perl-crypt-x509 perl-date-format perl-libwww perl-text-glob"
 makedepends="openssh-client bind-tools samba-client fping grep rpcbind
 	lm-sensors net-snmp-tools
 	file freeradius-client-dev<1.1.8 libdbi-dev libpq linux-headers mariadb-dev

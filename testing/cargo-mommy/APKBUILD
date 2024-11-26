@@ -1,0 +1,35 @@
+# Contributor: lauren n. liberda <lauren@selfisekai.rocks>
+maintainer="lauren n. liberda <lauren@selfisekai.rocks>"
+pkgname=cargo-mommy
+pkgver=0.3.1
+pkgrel=0
+pkgdesc="Mommy's here to support you when running cargo~"
+url="https://github.com/Gankra/cargo-mommy"
+arch="all"
+license="Apache-2.0 OR MIT"
+makedepends="cargo cargo-auditable"
+source="https://github.com/Gankra/cargo-mommy/archive/v$pkgver/cargo-mommy-$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/cargo-mommy "$pkgdir"/usr/bin/cargo-mommy
+
+	install -Dm644 LICENSE-MIT -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+da4740231ff025a310020fb487001a0cf0ec326f458c0114f15b8cd29123d7d4b74deb7311063d992ebc1bdffc6392e4081e66f4b1323e913988eb7bfca5f7c8  cargo-mommy-0.3.1.tar.gz
+"

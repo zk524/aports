@@ -1,0 +1,89 @@
+# Contributor: Alex Denes <caskd@redxen.eu>
+# Maintainer: Alex Denes <caskd@redxen.eu>
+pkgname=hotspot
+pkgver=1.5.1
+pkgrel=0
+pkgdesc="Linux perf GUI for performance analysis"
+url="https://github.com/KDAB/hotspot"
+arch="all"
+license="GPL-2.0-only OR GPL-3.0-only OR custom:KDAB-commercial"
+makedepends="
+	ninja
+	cmake>=3.1.0
+	extra-cmake-modules
+
+	threadweaver5-dev
+	ki18n5-dev
+	kconfigwidgets5-dev
+	kcoreaddons5-dev
+	kitemviews5-dev
+	kitemmodels5-dev
+	kio5-dev
+	solid5-dev
+	kwindowsystem5-dev
+	knotifications5-dev
+	kiconthemes5-dev
+	kparts5-dev
+
+	qt5-qtbase-dev
+	kddockwidgets-dev
+	gettext-dev
+	desktop-file-utils
+	libelf
+	elfutils-dev
+
+"
+options="!check" # not sure how to list/call testing suite
+[ "$DEBUG" -eq 1 ] && subpackages="$subpackages $pkgname-dbg"
+source="
+	$pkgname-$pkgver.tar.gz::$url/releases/download/v$pkgver/hotspot-v$pkgver.tar.gz
+	$pkgname-PrefixTickLabels-$pkgver.tar.gz::$url/releases/download/v$pkgver/hotspot-PrefixTickLabels-v$pkgver.tar.gz
+	$pkgname-perfparser-$pkgver.tar.gz::$url/releases/download/v$pkgver/hotspot-perfparser-v$pkgver.tar.gz
+
+	0001-pid-t.diff
+"
+builddir="$srcdir/$pkgname"
+
+prepare() {
+	default_prepare
+
+	# Main archive provides the directory, this replaces them
+	rmdir -v "$builddir"/3rdparty/perfparser "$builddir"/3rdparty/PrefixTickLabels
+	mv -v "$srcdir"/perfparser "$builddir"/3rdparty/perfparser
+	mv -v "$srcdir"/PrefixTickLabels "$builddir"/3rdparty/PrefixTickLabels
+
+	patch -p1 < "$srcdir"/0001-pid-t.diff
+}
+
+build() {
+	local BUILD_TYPE=MinRelSize
+	if [ "$DEBUG" -eq 1 ]; then
+		BUILD_TYPE=RelwithDebInfo
+	fi
+	export LDFLAGS="$LDFLAGS -Wl,-z,stack-size=0x200000"
+
+	cmake -B build -G Ninja \
+		-DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
+		-DCMAKE_INSTALL_LOCALSTATEDIR=/var \
+		-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+		-DNINJA_MAX_COMPILE_JOBS=$JOBS \
+		.
+	ninja -C build
+}
+
+check() {
+	ninja -C build test
+}
+
+package() {
+	DESTDIR="$pkgdir" ninja -C build install
+}
+
+sha512sums="
+dbd79505373290f8a666c0c7a837db0f5c97b8568b44d9c1120c7ba9e1cfce4a1932c74f7b1148f3ccb509788ba907339bb90c613f158cf0e35b824641b5bf4e  hotspot-1.5.1.tar.gz
+1f637b6f868fcd89a61da681ddfe2a66e2e5826a4b41d346176e0fdf6ac3c510fdb638bb12dca779c51da50b877e15243ba2aa94f2900b6bba2a2c9e66bdc989  hotspot-PrefixTickLabels-1.5.1.tar.gz
+71e30679718d91626e9bace9a09b588b954dd6abf3d4b9ea58d9469f13375eecbe4153aa663f0cf97d99b109d3dd8b4321b32a3ee76439d7516433a4e6056cd5  hotspot-perfparser-1.5.1.tar.gz
+e4f5d19097935c62f8d097427cad0dd090cf5883a8aa982142ad31d2d6d2f306547e307e108e73cd71582ac047f911538d7f20c8524cb418fbce027954f28eaf  0001-pid-t.diff
+"

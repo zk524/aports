@@ -3,7 +3,7 @@
 # Maintainer: Clayton Craft <clayton@craftyguy.net>
 pkgname=waked
 pkgver=0.1.1
-pkgrel=4
+pkgrel=5
 license="GPL-2.0-or-later"
 pkgdesc="Waked is a daemon which lets Apps wake the system from suspend at requested times"
 arch="all"

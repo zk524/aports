@@ -1,0 +1,52 @@
+# Contributor: Alex Denes <caskd@redxen.eu>
+# Maintainer: Alex Denes <caskd@redxen.eu>
+pkgname=kddockwidgets
+pkgver=2.1.0
+pkgrel=0
+pkgdesc="KDAB's Dock Widget Framework for Qt"
+url="https://github.com/KDAB/KDDockWidgets"
+arch="all"
+license="GPL-2.0-only OR GPL-3.0-only OR custom:KDAB-commercial"
+makedepends="
+	qt5-qtdeclarative-dev
+	qt5-qtx11extras-dev
+	qt5-qtbase-dev
+	qt5-qttools-dev
+	cmake
+	ninja
+"
+options="!check" # not sure how to list/call testing suite
+subpackages="$pkgname-doc $pkgname-dev"
+[ "$DEBUG" -eq 1 ] && subpackages="$subpackages $pkgname-dbg"
+source="
+	$pkgname-$pkgver.tar.gz::$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz
+"
+builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+	local BUILD_TYPE=MinRelSize
+	if [ "$DEBUG" -eq 1 ]; then
+		BUILD_TYPE=RelwithDebInfo
+	fi
+
+	cmake -B build -G Ninja \
+		-DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
+		-DCMAKE_INSTALL_LOCALSTATEDIR=/var \
+		-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+		-DNINJA_MAX_COMPILE_JOBS=$JOBS \
+		.
+	ninja -C build
+}
+
+check() {
+	ninja -C build test
+}
+
+package() {
+	DESTDIR="$pkgdir" ninja -C build install
+}
+sha512sums="
+3e4785d210deae631fe5487bd81d0c83417983f615bdfdea330e1d074da3462a5d9f76cd1423d6ad26bb74e1abecc2c1750d12d829c8d81327e34b29715b895f  kddockwidgets-2.1.0.tar.gz
+"

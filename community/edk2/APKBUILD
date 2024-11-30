@@ -2,11 +2,13 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 
 pkgname=edk2
-pkgver=0.0.202308
+pkgver=0.0.202411
 _realver=edk2-stable${pkgver##*.}
-_sslver=3.0.9
+_libspdmver=3.5.0
+_mbedtlsver=2.28.9
+_sslver=3.0.15
 _sfver=3e
-pkgrel=1
+pkgrel=0
 pkgdesc="EFI Development Kit II"
 url="https://github.com/tianocore/tianocore.github.io/wiki/EDK-II/"
 arch="x86_64 aarch64"
@@ -16,7 +18,9 @@ options="!archcheck !check" # has no checks
 subpackages="$pkgname-pyc $pkgname-shell:_shell"
 _mipisyst_commit=370b5944c046bab043dd8b133727b2135af7747a
 source="$pkgname-$pkgver.tar.gz::https://github.com/tianocore/edk2/archive/$_realver.tar.gz
+	libspdm-$_libspdmver.tar.gz::https://github.com/DMTF/libspdm/archive/refs/tags/$_libspdmver.tar.gz
 	mipisyst-$_mipisyst_commit.tar.gz::https://github.com/MIPI-Alliance/public-mipi-sys-t/archive/$_mipisyst_commit.tar.gz
+	mbedtls-$_mbedtlsver.tar.gz::https://github.com/ARMmbed/mbedtls/archive/v$_mbedtlsver.tar.gz
 	https://www.openssl.org/source/openssl-$_sslver.tar.gz
 	http://www.jhauser.us/arithmetic/SoftFloat-$_sfver.zip
 	build-hack.patch
@@ -24,6 +28,24 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/tianocore/edk2/archive/$_rea
 	0009-MdeModulePkg-remove-package-private-Brotli-include-p.patch
 	"
 builddir="$srcdir/$pkgname-$_realver"
+
+# secfixes:
+#   0.0.202411-r0:
+#     - CVE-2022-36763
+#     - CVE-2022-36764
+#     - CVE-2022-36765
+#     - CVE-2023-45229
+#     - CVE-2023-45230
+#     - CVE-2023-45231
+#     - CVE-2023-45232
+#     - CVE-2023-45233
+#     - CVE-2023-45234
+#     - CVE-2023-45235
+#     - CVE-2023-45236
+#     - CVE-2023-45237
+#     - CVE-2024-1298
+#     - CVE-2024-25742
+#     - CVE-2024-38796
 
 PLATFORM="ShellPkg/ShellPkg.dsc"
 case "$CARCH" in
@@ -50,6 +72,10 @@ prepare() {
 	# unix line endings for the files to be patched
 	sed -e 's/\r$//' -i BaseTools/Source/C/VfrCompile/VfrUtilityLib.cpp \
 		BaseTools/Source/C/VolInfo/VolInfo.c
+	rm -rf SecurityPkg/DeviceSecurity/SpdmLib/libspdm
+	ln -s "$srcdir"/libspdm-$_libspdmver SecurityPkg/DeviceSecurity/SpdmLib/libspdm
+	rm -rf CryptoPkg/Library/MbedTlsLib/mbedtls
+	ln -s "$srcdir"/mbedtls-$_mbedtlsver CryptoPkg/Library/MbedTlsLib/mbedtls
 	rm -rf CryptoPkg/Library/OpensslLib/openssl
 	ln -s "$srcdir"/openssl-$_sslver CryptoPkg/Library/OpensslLib/openssl
 	rm -rf ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3
@@ -177,9 +203,11 @@ pyc() {
 }
 
 sha512sums="
-668411dc64a4a69afd145221c599fffc3797de26e801dda7d9b7ed92f755ff4fda4635dbc21c821f527e56eb71c4ad98c1fb079112a56d6b6eea5ff4d010e3cf  edk2-0.0.202308.tar.gz
+633483a1ff915f6e5f5a6d3c329f517d6c070368855f1d5348a80e22e71ac13ff4c6774c8620482a4e5cefe03907edc3a904ae405cbfe2dcd025ddd82f039eaf  edk2-0.0.202411.tar.gz
+c70e346f7f961739660281d4fc1d03bddfb78bb333e8b91ff37b712dd043e92c5724347fbc3e4259b87c2aaad4de8d4013ca654aae113d451ddcdc3e0816f9e8  libspdm-3.5.0.tar.gz
 de6888577ceab7ab6915d792f3c48248cfa53357ccd310fc7f7eae4d25a932de8c7c23e5b898c9ebf61cf86cb538277273f2eb131a628b3bf0d46c9a3b9b6686  mipisyst-370b5944c046bab043dd8b133727b2135af7747a.tar.gz
-86c99146b37236419b110db77dd3ac3992e6bed78c258f0cc3434ca233460b4e17c0ac81d7058547fe9cb72a9fd80ee56d4b4916bb731dbe2bbcf1c3d46bf31a  openssl-3.0.9.tar.gz
+95cc33e052670ae69a0d6779e1e675d176cecc263d795cedaebb8e01bc89ee6e91d843fd94337a7ef885440a08a30bbd8bdaf26664ae45f3c4fc18eb0a00c033  mbedtls-2.28.9.tar.gz
+acd80f2f7924d90c1416946a5c61eff461926ad60f4821bb6b08845ea18f8452fd5e88a2c2c5bd0d7590a792cb8341a3f3be042fd0a5b6c9c1b84a497c347bbf  openssl-3.0.15.tar.gz
 3fedcd0060affb2d8fc7995894133cfed6a495c8717df0d30c89885223c38749f25743598383736036332dad6353c6a3f027f5a94a696660f7c4b607e33e534c  SoftFloat-3e.zip
 a7d4ab2c82b62ba01c86e59f53bd3896d661c9bfbb9db9598734155b66d5fe03eca4a2a9993a14d3bf555992c6d01ba5d7a15868ff9ec6ed98b8a9b3895bb7df  build-hack.patch
 ecbfc1ec3b732580c33c477191b71553247af1a68f1754bd363d179e0f5aabde93e3c5ec7f2574f9a9ffefef34e75787a2a87b1057b02cd206e8f0618a252871  0008-BaseTools-do-not-build-BrotliCompress-RH-only.patch

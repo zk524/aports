@@ -5,7 +5,7 @@ pkgver=10.1
 pkgrel=0
 pkgdesc="Matrix group messaging app"
 url="https://wiki.gnome.org/Apps/Fractal"
-arch="x86_64 aarch64 ppc64le" # limited by Rust + crate dependencies
+arch="all !s390x"  # limited by glycin-loaders
 license="GPL-3.0-or-later"
 depends="
 	dbus:org.freedesktop.Secrets

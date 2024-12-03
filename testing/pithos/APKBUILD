@@ -2,7 +2,7 @@
 # Maintainer: Adam Plumb <adamplumb@gmail.com>
 pkgname=pithos
 pkgver=1.6.1
-pkgrel=0
+pkgrel=1
 pkgdesc="GTK+ player for pandora web radio"
 url="https://pithos.github.io/"
 arch="noarch"
@@ -29,7 +29,7 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C output
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 }
 
 pyc() {

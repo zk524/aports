@@ -2,7 +2,7 @@
 # Maintainer: fossdd <fossdd@pwned.life>
 pkgname=confy
 pkgver=0.7.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Conferences schedule viewer for GNOME"
 url="https://confy.kirgroup.net/"
 license="GPL-3.0-or-later"
@@ -35,7 +35,7 @@ check() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C output
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 }
 
 sha512sums="

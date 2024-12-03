@@ -4,7 +4,7 @@
 # Maintainer: Sascha Paunovic <azarus@posteo.net>
 pkgname=arc-theme
 pkgver=20221218
-pkgrel=0
+pkgrel=1
 pkgdesc="Flat theme with transparent elements"
 options="!check" # no test suite
 url="https://github.com/jnsh/arc-theme"
@@ -52,7 +52,7 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C build
+	DESTDIR="$pkgdir" meson install --no-rebuild -C build
 }
 
 arc() {

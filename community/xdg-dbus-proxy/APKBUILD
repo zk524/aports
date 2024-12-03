@@ -1,7 +1,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=xdg-dbus-proxy
 pkgver=0.1.6
-pkgrel=0
+pkgrel=1
 pkgdesc="Filtering proxy for D-Bus connections"
 url="https://github.com/flatpak/xdg-dbus-proxy/"
 arch="all"
@@ -21,7 +21,7 @@ check() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C output
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 }
 
 sha512sums="

@@ -38,8 +38,7 @@ build() {
 }
 
 check() {
-	# kcatalogtest and ktimezonetest are broken
-	xvfb-run ctest --test-dir build --output-on-failure -E "(kcatalog|ktimezone)test"
+	xvfb-run ctest --test-dir build --output-on-failure
 }
 
 package() {

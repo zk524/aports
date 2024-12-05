@@ -20,8 +20,9 @@ makedepends="
 	lua5.3-dev
 	minizip-dev
 	mosquitto-dev
-	openssl-dev>3
+	openssl-dev
 	openzwave-dev
+	openzwave-libs
 	python3-dev
 	samurai
 	sqlite-dev

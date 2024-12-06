@@ -1,0 +1,75 @@
+# Contributor: Naomi Rennie-Waldock <naomi.renniewaldock@gmail.com>
+# Maintainer: Naomi Rennie-Waldock <naomi.renniewaldock@gmail.com>
+pkgname=libskiasharp
+pkgver=2.88.9
+pkgrel=0
+pkgdesc="2D graphics API for .NET - native library"
+url="https://github.com/mono/SkiaSharp"
+arch="x86_64 armv7 aarch64"
+license="BSD-3-Clause"
+_llvmver=19
+_skiaver=2.88.3
+makedepends="
+	cmd:awk
+	cmd:envsubst
+	clang$_llvmver
+	llvm$_llvmver
+	gn
+	ninja
+	freetype-dev
+	fontconfig-dev
+	libwebp-dev
+	libjpeg-turbo-dev
+	harfbuzz-dev
+	"
+subpackages="$pkgname-dbg"
+source="https://github.com/mono/SkiaSharp/archive/v$pkgver/SkiaSharp-$pkgver.tar.gz
+	https://github.com/mono/skia/archive/v$_skiaver/skia-$_skiaver.tar.gz
+
+	args.gn.in
+
+	0001-fix-cflags-for-system-freetype2.patch
+	0002-add-missing-includes.patch
+	"
+_skiasharpdir="$srcdir/SkiaSharp-$pkgver"
+_skiadir="$srcdir/skia-$_skiaver"
+builddir="$_skiadir"
+options="!check"
+
+
+build() {
+	# Generate build config
+	local soname=$(awk '$1 == "libSkiaSharp" && $2 == "soname" { print $3 }' "$_skiasharpdir"/VERSIONS.txt)
+	local map="$_skiasharpdir"/native/linux/libSkiaSharp/libSkiaSharp.map
+	local _skia_arch=$CTARGET_ARCH
+
+	case "$CTARGET_ARCH" in
+	aarch64) _skia_arch=arm64 ;;
+	armv7) _skia_arch=arm ;;
+	x86_64) _skia_arch=x64 ;;
+	esac
+
+	export soname map _skia_arch _llvmver
+
+	[ -d _build ] || mkdir _build
+	envsubst < "$srcdir"/args.gn.in > _build/args.gn
+
+	gn gen _build
+	ninja -j"${JOBS:-1}" -C _build SkiaSharp
+}
+
+package() {
+	local soname=$(awk '$1 == "libSkiaSharp" && $2 == "soname" { print $3 }' "$_skiasharpdir"/VERSIONS.txt)
+
+	install -Dm644 _build/libSkiaSharp.so.$soname -t "$pkgdir"/usr/lib/
+	ln -s libSkiaSharp.so.$soname "$pkgdir"/usr/lib/libSkiaSharp.so.${soname%%.*}
+	ln -s libSkiaSharp.so.$soname "$pkgdir"/usr/lib/libSkiaSharp.so
+}
+
+sha512sums="
+c13fb2f2cb8e231f5130e97450e242b910ea098419334303ed0b3391ff264549f9283343be8f5e1a6e59fa7ffe9d9aeb1c2d5607af0fb1fc03af0645b685dff2  SkiaSharp-2.88.9.tar.gz
+43b19f6ddefe30ddf37034c73cd23feea28cb9e4a5830f8c526771afa051bdb2a96934f70dc035ca85891992b67b47d1becc6f4bf8768175db8452e144dfd9f1  skia-2.88.3.tar.gz
+acf0e455c521d2e8bb4b30e55e8645cdf28f320ab4a4a1095b4d185763166821cab0e205e98edc5f1bfd2315e6463787df2c127307e6d2f29cf3bdc02a1b9edf  args.gn.in
+0c4caa5aff089d314540959f068ca06c5580465be7a4a4abb3db9e1756a8043e14cbd4f8be677cfe4bd837b32115c8fefb2c79cf7bd52dd06fa1cb50e2406756  0001-fix-cflags-for-system-freetype2.patch
+7eac411d6f235a450dcccf7d451ecc0d9516761b3cf37d3b0438fa2648b4ce7b0912de16d27221dc1df82fe62efb9287084fce433f1aeae48732da454402dbd7  0002-add-missing-includes.patch
+"

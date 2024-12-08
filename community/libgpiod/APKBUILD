@@ -1,12 +1,15 @@
 # Contributor: vinymeuh <vinymeuh@gmail.com>
+# Contributor: Douglas Silva <doug.hs@proton.me>
 # Maintainer: Luca Weiss <luca@lucaweiss.eu>
 pkgname=libgpiod
 pkgver=2.2.2
-pkgrel=0
+pkgrel=1
 pkgdesc="C library and tools for interacting with the linux GPIO character device"
 url="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/"
 arch="all"
 license="LGPL-2.1-or-later"
+pkgusers="gpio-manager"
+pkggroups="gpio"
 options="!check" # no test suite
 makedepends="
 	autoconf
@@ -20,7 +23,13 @@ makedepends="
 	py3-pip
 	python3-dev
 	"
-subpackages="$pkgname-dev $pkgname-doc py3-$pkgname:_py3"
+install="$pkgname.pre-install"
+subpackages="$pkgname-dev
+	$pkgname-doc
+	py3-$pkgname:_py3
+	$pkgname-openrc
+	$pkgname-udev
+	"
 source="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-$pkgver.tar.gz"
 
 prepare() {
@@ -37,6 +46,7 @@ build() {
 		--mandir=/usr/share/man \
 		--localstatedir=/var \
 		--enable-tools=yes \
+		--enable-dbus \
 		--disable-static \
 		--enable-bindings-python
 	make

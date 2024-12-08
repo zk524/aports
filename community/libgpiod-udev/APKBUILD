@@ -1,0 +1,20 @@
+# Contributor: Douglas Silva <doug.hs@proton.me>
+# Maintainer: Luca Weiss <luca@lucaweiss.eu>
+pkgname=libgpiod-udev
+pkgver=2.2
+pkgrel=1
+pkgdesc="C library and tools for interacting with the linux GPIO character device - udev rules"
+url="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/"
+arch="noarch"
+license="LGPL-2.1-or-later"
+depends="udev"
+source="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-$pkgver.tar.gz"
+options="!check" # no test suite
+
+package() {
+	install -Dm644 90-gpio.rules -t "$pkgdir"/usr/lib/udev/rules.d/
+}
+
+sha512sums="
+41e7a2b8cbd6f5766f34134c589876b6130bb3a5143be6868e8d2d6c7522ef7d5b78bf2d95da873451b82ad5abaaff2f92d61bb86e53634cf683230006612952  libgpiod-2.2.tar.gz
+"

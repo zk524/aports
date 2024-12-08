@@ -2,7 +2,7 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=yash
 pkgver=2.57
-pkgrel=1
+pkgrel=2
 pkgdesc="Yet another shell"
 url="https://yash.osdn.jp"
 arch="all"

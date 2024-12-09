@@ -66,6 +66,7 @@ makedepends="
 	"
 subpackages="$pkgname-doc $pkgname-shared::noarch $pkgname-headless py3-$pkgname:python"
 source="https://download.blender.org/source/blender-$pkgver.tar.xz
+	blender-assets-$pkgver.tar.gz::https://projects.blender.org/blender/blender-assets/archive/v$pkgver.tar.gz
 	0001-musl-fixes.patch
 	0002-fix-includes.patch
 	"
@@ -77,6 +78,8 @@ source="https://download.blender.org/source/blender-$pkgver.tar.xz
 #     - CVE-2022-2833
 
 build() {
+	cp -r "$srcdir"/blender-assets release/datafiles/assets
+
 	# Headless
 	_build build-headless -C build_files/cmake/config/blender_headless.cmake
 
@@ -151,6 +154,7 @@ python() {
 
 sha512sums="
 d71a954540eac1ce5301b0a831daeb03d8e3c5a39b8955077630c72cf502592ca9f2fd9926d19cde47b9e4b8cff16451c5d86e0213a230f20fa684e9e1c219e9  blender-4.3.0.tar.xz
+39317de2508a3e2202a3e770e97d7be8e366ee6e9d01d66063893a60ad1b9f10e65dc1092f43fb77d8ec6952366044f3e3d96b28d270b9727d56f76f92968d66  blender-assets-4.3.0.tar.gz
 fd06c0af6855e15edc7ce9a4bdcd07f245d5d8bc84f67b49c2935bbfb6c811e62926ec8932bc9b903d5d314e5be5c079510e73b4ef9968fd88abca585ffecb57  0001-musl-fixes.patch
 8fffd66af4a4ebc23767950c2831c889d2260fc499d094d57da5f6638cb85b67d520eb2d68d88146326ffbac74495fc09f803c03a6ab04555e91b379fd3328f2  0002-fix-includes.patch
 "

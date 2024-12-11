@@ -1,0 +1,64 @@
+# Maintainer: David Heidelberg <david@ixit.cz>
+pkgname=openrw
+pkgver=0_git20241211
+pkgrel=0
+_commit=d2335fef3ea234389308c7eb2fae51ebd6fbd2f6
+pkgdesc="OpenRW 'Open ReWrite' is an un-official open source recreation of the classic Grand Theft Auto III game executable"
+url="https://openrw.org/"
+#arch="all"
+arch="aarch64"  # FIXME for testing only
+license="GPL-3.0-or-later"
+
+# FIXME makedepends
+makedepends="
+	boost-dev
+	bullet-dev
+	bzip2-dev
+	cmake
+	curl-dev
+	freetype-dev
+	ffmpeg-dev
+	gettext-dev
+	glm-dev
+	libpng-dev
+	mesa-dev
+	openal-soft-dev
+	openssl-dev>3
+	samurai
+	sdl2-dev
+	zstd-dev
+	"
+_imgui_commit=801645d35092c8da0eeabe71d7c1997c47aa3648
+source="$pkgname-$pkgver.tar.gz::https://github.com/okias/openrw/archive/$_commit.tar.gz
+	imgui-$_imgui_commit.tar.gz::https://github.com/ocornut/imgui/archive/$_imgui_commit.tar.gz
+	0001-rwengine-fix-Bullet-linkage-issues.patch
+	"
+
+builddir="$srcdir/openrw-$_commit"
+
+prepare() {
+	# imgui library
+	mv -v ../imgui-$_imgui_commit/* external/imgui/imgui/
+
+	default_prepare
+}
+
+build() {
+	cmake -G Ninja -B build \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DBUILD_TESTS=True \
+		-DENABLE_SCRIPT_DEBUG=True \
+		-DDebug=True
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+ddd9399e138cc926c96aaed191fc71c0f84849399cb48894a8586ea1c42bcaabd48eb191b5526f9d85824ce08a958f15cb44267a1a2f962424c8eef5ce710c66  openrw-0_git20241211.tar.gz
+9d713bea26be449c9c9e813ed77dacdec41d091ebcab9273e81c2eb4bc72192c24f9359d4cbecd1788f582f1588892fff389d07109cd911237f3b9b392b963ea  0001-rwengine-fix-Bullet-linkage-issues.patch
+7d1675553b51966c876b2c858bdcadf80ac46c6127f253d3d835b9cad4033687d7cc31943685c73d0160e143d324fb085c0e850cbce0a499b7655c1514a4d021  imgui-801645d35092c8da0eeabe71d7c1997c47aa3648.tar.gz
+"

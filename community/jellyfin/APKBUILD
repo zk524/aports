@@ -2,7 +2,7 @@
 # Contributor: Fabricio Silva <hi@fabricio.dev>
 pkgname=jellyfin
 pkgver=10.10.3
-pkgrel=0
+pkgrel=1
 pkgdesc="The Free Software Media System"
 install="$pkgname.pre-install"
 url="https://jellyfin.org/"

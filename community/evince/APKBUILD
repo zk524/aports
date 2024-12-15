@@ -77,12 +77,6 @@ libs() {
 	mv "$pkgdir"/usr/lib/* "$subpkgdir"/usr/lib/
 }
 
-doc() {
-	default_doc
-	if [ -d "$pkgdir"/usr/share/help ]; then
-		amove usr/share/help
-	fi
-}
 sha512sums="
 bae616989f339e4d4204e8bb3eafd2d05d5a16a4fe3e658fbdbb2d92c541b75edc1afe89d624f9d0345ffe181598b6b9315f1902d5c5cc34419fd714eb65dfdf  evince-48.0.tar.xz
 "

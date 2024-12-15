@@ -47,12 +47,6 @@ package() {
 		"$pkgdir"/usr/share/fish/vendor_completions.d/$pkgname.fish
 }
 
-doc() {
-	default_doc
-	mkdir -p "$subpkgdir/usr/share/doc/chezmoi"
-	cp "$builddir/docs/"* "$subpkgdir/usr/share/doc/chezmoi"
-}
-
 sha512sums="
 2564a543de16b27d904411d93aa8656d8a65d06d0ab6f16f6d53dba6dabe652549d63f237231874a69f70c8e5dc543ec652dbd3dc723f93b2bec0b04d26a38c6  chezmoi-2.60.1.tar.gz
 6be6a032054e5d33ac74586c31381ab9332e8a22faff8ea2ff4248c4eddc3300243890c0e7d064db2648b336355115d597bf686aa70cea13b2250710ab885c9e  makefile-quote-built-by.patch

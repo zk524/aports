@@ -80,12 +80,9 @@ package() {
 	install -d -o $pkgusers -g $pkggroups "$pkgdir"/var/lib/gvm
 	chown -R "$pkgusers":"$pkggroups" "$pkgdir"/var/lib/gvm
 	chmod -R g+srw "$pkgdir"/var/lib/gvm
-}
 
-doc() {
-	default_doc
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-	cat >"$subpkgdir"/usr/share/doc/$pkgname/README.alpine <<EOF
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+	cat >"$pkgdir"/usr/share/doc/$pkgname/README.alpine <<EOF
 	** Add texlive to generate PDF reports with
 	** apk add texlive
 EOF

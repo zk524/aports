@@ -40,14 +40,9 @@ package() {
 	install -Dm644 target/$pkgname-$pkgver.jar \
 		"$pkgdir"/usr/share/java/$pkgname-$pkgver.jar
 	ln -s $pkgname-$pkgver.jar "$pkgdir"/usr/share/java/$pkgname.jar
-}
 
-doc() {
-	default_doc
-
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-	cp -a "$builddir"/src/docs/* "$subpkgdir"/usr/share/doc/$pkgname/
-	cp -a "$builddir"/src/samples "$subpkgdir"/usr/share/doc/$pkgname/
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+	cp -a src/docs/* src/samples "$pkgdir"/usr/share/doc/$pkgname/
 }
 
 _jsvc() {

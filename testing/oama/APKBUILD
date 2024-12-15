@@ -1,0 +1,102 @@
+# Contributor: Koni Marti <koni.marti@gmail.com>
+# Maintainer: Koni Marti <koni.marti@gmail.com>
+pkgname=oama
+pkgver=0.18
+pkgrel=0
+pkgdesc="Renewal and authorization of OAuth2 credentials"
+url="https://github.com/pdobsan/oama"
+arch="aarch64 x86_64" # limited by ghc
+license="BSD-3-Clause"
+depends="gnupg"
+makedepends="
+	ghc
+	cabal
+	zlib-dev
+	libffi-dev
+	"
+subpackages="
+	$pkgname-doc
+	$pkgname-bash-completion
+	$pkgname-zsh-completion
+	$pkgname-fish-completion
+	"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/pdobsan/oama/archive/refs/tags/$pkgver.tar.gz
+	cabal.project.freeze
+	"
+
+replaces="mailctl"
+provides="mailctl=$pkgver-r$pkgrel"
+
+export CABAL_DIR="${CABAL_DIR:-"$srcdir/.cabal"}"
+
+cabal_update() {
+	local repo="hackage.haskell.org"
+
+	# Default config uses HTTP, change it to HTTPS.
+	[ -f "$CABAL_DIR"/config ] || {
+		cabal user-config init
+		cabal user-config update -a \
+			"repository $repo {url: https://$repo/}"
+	}
+
+	cd "$startdir"
+	[ -d "$builddir" ] || abuild unpack
+	msg "Freezing $pkgname dependencies"
+
+	# Resolve deps and generate fresh cabal.project.freeze with version constraints.
+	(
+		cd "$builddir" || {
+			error 'Is $builddir set correctly?'
+			return 1
+		}
+		cabal v2-update
+		cabal v2-freeze --shadow-installed-packages
+
+		mv -v cabal.project.freeze "$startdir"/
+	)
+
+	if ! abuild checksum; then
+		die "Failed to update checksum, run 'abuild checksum' manually"
+	fi
+}
+
+prepare() {
+	default_prepare
+
+	# XXX: upstream specifies value 3.12 raising "Unsupported cabal-version" error
+	sed -i "$builddir/oama.cabal" -e 's/^cabal-version:.*$/cabal-version: 2.2/'
+
+	ln -svf "$srcdir"/cabal.project.freeze "$builddir"/
+}
+
+build() {
+	cabal v2-update
+	cabal v2-build oama:exes \
+		--jobs=${JOBS:-1} \
+		--prefix=/usr \
+		--docdir=/usr/share/doc/$pkgname \
+		--sysconfdir=/etc
+}
+
+check() {
+	cabal test
+}
+
+package() {
+	cabal list-bin oama:exes | xargs install -Dm755 -t "$pkgdir"/usr/bin/
+	install -Dm644 Readme.md -t "$pkgdir"/usr/share/doc/$pkgname/
+	install -Dm644 configs/* -t "$pkgdir"/usr/share/doc/$pkgname/examples/
+
+	install -Dm644 completions/$pkgname.bash \
+		"$pkgdir"/usr/share/bash-completion/completions/$pkgname
+	install -Dm644 completions/$pkgname.fish \
+		"$pkgdir"/usr/share/fish/vendor_completions.d/$pkgname.fish
+	install -Dm644 completions/$pkgname.zsh \
+		"$pkgdir"/usr/share/zsh/site-functions/_$pkgname
+}
+
+sha512sums="
+bd799349edd41b7eb5e351d40b2a714895f5df24bbab709a9b38a1aee94f7b1b88641c01447efb710093264ff3baea7f1e032ad0e3d6669d70b8ea404f062e40  oama-0.18.tar.gz
+823cc157a13bb0f40026db7b7deff4dd79030a6b7dd4e3b6da79303e3fe4c3d693b3211f9288dcfa210369b959b5dea560c37a0cabcf5f7992ded08a6d730bb0  cabal.project.freeze
+"

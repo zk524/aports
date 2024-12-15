@@ -1,7 +1,7 @@
 # Contributor: Jakob Meier <comcloudway@ccw.icu>
 # Maintainer: Jakob Meier <comcloudway@ccw.icu>
 pkgname=tractor
-pkgver=4.5.1
+pkgver=5.0.0
 pkgrel=0
 pkgdesc="Setup an onion routing proxy"
 url="https://framagit.org/tractor/tractor"
@@ -16,11 +16,13 @@ depends="
 	py3-stem
 	tor
 "
-makedepends="py3-gpep517 py3-setuptools py3-wheel py3-pytest"
+makedepends="py3-gpep517 py3-setuptools py3-wheel"
+checkdepends="py3-tox"
 subpackages="$pkgname-doc $pkgname-pyc"
 source="https://framagit.org/tractor/tractor/-/archive/$pkgver/tractor-$pkgver.tar.gz
 	recursively_look_for_schemas.patch
 	"
+options="net"
 
 build() {
 	gpep517 build-wheel \
@@ -29,9 +31,7 @@ build() {
 }
 
 check() {
-	python3 -m venv --clear --without-pip --system-site-packages .testenv
-	.testenv/bin/python3 -m installer .dist/*.whl
-	.testenv/bin/python3 -m pytest
+	tox --sitepackages
 }
 
 package() {
@@ -43,6 +43,6 @@ package() {
 }
 
 sha512sums="
-8c0e01598042177dd8907f783fdd6eca4837036493484b125ed5540cf00efaa9d255794a8d87305cc8a8e9228eb98ff7e7045476e5b41158ffc4142c0151f1e7  tractor-4.5.1.tar.gz
+aaab3e44e3a9360ed1c89f21d5188d54f84f916627f26310104db8939837c2f2049f9f59a859b83f24d148cec8b13211a3d371ac7888a3879df1fe229f140d88  tractor-5.0.0.tar.gz
 80f1cbb653fc7e5568c3a21361c2b0ddea8463a9f021d51481ff323c4913b6ef673860d68dfa9d18e8d25564ddb16eda17373e15c33c19b4fba36b2f5ed8af23  recursively_look_for_schemas.patch
 "

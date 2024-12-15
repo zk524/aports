@@ -77,13 +77,6 @@ libs() {
 	amove usr/lib/girepository-1.0
 }
 
-doc() {
-	default_doc
-	if [ -d "$pkgdir"/usr/share/help ]; then
-		mv "$pkgdir"/usr/share/help "$subpkgdir"/usr/share/
-	fi
-}
-
 sha512sums="
 fad546bae06ac68e0e231fbca6b5cd02a5c01a17702ace15385a829ea16ee5f6aa2f118f6f041d489ecbdd25f939ed2c5c0b41a57c1f321ef8e3e741cdeaf771  papers-48.0.tar.xz
 "

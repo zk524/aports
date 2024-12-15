@@ -90,17 +90,14 @@ package() {
 		"$pkgdir"/usr/bin/hrepack \
 		"$pkgdir"/usr/bin/ncgen \
 		"$pkgdir"/usr/bin/ristosds
+
+	# Remove conflicts with netcdf-doc
+	rm "$pkgdir"/usr/share/man/man1/ncdump.1 "$pkgdir"/usr/share/man/man1/ncgen.1
 }
 
 dev() {
 	default_dev
 	amove usr/lib/libhdf4.settings
-}
-
-doc() {
-	default_doc
-	# Remove conflicts with netcdf-doc
-	rm "$subpkgdir"/usr/share/man/man1/ncdump.1.gz "$subpkgdir"/usr/share/man/man1/ncgen.1.gz
 }
 
 tools() {

@@ -461,6 +461,11 @@ package() {
 	if [ "$_default_php" = yes ]; then
 		ln -s php$_suffix "$pkgdir"/usr/bin/php
 	fi
+
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+	cp CODING_STANDARDS.md EXTENSIONS LICENSE NEWS \
+		README* UPGRADING* \
+		"$pkgdir"/usr/share/doc/$pkgname/
 }
 
 dev() {
@@ -476,17 +481,6 @@ dev() {
 		ln -s phpize$_suffix "$subpkgdir"/usr/bin/phpize
 		ln -s php-config$_suffix "$subpkgdir"/usr/bin/php-config
 	fi
-}
-
-doc() {
-	default_doc
-
-	cd "$builddir"
-
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-	cp CODING_STANDARDS.md EXTENSIONS LICENSE NEWS \
-		README* UPGRADING* \
-		"$subpkgdir"/usr/share/doc/$pkgname/
 }
 
 apache2() {

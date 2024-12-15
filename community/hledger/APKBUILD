@@ -69,20 +69,9 @@ package() {
 		"$pkgdir"/usr/share/bash-completion/completions/hledger
 	# hledger-ui
 	install -Dm755 "$(cabal list-bin hledger-ui)" "$pkgdir"/usr/bin/hledger-ui
-	install -Dm644 hledger-ui/hledger-ui.1 "$pkgdir"/usr/share/man/man1/hledger-ui.1
-	install -Dm644 hledger-ui/hledger-ui.info "$pkgdir"/usr/share/info/hledger-ui.info
 	# hledger-web
 	install -Dm755 "$(cabal list-bin hledger-web)" "$pkgdir"/usr/bin/hledger-web
-	install -Dm644 hledger-web/hledger-web.1 "$pkgdir"/usr/share/man/man1/hledger-web.1
-	install -Dm644 hledger-web/hledger-web.info "$pkgdir"/usr/share/info/hledger-web.info
 	install -Dm755 "$srcdir"/hledger-web.initd "$pkgdir"/etc/init.d/hledger-web
-}
-
-doc() {
-	pkgdesc="$pkgdesc (documentation)"
-	install_if="docs $pkgname=$pkgver-r$pkgrel"
-	amove /usr/share/man/man1/hledger.1 /usr/share/info/hledger.info
-	$(command -v pigz || echo gzip) -n -9 "$subpkgdir"/usr/share/man/man1/hledger.1
 }
 
 ui() {
@@ -92,11 +81,13 @@ ui() {
 }
 
 uidoc() {
+	cd "$builddir"
+	install -Dm644 hledger-ui/hledger-ui.1 "$subpkgdir"/usr/share/man/man1/hledger-ui.1
+	install -Dm644 hledger-ui/hledger-ui.info "$subpkgdir"/usr/share/info/hledger-ui.info
+	default_doc
 	pkgdesc="$_uipkgdesc (documentation)"
 	url="$_uiurl"
 	install_if="docs $pkgname-ui=$pkgver-r$pkgrel"
-	amove /usr/share/man/man1/hledger-ui.1 /usr/share/info/hledger-ui.info
-	$(command -v pigz || echo gzip) -n -9 "$subpkgdir"/usr/share/man/man1/hledger-ui.1
 }
 
 web() {
@@ -107,11 +98,13 @@ web() {
 }
 
 webdoc() {
+	cd "$builddir"
+	install -Dm644 hledger-web/hledger-web.1 "$subpkgdir"/usr/share/man/man1/hledger-web.1
+	install -Dm644 hledger-web/hledger-web.info "$subpkgdir"/usr/share/info/hledger-web.info
+	default_doc
 	pkgdesc="$_webpkgdesc (documentation)"
 	url="$_weburl"
 	install_if="docs $pkgname-web=$pkgver-r$pkgrel"
-	amove /usr/share/man/man1/hledger-web.1 /usr/share/info/hledger-web.info
-	$(command -v pigz || echo gzip) -n -9 "$subpkgdir"/usr/share/man/man1/hledger-web.1
 }
 
 webopenrc() {

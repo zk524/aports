@@ -432,6 +432,11 @@ package() {
 
 	install -D -m 644 "$srcdir"/php$_suffix-module.conf \
 		"$pkgdir"/etc/apache2/conf.d/php$_suffix-module.conf
+
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+	cp CODING_STANDARDS.md EXTENSIONS LICENSE NEWS \
+		README* UPGRADING* \
+		"$pkgdir"/usr/share/doc/$pkgname/
 }
 
 dev() {
@@ -447,17 +452,6 @@ dev() {
 		ln -s phpize$_suffix "$subpkgdir"/usr/bin/phpize
 		ln -s php-config$_suffix "$subpkgdir"/usr/bin/php-config
 	fi
-}
-
-doc() {
-	default_doc
-
-	cd "$builddir"
-
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-	cp CODING_STANDARDS.md EXTENSIONS LICENSE NEWS \
-		README* UPGRADING* \
-		"$subpkgdir"/usr/share/doc/$pkgname/
 }
 
 apache2() {

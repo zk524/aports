@@ -48,20 +48,16 @@ check() {
 	make test
 }
 
-doc() {
-	default_doc
+package() {
+	make DESTDIR="$pkgdir" install
 
 	case "$CARCH" in
 	ppc64le|riscv64|s390x|loongarch64) ;;
 	*)
-		mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-		mv "$builddir"/${pkgname}_api_$pkgver.pdf "$subpkgdir"/usr/share/doc/$pkgname/
+		mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+		mv ${pkgname}_api_$pkgver.pdf "$pkgdir"/usr/share/doc/$pkgname/
 		;;
 	esac
-}
-
-package() {
-	make DESTDIR="$pkgdir" install
 }
 
 sha512sums="

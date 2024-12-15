@@ -110,22 +110,18 @@ package() {
 		"$pkgdir"/usr/sbin/in.$pkgname \
 		"$pkgdir"/usr/lib/pkgconfig \
 		"$pkgdir"/usr/include
+
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+	cp -r RELEASE_NOTES doc/* contrib/README* \
+		contrib/mod_quotatab_ldap.ldif \
+		contrib/mod_quotatab_ldap.schema \
+		"$pkgdir"/usr/share/doc/$pkgname
 }
 
 dev() {
 	default_dev
 	mkdir -p "$subpkgdir"/usr/bin
 	mv "$pkgdir"/usr/bin/prxs "$subpkgdir"/usr/bin
-}
-
-doc() {
-	default_doc
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-	cd "$builddir"
-	cp -r RELEASE_NOTES doc/* contrib/README* \
-		contrib/mod_quotatab_ldap.ldif \
-		contrib/mod_quotatab_ldap.schema \
-		"$subpkgdir"/usr/share/doc/$pkgname
 }
 
 utils() {

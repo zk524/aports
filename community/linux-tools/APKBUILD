@@ -276,10 +276,6 @@ bpftool_bashcomp() {
 	amove usr/share/bash-completion/completions/bpftool
 }
 
-doc() {
-	default_doc
-}
-
 sha512sums="
 a5a224eeb9e8dd365c80bd567feb7f960505537fc248e3b7e7f6e8e5b4379b5354ab88ecf651b7a85890755746d22287bb309a5a496d05f3fa07537ddd4d924a  patch-6.13.3.patch.xz
 1137e6440132b0958f89165440e99208f82b204e7245ae69dc9c808df97d13ce8f58136db92407e0e93394fa7f6283ec7a34597c6e92a5b6d9025e0960357957  linux-6.13.tar.xz

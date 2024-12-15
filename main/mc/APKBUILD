@@ -41,15 +41,12 @@ check() {
 package() {
 	make DESTDIR="$pkgdir" install
 	rm -fr "$pkgdir"/usr/share/man/??
-}
 
-doc() {
-	default_doc
-	mkdir -p "$subpkgdir"/usr/share/doc
+	mkdir -p "$pkgdir"/usr/share/doc
 	mv "$pkgdir"/usr/share/mc/examples \
-		"$subpkgdir"/usr/share/doc/mc
+		"$pkgdir"/usr/share/doc/mc
 	find "$pkgdir"/usr/lib/mc -name "README*" \
-		-exec mv {} "$subpkgdir"/usr/share/doc/mc/ \;
+		-exec mv {} "$pkgdir"/usr/share/doc/mc/ \;
 }
 
 lang() {

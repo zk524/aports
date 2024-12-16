@@ -1,0 +1,19 @@
+*** a/0006-linux-hardened-v6.11.11-hardened1.patch	Sun Dec 15 07:57:17 2024
+--- b/0006-linux-hardened-v6.11.11-hardened1.patch	Tue Dec 10 10:53:58 2024
+***************
+*** 110,116 ****
+   PATCHLEVEL = 11
+   SUBLEVEL = 11
+  -EXTRAVERSION =
+! +EXTRAVERSION = -hardened1
+   NAME = Baby Opossum Posse
+   
+   # *DOCUMENTATION*
+--- 110,116 ----
+   PATCHLEVEL = 11
+   SUBLEVEL = 11
+  -EXTRAVERSION =
+! +EXTRAVERSION =
+   NAME = Baby Opossum Posse
+   
+   # *DOCUMENTATION*

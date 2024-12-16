@@ -1,0 +1,7 @@
+my/
+
+# Byte-compiled / optimized files
+__pycache__/
+
+# vim swp files
+.*.swp

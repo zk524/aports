@@ -15,9 +15,9 @@ options="!strip !check"
 _config=${config:-config-lts.${CARCH}}
 source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver.tar.xz
 
-	0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
-	0003-kexec-add-kexec_load_disabled-boot-option.patch
-	0004-objtool-respect-AWK-setting.patch
+	https://gitlab.alpinelinux.org/alpine/aports/-/raw/master/main/linux-lts/0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
+	https://gitlab.alpinelinux.org/alpine/aports/-/raw/master/main/linux-lts/0003-kexec-add-kexec_load_disabled-boot-option.patch
+	https://gitlab.alpinelinux.org/alpine/aports/-/raw/master/main/linux-lts/0004-objtool-respect-AWK-setting.patch
 
 	0005-linux-hardened-alpine-config.patch
 	0006-linux-hardened-alpine-patch.patch
@@ -330,9 +330,9 @@ _dev() {
 sha512sums="
 06c184c75c00bdcdf7ecb9b3daaf887a52ef353e4a7b485efa001565acca0edda0cce9b491215fb1f8dfacfba2e8661476fe53aac696c0fef63dc150c39ab0e8  patch-6.11.11.patch.xz
 329c1f94008742e3f0c2ce7e591a16316d1b2cb9ea4596d4f45604097e07b7aa2f64afa40630a07f321a858455c77aa32ba57b271932ddcf4dc27863f9081cea  linux-6.11.tar.xz
-763dcb40f698d43b0bb856f44493973e840b66efe62a8fd41a08b6e3fa38cf903e059d107be3735ab2f38a0f27bdb0262798e5e530a1905f96195cd8bcf62fdf  0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
-75f232b6becee7d36d360ffaf2aaa837d13518f9ec620ca159bcb2a0e98eb18a77631406a9b44244ea0164a7ed59fad583823909681e9b894a012f9d13365b69  0003-kexec-add-kexec_load_disabled-boot-option.patch
-2956050bb332411d00a285e9656618f2e34b631492bbc19bef54d83a6e91b8531f4e18830b9313cfe52fbf8a8ca6fb76cf55b3ddd146ca3b977046cf2fd10cad  0004-objtool-respect-AWK-setting.patch
+055e10e7b3e00bb3621389315d5206a8feb5022a1f0dc51c3aa107facfe83d191da05a502a0c62488be7299677a63c1da84f87c42cbf3125788c56db67e810ee  0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
+7e066473fd0e234a279280eee0351bf9c3efab1e7ad0e1a85cb62193e63df06a7641015229445aaab6f68019c4852e6731b2cb3c4a54c0dbe405fac12b365873  0003-kexec-add-kexec_load_disabled-boot-option.patch
+28c83be4c97152001381cd5e3a8acb8552a42d9dac9aaec8f096e3762b7944035aa5a4363fb4602f9bb427c4f72cfd2f996a0a725f7f9e07ab250317985aff9e  0004-objtool-respect-AWK-setting.patch
 9483f5043c15c4c4780e2b97608ad482215c84757a1238fabe811ee735730d9d596dd9cfb6053a960089f2e55e6e0860fcc7684142f162b3cce2db6d2a597c2c  0005-linux-hardened-alpine-config.patch
 43bed967c1f6d71235dea2e18ee5bdf9c41a78f40544bea85327e0c1709b20893f209ef28608757db13463d3730083b04ca30a6d176a2414da5088f6c89a1004  0006-linux-hardened-alpine-patch.patch
 9de96bd03456195c82e00629e16249f2dd38f6e24cecbc527099e44407a7492252eb35c05489d3195951396e05103f3a7aa825bfd314dd98b0c9abf549517668  linux-hardened-v6.11.11-hardened1.patch

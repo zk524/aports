@@ -26,7 +26,7 @@ source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver
 
 	https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/raw/main/config
 
-	virt.x86_64.config
+	https://gitlab.alpinelinux.org/alpine/aports/-/raw/master/main/linux-lts/virt.x86_64.config
 	"
 subpackages="$pkgname-dev:_dev:$CBUILD_ARCH $pkgname-doc"
 for _i in $source; do

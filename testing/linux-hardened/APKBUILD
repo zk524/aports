@@ -22,7 +22,7 @@ source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver
 	0005-linux-hardened-alpine-config.patch
 	0006-linux-hardened-alpine-patch.patch
 
-	https://github.com/anthraxx/linux-hardened/releases/download/v${pkgver}-hardened1/linux-hardened-v${pkgver}-hardened1.patch
+	https://github.com/anthraxx/linux-hardened/releases/download/v$pkgver-hardened1/linux-hardened-v$pkgver-hardened1.patch
 
 	https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/raw/main/config
 

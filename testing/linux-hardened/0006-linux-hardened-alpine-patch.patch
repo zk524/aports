@@ -1,0 +1,11 @@
+--- ../linux-hardened-v6.11.11-hardened1.patch
++++ ../linux-hardened-v6.11.11-hardened1.patch
+@@ -110,7 +110,7 @@ index e19ae179ca36..3674108298ab 100644
+  PATCHLEVEL = 11
+  SUBLEVEL = 11
+ -EXTRAVERSION =
+-+EXTRAVERSION = -hardened1
+++EXTRAVERSION =
+  NAME = Baby Opossum Posse
+  
+  # *DOCUMENTATION*

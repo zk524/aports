@@ -1,10 +1,14 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=newlib
 pkgver=4.4.0.20231231
-pkgrel=0
+pkgrel=1
 pkgdesc="C standard library implementation intended for use on embedded systems"
 url="https://www.sourceware.org/newlib/"
-makedepends="texinfo"
+makedepends="
+	autoconf
+	automake
+	texinfo
+	"
 arch="aarch64 ppc64le x86_64 x86"
 license="GPL-2.0-only AND LGPL-2.1-only AND 0BSD AND BSD-3-Clause AND GPL-3.0-only AND LGPL-3.0-only"
 source="
@@ -16,6 +20,7 @@ source="
 	0003-or1k-fix-uart-irq-handler-signature.patch
 	0004-or1k-drop-invalid-cast.patch
 	0005-or1k-add-missing-cast.patch
+	0006-fix-compilation-on-xtensa.patch
 	"
 options="!check"
 
@@ -30,6 +35,11 @@ _targets_exotic="
 	msp430-elf
 	or1k-elf
 	aarch64-none-elf
+	xtensa-none-elf
+	xtensa-esp8266-elf
+	xtensa-esp32-elf
+	xtensa-esp32s2-elf
+	xtensa-esp32s3-elf
 	"
 
 case "$CARCH" in
@@ -165,6 +175,20 @@ _install_subpkg() {
 		install -m 644 "$srcdir/$target-nano.specs" \
 			"$subpkgdir/usr/$target/lib/nano.specs"
 	fi
+
+	case $target in
+	xtensa-esp*)
+		# For xtensa targets we share the headers (they do not change based
+		# on CPU paramters) and only keep the machine code.
+		depends="newlib-xtensa-none-elf $depends"
+		rm -rf "${subpkgdir:?}/usr/$target/include"
+		ln -s "/usr/xtensa-none-elf/include" "${subpkgdir:?}/usr/$target/include"
+		;;
+	xtensa-none-elf)
+		# For unknown xtensa, we only keep the headers.
+		rm -rf "${subpkgdir:?}/usr/xtensa-none-elf/lib"
+		;;
+	esac
 }
 
 sha512sums="
@@ -175,4 +199,5 @@ f48058084d25d59edf4d4bd4ffc23428a4a89e00c9f6ed7588315ddb5bafcc68e2b63945b135e3ba
 780d4c8e3b90f875044891a03f8215a7ea857601c908434d31691c47da09af967e264a0f350e165a7b3c674fb7b49421bde96acd9a8a7936a549e53ae79e8acd  0003-or1k-fix-uart-irq-handler-signature.patch
 0a8b9ea27998baab7f499f45fe8b3e537919142e1372055fef7ed221428c2e02fc00ec21470c8820115ea65f20d23050ae3f0639094aed1368d1447d293f8382  0004-or1k-drop-invalid-cast.patch
 997fcf0dc49d0f92e49c8148959e9979a7721b2da1defa0ffc67379b028ef66a454b7582f06b9965280fe9c58cf65b8f4f4127490cb7e6cd209be3b244bb65ae  0005-or1k-add-missing-cast.patch
+bb23dd4ceaf501a9cff3591102f84fddac047c5aa7bc2e698e4e82aa9859e7add07e95213729c8d36ab4d359f2f4841bca365623280e002d503924fb61e96b1f  0006-fix-compilation-on-xtensa.patch
 "

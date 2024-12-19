@@ -2,7 +2,7 @@
 # Maintainer: Erwan Rouchet <lucidiot@brainshit.fr>
 pkgname=gnome-sudoku
 pkgver=47.1.1
-pkgrel=0
+pkgrel=1
 arch="all"
 url="https://wiki.gnome.org/Apps/Sudoku"
 pkgdesc="Test your logic skills in this number grid puzzle"
@@ -21,7 +21,7 @@ check() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C build
+	DESTDIR="$pkgdir" meson install --no-rebuild -C build
 }
 
 sha512sums="

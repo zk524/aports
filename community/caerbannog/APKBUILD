@@ -2,7 +2,7 @@
 # Maintainer: Clayton Craft <clayton@craftyguy.net>
 pkgname=caerbannog
 pkgver=0.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Mobile-friendly Gtk frontend for password-store"
 url="https://git.sr.ht/~craftyguy/caerbannog"
 arch="all"
@@ -28,7 +28,7 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C output
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 }
 
 sha512sums="0174b0be631d1b2bfce3354ee6fdb6ac5308596193d003baeba068a384d71374a710f9072ec7e67fcf4fdc6e383e578050592374707c756a05abc1012a2dac1e  caerbannog-0.3.tar.gz"

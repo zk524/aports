@@ -3,7 +3,7 @@
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=pacman
 pkgver=7.0.0
-pkgrel=0
+pkgrel=1
 pkgdesc="A simple library-based package manager"
 options="!check" # Depends on not packaged fakechroot
 url="https://www.archlinux.org/pacman/"
@@ -57,7 +57,7 @@ check() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C build
+	DESTDIR="$pkgdir" meson install --no-rebuild -C build
 
 	mkdir -p "$pkgdir"/usr/lib/pkgconfig
 	mv "$pkgdir"/usr/share/pkgconfig/* "$pkgdir"/usr/lib/pkgconfig

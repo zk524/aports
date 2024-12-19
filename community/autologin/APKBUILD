@@ -2,7 +2,7 @@
 # Contributor: Oliver Smith <ollieparanoid@postmarketos.org>
 pkgname=autologin
 pkgver=1.0.0
-pkgrel=6
+pkgrel=7
 pkgdesc="Daemon for automatic login on TTY"
 url="https://git.sr.ht/~kennylevinsen/autologin"
 arch="all"
@@ -19,7 +19,7 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C output
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 	install -Dm644 "$srcdir"/autologin.pamd "$pkgdir"/etc/pam.d/autologin
 }
 

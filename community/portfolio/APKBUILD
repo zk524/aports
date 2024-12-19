@@ -2,7 +2,7 @@
 # Maintainer: Clayton Craft <clayton@craftyguy.net>
 pkgname=portfolio
 pkgver=1.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Minimalist file manager for those who want to use Linux mobile devices"
 url="https://github.com/tchx84/Portfolio"
 arch="noarch"
@@ -33,7 +33,7 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C output
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 }
 
 sha512sums="

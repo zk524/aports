@@ -2,7 +2,7 @@
 # Maintainer: Francesco Colista <fcolista@alpinelinux.org>
 pkgname=seahorse
 pkgver=47.0.1
-pkgrel=0
+pkgrel=1
 pkgdesc="GNOME application for managing PGP keys."
 url="https://projects.gnome.org/seahorse/"
 arch="all"
@@ -44,7 +44,7 @@ check() {
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C builddir
+	DESTDIR="$pkgdir" meson install --no-rebuild -C builddir
 }
 
 sha512sums="

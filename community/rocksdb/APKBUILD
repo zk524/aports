@@ -3,9 +3,10 @@
 # Contributor: Lars Kuhtz <lakuhtz@gmail.com>
 # Contributor: Duncan Bellamy <dunk@denkimushi.com>
 # Maintainer: Matthias Ahouansou <matthias@ahouansou.cz>
+# Contributor: doitwithnotepad <doitwithnotepad@proton.me>
 pkgname=rocksdb
 pkgver=9.9.3
-pkgrel=0
+pkgrel=1
 pkgdesc="persistent key-value store for fast storage environments"
 url="https://rocksdb.org"
 arch="all"
@@ -23,7 +24,7 @@ source="
 options="!check" # tests are excluded from release builds
 
 build() {
-	PORTABLE=1 DEBUG_LEVEL=0 make shared_lib
+	PORTABLE=1 DEBUG_LEVEL=0 USE_RTTI=1 make shared_lib
 }
 
 package() {

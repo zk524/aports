@@ -1,0 +1,48 @@
+# Contributor: VnPower <vnpower@loang.net>
+# Maintainer: VnPower <vnpower@loang.net>
+pkgname=libeb
+_pkgname=eb
+pkgver=4.4.3
+pkgrel=0
+pkgdesc="C library for accessing CD-ROM books."
+url="https://web.archive.org/web/20120401145849/http://www.sra.co.jp/people/m-kasahr/eb"
+arch="all"
+license="BSD-3-Clause"
+makedepends="zlib-dev perl"
+subpackages="$pkgname-dev $pkgname-doc"
+source="ftp://ftp.sra.co.jp/pub/misc/eb/$_pkgname-$pkgver.tar.bz2"
+builddir="$srcdir/$_pkgname-$pkgver"
+
+# Tarball comes with a very old config.guess file
+prepare() {
+	default_prepare
+	update_config_guess
+	update_config_sub
+}
+
+build() {
+	CFLAGS="$CFLAGS -Wno-incompatible-pointer-types" \
+	./configure \
+		--prefix='/usr' \
+		--libexecdir="/usr/lib/$pkgname" \
+		--localstatedir="/var/lib/$pkgname" \
+		--sysconfdir='/etc' \
+		--with-pkgdocdir="/usr/share/doc/html/$pkgname" \
+		--disable-silent-rules \
+		--disable-static
+
+	make
+}
+
+check() {
+	make -k check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
+}
+
+sha512sums="
+29578223e9bf0e8475cf0518c4e319d8440eb9dc2b819ea7de6e90d67824eb7ac9f5a29cf1baa9b6e947840de17ad2182d1ea6ee4816df84e7baf025149bbbf2  eb-4.4.3.tar.bz2
+"

@@ -1,0 +1,53 @@
+# Contributor: Peter Shkenev <santurysim@gmail.com>
+# Maintainer: Peter Shkenev <santurysim@gmail.com>
+pkgname=tyrquake
+pkgver=0.71
+pkgrel=0
+pkgdesc="SDL port of Quake"
+url="https://disenchant.net/tyrquake"
+arch="all"
+options="!check" # No test suite
+license=" GPL-2.0-only"
+makedepends="sdl2-dev imagemagick"
+install="$pkgname.pre-install"
+subpackages="$pkgname-openrc $pkgname-server $pkgname-gl"
+source="https://disenchant.net/files/engine/tyrquake-$pkgver.tar.gz
+	tyrquake.initd
+	"
+
+build() {
+	make USE_SDL=Y USE_X86_ASM=N
+}
+
+package() {
+	# no install target
+	install -m755 -D "$builddir"/bin/tyr-quake "$pkgdir"/usr/bin/tyr-quake
+	install -m755 -D "$builddir"/bin/tyr-glquake "$pkgdir"/usr/bin/tyr-glquake
+	install -m755 -D "$builddir"/bin/tyr-qwcl "$pkgdir"/usr/bin/tyr-qwcl
+	install -m755 -D "$builddir"/bin/tyr-glqwcl "$pkgdir"/usr/bin/tyr-glqwcl
+	install -m755 -D "$builddir"/bin/tyr-qwsv "$pkgdir"/usr/bin/tyr-qwsv
+
+	install -m755 -D "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/init.d/$pkgname
+}
+
+server() {
+	pkgdesc="$pkgdesc (QuakeWorld server)"
+	amove usr/bin/tyr-qwsv
+}
+
+openrc() {
+	default_openrc
+	install_if="openrc $pkgname-server=$pkgver-r$pkgrel"
+}
+
+gl() {
+	pkgdesc="$pkgdesc (OpenGL-accelerated version)"
+	amove usr/bin/tyr-glquake
+	amove usr/bin/tyr-glqwcl
+}
+
+sha512sums="
+ecceeecb43866c10c0669b4362ce2eda7a790c502764b3d644566e7637ffbde0548676c9dcea07963db0d91d83c248e3497603c0a3a2e1a12a1418a82c07179a  tyrquake-0.71.tar.gz
+1b7108ccb744eb95bedfa96d209dd80bfcbbb8d78d46087383fbb6f7a8452454d48ef94ea61167ca1540640be39b6143d4d859a65f07bea3f385efe327cb2c2a  tyrquake.initd
+"

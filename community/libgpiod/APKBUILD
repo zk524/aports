@@ -22,6 +22,7 @@ makedepends="
 	py3-build
 	py3-pip
 	python3-dev
+	libgudev-dev
 	"
 install="$pkgname.pre-install"
 subpackages="$pkgname-dev

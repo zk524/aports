@@ -51,6 +51,20 @@ source="https://nodejs.org/dist/v$pkgver/node-v$pkgver.tar.gz
 	"
 builddir="$srcdir/node-v$pkgver"
 
+# Vendored cjs-module-lexer and undici contains pre-built WASM binaries, so we
+# build them from source and package separately, if possible.
+#
+# BOOTSTRAP: avoid circular dependency:
+#   nodejs -> (node-cjs-module-lexer & node-undici) -> nodejs.
+# s390x: node-cjs-module-lexer and node-undici are not available on s390x,
+#   so we have to use bundled ones.
+_shared_builtins=no
+if [ -z "$BOOTSTRAP" ] && [ "$CARCH" != s390x ]; then
+	_shared_builtins=yes
+	depends_libs="node-cjs-module-lexer node-undici"
+	depends="$depends $depends_libs"
+fi
+
 # secfixes:
 #   20.15.1-r0:
 #     - CVE-2024-22018
@@ -194,6 +208,10 @@ prepare() {
 		deps/zlib \
 		tools/inspector_protocol/jinja2
 
+	if [ "$_shared_builtins" = yes ]; then
+		rm -rf deps/cjs-module-lexer deps/undici
+	fi
+
 	mv nodejs-openssl.cnf deps/openssl/
 }
 
@@ -228,6 +246,13 @@ build() {
 }
 
 _build() {
+	local builtins_opts=
+	[ "$_shared_builtins" = yes ] && builtins_opts="\
+		--shared-builtin-cjs_module_lexer/lexer-path=/usr/lib/node_modules/cjs-module-lexer/lexer.js \
+		--shared-builtin-cjs_module_lexer/dist/lexer-path=/usr/lib/node_modules/cjs-module-lexer/dist/lexer.js \
+		--shared-builtin-undici/undici-path=/usr/lib/node_modules/undici/loader.js \
+		"
+
 	# NOTE: We use bundled libuv because they don't care much about backward
 	# compatibility and it has happened several times in past that we
 	# couldn't upgrade nodejs package in stable branches to fix CVEs due to
@@ -259,8 +284,8 @@ _build() {
 		--without-amaro \
 		--without-corepack \
 		--without-npm \
+		$builtins_opts \
 		"$@"
-
 	make BUILDTYPE=Release
 }
 

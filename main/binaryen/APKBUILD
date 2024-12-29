@@ -28,6 +28,9 @@ source="https://github.com/WebAssembly/binaryen/archive/version_$pkgver/binaryen
 	"
 builddir="$srcdir/$pkgname-version_$pkgver"
 
+# Avoid circular dependency binaryen -> nodejs -> node-cjs-module-lexer
+[ "$BOOTSTRAP" ] && options="!check"
+
 prepare() {
 	rmdir test/spec/testsuite
 	mv "$srcdir"/testsuite-$_testsuite_gitrev test/spec/testsuite

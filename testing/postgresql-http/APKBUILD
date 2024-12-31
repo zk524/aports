@@ -1,0 +1,36 @@
+# Maintainer: Patrick Gansterer <paroga@paroga.com>
+pkgname=postgresql-http
+_pkgname=pgsql-http
+pkgver=1.6.1
+pkgrel=0
+pkgdesc="HTTP client for PostgreSQL, retrieve a web page from inside the database"
+url="https://github.com/pramsey/pgsql-http"
+arch="all"
+license="MIT"
+makedepends="curl-dev postgresql-dev"
+subpackages="$pkgname-bitcode"
+source="$pkgname-$pkgver.tar.gz::https://github.com/pramsey/pgsql-http/archive/v$pkgver.tar.gz"
+builddir="$srcdir/$_pkgname-$pkgver"
+options="!check"  # XXX: installcheck requires running PostgreSQL
+
+build() {
+	make
+}
+
+package() {
+	depends="postgresql$(pg_config --major-version)"
+
+	make DESTDIR="$pkgdir" install
+}
+
+bitcode() {
+	pkgdesc="$pkgdesc (bitcode for JIT)"
+	depends="$pkgname=$pkgver-r$pkgrel"
+	install_if="postgresql$(pg_config --major-version)-jit $pkgname=$pkgver-r$pkgrel"
+
+	amove usr/lib/postgresql*/bitcode
+}
+
+sha512sums="
+b3a7b0e3eb58ae5bc2d2d56d37b619f6805d9f10395434d7dcd81859df5c511979861c7ebdf7a966739b088a22dfb64c57d93ceb8c35a926cb419ff71e72eb90  postgresql-http-1.6.1.tar.gz
+"

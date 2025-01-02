@@ -1,0 +1,28 @@
+# Maintainer: Patrick Gansterer <paroga@paroga.com>
+pkgname=postgresql-pgjwt
+_pkgname=pgjwt
+pkgver=0.2.0_git20230302
+_gitrev=f3d82fd30151e754e19ce5d6a06c71c20689ce3d
+pkgrel=0
+pkgdesc="PostgreSQL implementation of JWT (JSON Web Tokens)"
+url="https://github.com/michelp/pgjwt"
+arch="all"
+license="MIT"
+makedepends="postgresql-dev"
+source="https://github.com/michelp/pgjwt/archive/$_gitrev/postgresql-pgjwt-$_gitrev.tar.gz"
+builddir="$srcdir/$_pkgname-$_gitrev"
+options="!check"  # XXX: installcheck requires running PostgreSQL
+
+build() {
+	make
+}
+
+package() {
+	depends="postgresql$(pg_config --major-version)-contrib"
+
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+6ed2709d604de25d363392ff641c81aeef4a7aa4059ef1987bd199ad71b72a21854cb3c0cbf80df0d095a0f273c9da9a996882bf6e651e4b1f646d928420914f  postgresql-pgjwt-f3d82fd30151e754e19ce5d6a06c71c20689ce3d.tar.gz
+"

@@ -1,0 +1,56 @@
+# Maintainer: Willow Barraco <contact@willowbarraco.fr>
+pkgname=unbound-hosts
+pkgver=3.14.89
+pkgrel=0
+pkgdesc="Unbound hosts configs to ad-block well-curated sources"
+url="https://github.com/StevenBlack/hosts"
+arch="noarch"
+license="MIT"
+options="!check"
+_alternates="
+	$pkgname-fakenews:alternate
+	$pkgname-gambling:alternate
+	$pkgname-porn:alternate
+	$pkgname-social:alternate
+"
+subpackages="
+	$_alternates
+	$pkgname-doc
+"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/StevenBlack/hosts/archive/refs/tags/$pkgver.tar.gz
+"
+builddir="$srcdir/hosts-$pkgver"
+
+build() {
+	_build_file < hosts > hosts.unbound
+	for subpackage in $_alternates; do
+		_subpkgname="${subpackage%:alternate}"
+		_build_file < "alternates/${_subpkgname#"$pkgname"-}-only/hosts" > "${_subpkgname#"$pkgname"-}.unbound"
+	done
+}
+
+package() {
+	install -Dm644 hosts.unbound "$pkgdir/etc/unbound/unbound.conf.d/50-hosts.conf"
+	install -Dm644 license.txt "$pkgdir/usr/share/doc/$pkgname/LICENSE"
+	for subpackage in $_alternates; do
+		_subpkgname="${subpackage%:alternate}"
+		install -Dm644 "${_subpkgname#"$pkgname"-}.unbound" "$pkgdir/etc/unbound/unbound.conf.d/50-hosts-${_subpkgname#"$pkgname"-}.conf"
+		install -Dm644 license.txt "$pkgdir/etc/unbound/unbound.conf.d/50-hosts-${_subpkgname#"$pkgname"-}.LICENCE"
+	done
+}
+
+alternate() {
+	amove "etc/unbound/unbound.conf.d/50-hosts-${subpkgname#"$pkgname"-}.conf"
+}
+
+_build_file() {
+	echo "server:"
+	grep ^0.0.0.0 - | \
+		sed 's/ #.*$//;
+		s/^0.0.0.0 \(.*\)/local-zone: "\1" refuse/'
+}
+
+sha512sums="
+0a415b58bd57793f5e631f5e036ddcaa05e73379b88ba73cbde6b41be4c85ade35e1226b6417d23990a425c62b2125ece92681be6f5fdbdb4544b623043f9700  unbound-hosts-3.14.89.tar.gz
+"

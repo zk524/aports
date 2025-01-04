@@ -26,6 +26,8 @@ depends="
 # eudev is only used for "pkg-config --variable=udevdir udev" to work
 makedepends="
 	eudev-dev
+	py3-gpep517
+	py3-wheel
 	py3-setuptools
 	"
 checkdepends="
@@ -77,7 +79,9 @@ prepare() {
 }
 
 build() {
-	python3 setup.py build
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
 }
 
 check() {
@@ -85,39 +89,26 @@ check() {
 }
 
 package() {
-	python3 setup.py install \
-		--prefix=/usr --root="$pkgdir" --init-system=sysvinit_openrc
+	gpep517 install-wheel --destdir "$pkgdir" \
+		.dist/*.whl
 
-	install -m644 \
-		-D \
-		"$srcdir"/interfaces \
-		"$pkgdir"/etc/network/interfaces
+	install -Dm644 "$srcdir"/interfaces -t \
+		"$pkgdir"/etc/network/
 
-	install -m755 \
-		-D \
-		"$srcdir"/cloud-init-hotplugd.initd \
+	install -Dm755 "$srcdir"/cloud-init-hotplugd.initd \
 		"$pkgdir"/etc/init.d/cloud-init-hotplugd
 
-	install -m644 \
-		-D \
-		"$srcdir"/cloud-init.logrotate \
+	install -Dm644 "$srcdir"/cloud-init.logrotate \
 		"$pkgdir"/etc/logrotate.d/cloud-init
 
-	mkdir -p \
-		"$pkgdir"/sbin
-	install -m755 \
-		"$srcdir"/setup-cloud-init \
-		"$pkgdir"/sbin/
-
-	mkdir -p \
-		"$pkgdir"/usr/sbin
-	install -m755 \
-		"$srcdir"/cloud-init-hotplugd \
+	install -Dm755 "$srcdir"/setup-cloud-init -t \
 		"$pkgdir"/usr/sbin/
 
-	install -m644 \
-		"$srcdir"/README.Alpine \
-		"$pkgdir"/usr/share/doc/"$pkgname"/
+	install -Dm755 "$srcdir"/cloud-init-hotplugd -t \
+		"$pkgdir"/usr/sbin/
+
+	install -Dm644 "$srcdir"/README.Alpine -t \
+		"$pkgdir"/usr/share/doc/$pkgname/
 
 	# Delete non-Alpine distribution template files
 	for distro in \

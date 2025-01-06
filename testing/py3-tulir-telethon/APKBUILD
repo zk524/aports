@@ -1,0 +1,52 @@
+# Contributor: Bart Ribbers <bribbers@disroot.org>
+# Contributor: Lindsay Zhou <i@lin.moe>
+maintainer="Dominic <git@msrd0.de>"
+pkgname=py3-tulir-telethon
+pkgver=1.37.0_alpha1
+_pkgver=1.37.0a1
+pkgrel=0
+pkgdesc="Full-featured Telegram client library"
+url="https://github.com/tulir/Telethon"
+arch="noarch"
+license="MIT"
+depends="
+	py3-pyaes
+	py3-rsa
+	"
+makedepends="
+	py3-gpep517
+	py3-setuptools
+	py3-wheel
+	"
+checkdepends="
+	py3-pytest
+	py3-pytest-asyncio
+	"
+subpackages="$pkgname-pyc"
+source="
+	https://github.com/tulir/Telethon/archive/v$_pkgver/Telethon-v$_pkgver.tar.gz
+	70098c58a569d0e75817e7c6d44cc7be726ae578.patch
+	"
+builddir="$srcdir/Telethon-$_pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest -k 'not test_all_methods_present'
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+db704622d58677c4b7470850ad37129c227487caa3cf34d60a5fa81f91306a46f943bcecbbe8ca045c7f47c780b917ada3e9a1860aa82c99751a131fc847b15a  Telethon-v1.37.0a1.tar.gz
+623e6ffca846e31bf41e5fc17b55088275c596277763d517ab45a5f3c237500eafdb91383e284b9a9feed0fe6680174e5f21318227e9a0c78672a206433f05ef  70098c58a569d0e75817e7c6d44cc7be726ae578.patch
+"

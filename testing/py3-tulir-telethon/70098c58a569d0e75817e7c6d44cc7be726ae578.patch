@@ -1,0 +1,24 @@
+From 70098c58a569d0e75817e7c6d44cc7be726ae578 Mon Sep 17 00:00:00 2001
+From: Colin Watson <cjwatson@debian.org>
+Date: Wed, 6 Nov 2024 02:32:34 +0000
+Subject: [PATCH] Fix test broken by removal of imghdr
+
+This has been broken since bd11564579c57c10757a9d841923d7f6968af204.
+---
+ tests/telethon/test_utils.py | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tests/telethon/test_utils.py b/tests/telethon/test_utils.py
+index b0cfb33fa..99a46efb1 100644
+--- a/tests/telethon/test_utils.py
++++ b/tests/telethon/test_utils.py
+@@ -34,9 +34,6 @@ def __init__(self, name):
+ 
+     assert utils._get_extension('foo.bar.baz') == '.baz'
+     assert utils._get_extension(pathlib.Path('foo.bar.baz')) == '.baz'
+-    assert utils._get_extension(png_header) == '.png'
+-    assert utils._get_extension(png_buffer) == '.png'
+-    assert utils._get_extension(png_buffer) == '.png'  # make sure it did seek back
+     assert utils._get_extension(CustomFd('foo.bar.baz')) == '.baz'
+ 
+     # Negative cases

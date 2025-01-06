@@ -24,8 +24,8 @@ build() {
 
 	# shared
 	# they pass ndebug in release mode
-	CFLAGS="$CFLAGS -O2 -flto=auto -DNDEBUG" \
-	CXXFLAGS="$CXXFLAGS -O2 -flto=auto -DNDEBUG" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto -DNDEBUG" \
+	CXXFLAGS="${CXXFLAGS/-Os/-O2} -flto=auto -DNDEBUG" \
 	cmake -B build-shared -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=None \

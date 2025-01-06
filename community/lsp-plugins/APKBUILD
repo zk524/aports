@@ -46,8 +46,8 @@ armv7) export ARCHITECTURE=armv7l ;;
 esac
 
 build() {
-	export CFLAGS="$CFLAGS -O2"
-	export CXXFLAGS="$CXXFLAGS -O2 -fno-lto"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
+	export CXXFLAGS="${CXXFLAGS/-Os/-O2} -fno-lto"
 	export LDFLAGS="-fno-lto"
 	make clean
 	make \

@@ -118,7 +118,7 @@ build() {
 	# `mpg123_decode_frame_64' in function
 	# `gst_mpg123_audio_dec_handle_frame'
 
-	CFLAGS="$CFLAGS -O2 -DMPG123_NO_LARGENAME" \
+	CFLAGS="${CFLAGS/-Os/-O2} -DMPG123_NO_LARGENAME" \
 	CXXFLAGS="$CXXFLAGS -O2 -DMPG123_NO_LARGENAME" \
 	CPPFLAGS="$CPPFLAGS -O2 -DMPG123_NO_LARGENAME" \
 	abuild-meson \

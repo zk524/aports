@@ -28,7 +28,7 @@ source="bullet3-$pkgver.tar.gz::https://github.com/bulletphysics/bullet3/archive
 builddir="$srcdir/bullet3-$pkgver"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -DNDEBUG -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -DNDEBUG -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -DNDEBUG -flto=auto" \
 	cmake -B build -G Ninja -Wno-dev \
 		-DCMAKE_INSTALL_PREFIX=/usr \

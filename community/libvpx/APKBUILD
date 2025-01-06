@@ -34,7 +34,7 @@ options="!check"
 build() {
 	# build fix for arm
 	export CROSS=" "
-	export CFLAGS="$CFLAGS -O2 -flto=auto -ffat-lto-objects"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto -ffat-lto-objects"
 	export CXXFLAGS="$CXXFLAGS -O2 -flto=auto -ffat-lto-objects"
 	./configure \
 		--prefix=/usr \

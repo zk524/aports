@@ -24,8 +24,8 @@ subpackages="$pkgname-doc"
 
 build() {
 	# work around temporary failure for armhf
-	CFLAGS="$CFLAGS -O2" \
-	CXXFLAGS="$CXXFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
+	CXXFLAGS="${CXXFLAGS/-Os/-O2}" \
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

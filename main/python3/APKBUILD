@@ -111,7 +111,7 @@ build() {
 	local stacksize=0x200000
 
 	# we want -O2 here for more speed for such a large interpreter.
-	export CFLAGS_NODIST="$CFLAGS -O2 -DTHREAD_STACK_SIZE=$stacksize"
+	export CFLAGS_NODIST="${CFLAGS/-Os/-O2} -DTHREAD_STACK_SIZE=$stacksize"
 	export CXXFLAGS_NODIST="$CXXFLAGS -O2"
 	export LDFLAGS_NODIST="$LDFLAGS -Wl,-z,stack-size=$stacksize"
 

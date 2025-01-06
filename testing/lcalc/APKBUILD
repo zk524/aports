@@ -13,7 +13,7 @@ subpackages="$pkgname-dev $pkgname-libs $pkgname-doc"
 source="https://gitlab.com/sagemath/lcalc/uploads/25f029f3c02fcb6c3174972e0ac0e192/lcalc-$pkgver.tar.xz"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	./configure \
 		--build=$CBUILD \

@@ -21,7 +21,7 @@ provider_priority=10
 #     - CVE-2021-30219
 
 build() {
-	make CFLAGS="$CFLAGS -O2"
+	make CFLAGS="${CFLAGS/-Os/-O2}"
 }
 
 package() {

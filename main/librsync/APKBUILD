@@ -20,7 +20,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/librsync/librsync/archive/v$
 	"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \

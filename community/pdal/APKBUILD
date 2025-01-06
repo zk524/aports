@@ -45,7 +45,7 @@ case "$CARCH" in
 esac
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \

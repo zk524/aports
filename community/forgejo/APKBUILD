@@ -50,7 +50,7 @@ prepare() {
 
 build() {
 	# XXX: LARGEFILE64
-	export CGO_CFLAGS="$CFLAGS -O2 -D_LARGEFILE64_SOURCE"
+	export CGO_CFLAGS="${CFLAGS/-Os/-O2} -D_LARGEFILE64_SOURCE"
 	export TAGS="bindata sqlite sqlite_unlock_notify"
 	export GITEA_VERSION="$pkgver"
 	export EXTRA_GOFLAGS="$GOFLAGS"

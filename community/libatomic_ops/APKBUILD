@@ -12,7 +12,7 @@ subpackages="$pkgname-static $pkgname-dev $pkgname-doc"
 source="https://github.com/ivmai/libatomic_ops/releases/download/v$pkgver/libatomic_ops-$pkgver.tar.gz"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \

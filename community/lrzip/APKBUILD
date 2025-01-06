@@ -44,7 +44,7 @@ prepare() {
 
 build() {
 	# compression utility; also doesn't make it any bigger
-	CFLAGS="$CFLAGS -O2 -flto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto" \
 	LDFLAGS="$LDFLAGS -flto" \
 	./configure \

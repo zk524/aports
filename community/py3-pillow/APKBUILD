@@ -80,7 +80,7 @@ replaces="py-pillow" # backwards compatiblity
 
 build() {
 	# zlib resides in lib
-	export CFLAGS="$CFLAGS -O2 -L/lib -flto=auto"
+	export CFLAGS="${CFLAGS/-Os/-O2} -L/lib -flto=auto"
 	gpep517 build-wheel \
 		--wheel-dir .dist \
 		--output-fd 3 3>&1 >&2

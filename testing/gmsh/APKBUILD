@@ -30,7 +30,7 @@ source="
 builddir="$srcdir/$pkgname-$pkgver-source"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \

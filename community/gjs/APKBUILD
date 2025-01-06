@@ -55,7 +55,7 @@ build() {
 
 	CC=clang \
 	CXX=clang++ \
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	abuild-meson \
 		--buildtype=release \

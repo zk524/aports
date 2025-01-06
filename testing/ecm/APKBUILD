@@ -21,7 +21,7 @@ prepare() {
 }
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	./configure \
 		--build="$CBUILD" \

@@ -29,7 +29,7 @@ source="https://code.videolan.org/videolan/libplacebo/-/archive/v$_pkgver/libpla
 builddir="$srcdir/libplacebo-v$_pkgver"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	abuild-meson \
 		-Db_lto=true \

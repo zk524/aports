@@ -87,7 +87,7 @@ x86_64)
 esac
 
 build() {
-	export CFLAGS="$CFLAGS -O2 -Wno-error=format-security"
+	export CFLAGS="${CFLAGS/-Os/-O2} -Wno-error=format-security"
 	export CXXFLAGS="$CXXFLAGS -O2 -Wno-error=format-security"
 	export CPPFLAGS="$CPPFLAGS -O2 -Wno-error=format-security"
 

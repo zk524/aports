@@ -30,7 +30,7 @@ prepare() {
 }
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	abuild-meson -Db_lto=true . output
 	meson compile -C output
 }

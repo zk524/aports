@@ -286,7 +286,7 @@ build() {
 	ppc64le)
 		# ppc64le specifically takes 15x longer to compile a certain file with O3, for
 		# some reason
-		export CFLAGS="$CFLAGS -O2"
+		export CFLAGS="${CFLAGS/-Os/-O2}"
 		export CXXFLAGS="$CXXFLAGS -O2"
 		;;
 	*)

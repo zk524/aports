@@ -79,7 +79,7 @@ prepare() {
 }
 
 build() {
-	export CFLAGS="$CFLAGS $_amalgamation -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2} $_amalgamation"
 	./configure \
 		--build="$CBUILD" \
 		--host="$CHOST" \

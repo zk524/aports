@@ -20,7 +20,7 @@ prepare() {
 }
 
 build() {
-	make CC="${CC:-cc}" LDFLAGS="$LDFLAGS" CFLAGS="$CFLAGS -O2 -fPIC"
+	make CC="${CC:-cc}" LDFLAGS="$LDFLAGS" CFLAGS="${CFLAGS/-Os/-O2} -fPIC"
 }
 
 check() {

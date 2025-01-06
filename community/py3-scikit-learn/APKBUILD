@@ -35,7 +35,7 @@ aarch64)
 esac
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	gpep517 build-wheel \
 		--wheel-dir .dist \
 		--output-fd 3 3>&1 >&2

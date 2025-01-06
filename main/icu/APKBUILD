@@ -67,7 +67,7 @@ build() {
 	case "$CARCH" in
 	armv7)
 		# bus error with -Os for some reason
-		export CFLAGS="$CFLAGS -O2"
+		export CFLAGS="${CFLAGS/-Os/-O2}"
 		export CXXFLAGS="$CXXFLAGS -O2"
 		;;
 	esac

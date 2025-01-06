@@ -47,7 +47,7 @@ builddir="$srcdir/rizin-v$pkgver"
 #     - CVE-2022-36042
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \

@@ -27,7 +27,7 @@ source="https://storage.googleapis.com/downloads.webmproject.org/releases/webp/l
 #     - CVE-2023-1999
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto -ffat-lto-objects" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto -ffat-lto-objects" \
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

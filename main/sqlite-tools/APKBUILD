@@ -117,7 +117,7 @@ build() {
 	# test at the same optimization level as main/sqlite
 	if want_check; then
 		msg "Building testfixture"
-		make CFLAGS="$CFLAGS -O2" testfixture
+		make CFLAGS="${CFLAGS/-Os/-O2}" testfixture
 	fi
 
 	if subpackage_types_has tcl; then

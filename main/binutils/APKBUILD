@@ -66,8 +66,8 @@ build() {
 		_arch_configure="--enable-targets=x86_64-pep"
 	fi
 
-	CFLAGS="$CFLAGS -O2" \
-	CXXFLAGS="$CXXFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
+	CXXFLAGS="${CXXFLAGS/-Os/-O2}" \
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

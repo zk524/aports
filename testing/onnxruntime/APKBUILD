@@ -47,7 +47,7 @@ armhf|armv7) options="!check $options"; _extra_cxxflags="-Wno-overflow";;
 esac
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS $_extra_cxxflags -O2 -Wno-deprecated-declarations -Wno-error=template-id-cdtor -flto=auto -U_FORTIFY_SOURCE" \
 	LDFLAGS="$LDFLAGS -Wl,--copy-dt-needed-entries" \
 	cmake -S cmake -B build -G Ninja \

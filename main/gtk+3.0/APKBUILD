@@ -68,8 +68,8 @@ source="https://download.gnome.org/sources/gtk+/${pkgver%.*}/gtk+-$pkgver.tar.xz
 builddir="$srcdir/gtk+-$pkgver"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
-	CXXFLAGS="$CXXFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
+	CXXFLAGS="${CXXFLAGS/-Os/-O2}" \
 	abuild-meson \
 		-Db_lto=true \
 		-Dman=true \

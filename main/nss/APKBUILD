@@ -56,7 +56,7 @@ builddir="$srcdir/$pkgname-$pkgver/nss"
 #     - CVE-2018-12384
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	./build.sh \
 		--opt \

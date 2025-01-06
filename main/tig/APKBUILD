@@ -15,7 +15,7 @@ subpackages="$pkgname-doc"
 source="https://github.com/jonas/tig/releases/download/tig-$pkgver/tig-$pkgver.tar.gz"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	./configure \
 		--build=$CBUILD \

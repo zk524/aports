@@ -121,7 +121,7 @@ build() {
 			target=$target \
 			arch=$arch \
 			$_sconsflags \
-			cflags="$CFLAGS -O2" \
+			cflags="${CFLAGS/-Os/-O2}" \
 			cxxflags="$CXXFLAGS -O2" \
 			linkflags="$LDFLAGS"
 	done

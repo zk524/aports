@@ -18,6 +18,7 @@ pkgusers="gitea"
 pkggroups="www-data"
 subpackages="$pkgname-doc $pkgname-openrc"
 source="$pkgname-$pkgver.tar.gz::https://dl.gitea.com/gitea/$pkgver/gitea-src-$pkgver.tar.gz
+	enforce-npm-lockfile.patch
 	$pkgname.initd
 	$pkgname.ini
 	"
@@ -118,6 +119,7 @@ package() {
 
 sha512sums="
 f21abc94e40d850567e59394c7f10f85ea881dbb59ce0bcf00295b1e887efabd63f0dad918d8f8cec0f0304db1327e20ad56512f16d19b3edcc2176c0e4f90f0  gitea-1.23.5.tar.gz
+d281c4c3bc2136db0d85758f3f00cf0b1ad8990f7f9ef174d7fa839750bf084ff529ad3b6ef3157e9b0681ba93ab3b775eb24b37c14ab9602c32ba55a6e91c41  enforce-npm-lockfile.patch
 71c767f9e851d99e6d87032faa833617ded28a292507c492bce63d0b87208819aa9ccbf8301d885da14901a4bdb93b21859883eaea78f980e8c8deb63ae8e57a  gitea.initd
 431184faffa8996873d92d7b0d16bc4b1a0178d264cd2928d1f49b13ad3e6470d9ede7a18c12112deeeb38f0647ccc0b012e98bcbd96e7b8496a3dc18f5b1fb7  gitea.ini
 "

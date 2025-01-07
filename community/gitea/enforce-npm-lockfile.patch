@@ -1,0 +1,11 @@
+--- ./Makefile.orig
++++ ./Makefile
+@@ -866,7 +866,7 @@
+ 	$(GO) install $(ACTIONLINT_PACKAGE)
+ 
+ node_modules: package-lock.json
+-	npm install --no-save
++	npm ci
+ 	@touch node_modules
+ 
+ .venv: poetry.lock

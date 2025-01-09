@@ -1,13 +1,13 @@
 # Contributor: Hannes Braun <hannes@hannesbraun.net>
 # Maintainer: Hannes Braun <hannes@hannesbraun.net>
 pkgname=sourcegit
-pkgver=8.33
+pkgver=2025.03
 pkgrel=0
 pkgdesc="Open-source & Free Git GUI Client"
 url="https://sourcegit-scm.github.io/"
-arch="x86_64 aarch64" # blocked by dotnet's native AOT compilation
+arch="x86_64" # limited by SkiaSharp: https://github.com/mono/SkiaSharp/issues/3097
 license="MIT"
-makedepends="dotnet8-sdk zlib-dev"
+makedepends="dotnet9-sdk fontconfig-dev zlib-dev"
 source="https://github.com/sourcegit-scm/sourcegit/archive/v$pkgver/sourcegit-$pkgver.tar.gz"
 options="!check" # no test suite
 
@@ -16,14 +16,15 @@ build() {
 		--no-self-contained \
 		--use-current-runtime \
 		--configuration Release \
-		--output publish
+		--output publish \
+		-p:DisableAOT=true \
+		-p:DisableUpdateDetection=true
 }
 
 package() {
 	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 
 	mkdir -p "$pkgdir"/usr/lib "$pkgdir/usr/bin"
-	rm publish/*.dbg
 	cp -a publish "$pkgdir"/usr/lib/sourcegit
 	ln -s ../lib/sourcegit/SourceGit "$pkgdir"/usr/bin/sourcegit
 
@@ -38,5 +39,5 @@ package() {
 }
 
 sha512sums="
-f73ee46bd0721f529a9d31fb9297a81628b80c20409348e869767cceed8e872be6e58c023c885756d4287f043981dd922ce0d1ffb72aea21adfb33fb346d43b4  sourcegit-8.33.tar.gz
+1dd17313f3ddedd985cbf5fd8866ba5a11050bbfbb3619ea4b9c59f6baf6e37fe7074b815873f5f4f744ee40711189e8cc1fbc17dc087d395b8356d5eaed296c  sourcegit-2025.03.tar.gz
 "

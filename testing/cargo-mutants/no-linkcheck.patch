@@ -1,0 +1,14 @@
+diff --git a/book/book.toml b/book/book.toml
+index a9be9f3..b28bb1f 100644
+--- a/book/book.toml
++++ b/book/book.toml
+@@ -8,9 +8,3 @@ title = "cargo-mutants"
+ [output.html]
+ git-repository-url = "https://github.com/sourcefrog/cargo-mutants"
+ edit-url-template = "https://github.com/sourcefrog/cargo-mutants/edit/main/book/{path}"
+-
+-[output.linkcheck]
+-follow-web-links = true
+-
+-[output.linkcheck.http-headers]
+-'crates\.io' = ["Accept: text/html"]

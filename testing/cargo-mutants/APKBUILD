@@ -1,0 +1,71 @@
+maintainer="Paolo Barbolini <paolo.barbolini@m4ss.net>"
+pkgname=cargo-mutants
+pkgver=25.0.0
+pkgrel=0
+pkgdesc="Inject bugs and see if your tests catch them"
+url="https://mutants.rs"
+arch="all"
+license="MIT"
+makedepends="
+	cargo
+	cargo-auditable
+	mdbook
+	"
+checkdepends="
+	cargo
+	cargo-nextest
+	"
+subpackages="
+	$pkgname-doc
+	$pkgname-bash-completion
+	$pkgname-fish-completion
+	$pkgname-zsh-completion
+	"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/sourcefrog/cargo-mutants/archive/refs/tags/v$pkgver.tar.gz
+	slow-tests.patch
+	no-linkcheck.patch
+	"
+# cargo fetch
+options="net"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --release --frozen
+	mdbook build book/ --dest-dir ../manual/
+
+	./target/release/cargo-mutants mutants --completions bash > "$pkgname".bash
+	./target/release/cargo-mutants mutants --completions fish > "$pkgname".fish
+	./target/release/cargo-mutants mutants --completions zsh > "$pkgname".zsh
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/cargo-mutants -t "$pkgdir"/usr/bin/
+
+	for d in README.md NEWS.md DESIGN.md
+	do
+		install -Dm 644 "$d" -t "$pkgdir"/usr/share/doc/"$pkgname"/
+	done
+	install -Dm 644 LICENSE -t "$pkgdir"/usr/share/licenses/"$pkgname"/
+
+	install -Dm644 "$pkgname".bash "$pkgdir"/usr/share/bash-completion/completions/"$pkgname"
+	install -Dm644 "$pkgname".fish "$pkgdir"/usr/share/fish/vendor_completions.d/"$pkgname".fish
+	install -Dm644 "$pkgname".zsh "$pkgdir"/usr/share/zsh/site-functions/_"$pkgname"
+
+	mv manual/ "$pkgdir"/usr/share/doc/"$pkgname"/manual
+}
+
+sha512sums="
+f5d419c7b2b7cd87cf2a0a154c1d4cd4d0adcaa505342f94e864d0220fce5674866529ecc95131835b3c0c56c43f77db7f4d1005cbe3f0f871369ac779e9b5c3  cargo-mutants-25.0.0.tar.gz
+25873bbf4b6b14a1d4447e7c659090e032422a4d3d3509f6703bfdb9b59756458797e92cc96a7c8766bf7fcad5594299286b04db151dc95d7bf577449b501161  slow-tests.patch
+0fcf60d2b7d0128927c2968d3a98e0d8a084a616120f1873deb47c3ddfb2b1c1f0f8ae48730e341a80cd223c6f1e075a3340d5fec19d99418d19cb529957bd99  no-linkcheck.patch
+"

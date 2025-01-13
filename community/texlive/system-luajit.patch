@@ -1,0 +1,111 @@
+From 605d32c18f9b522a749761b7fd41c9fc5ba22942 Mon Sep 17 00:00:00 2001
+From: Karl Berry <karl@freefriends.org>
+Date: Wed, 15 Jan 2025 22:51:07 +0000
+Subject: [PATCH] configure support for system luajit lib, from j.ne
+
+git-svn-id: svn://tug.org/texlive/trunk/Build/source@73471 c570f23f-e606-0410-a88d-b1316a301751
+Details: https://tug.org/pipermail/tex-live/2025-January/051043.html
+[Dropped ChangeLog entries because they cause conflicts while applying]
+---
+ libs/luajit/ChangeLog        |  7 ++++++-
+ libs/luajit/ac/luajit.ac     | 10 ++++++++++
+ libs/luajit/ac/withenable.ac |  6 ++++--
+ m4/ChangeLog                 |  9 +++++++++
+ m4/kpse-luajit-flags.m4      | 12 ++++++++++--
+ m4/kpse-pkgs.m4              |  3 ++-
+ 6 files changed, 41 insertions(+), 6 deletions(-)
+ create mode 100644 libs/luajit/ac/luajit.ac
+
+diff --git a/libs/luajit/ac/luajit.ac b/libs/luajit/ac/luajit.ac
+new file mode 100644
+index 0000000000..79d429bb5d
+--- /dev/null
++++ b/libs/luajit/ac/luajit.ac
+@@ -0,0 +1,10 @@
++dnl $Id$
++## libs/luajit/ac/luajit.ac: configure.ac fragment for the TeX Live subdirectory libs/luajit/
++dnl
++dnl Copyright 2025 Karl Berry <tex-live@tug.org>
++dnl You may freely use, modify and/or distribute this file.
++dnl
++## basic check of system luajit
++KPSE_TRY_LIB([luajit],
++             [#include <luajit.h>],
++             [const char *v = LUAJIT_VERSION;])
+diff --git a/libs/luajit/ac/withenable.ac b/libs/luajit/ac/withenable.ac
+index 7f7a246e52..9fcded13d5 100755
+--- a/libs/luajit/ac/withenable.ac
++++ b/libs/luajit/ac/withenable.ac
+@@ -1,9 +1,11 @@
++dnl $Id$
+ ## libs/luajit/ac/withenable.ac: configure.ac fragment for the TeX Live subdirectory libs/luajit/
+ dnl
+-dnl Copyright (C) 2014 Peter Breitenlohner <tex-live@tug.org>
++dnl Copyright 2015-2025 Karl Berry <tex-live@tug.org>
++dnl Copyright 2014 Peter Breitenlohner <tex-live@tug.org>
+ dnl You may freely use, modify and/or distribute this file.
+ dnl
+ dnl extra_dirs = libs/luajit/native
+ dnl
+ ## configure options and TL libraries required for luajit
+-KPSE_WITH_LIB([luajit], , [tree])
++KPSE_WITH_LIB([luajit])
+diff --git a/m4/kpse-luajit-flags.m4 b/m4/kpse-luajit-flags.m4
+index 1677a72742..8140594dad 100644
+--- a/m4/kpse-luajit-flags.m4
++++ b/m4/kpse-luajit-flags.m4
+@@ -1,6 +1,6 @@
+ # $Id$
+ # Public macros for the TeX Live (TL) tree.
+-# Copyright 2019 Karl Berry <tex-live@tug.org>
++# Copyright 2019-2025 Karl Berry <tex-live@tug.org>
+ # Copyright 2014 Peter Breitenlohner <tex-live@tug.org>
+ #
+ # This file is free software; the copyright holder
+@@ -13,7 +13,7 @@
+ # LIBS required for the `-ltexluajit' library in libs/luajit/ of the TL tree.
+ AC_DEFUN([KPSE_LUAJIT_FLAGS], [dnl
+ echo 'tldbg:[$0] called.' >&AS_MESSAGE_LOG_FD
+-_KPSE_LIB_FLAGS([luajit], [texluajit], [lt tree],
++_KPSE_LIB_FLAGS([luajit], [texluajit], [lt],
+                 [-IBLD/libs/luajit/include],
+                 [BLD/libs/luajit/libtexluajit.la],
+                 [],
+@@ -61,6 +61,14 @@ esac
+ echo 'tldbg:[$0] done.' >&AS_MESSAGE_LOG_FD
+ ]) # KPSE_LUAJIT_FLAGS
+ 
++# KPSE_LUAJIT_OPTIONS([WITH-SYSTEM])
++# ----------------------------------
++AC_DEFUN([KPSE_LUAJIT_OPTIONS], [_KPSE_LIB_OPTIONS([luajit], [$1], [pkg-config])])
++
++# KPSE_LUAJIT_SYSTEM_FLAGS
++# ------------------------
++AC_DEFUN([KPSE_LUAJIT_SYSTEM_FLAGS], [_KPSE_PKG_CONFIG_FLAGS([luajit], [luajit])])
++
+ # KPSE_LUAJIT_DEFINES
+ # -------------------
+ # Set the make variable LUAJIT_DEFINES to the CPPFLAGS required when
+diff --git a/m4/kpse-pkgs.m4 b/m4/kpse-pkgs.m4
+index cd90410f9d..6b1777d41c 100644
+--- a/m4/kpse-pkgs.m4
++++ b/m4/kpse-pkgs.m4
+@@ -1,6 +1,6 @@
+ # $Id$
+ # Private Autoconf macros for the TeX Live (TL) tree.
+-# Copyright 2016-2024 Karl Berry <tex-live@tug.org>
++# Copyright 2016-2025 Karl Berry <tex-live@tug.org>
+ # Copyright 2009-2015 Peter Breitenlohner <tex-live@tug.org>
+ #
+ # This file is free software; the copyright holder
+@@ -77,6 +77,7 @@ AC_REQUIRE([KPSE_GRAPHITE2_SYSTEM_FLAGS])[]dnl
+ AC_REQUIRE([KPSE_TECKIT_SYSTEM_FLAGS])[]dnl
+ AC_REQUIRE([KPSE_ICU_SYSTEM_FLAGS])[]dnl
+ AC_REQUIRE([KPSE_HARFBUZZ_SYSTEM_FLAGS])[]dnl
++AC_REQUIRE([KPSE_LUAJIT_SYSTEM_FLAGS])[]dnl
+ ]) # KPSE_ALL_SYSTEM_FLAGS
+ 
+ # KPSE_UTILS_PKGS()
+-- 
+2.48.0.rc1.219.gb6b6757d772
+

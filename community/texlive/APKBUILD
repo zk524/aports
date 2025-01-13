@@ -3,11 +3,11 @@
 pkgname=texlive
 pkgver=20240210.69778
 _commit=8fc7b0ba764da3d30d18662dd7ea5a97abced38b
-pkgrel=9
+pkgrel=10
 pkgdesc="Comprehensive TeX document production system"
 url="https://tug.org/texlive/"
-# s390x, riscv64, loongarch64: luajit fails to compile
-arch="all !s390x !riscv64 !loongarch64"
+# s390x: check fails, "I can't find the format file `xelatex.fmt'!"
+arch="all !s390x"
 license="GPL-2.0-or-later AND GPL-3.0-or-later"
 depends="
 	ghostscript
@@ -71,6 +71,7 @@ source="
 	texmfmp-fix-format-specifier.patch
 	fix-fortify-string.patch
 	fix-incompatible-ptr-types.patch
+	system-luajit.patch
 	"
 builddir="$srcdir"/texlive-source-$_commit
 
@@ -85,10 +86,24 @@ prepare() {
 	sed -i '/AC_SEARCH_LIBS/a KPSE_KPATHSEA_FLAGS' texk/bibtex-x/configure.ac
 	(cd texk/bibtex-x && autoreconf)
 
+	# to apply the changes from system-luajit.patch
+	autoreconf
+
 	# t4ht expects to be run as /usr/share/texmf/bin/t4ht
 	# (see https://bugs.archlinux.org/task/27251)
 	sed -i s/SELFAUTOPARENT/TEXMFROOT/ texk/tex4htk/t4ht.c
 }
+
+# texlive's bundled luajit doesn't support these architectures
+case "$CARCH" in
+	s390x|riscv64|loongarch64)
+		_luajitopt="--without-luajit --disable-luajittex \
+			    --disable-luajithbtex --disable-mfluajit" ;;
+	*)
+		_luajitopt="" ;;
+esac
+
+
 
 build() {
 	# builders keep failing when -jN == nproc
@@ -145,6 +160,7 @@ build() {
 		--disable-xindy-rules \
 		--disable-xpdfopen \
 		--disable-xz \
+		$_luajitopt \
 		--with-banner-add="/Alpine Linux" \
 		--with-clisp-runtime=default \
 		--with-freetype2-include=/usr/include/freetype2 \
@@ -691,4 +707,5 @@ sha512sums="
 76c5385735cb19c926a2c15d1b972225bf9647df9749d60eb6ed0e9197d3d23ab76f944119f417f5e4598e8a2eacf8ca9f7c86baa1beada68fde0f44ee65da02  texmfmp-fix-format-specifier.patch
 7b3c6f1c452315efc32e6579e0a7e62496e4f62e204217ec2abaf3fa0296ab3b26fc91f2e3d43fd7358e9a3183610c3a8d38a28a978ff9ab626365dd893a1b4b  fix-fortify-string.patch
 00774cf34a6a98baecc9f8fdb2e35843b11a69203394788544cc7a8165d81f7c820a689e79b4a0a83e3d713565898fe33c7d32b31dae36ff81bce94e6073f754  fix-incompatible-ptr-types.patch
+b50142b8b6ba66109fe38897d4ca69bbaa1bfd10dcbcfc4530c119dbbc02894c20b668217bd72594005e5bfd2db195a7d967607da0d279f89b49b9d8cbcbbd23  system-luajit.patch
 "

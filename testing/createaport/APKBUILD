@@ -1,0 +1,31 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+maintainer="Angelo Verlain <hey@vixalien.com>"
+pkgname=py3-createaport
+_pyname=createaport
+pkgver=0.2.0
+pkgrel=0
+pkgdesc="A command line utility that tries to guess a complete APKBUILD file for a repository URL."
+url="https://git.sr.ht/~martijnbraam/createaport"
+arch="noarch"
+license="MIT"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~martijnbraam/createaport/archive/$pkgver.tar.gz"
+makedepends="py3-setuptools python3-dev"
+subpackages="$pkgname-pyc"
+
+builddir="$srcdir/$_pyname-$pkgver"
+
+build() {
+	python3 setup.py build
+}
+
+check() {
+	python3 setup.py test
+}
+
+package() {
+	python3 setup.py install --prefix=/usr --root="$pkgdir"
+}
+
+sha512sums="
+5124f99a0f40e9e7e9e64600013b5e0900433acabd77d5dd846c71ec91a1de9fce6f5eb909b822ce7c0e8f92d70873052d7c5451c116bb75aeadac32cc44220a  py3-createaport-0.2.0.tar.gz
+"

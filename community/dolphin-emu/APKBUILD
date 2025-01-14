@@ -158,7 +158,7 @@ build() {
 	esac
 
 	# analytics is opt-in, a pop up box at first launch, thus fine
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \

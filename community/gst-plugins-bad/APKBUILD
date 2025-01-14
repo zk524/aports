@@ -103,7 +103,7 @@ esac
 #     - CVE-2023-37328
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \

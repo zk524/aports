@@ -51,7 +51,7 @@ build() {
 	export CC=clang
 	export CXX=clang++
 	# a bunch of failures in vendored ancient libzip that is patched..
-	export CFLAGS="$CFLAGS -O2 -Wno-error=format-security"
+	export CFLAGS="${CFLAGS/-Os/-O2} -Wno-error=format-security"
 	export CXXFLAGS="$CXXFLAGS -O2 -Wno-error=format-security"
 
 	./_autosetup

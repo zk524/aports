@@ -133,7 +133,7 @@ replaces="xdg-desktop-portal-kde<=6.1.5-r0"
 
 build() {
 	# reduce size of debug syms
-	CFLAGS="$CFLAGS -O2 -g1" CXXFLAGS="$CXXFLAGS -O2 -g1" \
+	CFLAGS="${CFLAGS/-Os/-O2} -g1" CXXFLAGS="$CXXFLAGS -O2 -g1" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_INSTALL_PREFIX=/usr \

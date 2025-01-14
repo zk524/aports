@@ -12,7 +12,7 @@ subpackages="$pkgname-dev"
 source="$pkgname-$pkgver.tar.gz::https://github.com/jiixyj/libebur128/archive/refs/tags/v$pkgver.tar.gz"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -DNDEBUG -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -DNDEBUG -flto=auto" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \

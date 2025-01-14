@@ -226,8 +226,8 @@ build() {
 	unset CARGO_PROFILE_RELEASE_PANIC
 	unset CARGO_PROFILE_RELEASE_CODEGEN_UNITS
 
-	export CFLAGS="$CFLAGS -O2"
-	export CXXFLAGS="$CXXFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
+	export CXXFLAGS="${CXXFLAGS/-Os/-O2}"
 
 	case "$CARCH" in
 	aarch64|ppc64le|x86_64|loongarch64)

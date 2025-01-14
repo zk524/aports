@@ -74,7 +74,7 @@ build() {
 	export BZIP2_INCLUDE=/usr/include
 
 	# language runtime
-	export CFLAGS="$CFLAGS -O2 -flto=auto"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto"
 
 	./Configure -des \
 		-Dcccdlflags='-fPIC' \

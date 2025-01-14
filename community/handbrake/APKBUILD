@@ -74,7 +74,7 @@ case "$CARCH" in
 esac
 
 # This is a video transcoder, performance is the most important.
-export CFLAGS="$CFLAGS -O2 -flto=auto"
+export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto"
 export CXXFLAGS="$CXXFLAGS -O2 -flto=auto"
 export CPPFLAGS="$CPPFLAGS -O2 -flto=auto"
 

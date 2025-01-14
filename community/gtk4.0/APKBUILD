@@ -59,7 +59,7 @@ source="https://download.gnome.org/sources/gtk/${pkgver%.*}/gtk-$pkgver.tar.xz"
 builddir="$srcdir/gtk-$pkgver"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \
 		-Ddocumentation=true \

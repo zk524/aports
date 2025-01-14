@@ -15,7 +15,7 @@ subpackages="$pkgname-dev lib$pkgname:libs"
 source="https://code.videolan.org/videolan/dav1d/-/archive/$pkgver/dav1d-$pkgver.tar.bz2"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	abuild-meson \
 		-Db_lto=true \

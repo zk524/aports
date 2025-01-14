@@ -68,7 +68,7 @@ source="$pkgname-$pkgver.tar.xz::https://launchpad.net/compiz/${pkgver%.*}/$pkgv
 	"
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	cmake -S . -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \

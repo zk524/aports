@@ -17,7 +17,7 @@ esac
 
 build() {
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	cmake -B build -G Ninja -Wno-dev \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_PREFIX_PATH=/usr \

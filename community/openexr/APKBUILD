@@ -88,7 +88,7 @@ build() {
 	mkdir -p build/src/test/bin
 	cp -R "$srcdir"/openexr-images-$_commit_images/* build/src/test/bin/
 
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \

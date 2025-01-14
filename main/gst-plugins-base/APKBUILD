@@ -53,7 +53,7 @@ ldpath="/usr/lib/gstreamer-1.0"
 options="!check"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \

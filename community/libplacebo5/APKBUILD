@@ -27,7 +27,7 @@ builddir="$srcdir/libplacebo-v$pkgver"
 replaces="libplacebo"
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	abuild-meson \
 		-Db_lto=true \

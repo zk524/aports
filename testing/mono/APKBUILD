@@ -30,7 +30,7 @@ source="https://download.mono-project.com/sources/mono/preview/mono-$pkgver.tar.
 options="!check" # fail
 
 build() {
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	./configure \
 		--build=$CBUILD \

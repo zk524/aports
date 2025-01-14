@@ -45,7 +45,7 @@ _run_scons() {
 }
 
 build() {
-	export CFLAGS="$CFLAGS -O2 -flto=auto"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto"
 	export CXXFLAGS="$CXXFLAGS -O2 -flto=auto"
 	_run_scons
 }

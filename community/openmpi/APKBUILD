@@ -18,7 +18,7 @@ build() {
 		ppc64le) disable_atomics="--disable-builtin-atomics";;
 	esac
 
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
 	./configure \
 		--prefix=/usr \

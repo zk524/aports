@@ -26,7 +26,7 @@ x86)
 esac
 
 build() {
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 	export CXXFLAGS="$CXXFLAGS -O2"
 	export CPPFLAGS="$CPPFLAGS -O2"
 

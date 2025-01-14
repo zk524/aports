@@ -22,7 +22,7 @@ source="https://www.memcached.org/files/memcached-$pkgver.tar.gz
 #     - CVE-2022-26635
 
 build() {
-	CFLAGS="$CFLAGS -flto=auto -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

@@ -21,7 +21,7 @@ prepare() {
 }
 
 build() {
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 	./icm_prepare /
 	./icm_bootstrap x
 }

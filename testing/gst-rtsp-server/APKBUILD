@@ -25,7 +25,7 @@ options="!check" # tests pass locally but not in ci
 #     - CVE-2024-44331
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \

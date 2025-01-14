@@ -18,7 +18,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/lz4/lz4/archive/v$pkgver.tar
 #     - CVE-2019-17543
 
 build() {
-	export CFLAGS="$CFLAGS -O2 -flto=auto"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto"
 	export CPPFLAGS="$CPPFLAGS -O2 -flto=auto"
 	make PREFIX="/usr"
 }

@@ -93,7 +93,7 @@ build() {
 		;;
 	esac
 
-	export CFLAGS="$CFLAGS -O2 -flto=auto -DNDEBUG"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto -DNDEBUG"
 	export CXXFLAGS="$CXXFLAGS -O2 -flto=auto -DNDEBUG"
 	cmake -B build-cpp -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \

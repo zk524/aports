@@ -54,7 +54,7 @@ esac
 
 export PUB_CACHE="$srcdir/pub_cache"
 
-export CFLAGS="$CFLAGS -O2 -Wno-error -Wno-unknown-warning-option -Wno-unused-command-line-argument"
+export CFLAGS="${CFLAGS/-Os/-O2} -Wno-error -Wno-unknown-warning-option -Wno-unused-command-line-argument"
 export CXXFLAGS="$CXXFLAGS -O2 -Wno-error -Wno-unknown-warning-option -Wno-unused-command-line-argument"
 
 export CC=clang

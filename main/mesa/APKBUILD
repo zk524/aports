@@ -158,9 +158,9 @@ esac
 build() {
 	# use -g1 to generate less debug info:
 	# 485 MiB -> ~80 MiB
-	export CFLAGS="$CFLAGS -O2 -g1"
-	export CXXFLAGS="$CXXFLAGS -O2 -g1"
-	export CPPFLAGS="$CPPFLAGS -O2 -g1"
+	export CFLAGS="${CFLAGS/-Os/-O2} -g1"
+	export CXXFLAGS="${CXXFLAGS/-Os/-O2} -g1"
+	export CPPFLAGS="${CPPFLAGS/-Os/-O2} -g1"
 
 	PATH="$PATH:/usr/lib/llvm$_llvmver/bin" \
 	abuild-meson \

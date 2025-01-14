@@ -47,7 +47,7 @@ prepare() {
 build() {
 	# It's a language runtime, performance does matter. Users for whom disk
 	# size is more important can use lua5.1 instead.
-	export CFLAGS="${CFLAGS/-Os/-O2}"
+	export CFLAGS="${CFLAGS/-Os/-O3}"
 
 	# These flags are recommended by OpenResty.
 	local xcflags="-DLUAJIT_ENABLE_LUA52COMPAT -DLUAJIT_NUMMODE=2"

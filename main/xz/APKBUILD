@@ -25,7 +25,7 @@ prepare() {
 
 build() {
 	# compression utility
-	CFLAGS="$CFLAGS -O3" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

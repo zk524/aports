@@ -34,7 +34,7 @@ esac
 
 build() {
 	RAPIDFUZZ_BUILD_EXTENSION=1 \
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2 -U_FORTIFY_SOURCE" \
 	gpep517 build-wheel \
 		--wheel-dir .dist \

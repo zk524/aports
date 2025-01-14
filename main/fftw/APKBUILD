@@ -39,7 +39,7 @@ prepare() {
 }
 
 build() {
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 	export CXXFLAGS="$CXXFLAGS -O2"
 	local cf
 	local i; for i in $_precision; do

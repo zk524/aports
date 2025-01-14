@@ -30,7 +30,7 @@ build() {
 		;;
 	esac
 
-	CFLAGS="$CFLAGS -O2 -DNDEBUG" \
+	CFLAGS="${CFLAGS/-Os/-O2} -DNDEBUG" \
 	CXXFLAGS="$CXXFLAGS -O2 -DNDEBUG" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \

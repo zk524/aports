@@ -33,7 +33,7 @@ x86) options="$options !check" ;;
 esac
 
 build() {
-	CFLAGS="$CFLAGS -O2 -DNDEBUG -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -DNDEBUG -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -DNDEBUG -flto=auto" \
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \

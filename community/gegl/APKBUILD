@@ -32,7 +32,7 @@ source="https://download.gimp.org/pub/gegl/${pkgver%.*}/gegl-$pkgver.tar.xz
 #     - CVE-2021-45463
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	abuild-meson \
 		-Db_lto=true \
 		. output

@@ -212,7 +212,7 @@ build() {
 	local _vfs_modules=vfs_dfs_samba4
 
 	# pclose, ..
-	export CFLAGS="$CFLAGS -O2 -D_BSD_SOURCE -flto=auto"
+	export CFLAGS="${CFLAGS/-Os/-O2} -D_BSD_SOURCE -flto=auto"
 	./configure \
 		--prefix=/usr \
 		--sysconfdir=/etc/$pkgname \

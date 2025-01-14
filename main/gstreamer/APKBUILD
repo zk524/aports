@@ -37,7 +37,7 @@ options="setcap !check"
 #     - CVE-2021-3498
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \

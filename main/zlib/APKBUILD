@@ -21,7 +21,7 @@ source="https://zlib.net/fossils/zlib-$pkgver.tar.gz
 
 build() {
 	# we trade size for a little more speed.
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 	CHOST="$CHOST" ./configure \
 		--prefix=/usr \
 		--shared

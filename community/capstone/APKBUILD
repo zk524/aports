@@ -16,7 +16,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/aquynh/capstone/archive/$pkg
 	"
 
 build() {
-	export CFLAGS="$CFLAGS -O2 -flto=auto -ffat-lto-objects"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto -ffat-lto-objects"
 	make
 	cd bindings/python
 	python3 setup.py build

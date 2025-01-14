@@ -351,7 +351,7 @@ _compile_common() {
 
 build() {
 	# it pretty much never makes sense to optimise qemu for disk size
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 	export CXXFLAGS="$CXXFLAGS -O2"
 	export CPPFLAGS="$CPPFLAGS -O2"
 

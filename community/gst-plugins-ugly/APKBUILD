@@ -36,7 +36,7 @@ ldpath="/usr/lib/gstreamer-1.0"
 #     - CVE-2017-5847
 
 build() {
-	CFLAGS="$CFLAGS -O2" \
+	CFLAGS="${CFLAGS/-Os/-O2}" \
 	CXXFLAGS="$CXXFLAGS -O2" \
 	CPPFLAGS="$CPPFLAGS -O2" \
 	abuild-meson \

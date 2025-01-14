@@ -61,7 +61,7 @@ esac
 
 build() {
 	# it's a whole language runtime
-	export CFLAGS="$CFLAGS -O2 -D_BSD_SOURCE"
+	export CFLAGS="${CFLAGS/-Os/-O2} -D_BSD_SOURCE"
 	export CXXFLAGS="$CXXFLAGS -O2"
 
 	./configure \

@@ -61,7 +61,7 @@ prepare() {
 }
 
 build() {
-	export CFLAGS="$CFLAGS -O2 -flto=auto"
+	export CFLAGS="${CFLAGS/-Os/-O2} -flto=auto"
 	export CXXFLAGS="$CXXFLAGS -O2 -flto=auto"
 
 	# Deactivate wxsmith-related plugins because they depend on wxpropgrid

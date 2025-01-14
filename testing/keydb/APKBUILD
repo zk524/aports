@@ -59,7 +59,7 @@ prepare() {
 }
 
 build() {
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 
 	make $_make_opts all
 }

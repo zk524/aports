@@ -41,7 +41,7 @@ esac
 
 build() {
 	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100431
-	export CFLAGS="$CFLAGS -O2 -Wno-error=format-security"
+	export CFLAGS="${CFLAGS/-Os/-O2} -Wno-error=format-security"
 	export CXXFLAGS="$CXXFLAGS -O2 -Wno-error=format-security"
 
 	local target

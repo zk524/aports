@@ -61,8 +61,8 @@ build() {
 	LIBPOSTFIX=/ \
 	LUA=lua$_luaver \
 	lua_suffix=$_luaver \
-	CFLAGS="$CFLAGS -O2 -flto=auto" \
-	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
+	CFLAGS="${CFLAGS/-Os/-O2} -flto=auto" \
+	CXXFLAGS="${CXXFLAGS/-Os/-O2} -flto=auto" \
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

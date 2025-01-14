@@ -43,8 +43,8 @@ prepare() {
 build() {
 	local lit=/usr/lib/llvm$_llvmver/bin/lit
 
-	CFLAGS="$CFLAGS -O2 -DNDEBUG -g1" \
-	CXXFLAGS="$CXXFLAGS -O2 -DNDEBUG -g1" \
+	CFLAGS="${CFLAGS/-Os/-O2} -DNDEBUG -g1" \
+	CXXFLAGS="${CXXFLAGS/-Os/-O2} -DNDEBUG -g1" \
 	CC=clang CXX=clang++ \
 	cmake -B build -G Ninja -Wno-dev \
 		-DCMAKE_BUILD_TYPE=None \

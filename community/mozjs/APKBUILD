@@ -67,7 +67,7 @@ prepare() {
 	ac_add_options --prefix=/usr
 	ac_add_options --enable-release
 	ac_add_options --enable-hardening
-	ac_add_options --enable-optimize="$CFLAGS -O2"
+	ac_add_options --enable-optimize="${CFLAGS/-Os/-O2}"
 	ac_add_options --enable-rust-simd
 	ac_add_options --enable-linker=$_linker
 	ac_add_options --disable-bootstrap
@@ -124,7 +124,7 @@ build() {
 	unset CARGO_PROFILE_RELEASE_LTO
 	export CC=clang
 	export CXX=clang++
-	export CFLAGS="$CFLAGS -O2"
+	export CFLAGS="${CFLAGS/-Os/-O2}"
 	export CXXFLAGS="$CXXFLAGS -O2"
 	export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=system
 	export MOZBUILD_STATE_PATH="$srcdir/mozbuild"

@@ -2,7 +2,7 @@
 # Contributor: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=ghidra
 pkgver=11.2
-pkgrel=0
+pkgrel=1
 pkgdesc="A Cross Platform and Open Source Electronics Design Automation Suite"
 url="https://ghidra-sre.org/"
 # only x86_64 and aarch64 support provided by upstream
@@ -10,7 +10,6 @@ url="https://ghidra-sre.org/"
 arch="x86_64"
 license="Apache-2.0"
 makedepends="
-	bash
 	gradle
 	protoc
 	python3
@@ -20,6 +19,7 @@ makedepends="
 # Note: Ghidra refuses to launch with only JRE installed, so
 #       please do not move JDK to makedepends
 depends="
+	bash
 	openjdk21-jdk
 	wmname
 	"

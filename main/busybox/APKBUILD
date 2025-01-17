@@ -327,7 +327,7 @@ binsh() {
 
 	install -d "$subpkgdir"/bin
 
-	ln -s /bin/busybox "$subpkgdir"/bin/sh
+	ln -s busybox "$subpkgdir"/bin/sh
 }
 
 _helper_openrc() {

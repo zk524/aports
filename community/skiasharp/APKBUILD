@@ -1,0 +1,102 @@
+# Contributor: Naomi Rennie-Waldock <naomi.renniewaldock@gmail.com>
+# Maintainer: Naomi Rennie-Waldock <naomi.renniewaldock@gmail.com>
+pkgname=libskiasharp
+pkgver=2.88.9
+pkgrel=0
+pkgdesc="2D graphics API for .NET - native library"
+url="https://github.com/mono/SkiaSharp"
+arch="x86_64 armv7 aarch64"
+license="BSD-3-Clause"
+_llvmver=19
+_skiaver=2.88.3
+makedepends="
+	cmd:awk
+	cmd:envsubst
+	clang$_llvmver
+	llvm$_llvmver
+	gn
+	ninja
+	freetype-dev
+	fontconfig-dev
+	libwebp-dev
+	harfbuzz-dev
+	cmake
+	"
+subpackages="$pkgname-dbg"
+# SkiaSharp currently doesn't work with jpeg-turbo 3.x which we've got packaged
+# https://github.com/mono/SkiaSharp/issues/2645
+# https://github.com/libjpeg-turbo/libjpeg-turbo/issues/741
+_jpegturbover=2.1.5.1
+source="https://github.com/mono/SkiaSharp/archive/v$pkgver/SkiaSharp-$pkgver.tar.gz
+	https://github.com/mono/skia/archive/v$_skiaver/skia-$_skiaver.tar.gz
+
+	args.gn.in
+
+	0001-fix-cflags-for-system-freetype2.patch
+	0002-add-missing-includes.patch
+
+	https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$_jpegturbover/libjpeg-turbo-$_jpegturbover.tar.gz
+	"
+_skiasharpdir="$srcdir/SkiaSharp-$pkgver"
+_skiadir="$srcdir/skia-$_skiaver"
+_jpegturbodir="$srcdir/libjpeg-turbo-$_jpegturbover"
+builddir="$_skiadir"
+options="!check"
+
+prepare() {
+	default_prepare
+
+	install -d "$builddir"/third_party/externals
+	rm -f "$builddir"/third_party/externals/libjpeg-turbo
+	ln -s "$_jpegturbodir" "$builddir"/third_party/externals/libjpeg-turbo
+	ln -sf "$_jpegturbodir"/jpeg_nbits_table.h "$_jpegturbodir"/jpeg_nbits_table.c
+}
+
+build() {
+	# Generate config for jpeg-turbo
+	# Note: jpeg-turbo is linked statically as part of SkiaSharp's build process
+	# We just run cmake first to generate jconfig.h
+	cd "$_jpegturbodir"
+	cmake . \
+		-DCMAKE_BUILD_TYPE= \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DWITH_JPEG8=1
+
+	# Generate build config for SkiaSharp
+	cd "$builddir"
+	local soname=$(awk '$1 == "libSkiaSharp" && $2 == "soname" { print $3 }' "$_skiasharpdir"/VERSIONS.txt)
+	local map="$_skiasharpdir"/native/linux/libSkiaSharp/libSkiaSharp.map
+	local _skia_arch=$CTARGET_ARCH
+
+	case "$CTARGET_ARCH" in
+	aarch64) _skia_arch=arm64 ;;
+	armv7) _skia_arch=arm ;;
+	x86_64) _skia_arch=x64 ;;
+	esac
+
+	export soname map _skia_arch _llvmver
+
+	[ -d _build ] || mkdir _build
+	envsubst < "$srcdir"/args.gn.in > _build/args.gn
+
+	gn gen _build
+	ninja -j"${JOBS:-1}" -C _build SkiaSharp
+}
+
+package() {
+	local soname=$(awk '$1 == "libSkiaSharp" && $2 == "soname" { print $3 }' "$_skiasharpdir"/VERSIONS.txt)
+
+	install -Dm644 _build/libSkiaSharp.so.$soname -t "$pkgdir"/usr/lib/
+	ln -s libSkiaSharp.so.$soname "$pkgdir"/usr/lib/libSkiaSharp.so.${soname%%.*}
+	ln -s libSkiaSharp.so.$soname "$pkgdir"/usr/lib/libSkiaSharp.so
+}
+
+sha512sums="
+c13fb2f2cb8e231f5130e97450e242b910ea098419334303ed0b3391ff264549f9283343be8f5e1a6e59fa7ffe9d9aeb1c2d5607af0fb1fc03af0645b685dff2  SkiaSharp-2.88.9.tar.gz
+43b19f6ddefe30ddf37034c73cd23feea28cb9e4a5830f8c526771afa051bdb2a96934f70dc035ca85891992b67b47d1becc6f4bf8768175db8452e144dfd9f1  skia-2.88.3.tar.gz
+c1d8eace5078a25a8be5aa92337e1211055fb4d6a1da6f019e8f53871051b56af5cd18f19e0d67a34895402bbd575d233c5b5ad752e3ea5cdc85bfd63a392910  args.gn.in
+0c4caa5aff089d314540959f068ca06c5580465be7a4a4abb3db9e1756a8043e14cbd4f8be677cfe4bd837b32115c8fefb2c79cf7bd52dd06fa1cb50e2406756  0001-fix-cflags-for-system-freetype2.patch
+7eac411d6f235a450dcccf7d451ecc0d9516761b3cf37d3b0438fa2648b4ce7b0912de16d27221dc1df82fe62efb9287084fce433f1aeae48732da454402dbd7  0002-add-missing-includes.patch
+86a7248d064043b26b09755633ef4872a2a6133c9e677a9fe4be6645b2e0fde102cf01e09119967b3b6b85f4cb93f3f7c49ec4973944d5eff99b5b90ce8b0be6  libjpeg-turbo-2.1.5.1.tar.gz
+"

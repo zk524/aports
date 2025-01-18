@@ -4,8 +4,7 @@ pkgver=10.10.3
 pkgrel=0
 pkgdesc="Web Client for Jellyfin"
 url="https://jellyfin.org/"
-# armv7: oom
-arch="x86_64"
+arch="x86_64 armv7 aarch64"
 options="net" # net for npm
 license="GPL-2.0-only"
 install="$pkgname.post-install"

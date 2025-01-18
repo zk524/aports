@@ -1,0 +1,25 @@
+From 5f2682ed16394ba3e10ab35150c15e265ab0a0db Mon Sep 17 00:00:00 2001
+From: Naomi Rennie-Waldock <naomi.renniewaldock@gmail.com>
+Date: Wed, 4 Dec 2024 02:01:11 +0000
+Subject: [PATCH 1/2] fix cflags for system freetype2
+
+---
+ third_party/freetype2/BUILD.gn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/third_party/freetype2/BUILD.gn b/third_party/freetype2/BUILD.gn
+index d3092c672f..1bf7d9fc62 100644
+--- a/third_party/freetype2/BUILD.gn
++++ b/third_party/freetype2/BUILD.gn
+@@ -14,7 +14,7 @@ import("../third_party.gni")
+ 
+ if (skia_use_system_freetype2) {
+   system("freetype2") {
+-    cflags = [ "-I=/usr/include/freetype2" ]
++    cflags = [ "-I/usr/include/freetype2" ]
+     libs = [ "freetype" ]
+   }
+ } else {
+-- 
+2.45.2
+

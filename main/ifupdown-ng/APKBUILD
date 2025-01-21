@@ -1,7 +1,7 @@
 # Maintainer: Ariadne Conill <ariadne@dereferenced.org>
 pkgname=ifupdown-ng
 pkgver=0.12.1
-pkgrel=7
+pkgrel=8
 pkgdesc="tools for managing network configuration"
 url="https://github.com/ifupdown-ng/ifupdown-ng"
 arch="all"
@@ -38,7 +38,7 @@ _executor_stubs="bridge bond"
 
 # These are optional executors which do not conflict with what we are
 # presently shipping.  These executors require iproute2.
-_executor_iproute2="vrf gre vxlan mpls"
+_executor_iproute2="vrf gre vxlan mpls tunnel"
 
 # These are all optional executors we plan to use.
 _executor_opt="ppp wireguard wireguard-quick ethtool batman wifi $_executor_iproute2"

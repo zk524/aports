@@ -3,7 +3,7 @@
 # Maintainer: Luca Weiss <luca@lucaweiss.eu>
 pkgname=lomiri-system-settings
 pkgver=1.3.0
-pkgrel=0
+pkgrel=1
 pkgdesc="System Settings application for Lomiri"
 url="https://gitlab.com/ubports/development/core/lomiri-system-settings"
 # armhf: blocked by lomiri-ui-toolkit
@@ -11,7 +11,7 @@ url="https://gitlab.com/ubports/development/core/lomiri-system-settings"
 arch="all !armhf !s390x !riscv64 !ppc64le"
 license="GPL-3.0-only"
 depends="
-	accountsservice
+	accountsservice-ubuntu
 	ayatana-indicator-bluetooth
 	ayatana-indicator-datetime
 	ayatana-indicator-power
@@ -22,7 +22,7 @@ depends="
 	qt5-qtmultimedia
 	"
 makedepends="
-	accountsservice-dev
+	accountsservice-ubuntu-dev
 	click-dev
 	cmake
 	cmake-extras
@@ -63,7 +63,8 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=ON \
-		-DCMAKE_BUILD_TYPE=None
+		-DCMAKE_BUILD_TYPE=None \
+		-DENABLE_UBUNTU_ACCOUNTSSERVICE=ON
 	cmake --build build
 }
 

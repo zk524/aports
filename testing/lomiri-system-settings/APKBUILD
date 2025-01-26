@@ -1,6 +1,6 @@
-# Contributor: Brandon Boese <brandonboese@protonmail.com>
+# Contributor: Aster Boese <asterboese@mailbox.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
-# Maintainer: Luca Weiss <luca@lucaweiss.eu>
+maintainer="Luca Weiss <luca@lucaweiss.eu>"
 pkgname=lomiri-system-settings
 pkgver=1.3.0
 pkgrel=1

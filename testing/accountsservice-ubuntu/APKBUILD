@@ -1,0 +1,111 @@
+# Contributor: Luca Weiss <luca@lucaweiss.eu>
+maintainer="Aster Boese <asterboese@mailbox.org>"
+pkgname=accountsservice-ubuntu
+_pkgname=accountsservice
+pkgver=23.13.9
+pkgrel=0
+pkgdesc="D-Bus interface for user account query and manipulation"
+url="https://www.freedesktop.org/software/accountsservice/"
+arch="all"
+license="GPL-3.0-or-later"
+depends_dev="gobject-introspection-dev"
+makedepends="
+	$depends_dev
+	elogind-dev
+	glib-dev
+	meson
+	polkit-dev
+	vala
+	"
+subpackages="$pkgname-dev $pkgname-lang lib$pkgname:libs"
+source="https://www.freedesktop.org/software/accountsservice/accountsservice-$pkgver.tar.xz
+	0001-formats-locale-property.patch
+	0002-create-and-manage-groups-like-on-a-debian-system.patch
+	0009-language-tools.patch
+	0010-set-language.patch
+	0011-add-background-file-support.patch
+	0012-add-keyboard-layout-support.patch
+	0013-add-has-message-support.patch
+	0016-add-input-sources-support.patch
+	0021-support-extrausers.patch
+	git_default_gdm.patch
+	git_user_manager.patch
+	implicit-funcs.patch
+	no-check-format.patch
+	tests-s-assertEquals-assertEqual.patch
+	ubuntu_notest_language.patch
+	musl-fgetspent_r.patch
+	musl-wtmp.patch
+	opt-tests.patch
+	"
+builddir="$srcdir/$_pkgname-$pkgver"
+# mocklibc fails to build with implicits
+options="!check"
+
+build() {
+	abuild-meson \
+		-Db_lto=true \
+		-Dsystemdsystemunitdir=no \
+		-Delogind=true \
+		-Dintrospection=true \
+		-Ddocbook=false \
+		-Dgtk_doc=false \
+		-Dadmin_group=wheel \
+		-Dtests="$(want_check && echo true || echo false)" \
+		. output
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs --no-rebuild -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+	provides="accountsservice"
+	provider_priority=0
+	replaces="accountsservice"
+}
+
+_dev() {
+	depends="$pkgname=$pkgver-r$pkgrel"
+	provides="$_pkgname-dev"
+	provider_priority=0
+	replaces="$_pkgname-dev"
+}
+
+_lang() {
+	depends="$pkgname=$pkgver-r$pkgrel"
+	provides="$_pkgname-lang"
+	provider_priority=0
+	replaces="$_pkgname-lang"
+}
+
+_libs() {
+	depends="$pkgname=$pkgver-r$pkgrel"
+	provides="lib$_pkgname"
+	provider_priority=0
+	replaces="lib$_pkgname"
+}
+
+sha512sums="
+c6eb543ce2e07b61bbdfa454e388949bc688517be0536b14f30c66383ed105b15d3fab8b6c62b1eaa08f67d9bdc29b928729d9f7c704f47de4decf0de8e12f89  accountsservice-23.13.9.tar.xz
+1906d5cefd63253596b484188428a5f3adbfa66fd017ac7286b4d4dae0430c1523a39baa97fc5dadfe14f7b2dd76ebb0e4012a5940f0bb5da395795cf93b48f3  0001-formats-locale-property.patch
+3b18754ef84dcc012ead37a82fe557ef0f5ae8343db5eadd50eb320e095719075c86b38a6f9fdcd23e9aa929405e67d440fa5dc46a31aa683b68dcbbe172f0e9  0002-create-and-manage-groups-like-on-a-debian-system.patch
+89c27eccdd4737fb97a4f1e12842334611812ac95ca2ed0be07563197d8909cd28d34f004d384d9292746554c5b98e4f163d144169303a9bf2db4f394c427dab  0009-language-tools.patch
+aee1dafe7c9090068d14a3544a4323ef31d8b6e8726ed6f170efc77cdc0f0009b6e313036603012abf03fd65aae4cc14aa5d74b4445a462a99177f9e7aa7ff76  0010-set-language.patch
+03916c99243bb4ab199e696bf8fce6569fb0bb673782157901dc768ecfedda3c3807dd41a656c775efe44afd3575fd887209a014b4c44118bd4f2c4ebe5e8c64  0011-add-background-file-support.patch
+60d40916c33c1d07002cf83c4546d05763e55d320a6f4cf8cf0ffa5250e888f0159b79024eb6740ac431159693017b64201af027bb76807b17276e8cff2fe04c  0012-add-keyboard-layout-support.patch
+081fc041a82a46e84f08e9a8efbe40bbf30503f6dd3e0d48e27fe0e0bdd296fd00aacd88f56759e1c02b8e6f9d74723f0d9190551be7aeb7579251ced6f9783b  0013-add-has-message-support.patch
+7d36837b7a6d67d4e3672170fbfaefee781c2293c69d22e5d6ac594a4c855d57dabb5c083b3ead2560b5e08083c08757178513742c6b3a43859318631e8a4d6b  0016-add-input-sources-support.patch
+aefafffd36010dfa22d456231ea8269424c4c37009c318b149f0712b83e6ebd4e2d7c2389c7d458e42835ba27d64329614a8a03ec0c7bc2b5db859b848cb43cb  0021-support-extrausers.patch
+742631094b977768f5e64cc512532537307acce999c78e547084839c8fbbdbc37f71301f6326ba4a022d43d5037c38e38754f3ec0d1fd64df8aaa9baca15d635  git_default_gdm.patch
+9d3e806262e452f6f762feb29fcfd01ecbd773e99b65e78639b8a1668310638a382f084268c009ada78f0e3c9e5c0da0b77dabc92ad2d9495df1ca0925329daa  git_user_manager.patch
+70fe021533c636061126c9a9fd15a37ea6b4d945cd73543ec74a00a7a886c1e4b711369aed899494079a223d034ce1c05a67c7ba6f3784356bcedcbdc9f0faa9  implicit-funcs.patch
+324e588aa7f865376758b1f4bca473fbf49fabcae70c57371f573a915d2173375148611d6054ae8873caca421f283667c97203daa9edf9205f310ef1b4800ccc  no-check-format.patch
+6a6aa246fa9bf86ab83a3c1a7ade4a96688f88af780e6677443e72baf00d5d459aba99b6a890eb049caa687f777347caf566ce47c1aba64d997669d1276e897b  tests-s-assertEquals-assertEqual.patch
+6aa74d5cbbdfd4053dbe47a6ad988c56fd9d16929ced3afff931413668632c9fac07d3e0f5c8949f7f5842fa9c38d734b91c17a4f251725d80c1c0856d5d4cf5  ubuntu_notest_language.patch
+469392beca8f5941eafaa193c4fcb0472770ee4183ce520416a1b5d6abafe0e201990eb74d06bfbd9e20af08e55aff5f0031f267083f6c6879f0fe4e5028103c  musl-fgetspent_r.patch
+6d81caed730473d5c94d575c580a236b4267b374bf50588860922a7ecbeef0b2a1d50124fa3ae195c4f26abe8c3bd6df2aea6d27a0ce23e99acef9fff3eb9652  musl-wtmp.patch
+cc5ea18d885ccc5a85f5f4191d3157f3953878af289a9cabc373afea67726042144d66fd9f8d08dac7090fc23037ab98adb4101e8378a16ab2eb04043c88378f  opt-tests.patch
+"

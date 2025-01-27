@@ -1,0 +1,22 @@
+--- a/subprojects/mocklibc.wrap
++++ b/subprojects/mocklibc.wrap
+@@ -8,3 +8,5 @@
+ patch_url = https://wrapdb.mesonbuild.com/v1/projects/mocklibc/1.0/2/get_zip
+ patch_filename = mocklibc-1.0-2-wrap.zip
+ patch_hash = 0280f96a2eeb3c023e5acf4e00cef03d362868218d4a85347ea45137c0ef6c56
++
++diff_files = mocklibc-implicit-declarations.patch
+--- /dev/null
++++ b/subprojects/packagefiles/mocklibc-implicit-declarations.patch
+@@ -0,0 +1,11 @@
++--- mocklibc-1.0/src/netgroup-debug.c.orig	2024-03-25 22:48:31.515887807 +0100
+++++ mocklibc-1.0/src/netgroup-debug.c	2024-03-25 22:46:27.311037804 +0100
++@@ -21,6 +21,8 @@
++ #include <stdio.h>
++ #include <stdlib.h>
++ 
+++extern void print_indent(FILE *stream, unsigned int indent);
+++
++ void netgroup_debug_print_entry(struct entry *entry, FILE *stream, unsigned int indent) {
++   print_indent(stream, indent);
++ 

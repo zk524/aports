@@ -1,0 +1,114 @@
+From: Frederic Peters <fpeters@debian.org>
+Date: Sat, 12 Oct 2019 10:29:08 +0200
+Subject: Create and manage groups like on a debian system.
+
+Reworked by Philip Withnall <withnall@endlessm.com> to support the new
+`-Dextra_admin_groups` option.
+
+Bug-Debian: http://bugs.debian.org/618764
+Forwarded: not-needed
+---
+ src/daemon.c | 77 +++++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 45 insertions(+), 32 deletions(-)
+
+Index: accountsservice/src/daemon.c
+===================================================================
+--- accountsservice.orig/src/daemon.c	2023-06-21 12:43:46.914098339 +0200
++++ accountsservice/src/daemon.c	2023-06-21 12:44:49.941238038 +0200
+@@ -1298,6 +1298,22 @@
+         g_free (cd);
+ }
+ 
++static gboolean
++add_user_to_group (GDBusMethodInvocation *context,
++                   const char *user_name,
++                   const char *group_name,
++                   GError **error)
++{
++        const gchar *argv[4];
++
++        argv[0] = "/usr/sbin/adduser";
++        argv[1] = user_name;
++        argv[2] = group_name;
++        argv[3] = NULL;
++
++        return spawn_sync (argv, error);
++}
++
+ static void
+ daemon_create_user_authorized_cb (Daemon                *daemon,
+                                   User                  *dummy,
+@@ -1319,37 +1335,12 @@
+ 
+         sys_log (context, "create user '%s'", cd->user_name);
+ 
+-        argv[0] = "/usr/sbin/useradd";
+-        argv[1] = "-m";
+-        argv[2] = "-c";
+-        argv[3] = cd->real_name;
+-        if (cd->account_type == ACCOUNT_TYPE_ADMINISTRATOR) {
+-                g_auto (GStrv) admin_groups_array = NULL;
+-                g_autoptr (GStrvBuilder) admin_groups_builder = g_strv_builder_new ();
+-
+-                g_strv_builder_add (admin_groups_builder, ADMIN_GROUP);
+-
+-                if (EXTRA_ADMIN_GROUPS != NULL && EXTRA_ADMIN_GROUPS[0] != '\0') {
+-                        g_auto (GStrv) extra_admin_groups = NULL;
+-                        extra_admin_groups = g_strsplit (EXTRA_ADMIN_GROUPS, ",", 0);
+-
+-                        for (gsize i = 0; extra_admin_groups[i] != NULL; i++) {
+-                                if (getgrnam (extra_admin_groups[i]) != NULL)
+-                                        g_strv_builder_add (admin_groups_builder, extra_admin_groups[i]);
+-                                else
+-                                        g_warning ("Extra admin group %s doesn’t exist: not adding the user to it", extra_admin_groups[i]);
+-                        }
+-                }
+-                admin_groups_array = g_strv_builder_end (admin_groups_builder);
+-                admin_groups = g_strjoinv (",", admin_groups_array);
+-
+-                argv[4] = "-G";
+-                argv[5] = admin_groups;
+-                argv[6] = "--";
+-                argv[7] = cd->user_name;
+-                argv[8] = NULL;
+-        } else if (cd->account_type == ACCOUNT_TYPE_STANDARD) {
+-                argv[4] = "--";
++        if (cd->account_type == ACCOUNT_TYPE_ADMINISTRATOR || cd->account_type == ACCOUNT_TYPE_STANDARD) {
++                argv[0] = "/usr/sbin/adduser";
++                argv[1] = "--quiet";
++                argv[2] = "--disabled-password";
++                argv[3] = "--gecos";
++                argv[4] = cd->real_name;
+                 argv[5] = cd->user_name;
+                 argv[6] = NULL;
+         } else {
+@@ -1362,6 +1353,29 @@
+                 return;
+         }
+ 
++        if (cd->account_type == ACCOUNT_TYPE_ADMINISTRATOR) {
++                g_auto(GStrv) extra_admin_groups = NULL;
++
++                if (!add_user_to_group (context, cd->user_name, ADMIN_GROUP, &error)) {
++                        throw_error (context, ERROR_FAILED, "failed to add user %s to group %s: %s",
++                                     cd->user_name, ADMIN_GROUP, error->message);
++                        return;
++                }
++
++                extra_admin_groups = g_strsplit (EXTRA_ADMIN_GROUPS ? EXTRA_ADMIN_GROUPS : "", ",", -1);
++                for (gsize i = 0; extra_admin_groups[i] != NULL; i++) {
++                        if (getgrnam (extra_admin_groups[i]) != NULL) {
++                                if (!add_user_to_group (context, cd->user_name, extra_admin_groups[i], &error)) {
++                                        throw_error (context, ERROR_FAILED, "failed to add user %s to group %s: %s",
++                                                     cd->user_name, extra_admin_groups[i], error->message);
++                                        return;
++                                }
++                        }
++                        else
++                                g_warning ("Extra admin group %s doesnâ€™t exist: not adding the user to it", extra_admin_groups[i]);
++                }
++        }
++
+         user = daemon_local_find_user_by_name (daemon, cd->user_name);
+         user_update_local_account_property (user, TRUE);
+         user_update_system_account_property (user, FALSE);

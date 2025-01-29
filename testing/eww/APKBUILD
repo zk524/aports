@@ -15,7 +15,7 @@ makedepends="
 	gtk+3.0-dev
 	gtk-layer-shell-dev
 	rustup
-	libdbusmenu-glib-dev
+	libdbusmenu-gtk3-dev
 	"
 subpackages="$pkgname-dbg"
 source="https://github.com/elkowar/eww/archive/refs/tags/v$pkgver/eww-$pkgver.tar.gz"

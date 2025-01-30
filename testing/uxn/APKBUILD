@@ -3,13 +3,14 @@
 pkgname=uxn
 pkgver=1.0_git20250131
 _commit=5829f7da504f77dbc44037250871befd64da79b3
-pkgrel=1
-pkgdesc="An assembler and emulator for the Uxn stack-machine"
+pkgrel=2
+pkgdesc="the Uxn stack-machine"
 url="https://wiki.xxiivv.com/site/uxn.html"
 arch="all"
 license="MIT"
 makedepends="sdl2-dev"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc uxnasm uxncli uxnemu"
+depends="uxnasm uxncli uxnemu"
 options="!check" #Tests not working yet
 source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxn/archive/$_commit.tar.gz"
 builddir="$srcdir/uxn-$_commit"
@@ -36,6 +37,27 @@ package() {
 
 	install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
 	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+uxnasm() {
+	pkgdesc="assembler for $pkgdesc"
+	depends=""
+
+	amove /usr/bin/uxnasm
+}
+
+uxnemu() {
+	pkgdesc="SDL emulator for $pkgdesc"
+	depends=""
+
+	amove /usr/bin/uxnemu
+}
+
+uxncli() {
+	pkgdesc="command line emulator for $pkgdesc"
+	depends=""
+
+	amove /usr/bin/uxncli
 }
 
 sha512sums="

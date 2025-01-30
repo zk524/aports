@@ -1,6 +1,8 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
 # Maintainer: Waweic <waweic@activ.ism.rocks>
 pkgname=uxn
-pkgver=1.0
+pkgver=1.0_git20250131
+_commit=5829f7da504f77dbc44037250871befd64da79b3
 pkgrel=0
 pkgdesc="An assembler and emulator for the Uxn stack-machine"
 url="https://wiki.xxiivv.com/site/uxn.html"
@@ -9,7 +11,8 @@ license="MIT"
 makedepends="sdl2-dev"
 subpackages="$pkgname-doc"
 options="!check" #Tests not working yet
-source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxn/archive/$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxn/archive/$_commit.tar.gz"
+builddir="$srcdir/uxn-$_commit"
 
 build() {
 	HOME=$(mktemp -d) ./build.sh --no-run
@@ -25,5 +28,5 @@ package() {
 }
 
 sha512sums="
-3d2f86f5dc702d73be8c9203dca10bdebf79f5052ab2fab044e46cb4189ddace46365b619e4da30b43804cb056fbb907ef9ff13b5f60e7ad30ce0f129724312c  uxn-1.0.tar.gz
+531bc57a012dcc1a72a3186c340439ef24b6902a291e6ce32a1b7e41367c4e64a322b095343e717f2213e48e5f05342678f5771a6baf47c6875bb45021f2f4c1  uxn-1.0_git20250131.tar.gz
 "

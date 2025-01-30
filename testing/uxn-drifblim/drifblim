@@ -1,0 +1,2 @@
+#!/bin/sh
+exec uxncli /usr/share/uxn/roms/drifblim.rom "$@"

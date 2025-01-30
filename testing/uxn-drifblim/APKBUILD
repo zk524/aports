@@ -1,0 +1,35 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxn-drifblim
+pkgver=0_git20250119
+_commit="8e8252a31719763689745f63610a9b2c8f10b70e"
+pkgrel=0
+pkgdesc="UXN assembler written in uxntal"
+url="https://git.sr.ht/~rabbits/drifblim"
+arch="noarch"
+license="ISC"
+depends="uxncli"
+makedepends="uxnasm"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/drifblim/archive/$_commit.tar.gz
+	drifblim"
+builddir="$srcdir/drifblim-$_commit"
+
+build() {
+	make
+}
+
+check() {
+	# drifblim should work the same as uxnasm
+	uxncli bin/drifblim.rom src/drifblim.tal bin/drifblim2.rom
+	cmp bin/drifblim.rom bin/drifblim2.rom
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/uxn/roms bin/drifblim.rom*
+	install -Dm755 -t "$pkgdir"/usr/bin "$srcdir"/drifblim
+}
+
+sha512sums="
+db6b4ebba5dc565f9c1d54b8ad8a92dd1e838e2adf87740066b0ac578e8d03d50feb0e093d9c18a038bbad20f51994577b8d2070d0348fb999c61c141ab91dfe  uxn-drifblim-0_git20250119.tar.gz
+8d2fa3b11a460c707f41542e843e86b6a27fac6ef9a1f0ead9652113abc6838da66410629a3108516633c657a952fdee864496e2c58156e94bd3bdc1d3f91206  drifblim
+"

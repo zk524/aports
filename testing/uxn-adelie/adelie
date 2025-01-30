@@ -1,0 +1,2 @@
+#!/bin/sh
+exec uxnemu /usr/share/uxn/roms/adelie.rom "$@"

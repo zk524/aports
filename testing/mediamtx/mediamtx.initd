@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+
+name="mediamtx"
+description="Real-time media server and proxy"
+
+: "${command_user:="mediamtx"}"
+
+command="/usr/bin/mediamtx"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+
+depend() {
+	need net
+	after firewall
+}
+
+start_pre() {
+	[ -n "$output_log" ] && checkpath -d "${output_log%/*}" \
+		-m 770 -o "$command_user"
+	[ -n "$error_log" ] && checkpath -d "${error_log%/*}" \
+		-m 770 -o "$command_user"
+}

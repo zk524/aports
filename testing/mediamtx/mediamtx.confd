@@ -1,0 +1,14 @@
+# Configuration for /etc/init.d/mediamtx
+
+# User (and group) to run mediamtx as.
+#command_user="<USER>[:<GROUP>]"
+
+# Additional arguments for mediamtx daemon.
+#command_args=
+
+# Log file locations
+output_log=/var/log/mediamtx/mediamtx.log
+error_log=/var/log/mediamtx/mediamtx.log
+
+# Comment out to disable process supervisor.
+supervisor=supervise-daemon

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S mediamtx 2>/dev/null
+adduser -S -D -h /var/empty -s /sbin/nologin -G mediamtx -g mediamtx mediamtx 2>/dev/null
+
+exit 0

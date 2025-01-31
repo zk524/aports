@@ -3,8 +3,6 @@
 # Copyright (C) 2016  Stuart Cardall
 # Licensed under the terms of the GPL2
 
-DAEMON=/usr/bin/lxcfs
-PIDFILE=/run/lxcfs.pid
 VARDIR=/var/lib/lxcfs
 RUNDIR=/run/lxcfs
 MAPPER=/usr/bin/uidmapshift
@@ -14,13 +12,20 @@ description_setup="Setup unprivileged container permissions"
 description_info="Unprivileged container config file settings"
 extra_commands="setup info"
 
+command="/usr/bin/lxcfs"
+command_args="-f -o allow_other ${ADDARGS} ${VARDIR}"
+command_background=true
+pidfile="/run/lxcfs.pid"
+stopsig=KILL
+
 depend() {
 	before lxc
 }
 
 start_pre() {
 	checkpath --directory ${VARDIR}
-	modprobe -a fuse autofs4
+	modprobe -a fuse autofs4 || return 1
+	find_perms
 }
 
 find_perms() {
@@ -106,30 +111,15 @@ setup() {
 	done
 }
 
-start() {
-	ebegin "Starting lxcfs"
-	find_perms
-
-	start-stop-daemon --start \
-		--pidfile ${PIDFILE} \
-		--exec ${DAEMON} \
-		--background \
-		--make-pidfile \
-		-- \
-		-f -o allow_other ${ADDARGS} ${VARDIR}
-
+start_post() {
 	# sometimes reboots are too fast
 	until [ -d ${RUNDIR} ]; do
 		usleep 50000
 	done
 
 	chown -R ${PERMS} ${RUNDIR}
-	eend $?
 }
 
-stop() {
-	ebegin "Stopping lxcfs"
-	start-stop-daemon --stop --exec ${DAEMON} --pidfile ${PIDFILE} --signal KILL
+stop_post() {
 	umount ${VARDIR}
-	eend $?
 }

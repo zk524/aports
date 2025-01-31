@@ -1,0 +1,47 @@
+# Contributor: Amelia Clarke <selene@perilune.dev>
+# Maintainer: Amelia Clarke <selene@perilune.dev>
+pkgname=zelbar
+pkgver=1.1.0
+pkgrel=0
+pkgdesc="Wayland statusbar reading input from STDIN"
+url="https://sr.ht/~novakane/zelbar/"
+arch="aarch64 x86_64" # limited by zig aport
+license="GPL-3.0-only"
+makedepends="
+	fcft-dev
+	pixman-dev
+	pkgconf
+	wayland-dev
+	wayland-protocols
+	zig
+	"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~novakane/zelbar/archive/v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-v$pkgver"
+options="net"
+
+build() {
+	DESTDIR="$builddir"/zig-out zig build \
+		-Dcpu=baseline \
+		-Doptimize=ReleaseSafe \
+		-Dpie \
+		--global-cache-dir "$builddir"/zig-cache \
+		--prefix /usr
+}
+
+check() {
+	zig build test \
+		-Dcpu=baseline \
+		-Doptimize=ReleaseSafe \
+		-Dpie \
+		--global-cache-dir "$builddir"/zig-cache
+}
+
+package() {
+	mkdir -p "$pkgdir"
+	cp -r zig-out/* "$pkgdir"
+}
+
+sha512sums="
+30f2c6be67e5e6db6826faf404b7195efe3d9ed04ac5fce242da852ae5604483d89a2af68347477241ab2112c26e20b3635213aa4f7ee68068b91e61847c5194  zelbar-1.1.0.tar.gz
+"

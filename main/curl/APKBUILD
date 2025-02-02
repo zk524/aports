@@ -17,7 +17,6 @@ license="curl"
 depends="ca-certificates-bundle"
 depends_dev="
 	brotli-dev
-	c-ares-dev
 	libidn2-dev
 	libpsl-dev
 	nghttp2-dev
@@ -206,7 +205,6 @@ build() {
 		--build=$CBUILD \
 		--host=$CHOST \
 		--prefix=/usr \
-		--enable-ares \
 		--enable-ipv6 \
 		--enable-unix-sockets \
 		--enable-static \

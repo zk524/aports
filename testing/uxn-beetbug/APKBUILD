@@ -1,0 +1,30 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxn-beetbug
+pkgver=0_git20240101
+_commit=3dd82acaa2d2c04b10acd93b55a32e031d418c6f
+pkgrel=0
+pkgdesc="Step debugger for Uxn"
+url="https://git.sr.ht/~rabbits/beetbug"
+arch="noarch"
+license="ISC"
+depends="uxnemu"
+makedepends="uxnasm"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/beetbug/archive/$_commit.tar.gz
+	beetbug"
+builddir="$srcdir/beetbug-$_commit"
+options="!check" # no automatic tests available
+
+build() {
+	uxnasm src/beetbug.tal beetbug.rom
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/uxn/roms beetbug.rom*
+	install -Dm755 -t "$pkgdir"/usr/bin "$srcdir"/beetbug
+}
+
+sha512sums="
+c10e42dde52bd5d3fdaa09d287cba7f148c8b739c45fc6b73220979f8e4e8fbd721ea7d70228488eeb2881ad7e2066213ab96cd5e2da4a7e02e6210fcfeaccfe  uxn-beetbug-0_git20240101.tar.gz
+6cb7a4fc40e8164172bcefc9916e1b6dfa8fa6576570f47a346274d74e0873336f24cbb903629571278691470bdc71c641f193541ea7b833679cd9a1b4ed1405  beetbug
+"

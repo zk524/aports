@@ -1,8 +1,8 @@
 # Contributor: Paul Onyschuk <blink@bojary.koba.pl>
 # Maintainer: David Demelier <markand@malikania.fr>
 pkgname=fossil
-pkgver=2.24
-pkgrel=1
+pkgver=2.25
+pkgrel=0
 pkgdesc="Simple, high-reliability, distributed software configuration management"
 url="https://www.fossil-scm.org"
 arch="all"
@@ -54,6 +54,6 @@ package() {
 }
 
 sha512sums="
-7fc7de7d947b0946866df38c6cb2215f6452d31903cae6470bb4a692816b2803eb66ea372280256e5cd00759e4d02a0ae459de2f56f39af10e873579d53d33ee  fossil-src-2.24.tar.gz
-2ce139acca006a754616409e2b713e814d7daf3633c3171e5ac2f98778fcb990638a4bb2037e2c02e7e3e9227fd1f7e0fad33e7ed8f98cc9a0fdc2f698629ccf  fix-tests.patch
+ec982a6fa9655910c692829a7aa246d7e35b1b1cec96c74d3d2af69d94cee10ffe6bb5b06a10559a3ca292147af9f1dae32d406e3e31cb7ca1d6113357eab153  fossil-src-2.25.tar.gz
+9d2c22d4b27dcb8336c3970d1b12a9816a3a7fac27251f12a806ff4933d5074eda7013c854760b5a86a3c75218bab3c162784a8df333b2d30909d14419c6d43a  fix-tests.patch
 "

@@ -1,0 +1,31 @@
+Patch-Source: https://github.com/cockroachdb/pebble/commit/cd254003ae6e9d7c246680e54e1299a0093a3c88
+
+diff --git a/vendor/github.com/cockroachdb/pebble/internal/manual/manual_64bit.go b/vendor/github.com/cockroachdb/pebble/internal/manual/manual_64bit.go
+index 8c08232b68..0709dd50d0 100644
+--- a/vendor/github.com/cockroachdb/pebble/internal/manual/manual_64bit.go
++++ b/vendor/github.com/cockroachdb/pebble/internal/manual/manual_64bit.go
+@@ -2,8 +2,8 @@
+ // of this source code is governed by a BSD-style license that can be found in
+ // the LICENSE file.
+ 
+-//go:build amd64 || arm64 || arm64be || ppc64 || ppc64le || mips64 || mips64le || s390x || sparc64 || riscv64
+-// +build amd64 arm64 arm64be ppc64 ppc64le mips64 mips64le s390x sparc64 riscv64
++//go:build amd64 || arm64 || arm64be || ppc64 || ppc64le || mips64 || mips64le || s390x || sparc64 || riscv64 || loong64
++// +build amd64 arm64 arm64be ppc64 ppc64le mips64 mips64le s390x sparc64 riscv64 loong64
+ 
+ package manual
+ 
+diff --git a/vendor/github.com/cockroachdb/pebble/internal/rawalloc/rawalloc_64bit.go b/vendor/github.com/cockroachdb/pebble/internal/rawalloc/rawalloc_64bit.go
+index c97ba33633..6660462e37 100644
+--- a/vendor/github.com/cockroachdb/pebble/internal/rawalloc/rawalloc_64bit.go
++++ b/vendor/github.com/cockroachdb/pebble/internal/rawalloc/rawalloc_64bit.go
+@@ -12,8 +12,8 @@
+ // implied. See the License for the specific language governing
+ // permissions and limitations under the License.
+ 
+-//go:build amd64 || arm64 || arm64be || ppc64 || ppc64le || mips64 || mips64le || s390x || sparc64 || riscv64
+-// +build amd64 arm64 arm64be ppc64 ppc64le mips64 mips64le s390x sparc64 riscv64
++//go:build amd64 || arm64 || arm64be || ppc64 || ppc64le || mips64 || mips64le || s390x || sparc64 || riscv64 || loong64
++// +build amd64 arm64 arm64be ppc64 ppc64le mips64 mips64le s390x sparc64 riscv64 loong64
+ 
+ package rawalloc

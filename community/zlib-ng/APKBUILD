@@ -2,14 +2,14 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=zlib-ng
 pkgver=2.1.8
-pkgrel=0
+pkgrel=1
 pkgdesc="zlib replacement with optimizations for next generation systems"
 url="https://github.com/zlib-ng/zlib-ng"
 arch="all"
 license="Zlib"
 makedepends="cmake samurai"
 checkdepends="gzip xxd zlib-dev"
-subpackages="$pkgname-dev"
+subpackages="$pkgname-static $pkgname-dev"
 source="https://github.com/zlib-ng/zlib-ng/archive/$pkgver/zlib-ng-$pkgver.tar.gz"
 
 # secfixes:

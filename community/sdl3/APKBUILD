@@ -1,9 +1,9 @@
 # Maintainer: Simon Zeni <simon@bl4ckb0ne.ca>
 pkgname=sdl3
 pkgver=3.2.20
-pkgrel=0
+pkgrel=1
 pkgdesc="development library designed to provide low level access to audio, keyboard, mouse, joystick and graphics"
-url="https://www.libsdl.org"
+url="https://www.libsdl.org/"
 arch="all"
 license="Zlib"
 depends_dev="$pkgname mesa-dev"
@@ -30,7 +30,7 @@ makedepends="
 	wayland-protocols
 	$depends_dev
 	"
-subpackages="$pkgname-dbg $pkgname-doc $pkgname-dev"
+subpackages="$pkgname-dbg $pkgname-doc $pkgname-static $pkgname-dev"
 source="https://github.com/libsdl-org/SDL/releases/download/release-$pkgver/SDL3-$pkgver.tar.gz"
 builddir="$srcdir/SDL3-$pkgver"
 

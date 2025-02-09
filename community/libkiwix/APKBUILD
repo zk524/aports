@@ -1,7 +1,7 @@
 # Contributor: Thomas Kienlen <kommander@laposte.net>
 # Maintainer: Thomas Kienlen <kommander@laposte.net>
 pkgname=libkiwix
-pkgver=13.1.0
+pkgver=14.0.0
 pkgrel=0
 pkgdesc="Common code base for all Kiwix ports"
 url="https://github.com/kiwix/libkiwix"
@@ -40,5 +40,5 @@ package() {
 }
 
 sha512sums="
-f1ecd14117e6805011dbcc3ec682ea330194433587224f2cc0874d6c9534d948fa1514d9c6c311c022372ab43456e3f5f1bdbf0fb0ef562fcfcfe20696048ade  libkiwix-13.1.0.tar.gz
+c0a6675e5add7221b812cdc91bd6212169922be6aea9cdcce34ec10328ae72ce5bc4eb218533172e6e926e58e9c683151b8ef13a489af0712f4c4c067d806e63  libkiwix-14.0.0.tar.gz
 "

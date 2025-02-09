@@ -11,8 +11,7 @@ license="GPL-3.0-only"
 makedepends="cargo"
 #checkdepends=""
 #install=""
-source="$pkgname-$pkgver.tar.gz::https://github.com/replydev/$pkgname/archive/refs/tags/v$pkgver.tar.gz"
-builddir="$srcdir/cotp-$pkgver"
+source="$pkgname-$pkgver.tar.gz::https://github.com/replydev/cotp/archive/refs/tags/v$pkgver.tar.gz"
 
 prepare() {
 	default_prepare

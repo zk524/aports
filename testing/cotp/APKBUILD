@@ -11,7 +11,7 @@ license="GPL-3.0-only"
 makedepends="cargo"
 #checkdepends=""
 #install=""
-source="https://github.com/replydev/cotp/archive/refs/tags/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/replydev/$pkgname/archive/refs/tags/v$pkgver.tar.gz"
 builddir="$srcdir/cotp-$pkgver"
 
 prepare() {
@@ -32,5 +32,5 @@ package() {
 	install -Dm755 target/release/cotp -t "$pkgdir"/usr/bin/
 }
 sha512sums="
-9da6384290d295a4e8d664512cd103e9982d7f9f7ca1ab4979bfde8d02182fb55093e011a2482ff355da1245042a13304b0634a6356da40c9e839949e3130bcd  v1.9.2.tar.gz
+9da6384290d295a4e8d664512cd103e9982d7f9f7ca1ab4979bfde8d02182fb55093e011a2482ff355da1245042a13304b0634a6356da40c9e839949e3130bcd  cotp-1.9.2.tar.gz
 "

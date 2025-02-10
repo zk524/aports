@@ -1,0 +1,25 @@
+From a8ef67a7138730bfdd941cfb068356f0b2cbae0e Mon Sep 17 00:00:00 2001
+From: Willow Barraco <contact@willowbarraco.fr>
+Date: Mon, 10 Feb 2025 15:29:53 +0100
+Subject: [PATCH] Fix build on musl
+
+Signed-off-by: Willow Barraco <contact@willowbarraco.fr>
+---
+ source/core/slang-stream.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/source/core/slang-stream.cpp b/source/core/slang-stream.cpp
+index 6af3f959..500f80dc 100644
+--- a/source/core/slang-stream.cpp
++++ b/source/core/slang-stream.cpp
+@@ -2,6 +2,7 @@
+ #ifdef _WIN32
+ #include <share.h>
+ #endif
++#include <stdio.h>
+ #include "slang-io.h"
+ #include "slang-process.h"
+ 
+-- 
+2.48.1
+

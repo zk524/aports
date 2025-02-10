@@ -1,0 +1,110 @@
+# Maintainer: Willow Barraco <contact@willowbarraco.fr>
+pkgname=shader-slang
+pkgver=2025.5
+pkgrel=0
+pkgdesc="The Slang Shading Language and Compiler"
+url="https://shader-slang.org/"
+arch="x86_64 aarch64"
+license="apache2"
+makedepends="
+	ninja
+	cmake
+	python3
+	vulkan-headers
+	libx11-dev
+	"
+subpackages="$pkgname-doc"
+_glsang_commit=a0995c49ebcaca2c6d3b03efbabf74f3843decdb
+_tinyobjloader_commit=d541711a794343de4ef5ea76f037c9fb9c127a55
+_glm_commit=efec5db081e3aad807d0731e172ac597f6a39447
+_imgui_commit=4c90284935258478d7d7ca428afa08bfec833545
+_slang_binaries_commit=ae6616fa0e3fb0a8e343e55e9e4d63b5eecfdf68
+_spirv_tools_commit=3364b982713a0440d1d342dd5eec65b122a61b71
+_spirv_headers_commit=e7294a8ebed84f8c5bd3686c68dbe12a4e65b644
+_miniz_commit=18795fa61e590521381ba9e1fa4a4ab362b095f6
+_lz4_commit=039ab4696526378ec0d111058b48305964284bf2
+_unordered_dense_commit=fd80dad6285286db5be6d2588cc7ddb624db7e5a
+_vulkan_headers_commit=39f924b810e561fd86b2558b6711ca68d4363f68
+_metal_cpp_commit=a63bd172ddcba73a3d87ca32032b66ad41ddb9a6
+_slang_rhi_commit=f562c4f4233b947766e3cc19b15ea3646642e3ca
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/shader-slang/slang/archive/refs/tags/v$pkgver.tar.gz
+	0001-Fix-build-on-musl.patch
+	glslang-$_glsang_commit.tar.gz::https://github.com/KhronosGroup/glslang/archive/$_glsang_commit.tar.gz
+	tinyobjloader-$_tinyobjloader_commit.tar.gz::https://github.com/syoyo/tinyobjloader/archive/$_tinyobjloader_commit.tar.gz
+	glm-$_glm_commit.tar.gz::https://github.com/g-truc/glm/archive/$_glm_commit.tar.gz
+	imgui-$_imgui_commit.tar.gz::https://github.com/ocornut/imgui/archive/$_imgui_commit.tar.gz
+	slang_binary-$_slang_binaries_commit.tar.gz::https://github.com/shader-slang/slang-binaries/archive/$_slang_binaries_commit.tar.gz
+	spirv_tools-$_spirv_tools_commit.tar.gz::https://github.com/KhronosGroup/SPIRV-Tools/archive/$_spirv_tools_commit.tar.gz
+	spirv_headers-$_spirv_headers_commit.tar.gz::https://github.com/KhronosGroup/SPIRV-Headers/archive/$_spirv_headers_commit.tar.gz
+	miniz-$_miniz_commit.tar.gz::https://github.com/richgel999/miniz/archive/$_miniz_commit.tar.gz
+	lz4-$_lz4_commit.tar.gz::https://github.com/lz4/lz4/archive/$_lz4_commit.tar.gz
+	unordered_dense-$_unordered_dense_commit.tar.gz::https://github.com/martinus/unordered_dense/archive/$_unordered_dense_commit.tar.gz
+	vulkan_headers-$_vulkan_headers_commit.tar.gz::https://github.com/KhronosGroup/Vulkan-Headers/archive/$_vulkan_headers_commit.tar.gz
+	metal_cpp-$_metal_cpp_commit.tar.gz::https://github.com/bkaradzic/metal-cpp/archive/$_metal_cpp_commit.tar.gz
+	slang_rhi-$_slang_rhi_commit.tar.gz::https://github.com/shader-slang/slang-rhi/archive/$_slang_rhi_commit.tar.gz
+	"
+builddir="$srcdir/slang-$pkgver"
+options="!check"
+
+prepare() {
+	default_prepare
+
+	rmdir "$builddir"/external/glslang
+	ln -s "$srcdir/glslang-$_glsang_commit" "$builddir"/external/glslang
+	rmdir "$builddir"/external/tinyobjloader
+	ln -s "$srcdir/tinyobjloader-$_tinyobjloader_commit" "$builddir"/external/tinyobjloader
+	rmdir "$builddir"/external/glm
+	ln -s "$srcdir/glm-$_glm_commit" "$builddir"/external/glm
+	rmdir "$builddir"/external/imgui
+	ln -s "$srcdir/imgui-$_imgui_commit" "$builddir"/external/imgui
+	rmdir "$builddir"/external/slang-binaries
+	ln -s "$srcdir/slang-binaries-$_slang_binaries_commit" "$builddir"/external/slang-binaries
+	rmdir "$builddir"/external/spirv-tools
+	ln -s "$srcdir/SPIRV-Tools-$_spirv_tools_commit" "$builddir"/external/spirv-tools
+	rmdir "$builddir"/external/spirv-headers
+	ln -s "$srcdir/SPIRV-Headers-$_spirv_headers_commit" "$builddir"/external/spirv-headers
+	rmdir "$builddir"/external/miniz
+	ln -s "$srcdir/miniz-$_miniz_commit" "$builddir"/external/miniz
+	rmdir "$builddir"/external/lz4
+	ln -s "$srcdir/lz4-$_lz4_commit" "$builddir"/external/lz4
+	rmdir "$builddir"/external/unordered_dense
+	ln -s "$srcdir/unordered_dense-$_unordered_dense_commit" "$builddir"/external/unordered_dense
+	rmdir "$builddir"/external/vulkan
+	ln -s "$srcdir/Vulkan-Headers-$_vulkan_headers_commit" "$builddir"/external/vulkan
+	rmdir "$builddir"/external/metal-cpp
+	ln -s "$srcdir/metal-cpp-$_metal_cpp_commit" "$builddir"/external/metal-cpp
+	rmdir "$builddir"/external/slang-rhi
+	ln -s "$srcdir/slang-rhi-$_slang_rhi_commit" "$builddir"/external/slang-rhi
+}
+
+build() {
+	export CXXFLAGS="$CXXFLAGS -D_LARGEFILE64_SOURCE"
+	cmake -B build -G Ninja \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DSLANG_SLANG_LLVM_FLAVOR=DISABLE # required version is 13
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+2fd8b1065f1218487f281c83ca746a0c3d672c88c6cc3018e4535ff6931b2305587dff1c8455dc43682d733cb748b44ee6b79e4f30deedb69d8817cf62b0a27e  shader-slang-2025.5.tar.gz
+173281b91b77e7f60c7401809becdabe645715346546bd49de7cf187f3d79296d922d9413831da9faba8e0a3742a8266ce64a4645e59c3f024866ea8ab288b04  0001-Fix-build-on-musl.patch
+2f051d94dcf56fae6aa2e4fc6ce6f19f7b8c54f221890337f7004385563f054e9bdfb41823b142a9942c557b6d25e03bc44d24f332e8970aa56cc8467e777311  glslang-a0995c49ebcaca2c6d3b03efbabf74f3843decdb.tar.gz
+6f1af0ee1efbfc5f548e477d0ae57f4b679fbeda2d9fe7f8d1ec29098e3420a79d40aafed4c0577727ba2fef410d4299ec5887883714e82dd07382616414cd8e  tinyobjloader-d541711a794343de4ef5ea76f037c9fb9c127a55.tar.gz
+af97685408ee2fbfb2f77513e703c617a4c8c0a5f2d69824fc9b3c65c9eb0f590af7dd4eff05af865ae9b225207a0a5422a318d1182a60c4668043ca08972002  glm-efec5db081e3aad807d0731e172ac597f6a39447.tar.gz
+89319af46f46014bdf9652cb0fff19fbdee7ddea9e7528735e0c28c31a5997f9061935aef2054f6573135daae1742656f0fc8d7ae9b2a01517e6ef6df39c4c25  imgui-4c90284935258478d7d7ca428afa08bfec833545.tar.gz
+1e95a870881f97042d798ed1f57c836112d68443b4c0ed7bb276e78f4f0fef5413b1c420a02de44d7ec035bd164edf5ae106d86fc3cd4c9e067830fdbaee418a  slang_binary-ae6616fa0e3fb0a8e343e55e9e4d63b5eecfdf68.tar.gz
+45188b372bc98a8de2da28d4b62f46a158d7092e6e5bae5b7acf780604079d6041016ccee4158dbaf5e2d09198d7673ee3ddbc06d011637601612dd1d9adac89  spirv_tools-3364b982713a0440d1d342dd5eec65b122a61b71.tar.gz
+3c6c16910df6c8b5b59073c99d80ee19aef102c736d21541f7db7f7b68944d98b72461ea6a98f6dd19d52e35ae999fb38fc6179031387a740b9dd6e093b15f6f  spirv_headers-e7294a8ebed84f8c5bd3686c68dbe12a4e65b644.tar.gz
+c03717131fc341397be508d4e37e846d3aa8bfaafed40e97377aad13fbe711afab3fe8e7e0e9a4d8a9b84662889a2aaf0d0ac874e9b89b6bc5d6437310a6c5ad  miniz-18795fa61e590521381ba9e1fa4a4ab362b095f6.tar.gz
+31982bea146d9016cebca5697adad8cd08a3c81d9b2a590c8ae8fe6d5cfabe02089a80b4ab952d9d94ba1133c94606f42dedd4e2654d127eafb5d7175fbd14bd  lz4-039ab4696526378ec0d111058b48305964284bf2.tar.gz
+7c7039012b6cef0ea7722cc384be839fea043093cd20f2b1e6328630d1cc1a2d57756e2a313ea7b876cb94b2ef761be7c2b272e0a7b0326263eaa723d8160383  unordered_dense-fd80dad6285286db5be6d2588cc7ddb624db7e5a.tar.gz
+2d722e32e3c5a217a62d0583fd1597fcf5e05c7092f0c629f54025ae8fdb22b12dba375d1aeeeb90e4a69507e254f33aebe435bf8f058f55a5ed3f5e6d351d6f  vulkan_headers-39f924b810e561fd86b2558b6711ca68d4363f68.tar.gz
+6e28be460db1cc14ce34360b3ada3005984bc8e65127f1d4722dd2cb4d9ef39b9440b03510c9013c6dc388ca47975d9a772417459391c22a72a9e86e6697dae5  metal_cpp-a63bd172ddcba73a3d87ca32032b66ad41ddb9a6.tar.gz
+9ceec7c436687bf79b1852ff6e24a91dbab59956bcb8a127d9e9d5cdabfa129da258113a5db166b10e3a9891990680f2e2e803c705403eea0e3e68b83b40308c  slang_rhi-f562c4f4233b947766e3cc19b15ea3646642e3ca.tar.gz
+"

@@ -1,0 +1,61 @@
+# Maintainer: Willow Barraco <contact@willowbarraco.fr>
+pkgname=magic-mirror
+pkgver=0.7.2
+pkgrel=0
+pkgdesc="Magical game streaming and remote desktop tool for Linux"
+url="https://colinmarc.github.io/magic-mirror/"
+arch="x86_64 aarch64"
+license="MIT"
+subpackages="$pkgname-server $pkgname-client"
+depends="$subpackages"
+makedepends="
+	cargo-auditable
+	nasm
+	cmake
+	protoc
+	libxkbcommon
+	wayland-dev
+	alsa-lib-dev
+	ffmpeg-dev
+	eudev-dev
+	shader-slang
+	clang-libclang
+	libxkbcommon-dev
+	fontconfig-dev
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/colinmarc/magic-mirror/archive/refs/tags/mmserver-v$pkgver.tar.gz"
+builddir="$srcdir/magic-mirror-mmserver-v$pkgver"
+options="net !check"
+
+build() {
+	export SLANG_DIR=/usr
+	cd "$builddir"/mm-server
+	cargo auditable build --release --bin mmserver
+	cd "$builddir"/mm-client
+	cargo auditable build --release --bin mmclient
+}
+
+check() {
+	cd "$builddir"/mm-server
+	cargo test -- --nocapture
+	cd "$builddir"/mm-client
+	cargo test -- --nocapture
+}
+
+package() {
+	install -Dvm755 mm-server/target/release/mmserver -t "$pkgdir"/usr/bin/
+	install -Dvm755 mm-client/target/release/mmclient -t "$pkgdir"/usr/bin/
+}
+
+server() {
+	license="BUSL"
+	amove usr/bin/mmserver
+}
+
+client() {
+	amove usr/bin/mmclient
+}
+
+sha512sums="
+728986b0d8f7338c9420edd6b31ef1b78cc99641f2aeed1209d4aec168a121cfc16cfbed43ed5bbf57bee78669927bca8faeeb51e123e0a15067ac1684be0c26  magic-mirror-0.7.2.tar.gz
+"

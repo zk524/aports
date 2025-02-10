@@ -2,7 +2,7 @@
 # Contributor: Michael Mason <ms13sp@gmail.com>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=gnutls
-pkgver=3.8.8
+pkgver=3.8.9
 pkgrel=0
 pkgdesc="TLS protocol implementation"
 url="https://www.gnutls.org/"
@@ -27,6 +27,7 @@ case $pkgver in
 esac
 source="https://www.gnupg.org/ftp/gcrypt/gnutls/v$_v/gnutls-$pkgver.tar.xz
 	skip-ktls.patch
+	tests-pqc-hybrid-kx.patch
 	"
 
 # Upstream Tracker: https://gnutls.org/security-new.html
@@ -107,6 +108,7 @@ xx() {
 }
 
 sha512sums="
-4f617c63e8e8392e400d72c9e39989fcd782268b4a4c4e36bbfb0444a4b5bcb0f53054f04a6dce99ab89c0f38f57430c95aaaec6eb9209b8e9329140abf230c3  gnutls-3.8.8.tar.xz
+b3b201671bf4e75325610a0291d4cd36a669718e22b3685246b64bde97b5bd94f463ab376ed817869869714115f4ff11bdc53c32604bb04a8ff8e10daa6d1fc7  gnutls-3.8.9.tar.xz
 07a1e56b8d821594c1ac00947fcd8ec40e3f49decc67574a8edcbdfb1181f925e5f46cc01879bc1118fbf29f78479953592efd4b6dae8e035d0aeaf79fdc0e06  skip-ktls.patch
+21a7a4c701f04bff38c7630718be3be604864321be6308414b0fa56b9705197bffee098fa17b9e31831750528f79de413d83e97aedaa3f8bc62c0096317238be  tests-pqc-hybrid-kx.patch
 "

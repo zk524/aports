@@ -1,0 +1,58 @@
+Patch-Source: https://github.com/gnutls/gnutls/commit/54a42b44522986b8fab2081c2f18026b44f3c0b1
+---
+From 54a42b44522986b8fab2081c2f18026b44f3c0b1 Mon Sep 17 00:00:00 2001
+From: Daiki Ueno <ueno@gnu.org>
+Date: Thu, 13 Feb 2025 16:23:07 +0900
+Subject: [PATCH] tests: make pqc-hybrid-kx.sh work when system time set beyond
+ 2038
+
+Signed-off-by: Daiki Ueno <ueno@gnu.org>
+---
+ tests/pqc-hybrid-kx.sh | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/tests/pqc-hybrid-kx.sh b/tests/pqc-hybrid-kx.sh
+index f67b07c45b..9174a3d5bc 100644
+--- a/tests/pqc-hybrid-kx.sh
++++ b/tests/pqc-hybrid-kx.sh
+@@ -33,6 +33,13 @@ fi
+ 
+ . "${srcdir}/scripts/common.sh"
+ 
++: ${ac_cv_sizeof_time_t=8}
++if test "${ac_cv_sizeof_time_t}" -ge 8; then
++	ATTIME_VALID="2038-10-12"  # almost the pregenerated cert expiration
++else
++	ATTIME_VALID="2030-12-17"  # end of epoch − 2590 days of validity
++fi
++
+ # First check any mismatch in the gnutls-cli --list
+ if ! "${CLI}" --list | grep '^Groups: .*GROUP-X25519-KYBER768.*' >/dev/null; then
+     if "${CLI}" --list | grep '^Public Key Systems: .*KYBER768.*' >/dev/null; then
+@@ -93,7 +100,7 @@ for group in X25519-KYBER768 SECP256R1-MLKEM768 SECP384R1-MLKEM1024 X25519-MLKEM
+     PID=$!
+     wait_server ${PID}
+ 
+-    ${VALGRIND} "${CLI}" -p "${PORT}" localhost --priority "NORMAL:-GROUP-ALL:+GROUP-$group" --x509cafile="$CACERT" --logfile="$testdir/cli.log" </dev/null
++    ${VALGRIND} "${CLI}" --attime "${ATTIME_VALID}" -p "${PORT}" localhost --priority "NORMAL:-GROUP-ALL:+GROUP-$group" --x509cafile="$CACERT" --logfile="$testdir/cli.log" </dev/null
+     kill ${PID}
+     wait
+ 
+@@ -112,7 +119,7 @@ for group in KYBER768 MLKEM768 MLKEM1024; do
+     PID=$!
+     wait_server ${PID}
+ 
+-    ${VALGRIND} "${CLI}" -p "${PORT}" localhost --priority "NORMAL:-GROUP-ALL:+GROUP-$group" --x509cafile="$CACERT" --logfile="$testdir/cli.log" </dev/null
++    ${VALGRIND} "${CLI}" --attime "${ATTIME_VALID}" -p "${PORT}" localhost --priority "NORMAL:-GROUP-ALL:+GROUP-$group" --x509cafile="$CACERT" --logfile="$testdir/cli.log" </dev/null
+     rc=$?
+     kill ${PID}
+     wait
+@@ -140,7 +147,7 @@ for group in X25519-KYBER768 SECP256R1-MLKEM768 SECP384R1-MLKEM1024 X25519-MLKEM
+     PID=$!
+     wait_server ${PID}
+ 
+-    ${VALGRIND} "${CLI}" -p "${PORT}" localhost --priority "NORMAL:-GROUP-ALL:+GROUP-$group" --x509cafile="$CACERT" --logfile="$testdir/cli.log" </dev/null
++    ${VALGRIND} "${CLI}" --attime "${ATTIME_VALID}" -p "${PORT}" localhost --priority "NORMAL:-GROUP-ALL:+GROUP-$group" --x509cafile="$CACERT" --logfile="$testdir/cli.log" </dev/null
+     rc=$?
+     kill ${PID}
+     wait

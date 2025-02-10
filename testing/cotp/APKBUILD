@@ -8,10 +8,7 @@ url="https://github.com/replydev/cotp"
 # loongarch64 and s390x cannot compile at the moment
 arch="all !loongarch64 !s390x"
 license="GPL-3.0-only"
-#depends=""
 makedepends="cargo"
-#checkdepends=""
-#install=""
 source="$pkgname-$pkgver.tar.gz::https://github.com/replydev/cotp/archive/refs/tags/v$pkgver.tar.gz"
 
 prepare() {

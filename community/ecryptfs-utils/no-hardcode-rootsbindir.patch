@@ -1,0 +1,14 @@
+--- a/configure	2024-10-28 16:31:20.085856815 +0100
++++ b/configure	2024-10-28 16:31:38.252070170 +0100
+@@ -15686,10 +15686,6 @@
+ fi
+
+ pkgconfigdir="\$(libdir)/pkgconfig"
+-if test "${prefix}" = "/usr"; then
+-	rootsbindir="/sbin"
+-else
+-	rootsbindir="\$(sbindir)"
+-fi
++rootsbindir="\$(sbindir)"
+
+ GETTEXT_PACKAGE=ecryptfs-utils

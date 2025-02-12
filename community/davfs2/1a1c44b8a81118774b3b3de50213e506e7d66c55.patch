@@ -1,0 +1,57 @@
+From 1a1c44b8a81118774b3b3de50213e506e7d66c55 Mon Sep 17 00:00:00 2001
+From: Ali Abdallah <ali.abdallah@suse.com>
+Date: Thu, 8 Sep 2022 22:31:49 +0200
+Subject: Remove ssbindir as it breaks make distcheck
+
+---
+ config/davfs2.m4 |  4 ----
+ src/Makefile.am  | 14 +-------------
+ 2 files changed, 1 insertion(+), 17 deletions(-)
+
+diff --git a/config/davfs2.m4 b/config/davfs2.m4
+index c6a6522..3f02a1a 100644
+--- a/config/davfs2.m4
++++ b/config/davfs2.m4
+@@ -78,10 +78,6 @@ AC_DEFUN([DAV_DEFAULTS],[
+         [the group, the mount.davfs daemon belongs to [davfs2]])
+     if test -z "$dav_group"; then dav_group="davfs2"; fi
+ 
+-    AC_ARG_VAR([ssbindir],
+-        [where mount will search for mount-helpers [/sbin]])
+-    if test -z "$ssbindir"; then ssbindir="/sbin"; fi
+-
+     AC_ARG_VAR([dav_localstatedir],
+         [directory to store pid-files in [/var/run]])
+     if test -z "$dav_localstatedir"; then dav_localstatedir="/var/run"; fi
+diff --git a/src/Makefile.am b/src/Makefile.am
+index df9abc7..bbde353 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -23,7 +23,6 @@ localedir = $(datadir)/locale
+ pkgsysconfdir = $(sysconfdir)/@PACKAGE@
+ pkglocalstatedir = $(dav_localstatedir)/mount.davfs
+ pkgsyscachedir = $(dav_syscachedir)/@PACKAGE@
+-ssbindir = @ssbindir@
+ 
+ sbin_PROGRAMS = mount.davfs umount.davfs
+ mount_davfs_SOURCES = cache.c \
+@@ -55,15 +54,4 @@ LIBS += @LIBICONV@
+ endif
+ 
+ install-exec-hook:
+-	chmod u+s $(DESTDIR)$(sbindir)/mount.davfs; \
+-	if test "$(sbindir)" != "$(ssbindir)"; then \
+-	  $(mkinstalldirs) $(DESTDIR)$(ssbindir); \
+-	  $(LN_S) -f $(sbindir)/mount.davfs $(DESTDIR)$(ssbindir)/mount.davfs; \
+-	  $(LN_S) -f $(sbindir)/umount.davfs $(DESTDIR)$(ssbindir)/umount.davfs; \
+-	fi
+-
+-uninstall-hook:
+-	if test "$(sbindir)" != "$(ssbindir)"; then \
+-	  rm -f $(DESTDIR)$(ssbindir)/mount.davfs; \
+-	  rm -f $(DESTDIR)$(ssbindir)/umount.davfs; \
+-	fi
++	chmod u+s $(DESTDIR)$(sbindir)/mount.davfs;
+-- 
+cgit v1.2.3-70-g09d2
+

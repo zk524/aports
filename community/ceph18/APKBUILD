@@ -276,10 +276,6 @@ package() {
 	install -D -m 755 "$srcdir"/"$_pkgname".initd "$pkgdir"/etc/init.d/ceph
 	install -D -m 644 "$srcdir"/"$_pkgname".confd "$pkgdir"/etc/conf.d/ceph
 
-	# move mount.* binaries to /sbin
-	mkdir -p "$pkgdir"/sbin
-	mv "$pkgdir"/usr/sbin/mount.* "$pkgdir"/sbin
-
 	install -m 644 -D src/etc-rbdmap "$pkgdir"/etc/ceph/rbdmap
 	install -m 644 -D src/logrotate.conf "$pkgdir"/etc/logrotate.d/ceph
 	install -m 644 -D etc/sysctl/90-ceph-osd.conf "$pkgdir"/etc/sysctl.d/90-ceph-osd.conf
@@ -370,7 +366,7 @@ common() {
 		usr/bin/rados \
 		usr/bin/rbd \
 		usr/bin/rbdmap \
-		sbin/mount.ceph \
+		usr/sbin/mount.ceph \
 		usr/share/ceph/*.ceph.com* \
 		etc/ceph/rbdmap
 
@@ -429,7 +425,7 @@ ceph_fuse() {
 	depends=
 	_default_replace_majorversion
 
-	amove usr/bin/ceph-fuse sbin/mount.fuse.ceph
+	amove usr/bin/ceph-fuse usr/sbin/mount.fuse.ceph
 }
 
 rbd_fuse() {

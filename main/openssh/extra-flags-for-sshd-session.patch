@@ -1,0 +1,14 @@
+diff -upr openssh-9.9p1.orig/Makefile.in openssh-9.9p1/Makefile.in
+--- openssh-9.9p1.orig/Makefile.in	2024-12-04 19:17:44.224457867 +0100
++++ openssh-9.9p1/Makefile.in	2024-12-04 19:21:38.718863642 +0100
+@@ -217,8 +217,9 @@ ssh$(EXEEXT): $(LIBCOMPAT) libssh.a $(SS
+ sshd$(EXEEXT): libssh.a	$(LIBCOMPAT) $(SSHDOBJS)
+ 	$(LD) -o $@ $(SSHDOBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(SSHDLIBS) $(LIBS) $(CHANNELLIBS)
+ 
++$(SSHD_SESSION_OBJS): CFLAGS += $(SESSIONCFLAGS)
+ sshd-session$(EXEEXT): libssh.a	$(LIBCOMPAT) $(SSHD_SESSION_OBJS)
+-	$(LD) -o $@ $(SSHD_SESSION_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(SSHDLIBS) $(LIBS) $(GSSLIBS) $(K5LIBS) $(CHANNELLIBS)
++	$(LD) -o $@ $(SSHD_SESSION_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(SSHDLIBS) $(LIBS) $(GSSLIBS) $(K5LIBS) $(CHANNELLIBS) $(SESSIONLIBS)
+ 
+ scp$(EXEEXT): $(LIBCOMPAT) libssh.a $(SCP_OBJS)
+ 	$(LD) -o $@ $(SCP_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)

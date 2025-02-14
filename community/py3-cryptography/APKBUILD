@@ -1,7 +1,7 @@
 # Contributor: August Klein <amatcoder@gmail.com>
 # Maintainer: Duncan Bellamy <dunk@denkimushi.com>
 pkgname=py3-cryptography
-pkgver=42.0.7
+pkgver=44.0.1
 pkgrel=0
 pkgdesc="Cryptographic recipes and primitives for Python"
 url="https://cryptography.io/"
@@ -76,8 +76,8 @@ package() {
 }
 
 sha512sums="
-2f502fd78490ed2dc26884b05c9db32d6dcf8ed17ca3808299e528aa53ec13805e2be741d92d6a540b7dded011850cf033abe2e073f22f07e271c7c1c25c024b  cryptography-42.0.7.tar.gz
-5d64b3b7576ff1f39db1c12fbe5ed71e8430ca82cd936aedaf41c45812ec6f72456d6369dbbc58fed1d29909a845fac467a41e0acf74e681f3de8ccb1b8422fc  cryptography_vectors-42.0.7.tar.gz
+f45bebc4e92d140859f4b5c3e505c17f5b607b5fe62eed45dd4df3981d2a20a74c192d885336a47e4f3bc6e1ed785cf3a3430f81ed14fcd89a3c750d4aae10f3  cryptography-44.0.1.tar.gz
+60d4aefc3aa7d18183993d96e203e7e94f323359a9f0824e9367548a1c33bd96982b6e619310a565290b5d1109e8310127f52c6478b392859788ba27fa6415b9  cryptography_vectors-44.0.1.tar.gz
 670ecc2d95083186bf7e986b18093ac289c218e7ab77b54258e21d09fd5729f551cf876645f2a175086c1a089926a367426d7745ef406efc3d1d82286d454323  skip-aead-tests-on-32-bit.patch
 c94a839f0e69137ded2043d3776ba5744a42144ef73b52bde537d90a567f754e4be5ee081b3f67f246c299356b87a6948b8e0e123c6b8fdefb6bb575893fdea1  Cargo-update.patch
 "

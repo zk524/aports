@@ -2,7 +2,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=linux-firmware
 pkgver=20241210
-pkgrel=0
+pkgrel=1
 pkgdesc="firmware files for linux"
 url="https://git.kernel.org/?p=linux/kernel/git/firmware/linux-firmware.git;a=summary"
 arch="noarch"
@@ -32,7 +32,7 @@ _folders="3com acenic adaptec advansys airoha amd amd-ucode amdgpu amdnpu
 	sxg synaptics tehuti ti ti-connectivity ti-keystone tigon ttusb-budget
 	ueagle-atm vicam vxge wfx xe yam yamaha"
 
-subpackages="$pkgname-other $pkgname-none"
+subpackages="$pkgname-iwlwifi::noarch $pkgname-other::noarch $pkgname-none::noarch"
 depends="linux-firmware-other=$pkgver-r$pkgrel"
 for i in $_folders; do
 	subpackages="$pkgname-$i:_folder $subpackages"
@@ -174,11 +174,19 @@ other() {
 
 	# Move /lib/firmware (which doesn't have subfolders now)
 	pkgdesc="firmware files for linux (uncategorized)"
-	depends=""
+	depends="linux-firmware-iwlwifi=$pkgver-r$pkgrel"
 	provides="linux-firmware-any"
 	provider_priority=1
 
 	amove /lib
+}
+
+iwlwifi() {
+	pkgdesc="firmware files for linux (iwlwifi)"
+	depends=""
+	provides="linux-firmware-any"
+	provider_priority=1
+	amove /lib/firmware/iwlwifi*
 }
 
 none() {

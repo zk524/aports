@@ -14,30 +14,26 @@ subpackages="
 	"
 source="https://github.com/chainguard-dev/apko/archive/v$pkgver/apko-$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	mkdir build
-	go build -o build/ -tags -tags=pivkey,pkcs11key "$builddir"/...
+	go build -o build/ -tags -tags=pivkey,pkcs11key ./...
 
 	for i in bash fish zsh; do
-		"$builddir"/build/apko completion $i > "$builddir"/apko.$i
+		./build/apko completion $i > apko.$i
 	done
 }
 
 check() {
 	# https://github.com/chainguard-dev/apko/issues/881 (Tests fail if SOURCE_DATE_EPOCH is set)
-	(unset SOURCE_DATE_EPOCH; go test "$builddir"/...)
+	(unset SOURCE_DATE_EPOCH; go test ./...)
 }
 
 package() {
-	install -Dm755 "$builddir"/build/apko "$pkgdir"/usr/bin/apko
+	install -Dm755 build/apko "$pkgdir"/usr/bin/apko
 
-	install -Dm644 "$builddir"/apko.bash "$pkgdir"/usr/share/bash-completion/completions/apko
-	install -Dm644 "$builddir"/apko.fish "$pkgdir"/usr/share/fish/vendor_completions.d/apko.fish
-	install -Dm644 "$builddir"/apko.zsh "$pkgdir"/usr/share/zsh/site-functions/_apko
+	install -Dm644 apko.bash "$pkgdir"/usr/share/bash-completion/completions/apko
+	install -Dm644 apko.fish "$pkgdir"/usr/share/fish/vendor_completions.d/apko.fish
+	install -Dm644 apko.zsh "$pkgdir"/usr/share/zsh/site-functions/_apko
 }
 
 sha512sums="

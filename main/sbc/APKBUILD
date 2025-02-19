@@ -2,7 +2,7 @@
 # Maintainer: Mark Riedesel <mark@klowner.com>
 pkgname=sbc
 pkgver=2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Bluetooth Subband Codec (SBC) library"
 url="https://www.bluez.org/"
 arch="all"

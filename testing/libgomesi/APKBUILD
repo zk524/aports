@@ -1,0 +1,45 @@
+contributor="Piotr Halas <halaspiotr@gmail.com>"
+maintainer="Piotr Halas <halaspiotr@gmail.com>"
+pkgname=libgomesi
+pkgver=0.3
+pkgrel=0
+pkgdesc="mESI – Minimal Edge Side Includes Implementation in Golang"
+url="https://github.com/crazy-goat/go-mesi"
+arch="all"
+license="MIT"
+makedepends="go make"
+source="$pkgname-$pkgver.tar.gz::https://github.com/crazy-goat/go-mesi/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/go-mesi-$pkgver"
+options="net"
+subpackages="$pkgname-dev $pkgname-cli"
+
+prepare() {
+	default_prepare
+	go mod tidy
+	go mod download
+}
+
+build() {
+	cd "$builddir/cli"
+	go build mesi-cli.go
+	cd "$builddir/libgomesi"
+	make build
+}
+
+check() {
+	:
+}
+
+package() {
+	install -Dm 644 "$builddir/libgomesi/libgomesi.so" -t "$pkgdir/usr/lib/"
+	install -Dm 644 "$builddir/libgomesi/libgomesi.a" -t "$pkgdir/usr/lib/"
+	install -Dm 644 "$builddir/libgomesi/libgomesi.h" -t "$pkgdir/usr/include"
+}
+
+cli() {
+	install -Dm 755 "$builddir/cli/mesi-cli" -t "$subpkgdir/usr/bin"
+}
+
+sha512sums="
+8552ebea884c9e83da238efaf5af9959dd8c991174ea4e42d95893abc74e53c00e047f3005ea4a10591e85d280bc219c01611d689b21ca948b6acd9960933a83  libgomesi-0.3.tar.gz
+"

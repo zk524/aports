@@ -1,6 +1,6 @@
 # Maintainer: Simon Zeni <simon@bl4ckb0ne.ca>
 pkgname=jellyfin-web
-pkgver=10.10.3
+pkgver=10.10.6
 pkgrel=0
 pkgdesc="Web Client for Jellyfin"
 url="https://jellyfin.org/"
@@ -34,5 +34,5 @@ package() {
 }
 
 sha512sums="
-c0d8ad552a79bac283d1ed54b9ae7a04b9a90996ec41a993559461bc168714550c5010803c86248b8a256a622538d01461d59c54edbb9521a14122133b901b34  jellyfin-web-10.10.3.tar.gz
+5334484ba5e60fe72549cfb902eac1d0ad4f63ef92253387ec505ba83151b2b07ed7f8a6ee275b397269eacfeb9a3feee4cda88daedf5586f673c5e8375767d5  jellyfin-web-10.10.6.tar.gz
 "

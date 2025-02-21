@@ -1,7 +1,6 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-# Maintainer: Bart Ribbers <bribbers@disroot.org>
+maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=mlite
-pkgver=0.4.5
+pkgver=0.5.3
 pkgrel=0
 pkgdesc="Useful classes originating from MeeGo Touch"
 url="https://github.com/sailfishos/mlite"
@@ -12,7 +11,7 @@ makedepends="$depends_dev
 	qt5-qtbase-dev
 	qt5-qttools-dev
 	"
-checkdepends="xvfb-run"
+checkdepends="xwayland-run"
 subpackages="$pkgname-dev"
 source="https://github.com/sailfishos/mlite/archive/$pkgver/mlite-$pkgver.tar.gz"
 options="!check" # Requires an impossible to replicate on CI environment
@@ -23,7 +22,7 @@ build() {
 }
 
 check() {
-	xvfb-run make check
+	wlheadless-run make check
 }
 
 package() {
@@ -33,5 +32,5 @@ package() {
 	rm -r "$pkgdir/opt"
 }
 sha512sums="
-c42b24cae0e29e3fff337827c0a47285a019e73d7339d44f627ce9f419394e35417cbfc8185f49fe05680c7762822ee56329422b67ea27fdd45f2d0e0f4aecfc  mlite-0.4.5.tar.gz
+93faf04c75566c1d5923fce3481df7314bac933e39c1e5abe70643a1318d83ae28ca37b0ba0db7e9c73c1e6e51049bcc9ae0dd931d8efa8bebd7279927da7f4e  mlite-0.5.3.tar.gz
 "

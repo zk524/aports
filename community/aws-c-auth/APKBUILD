@@ -1,7 +1,7 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
-# Maintainer: fossdd <fossdd@pwned.life>
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=aws-c-auth
-pkgver=0.8.0
+pkgver=0.8.5
 pkgrel=0
 pkgdesc="C99 library implementation of AWS client-side authentication: standard credentials providers and signing"
 url="https://github.com/awslabs/aws-c-auth"
@@ -48,11 +48,6 @@ package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
 
-dev() {
-	default_dev
-	amove usr/lib/aws-c-auth
-}
-
 sha512sums="
-8c2b2230d694005d6e8e0245b3bf1c3a623f2bea6f2b854e6cabebf00652af120bf05961b2c18625226d2ede2e07485c5e0a35f8c929cc142af440579d84cc60  aws-c-auth-0.8.0.tar.gz
+d24ad4efd0e0a295eabc08f8904dbbc4509ec68c4b418ffbbf547d1af83872a611e8acc650f36693be834c7948af7ea5e0898b044cc6e93d3bbf8a258a973929  aws-c-auth-0.8.5.tar.gz
 "

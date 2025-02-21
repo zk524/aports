@@ -1,10 +1,8 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=plasma-disks
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Monitors S.M.A.R.T. capable devices for imminent failure"
 # armhf blocked by qt6-qtdeclarative
@@ -30,12 +28,13 @@ makedepends="
 	samurai
 	solid-dev
 	"
-checkdepends="xvfb-run"
+checkdepends="xwayland-run"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 subpackages="$pkgname-lang"
 _repo_url="https://invent.kde.org/plasma/plasma-disks.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/plasma-disks-$pkgver.tar.xz"
@@ -49,7 +48,7 @@ build() {
 }
 
 check() {
-	xvfb-run -a ctest --test-dir build --output-on-failure
+	wlheadless-run -- ctest --test-dir build
 }
 
 package() {
@@ -57,5 +56,5 @@ package() {
 }
 
 sha512sums="
-a89f9714fcd220dac33b76e1308004492487c29c73ba742ce1afb7cb56a776f36c25436c5520fbab3176dca8a5cbac6599afe21ab078776d0ec0342581e70f0b  plasma-disks-6.2.5.tar.xz
+9dee4511bb3537572257130d39e9c084edc5bb65960120a0fb90da498b6980ef0c0febd33c12aa4d72734f43a22f6f06a8be5762137a04264ba983ab745bff65  plasma-disks-6.3.1.tar.xz
 "

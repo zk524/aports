@@ -1,7 +1,7 @@
 # Contributor: Kaarle Ritvanen <kunkku@alpinelinux.org>
 # Maintainer: Kaarle Ritvanen <kunkku@alpinelinux.org>
 pkgname=py3-phonenumbers
-pkgver=8.13.53
+pkgver=8.13.55
 pkgrel=0
 pkgdesc="International phone number library for Python"
 url="https://github.com/daviddrysdale/python-phonenumbers"
@@ -38,5 +38,5 @@ package() {
 }
 
 sha512sums="
-362ac86f0d9017935b75363a79ee45a0ad1d7458b216cd7b8843ff0ff5d5fb480310ae11d3e5f7adcb3df3b5ad5b6b42c2964793222ad1b5a35357cd3e27aabe  phonenumbers-8.13.53.tar.gz
+6f3e3f336262926dd1012ac9756294e9b81805d25cd36b403ecf40be7ef3ef87b7d57d85063abd00a76b51dd06e8ecf33b2876fba7e857edea659a650bd7e954  phonenumbers-8.13.55.tar.gz
 "

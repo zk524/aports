@@ -2,13 +2,13 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=git-lfs
 pkgver=3.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Git extension for versioning large files"
 url="https://git-lfs.github.io/"
 arch="all"
 license="MIT"
 depends="git"
-makedepends="asciidoctor go ronn"
+makedepends="asciidoctor go"
 checkdepends="bash coreutils curl git-daemon perl-utils"
 install="$pkgname.post-install $pkgname.pre-deinstall"
 subpackages="

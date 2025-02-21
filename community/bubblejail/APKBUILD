@@ -1,6 +1,6 @@
 # Maintainer: Donoban <donoban@riseup.net>
 pkgname=bubblejail
-pkgver=0.9.4
+pkgver=0.9.5
 pkgrel=0
 pkgdesc="Bubblewrap based sandboxing for desktop applications"
 url="https://github.com/igo95862/bubblejail"
@@ -48,6 +48,6 @@ config() {
 }
 
 sha512sums="
-d11624670e749548061d44b0fb604c3bfa5216b58823144fb9d856b4dc85f30fc6a75fb61974e75fa89344c749967f1413afe5c111d3cfdf085b51ea7bab8090  bubblejail-0.9.4.tar.gz
+a480b84084b007c37d23f640c3a932fb569661a9d351f7981bb6d620bff370824887200a8c1e9464738ccba797a8c5bded84605268d9d080aeca7608dfdcdff9  bubblejail-0.9.5.tar.gz
 5eb891d23fd4ef3758be542c529c6f252fafe311fa51fd54aed6b080a5c622c72357a05ba5eb37353ce13fdbbad4958e5750cb19e48b17e28982722bfd5519fc  site-packages.patch
 "

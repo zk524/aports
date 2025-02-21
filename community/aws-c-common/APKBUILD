@@ -1,7 +1,7 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
-# Maintainer: fossdd <fossdd@pwned.life>
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=aws-c-common
-pkgver=0.10.6
+pkgver=0.11.1
 pkgrel=0
 pkgdesc="Core c99 package for AWS SDK for C including cross-platform primitives, configuration, data structures, and error handling"
 url="https://github.com/awslabs/aws-c-common"
@@ -40,11 +40,6 @@ package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
 
-dev() {
-	default_dev
-	amove usr/lib/aws-c-common
-}
-
 sha512sums="
-5ec579dca53a0b5dc8ceac4ef65d1ee5dd76e585f10b7bab14e5c668c001516d48fb0669e2d909d665af665ba1429e5a87e15d7dc784fd3796455531af7b3762  aws-c-common-0.10.6.tar.gz
+e4a976db8a734884225636116bd3a2b5a72af76484fbe0fa6f39845a60c384c8017f9449e4a3b4582768b9d9325ced3d176090d0caa21d1ae93f66c52614fa98  aws-c-common-0.11.1.tar.gz
 "

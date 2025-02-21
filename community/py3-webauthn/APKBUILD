@@ -2,7 +2,7 @@
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=py3-webauthn
 _pyname=webauthn
-pkgver=2.4.0
+pkgver=2.5.1
 pkgrel=0
 arch="noarch"
 pkgdesc="A Python3 implementation of the WebAuthn API focused on making it easy to leverage the power of WebAuthn."
@@ -40,5 +40,5 @@ package() {
 		.dist/*.whl
 }
 sha512sums="
-25da7138cb63a46a08455272e0b0cfa3557b10d7fc58252d56b2be5b2fac7246ffb96465ad77b0ec90cbf1ddd6faf3ab8da024f0a6c0c622cdb616d20d156b84  py3-webauthn-2.4.0.tar.gz
+1d04ff4163c961df3125385cd876771a6b646d15cd9356d936b343a25aac9af6fb8ff826e4f5b882ae7171c068f7fa098e626f3b3ff9f10c6aeaa0d3d75e210d  py3-webauthn-2.5.1.tar.gz
 "

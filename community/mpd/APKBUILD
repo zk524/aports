@@ -9,13 +9,12 @@ case $pkgver in
 *.*.*) _branch=${pkgver%.*};;
 *.*) _branch=$pkgver;;
 esac
-pkgrel=2
+pkgrel=3
 pkgdesc="Music daemon that plays MP3, FLAC, Ogg Vorbis files and Audio CDs"
 url="https://musicpd.org/"
 pkgusers="mpd"
 pkggroups="mpd audio"
-# s390x: limited by pipewire
-arch="all !s390x"
+arch="all"
 license="GPL-2.0-or-later"
 makedepends="
 	alsa-lib-dev

@@ -1,13 +1,11 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=powerdevil
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Manages the power consumption settings of a Plasma Shell"
-# armhf blocked by extra-cmake-modules
+# armhf blocked by qt6-qtdeclarative -> ki18n
 # s390x blocked by plasma-workspace
 arch="all !armhf !s390x"
 url="https://kde.org/plasma-desktop/"
@@ -47,18 +45,15 @@ makedepends="$depends_dev
 checkdepends="bash"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 subpackages="$pkgname-dev $pkgname-libs $pkgname-doc $pkgname-lang"
 _repo_url="https://invent.kde.org/plasma/powerdevil.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/powerdevil-$pkgver.tar.xz"
 
 build() {
-	# HAVE_DDCUTIL needs to be set manually for now but is enabled by default in the next
-	# (post 5.28.x) powerdevil version. Nothing changed in particular warranting it to be
-	# enabled again, but upstream mentions the reasons for originally disabling it by default
-	# aren't known anymore and it's time to re-enable again
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_INSTALL_PREFIX=/usr \
@@ -67,7 +62,7 @@ build() {
 }
 
 check() {
-	ctest --test-dir build --output-on-failure -E "migrateconfig_test(1_default_configs_can_suspend_to_ram|2_activities|2a_activities_no_double_migration|3_profiles|4_profiles_more)"
+	ctest --test-dir build -E "migrateconfig_test(1_default_configs_can_suspend_to_ram|2_activities|2a_activities_no_double_migration|3_profiles|4_profiles_more)"
 }
 
 package() {
@@ -82,5 +77,5 @@ package() {
 }
 
 sha512sums="
-29cdb34422aafba5cea6bca93036fcd9e6f8641d8f83fa410e9e70d93c81c034f64fe86d89a084285c8421fc672105b81894e66b185933edeb8b025f06b38e49  powerdevil-6.2.5.tar.xz
+0bc94563a524028df91406681a44e90356bfdb6689388a6666fbf0fbc009af23c1a649731f539a24a22ac9d481661c8acdc54fc00d19cb55db9be93d4b62cb37  powerdevil-6.3.1.tar.xz
 "

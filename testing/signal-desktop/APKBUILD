@@ -2,7 +2,7 @@
 # Contributor: Antoine Martin (ayakael) <dev@ayakael.net>
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=signal-desktop
-pkgver=7.37.0
+pkgver=7.42.0
 pkgrel=0
 pkgdesc="A messaging app for simple private communication with friends"
 url="https://github.com/signalapp/Signal-Desktop/"
@@ -58,6 +58,7 @@ makedepends="
 	pulseaudio-dev
 	py3-setuptools
 	python3
+	re2-dev
 	samurai
 	sqlcipher-dev
 	vips-dev
@@ -66,9 +67,9 @@ makedepends="
 options="net !check"
 
 # use _check_depends to validate this
-_libsignalver=0.64.1
-_ringrtcver=2.49.1
-_webrtcver=6723b
+_libsignalver=0.65.5
+_ringrtcver=2.49.4
+_webrtcver=6834d
 _stokenizerver=0.2.1
 
 source="
@@ -87,6 +88,8 @@ source="
 	webrtc-shared-libs.patch
 	webrtc-compiler.patch
 	webrtc-gcc13.patch
+	webrtc-rollback-red.patch
+	webrtc-rollback-3rdparty-build-gn.patch
 
 	signal-desktop.sh
 	"
@@ -125,6 +128,7 @@ _update_depends() {
 	local _bsqlitever=$(curl --silent https://raw.githubusercontent.com/signalapp/Signal-Desktop/v$pkgver/package-lock.json | grep "@signalapp/better-sqlite3\": \"" | awk '{print $2}' | tr -d ',' | tr -d '"' | head -n 1)
 	local _webrtcver=$(curl --silent https://raw.githubusercontent.com/signalapp/ringrtc/v$_ringrtcver/config/version.properties | awk -F '=' '{if($1 == "webrtc.version"){print $2}}' | head -n 1)
 	local _extensionver=$(curl --silent https://raw.githubusercontent.com/signalapp/better-sqlite3/v$_bsqlitever/deps/download.js | grep "const EXTENSION_VERSION" | awk '{print $4}' | tr -d "'" | tr -d ';' |  head -n 1)
+	local _extensionver=${_extensionver/-*}
 	local _stokenizerver=$(curl --silent https://raw.githubusercontent.com/signalapp/Signal-Sqlcipher-Extension/refs/tags/v$_extensionver/Cargo.lock | sed -n "/^name = \"signal-tokenizer\"$/,/^$/p" | awk -F ' = ' '{if($1=="version"){print $2}}' | tr -d '"')
 
 	sed -i \
@@ -455,10 +459,10 @@ package() {
 }
 
 sha512sums="
-3c922ece17adb8bff292f1b799b4653b65c662ffe4085627ca578d62bcb7c146dff6f5b000940aec44a27b8b3af41337b7bcea3730c8fc3839b449c94f148e55  Signal-Desktop-7.37.0.tar.gz
-a3c02fc38a8a3032dab6aad9e89c2952b1c49fedfcd892d060c6274d9bcf7c02fd38b325b32456d47f4c6a16982af0b6fc7428e0e8b23a683667aebfc8f5953d  libsignal-0.64.1.tar.gz
-394f38bc4f815e716b1ff8a874453823ec7bd088239ea6c55f196200e921cccdbb2efa781b54df4ea48a0fcdf9526ab71b47f8d7cbc3b68b58114bba32fe384d  ringrtc-2.49.1.tar.gz
-433ca889f458ed8327ca18685491f6ddd4a5cec4f268455bc5fce688d19dd7b2878d938cfe6fffb9b0881bc99de9341856baa206269d41bf030bd9d1fecf1455  webrtc-6723b.tar.zst
+fe54c0aa392d8af4673a8651cac7a9b70990f7ee612d2bf530d90b3067d7e4e4231a887866d4d54e06ad7f663fda4314ba92295cfb64306ffe4c2f91e9d1557a  Signal-Desktop-7.42.0.tar.gz
+03aed3cb94dc41bd0d83a038dc8529e9694d57f8bab7de6ee90ff5fb8a1ba0a6f2d80e834c4902e888244b6f9c7992671bc4b4e8093150b09baeea00ff802cca  libsignal-0.65.5.tar.gz
+477f92abef249a7417ece337a2321a202551a5946fc06b70b71ce67626a479340e413f2c7662295c80956220b2644705a7f82a4fee146c1aa7c88be6b661910f  ringrtc-2.49.4.tar.gz
+8587c3375130bedf3e995c82885fd1ffac8c61e60063734e070b3578c324bdd8cb1109bf3280c6329ba2411cc06c304e731ea11573b5b0f22880b9a9fe0d22c2  webrtc-6834d.tar.zst
 84a1f2fc29262a12842e94698d124a85b823128e72a493b0be8ea92fbb72c5c268499f4a6827cdedaae06ec73cce4039a39fe5c5d536cbef330e59ba0183da28  stokenizer-0.2.1.tar.gz
 8d2d2d82c8546c2dd1fef161b61df79918f8c22235a56a46adb375a0beb4acef12c5fe53e67242a4be97f77adc522ff79b47949c352956c742a70d50f4179f7f  libsignal-auditable.patch
 18d5a0208d75fa910b6c0d531997402bba83290dfc7d7ce903acdcd0ce1d88bd3026ace40ecd32a88c2e429e48530b4e40f207a3d15bd9c0d6ebc8c447fa8ff9  signal-use-system-sqlcipher.patch
@@ -468,6 +472,8 @@ fc2af28645364cd85c106304a26811b036f6be048c52137fbbcc112870a84132a181f532563e0569
 02a648bb8541a39c75fec2db39f024a27976afca41908eefa2fe1f2e30b05b5d59f980ccc930021c0b0c09ba8b0cbcae071e9f0dd530543c667adbc4272af552  ringrtc-webrtc-renamed.patch
 98a7e4df27c3ed56c5968ebc3ae8e08bfb54362d0c910f9af1d414079a6d5fe0f18aa570ae3c38042f4691af6a130cb3ff689625e26a3987720dd319a5f587b1  webrtc-shared-libs.patch
 fe78cdc58c18826fc4227cc8e9377980766229390544578f6a1a6f7322bc3243c066963b589323dbfe4f2bfd37f8859ad84f63cb3783317892e5ae3652270a3a  webrtc-compiler.patch
-48ab5c733e643eaff08ccbe839086bebbb68d397984ad7c5c5b68df8071f75d2dfe92c3f52d9fbf9b81754934bdfa8a67c69addd476ce4265b978592fb4ff9bd  webrtc-gcc13.patch
+3f1095861a79862ab5a55c86d7e353d272974617afba39e4d4441024bede8d7b9b8e122da90d56a9c3c0965171803d6b9e29e91d78167a08c6bcc86b3eedab18  webrtc-gcc13.patch
+8f53dcf3264c5cec338f037e57a7770ec939ee06dfb0c5dfeab23967a3a64d3f861a6b5419766ac892676036b4522bce2f47279ca3658b5c0b6a31c82ac05053  webrtc-rollback-red.patch
+f8bd574a0de077a643ced26e8a0e3f162e014bbf91c957bbefd113883a70e2b63e483bf400b7e2da8d09edfe76d4f6a257f194a14124f344f1625c5632d12acb  webrtc-rollback-3rdparty-build-gn.patch
 87534e7b5ad7365509eab75629e6bd1a9ed61ee92f7e358405a0abaf0df57de14623fb3894eb082f8785422e5c087e1c50f9e2e5cafbb2529591fd7bf447f7f5  signal-desktop.sh
 "

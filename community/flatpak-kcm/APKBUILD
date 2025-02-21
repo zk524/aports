@@ -1,10 +1,8 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=flatpak-kcm
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Flatpak Permissions Management KCM"
 # armhf blocked by qt6-qtdeclarative
@@ -24,12 +22,13 @@ makedepends="
 	qt6-qtsvg-dev
 	samurai
 	"
-checkdepends="xvfb-run"
+checkdepends="xwayland-run"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 subpackages="$pkgname-lang"
 _repo_url="https://invent.kde.org/plasma/flatpak-kcm.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/flatpak-kcm-$pkgver.tar.xz"
@@ -45,7 +44,7 @@ build() {
 
 check() {
 	# flatpakpermissiontest is broken
-	xvfb-run -a ctest --test-dir build --output-on-failure -E "flatpakpermissiontest"
+	wlheadless-run -- ctest --test-dir build -E "flatpakpermissiontest"
 }
 
 package() {
@@ -53,5 +52,5 @@ package() {
 }
 
 sha512sums="
-a909a2ccc28db94a31ca52cab07269d86857f16fcc16e3d436f085b9f6620d931815bd409016d75215e0cc990142259ed5fe537b146aff04ac8558a3d65d79e1  flatpak-kcm-6.2.5.tar.xz
+eab79a655264ca79261eaab67f900cd4e05de5506ce456227f9f36bc027a910a2dce0407b4bb43f685d903179b8226ad68858e53a34cae7ee4bd96454d928d64  flatpak-kcm-6.3.1.tar.xz
 "

@@ -1,29 +1,32 @@
 # Maintainer: Sertonix <sertonix@posteo.net>
 pkgname=apk-tools3
-pkgver=3.0.0_pre3_git20241029
-_commit=16d93ac94489857db6036e64a1abd7484a4898a5
-pkgrel=0
+pkgver=3.0.0_rc4
+pkgrel=3
 pkgdesc="Alpine Package Keeper v3 - package manager for alpine"
 arch="all"
 url="https://git.alpinelinux.org/apk-tools"
 license="GPL-2.0-only"
-subpackages="$pkgname-dbg $pkgname-dev $pkgname-static $pkgname-doc $pkgname-libs"
+subpackages="$pkgname-dbg $pkgname-dev $pkgname-static $pkgname-doc libapk3:libapk"
 depends="musl>=1.2.3_git20230424"
 depends_doc="!apk-tools-doc"
 _lua="5.3"
 makedepends_build="meson openssl>3 lua$_lua lua$_lua-lzlib scdoc"
 makedepends_host="zlib-dev zstd-dev openssl-dev zlib-static zstd-static openssl-libs-static linux-headers"
-if [ "$CBUILD" = "$CHOST" ]; then
-	subpackages="$subpackages lua$_lua-apk3:luaapk"
-	makedepends_host="$makedepends_host lua$_lua-dev"
+checkdepends="cmocka-dev"
+if [ -z "$BOOTSTRAP" ]; then
+	subpackages="$subpackages lua$_lua-apk3:luaapk py3-apk3:pyapk"
+	makedepends_host="$makedepends_host lua$_lua-dev python3-dev"
 
 	# ca-certificates-bundle needed for https certificate validation
 	depends="$depends ca-certificates-bundle"
 fi
-source="$pkgname-$pkgver.tar.gz::https://gitlab.alpinelinux.org/alpine/apk-tools/-/archive/$_commit/apk-tools-$_commit.tar.gz
-	lua-module.patch
-	"
-builddir=$srcdir/apk-tools-$_commit
+source="https://gitlab.alpinelinux.org/alpine/apk-tools/-/archive/v$pkgver/apk-tools-v$pkgver.tar.gz"
+builddir=$srcdir/apk-tools-v$pkgver
+
+# Allow apk3 to be installed as system-wide apk.
+# We provide apk-tools version 2.10 in order to encourage the solver to
+# use apk2 in main for now.
+provides="apk-tools=2.10"
 
 build() {
 	export VERSION=$pkgver-r$pkgrel
@@ -31,15 +34,19 @@ build() {
 	abuild-meson \
 		--auto-features=disabled \
 		--bindir=/sbin \
-		-Dlua_version=$_lua \
-		-Dlua="$([ "$CBUILD" = "$CHOST" ] && echo enabled || echo disabled)" \
+		-Darch="$CARCH" \
 		-Ddocs=enabled \
 		-Dhelp=enabled \
+		-Dlua_version=$_lua \
+		-Dlua="$([ -z "$BOOTSTRAP" ] && echo enabled || echo disabled)" \
+		-Dpython="$([ -z "$BOOTSTRAP" ] && echo enabled || echo disabled)" \
+		-Dtests="$(want_check && echo enabled || echo disabled)" \
 		output
 	ninja -C output
 
 	abuild-meson \
 		--auto-features=disabled \
+		-Darch="$CARCH" \
 		-Dc_link_args="$CFLAGS -static" \
 		-Ddefault_library=static \
 		-Dprefer_static=true \
@@ -57,6 +64,10 @@ package() {
 		"$pkgdir"/lib/apk/exec \
 		"$pkgdir"/etc/apk/keys \
 		"$pkgdir"/etc/apk/protected_paths.d
+}
+
+libapk() {
+	amove usr/lib/libapk.so.*
 }
 
 static() {
@@ -81,7 +92,12 @@ luaapk() {
 	amove usr/lib/lua
 }
 
+pyapk() {
+	pkgdesc="Python module for $pkgname"
+	depends=""
+	amove usr/lib/python\*
+}
+
 sha512sums="
-815718549f6e9b1ee17fa7d37110fe70b466cd635818efd7447b3a8224597e6d62dcd3e7d5a553f7f9988de7006ef676ce9a3613ac19336d3d5e6a5cb5c8d392  apk-tools3-3.0.0_pre3_git20241029.tar.gz
-7a7fdc0225938e6babeca18b4dcb91b2742449aa6d71a94e2739f3018c69ef738877fd3abf79813002cf2d761bf67a67a6d00587b9ba97371aeb3f50957ce447  lua-module.patch
+ffc8348249d18e192a806795635c5029932ccb8d9e4872bc7a93feb5990eb642511f529b68f61fc2f2f77da1487e1d85d495f8e163f1c821ea7d82c760419779  apk-tools-v3.0.0_rc4.tar.gz
 "

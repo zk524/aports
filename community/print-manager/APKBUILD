@@ -2,7 +2,7 @@
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=print-manager
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 # armhf blocked by qt6-qtdeclarative
 arch="all !armhf"
@@ -33,9 +33,10 @@ makedepends="
 subpackages="$pkgname-lang"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 _repo_url="https://invent.kde.org/utilities/print-manager.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/print-manager-$pkgver.tar.xz"
 options="!check" # No tests
@@ -53,5 +54,5 @@ package() {
 }
 
 sha512sums="
-da261c7659d85d67c04eb6b8839bc48d36be41b536312706b3356aa8e85c13832b64741dfa57656778ea6b093fbbb27f268361bf007585050e8bf63113475a9b  print-manager-6.2.5.tar.xz
+8f386a4075861cdbd4342cf4e0d4983d92c70477b9d2603085bdce14f7866167ef807a04fc04198f8e568fd2fb4e10cfbf6f8aa72a8f6e0b26a4b74d6c87ad12  print-manager-6.3.1.tar.xz
 "

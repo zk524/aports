@@ -1,12 +1,11 @@
 # Maintainer: ovf <ovf@mm.st>
 pkgname=vcmi
-pkgver=1.6.3
+pkgver=1.6.5
 pkgrel=0
 pkgdesc="Open-source engine for Heroes of Might and Magic III"
 url="https://vcmi.eu"
-# riscv64: no luajit
 # game engine
-arch="aarch64 loongarch64 ppc64le x86_64"
+arch="aarch64 loongarch64 ppc64le riscv64 x86_64"
 license="GPL-2.0-or-later"
 options="!check" # "test coverage is close to 0" and needs googletest
 makedepends="
@@ -14,7 +13,6 @@ makedepends="
 	cmake
 	ffmpeg-dev
 	fuzzylite-dev
-	luajit-dev
 	minizip-dev
 	onetbb-dev
 	qt6-qtbase-dev
@@ -44,5 +42,5 @@ package() {
 }
 
 sha512sums="
-8146cd1aedb293a79c65f36aa82b72e1de6e9c9b2026979568d34e30ab7e6956d1aa301dd969ba98250ede32c24b30f7bf906dfbc1390dd9299ff39ed7df689f  vcmi-1.6.3.tar.gz
+bb13a97bb0616e187b96a3907ad843cd4d7bd510cf380142cb2edfd843367e7cb0ea7b4db5d26fd5ef61cb01bd4090f486035858286d9147f29a92cefb464b25  vcmi-1.6.5.tar.gz
 "

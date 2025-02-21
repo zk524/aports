@@ -1,13 +1,12 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=kglobalacceld
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Daemon providing Global Keyboard Shortcut (Accelerator) functionality"
-arch="all !armhf" # armhf blocked by extra-cmake-modules
+# armhf blocked by qt6-qtdeclarative -> kio
+arch="all !armhf"
 url="https://invent.kde.org/plasma/kglobalacceld"
 license="LGPL-2.0-or-later AND LGPL-2.0-only AND LGPL-2.1-or-later"
 depends_dev="$pkgname
@@ -32,14 +31,16 @@ makedepends="$depends_dev
 	"
 checkdepends="
 	dbus
-	xvfb-run
+	xwayland-run
 	"
 subpackages="$pkgname-dev"
-_repo_url="https://invent.kde.org/plasma/kglobalacceld.git"
+
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
+_repo_url="https://invent.kde.org/plasma/kglobalacceld.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/kglobalacceld-$pkgver.tar.xz"
 
 build() {
@@ -51,7 +52,7 @@ build() {
 }
 
 check() {
-	dbus-run-session -- xvfb-run -a ctest --test-dir build --output-on-failure
+	dbus-run-session wlheadless-run -- ctest --test-dir build
 }
 
 package() {
@@ -61,5 +62,5 @@ package() {
 	rm -r "$pkgdir"/usr/lib/systemd
 }
 sha512sums="
-2ea01f16fea31ebd01b7629eddd07bc19fd27a4a5908dd42b94ecae5fdee99cfa05dd9c3f45e11aa428c918b7041a8111205ca1cc851b750c91cfb163664e468  kglobalacceld-6.2.5.tar.xz
+54e58de4968c63ec901291bd171fec9af0e2a081addf97df9be1aeb3634c6f344b266217c24b831694a1d2249c3065a06feff74eb08b12d01cfc215e6f6bf8d5  kglobalacceld-6.3.1.tar.xz
 "

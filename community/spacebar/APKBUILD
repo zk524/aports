@@ -1,14 +1,12 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=spacebar
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Collection of stuff for running IM on Plasma Mobile"
 url="https://invent.kde.org/plasma-mobile/spacebar"
-# armhf blocked by qt5-qtdeclarative
+# armhf blocked by qt6-qtdeclarative
 arch="all !armhf"
 license="GPL-2.0-or-later AND LicenseRef-KDE-Accepted-GPL"
 depends="kirigami"
@@ -32,8 +30,14 @@ makedepends="
 	samurai
 	"
 subpackages="$pkgname-lang"
+
+case "$pkgver" in
+	*.*.9*) _rel=unstable;;
+	*) _rel=stable;;
+esac
+
 _repo_url="https://invent.kde.org/plasma-mobile/spacebar.git"
-source="https://download.kde.org/stable/plasma/$pkgver/spacebar-$pkgver.tar.xz"
+source="https://download.kde.org/$_rel/plasma/$pkgver/spacebar-$pkgver.tar.xz"
 options="!check" # No tests
 
 build() {
@@ -41,7 +45,7 @@ build() {
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib
-	cmake --build build -j1
+	cmake --build build
 }
 
 package() {
@@ -49,5 +53,5 @@ package() {
 }
 
 sha512sums="
-bf8f96ff6e34128a2e2f7d7672b82c4d59ba611b08add4d8c1a7608a2358179309c50479809e6f1ccc23f43d7fa3c1f5bac3b2521239673e4c252dfa5f40d482  spacebar-6.2.5.tar.xz
+27aca98f6b5a0a4c6dd73754f91fc71534ee37108259514fbec1b8ef07900abbae50020ded4f0ca7a10bb67ef8df72bd325261965638c6b85bfcf128e22953b4  spacebar-6.3.1.tar.xz
 "

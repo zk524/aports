@@ -1,15 +1,12 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=plasma-pa
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Plasma applet for audio volume management using PulseAudio"
 # armhf blocked by qt6-qtdeclarative
-# s390x blocked by plasma-workspace
-arch="all !armhf !s390x"
+arch="all !armhf"
 url="https://kde.org/plasma-desktop/"
 license="LGPL-2.1-only OR LGPL-3.0-only AND GPL-2.0-only"
 depends="
@@ -38,9 +35,10 @@ makedepends="
 	"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 subpackages="$pkgname-doc $pkgname-lang"
 _repo_url="https://invent.kde.org/plasma/plasma-pa.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/plasma-pa-$pkgver.tar.xz"
@@ -56,7 +54,7 @@ build() {
 
 check() {
 	# applettest requires Selenium
-	ctest --test-dir build --output-on-failure -E "applettest"
+	ctest --test-dir build -E "applettest"
 }
 
 package() {
@@ -64,5 +62,5 @@ package() {
 }
 
 sha512sums="
-ff0a9c902a29e64493b3505be082ee1c692e1d0ba16627b3eca9927da96e991b952189d67e48f2caa294ce71cfa6606e59446c85fbd591e195a16df9419d8ba3  plasma-pa-6.2.5.tar.xz
+817d66658ed481ddcaadb252f1f42ecea87111f5bc427256124db05f483275fa4ef258fb515954d02802724c5e3a088c9b781cf75e7c5e024a2cb629de653a34  plasma-pa-6.3.1.tar.xz
 "

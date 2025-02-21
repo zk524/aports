@@ -1,14 +1,14 @@
 # Maintainer: Will Sinatra <wpsinatra@gmail.com>
 pkgname=ruby-json
 _gemname=${pkgname#ruby-}
-pkgver=2.9.1
-pkgrel=0
+pkgver=2.10.1
+pkgrel=1
 pkgdesc="This is a JSON implementation as a Ruby extension in C."
 url="https://rubygems.org/gems/json"
 arch="all"
-license="RUBY"
-makedepends="ruby-dev"
-checkdepends="ruby-rake ruby-test-unit ruby-test-unit-ruby-core"
+license="Ruby"
+makedepends="ruby-dev ruby-bundler"
+checkdepends="ruby-rake ruby-rake-compiler ruby-test-unit ruby-test-unit-ruby-core"
 depends="ruby"
 source="$pkgname-$pkgver.tar.gz::https://github.com/flori/json/archive/refs/tags/v$pkgver.tar.gz"
 builddir="$srcdir/$_gemname-$pkgver"
@@ -47,5 +47,5 @@ package() {
 }
 
 sha512sums="
-47cbd2d65d8aa2e0c41ef2099fc6851a854d8f10b9c6759e9cfb2865f124e034d1b5f4fbcb7bd502efb12ae88cfec36f7e837500d601a4a6e0849a69dedc369b  ruby-json-2.9.1.tar.gz
+eb3a5f4bd27aa5503c9184384d88b53580f1ba5b5e2b29a0c819bd3ed578e31742d2866a4aed9ce8b50efa4d06dbcead5581251d4311e368003ae0fb8b177dfa  ruby-json-2.10.1.tar.gz
 "

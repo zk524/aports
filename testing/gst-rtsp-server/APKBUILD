@@ -1,7 +1,7 @@
 # Contributor: Andrew Panteleyev <insonifi@gmail.com>
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gst-rtsp-server
-pkgver=1.24.10
+pkgver=1.24.12
 pkgrel=0
 pkgdesc="GStreamer RTSP server"
 url="https://gstreamer.freedesktop.org"
@@ -46,5 +46,5 @@ package() {
 }
 
 sha512sums="
-e5baba79f98ecbc10c90d1e91d6709d20e3faf8bf7f8e166c383229337ec3e3986fc17ef554c5276d517153f380a82c83092261a324b47ae66aeebb9bc741cab  gst-rtsp-server-1.24.10.tar.xz
+28d6dd37be98e17ca2f01902b85cf1f61dd02053aa81f50114a8843478c34784b35896352a9a5913322dc6d90c632d436a9c9637aba4b9899712df7f7f3f3d15  gst-rtsp-server-1.24.12.tar.xz
 "

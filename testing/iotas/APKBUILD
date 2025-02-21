@@ -1,18 +1,21 @@
 # Contributor: fossdd <fossdd@pwned.life>
 # Maintainer: fossdd <fossdd@pwned.life>
 pkgname=iotas
-pkgver=0.9.5
+pkgver=0.10.1
 pkgrel=0
 pkgdesc="Distraction-free note taking via a mobile-first design"
 url="https://gitlab.gnome.org/World/iotas"
-arch="noarch"
+arch="noarch !armhf !armv7 !loongarch64 !ppc64le !riscv64 !s390x !x86" # py3-pandoc
 license="GPL-3.0-or-later"
 depends="
 	gtksourceview5
 	libadwaita
 	py3-gobject3
 	py3-gtkspellcheck
-	py3-packaging
+	py3-linkify-it-py
+	py3-markdown-it-py
+	py3-mdit-py-plugins
+	py3-pypandoc
 	python3
 	"
 makedepends="
@@ -23,11 +26,10 @@ makedepends="
 	gtksourceview5-dev
 	libadwaita-dev
 	meson
+	py3-packaging
 	"
 subpackages="$pkgname-lang $pkgname-pyc"
-source="https://gitlab.gnome.org/World/iotas/-/archive/$pkgver/iotas-$pkgver.tar.gz
-	builtin-strenum.patch
-	"
+source="https://gitlab.gnome.org/World/iotas/-/archive/$pkgver/iotas-$pkgver.tar.gz"
 
 build() {
 	abuild-meson \
@@ -44,6 +46,5 @@ package() {
 }
 
 sha512sums="
-09088e7b598a5dfc7c1edb088e5e4e7b1d417a159b18ca7a7ba16eea04e7a6ace99e6a2a70385287262d9ecaf9337785a4402fcadef556072681b105400a2186  iotas-0.9.5.tar.gz
-7dcf3a39ae86fd10796674e76e0b1c04a1a328bafb06ee1aa17fdad8b70b63a3bcc89a15064f14acce03cd4756ac8ec7909db685ff2a4bccab484bc93942db46  builtin-strenum.patch
+46043131c5edb6e2f78e4ba8b0a7895a277c068486b25f643f2bf2d17bfa50a9d9dc55c1ca566a02e762a65fd59a2691ae9fcc7fcf331b0f8b1650de0f960321  iotas-0.10.1.tar.gz
 "

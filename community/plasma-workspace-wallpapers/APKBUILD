@@ -2,7 +2,7 @@
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=plasma-workspace-wallpapers
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Wallpapers for the Plasma Workspace"
 arch="noarch"
@@ -15,9 +15,10 @@ makedepends="
 	"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 _repo_url="https://invent.kde.org/plasma/plasma-workspace-wallpapers.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/plasma-workspace-wallpapers-$pkgver.tar.xz"
 options="!check" # No code to test
@@ -35,5 +36,5 @@ package() {
 }
 
 sha512sums="
-76d972a8fe00245f0f0195091414b36959b5b120114ab466c7eb1ace3850e2398ebbe85c47a25702bbdc307d1586139303893ee690299877e87f0f15a9d68a20  plasma-workspace-wallpapers-6.2.5.tar.xz
+3632910503961d072dfe2013fcdb2e8ec13c1317d31f6489a76dbcadd6863491fe38dbc92deb8d080543a9b997bb373adcdf628255d895887162a6c62579ae57  plasma-workspace-wallpapers-6.3.1.tar.xz
 "

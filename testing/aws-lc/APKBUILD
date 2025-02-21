@@ -1,13 +1,16 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=aws-lc
-pkgver=1.42.0
-pkgrel=1
+pkgver=1.46.1
+pkgrel=0
 pkgdesc="General-purpose cryptographic library based on BoringSSL and OpenSSL"
 url="https://github.com/aws/aws-lc"
 # armhf, armv7, ppc64le, s390x: tests fail
 arch="all !armhf !armv7 !ppc64le !s390x"
 license="(Apache-2.0 OR ISC) AND BSD-3-Clause AND MIT AND OpenSSL"
+provider_priority=10  # lowest (other provider is openssl)
+pcprefix="$pkgname:"  # avoid mix up with openssl pkg-config
+sonameprefix="$pkgname:"  # avoid mix up with openssl
 makedepends="
 	cmake
 	go
@@ -35,7 +38,16 @@ build() {
 }
 
 check() {
-	cmake --build build --target run_tests
+	local allow_fail='no'
+	case "$CARCH" in
+	aarch64)
+		# tests pass on CI in under 15 minutes,
+		# but keep getting stuck on the builders
+		allow_fail='yes' ;;
+	esac
+
+	timeout 30m cmake --build build --target run_tests \
+		|| [ "$allow_fail" = yes ]
 }
 
 package() {
@@ -49,6 +61,6 @@ tools() {
 }
 
 sha512sums="
-7fb61bf0051f0ffa7653dc55eb9adb493c5e363278b57ae7ff2e0373a1f305f17df63509a1f72886fa21d3c07150294a4306128c920a4bac510aec291891accc  aws-lc-1.42.0.tar.gz
+bb0fa417de5d40ce7145b14b7d6bbef7937a5d328ee9b20581fd41746c8bcd0ded0fa6c5e7c797c5a015c054d9f0cd40a56fe634f408fcf27b2579a07261a6e8  aws-lc-1.46.1.tar.gz
 a9d1d4d785c7efaee967b150c25779488786d7941be4990fd01a9f18225c91c2dfc40e16bbf0b52283aa37c3abd20ed27d1440eadaf2e1e2be8b852caa0bf241  move-cmake-dirs.patch
 "

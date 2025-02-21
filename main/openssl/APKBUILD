@@ -2,27 +2,37 @@
 # Contributor: Timo Teras <timo.teras@iki.fi>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=openssl
-pkgver=3.3.2
+pkgver=3.3.3
 _abiver=${pkgver%.*.*}
-pkgrel=4
+pkgrel=0
 pkgdesc="Toolkit for Transport Layer Security (TLS)"
 url="https://www.openssl.org/"
 arch="all"
 license="Apache-2.0"
-replaces="openssl"
+provider_priority=100  # highest
 makedepends_build="perl"
 makedepends_host="linux-headers"
 makedepends="$makedepends_host $makedepends_build"
-subpackages="$pkgname-dbg $pkgname-libs-static $pkgname-dev $pkgname-doc
-	$pkgname-misc::noarch libcrypto$_abiver:_libcrypto libssl$_abiver:_libssl"
+subpackages="
+	$pkgname-dbg
+	$pkgname-libs-static
+	$pkgname-dev
+	$pkgname-doc
+	$pkgname-misc::noarch
+	libcrypto$_abiver:_libcrypto
+	libssl$_abiver:_libssl
+	"
 source="https://github.com/openssl/openssl/releases/download/openssl-$pkgver/openssl-$pkgver.tar.gz
-	CVE-2024-9143.patch
 	auxv.patch
 	man-section.patch
 	"
 builddir="$srcdir/openssl-$pkgver"
 
 # secfixes:
+#   3.3.3-r0:
+#     - CVE-2024-12797
+#   3.3.2-r5:
+#     - CVE-2024-13176
 #   3.3.2-r3:
 #     - CVE-2024-9143
 #   3.3.2-r0:
@@ -118,7 +128,7 @@ builddir="$srcdir/openssl-$pkgver"
 #     - CVE-2023-4807
 
 build() {
-	local _target _optflags
+	local target optflags
 
 	# openssl will prepend crosscompile always core CC et al
 	CC=${CC#"$CROSS_COMPILE"}
@@ -127,19 +137,19 @@ build() {
 
 	# determine target OS for openssl
 	case "$CARCH" in
-		aarch64*)	_target="linux-aarch64" ;;
-		arm*)		_target="linux-armv4" ;;
-		mips64*)	_target="linux64-mips64" ;;
-		# explicit _optflags is needed to prevent automatic -mips3 addition
-		mips*)		_target="linux-mips32"; _optflags="-mips32" ;;
-		ppc)		_target="linux-ppc" ;;
-		ppc64)		_target="linux-ppc64" ;;
-		ppc64le)	_target="linux-ppc64le" ;;
-		x86)		_target="linux-elf" ;;
-		x86_64)		_target="linux-x86_64"; _optflags="enable-ec_nistp_64_gcc_128" ;;
-		s390x)		_target="linux64-s390x";;
-		riscv64)	_target="linux64-riscv64";;
-		loongarch64)	_target="linux64-loongarch64";;
+		aarch64*)	target="linux-aarch64" ;;
+		arm*)		target="linux-armv4" ;;
+		mips64*)	target="linux64-mips64" ;;
+		# explicit optflags is needed to prevent automatic -mips3 addition
+		mips*)		target="linux-mips32"; optflags="-mips32" ;;
+		ppc)		target="linux-ppc" ;;
+		ppc64)		target="linux-ppc64" ;;
+		ppc64le)	target="linux-ppc64le" ;;
+		x86)		target="linux-elf" ;;
+		x86_64)		target="linux-x86_64"; optflags="enable-ec_nistp_64_gcc_128" ;;
+		s390x)		target="linux64-s390x";;
+		riscv64)	target="linux64-riscv64";;
+		loongarch64)	target="linux64-loongarch64";;
 		*)		msg "Unable to determine architecture from (CARCH=$CARCH)" ; return 1 ;;
 	esac
 
@@ -149,11 +159,11 @@ build() {
 
 	# when cross building do not enable threads as libatomic is not avaiable
 	if [ "$CBUILD" != "$CHOST" ]; then
-		_optflags="$_optflags no-threads"
+		optflags="$optflags no-threads"
 	fi
 
 	perl ./Configure \
-		$_target \
+		$target \
 		--prefix=/usr \
 		--libdir=lib \
 		--openssldir=/etc/ssl \
@@ -169,7 +179,7 @@ build() {
 		no-ssl3 \
 		no-seed \
 		no-weak-ssl-ciphers \
-		$_optflags \
+		$optflags \
 		$CPPFLAGS \
 		$CFLAGS \
 		$LDFLAGS -Wa,--noexecstack
@@ -230,8 +240,7 @@ _libssl() {
 }
 
 sha512sums="
-5ae47bf1aed2740a33ba5df7dc7345a6738aa6bfa3c9c4de5e51742485e24b25192988d7a2c1b8201ef70056ad8abd0ca78b3d55abe24c0b0373d83b47ed9b74  openssl-3.3.2.tar.gz
-14d626dbc1d3fb3c986034eb2488e7226ab895c1f9de66ddaf1986eec9184f98b572b0f6184bf597b908f2957d914680e15e8ecfb7769465121b16105993c08e  CVE-2024-9143.patch
+4f53d963c258305f0e926d2e56fc73359c3d62adb25bfce06889eef3278652d073b9e2a4100a884c0d8ee90cb924ba258a5de4e7be6d2c7c49765167e95430d7  openssl-3.3.3.tar.gz
 63f7b46f11c222d2c49200f252937516cbca0bfeb475f008a18ad1abeb1d73110ba7a0506898353c8c6c760c5cb446215da7c83a420afa57e0d73f7fb8c3af7a  auxv.patch
 8c44e990fe8a820f649631b9f81cf28225b7516065169a7f68e2dd7c067b30df9b2c6cb88fa826afbc9fcdaf156360aabf7c498d2d9ed452968815b12b004809  man-section.patch
 "

@@ -1,6 +1,6 @@
 # Maintainer: Jordan Christiansen <xordspar0@gmail.com>
 pkgname=lua-language-server
-pkgver=3.13.3
+pkgver=3.13.6
 pkgrel=0
 pkgdesc="Language Server for Lua"
 url="https://github.com/LuaLS/lua-language-server"
@@ -43,7 +43,7 @@ package() {
 }
 
 sha512sums="
-78b7cac485ded881307ef65916eed3df830116ad647452fd2449d93c9f41b8bb662b8f9fb384745a6fb6c4553aa1d5be1b633f16a96aa6bb257b2c3a2774c8fe  lua-language-server-3.13.3.tar.gz
-c3ee82fb0197b07818dc44b9d6e10bc84b2043ba89f4301c5900179c9cab4f260270b10dd735e667d7b408ec160c47cbbb9967790d2f6c5ccf4022e98b869a22  lua-language-server-submodules-3.13.3.zip.noauto
+8137f77fee085fd4f64dac89903c132e500707e6ea41f50326b4ed27e760f06b61c661b9eb248e66c514612614f8d0526821fc9ad9d9982c498ea79a520b3552  lua-language-server-3.13.6.tar.gz
+e6de99e76734deeb38b4c84b1800f7e665512d26ade88021db91c30040ca4ead5e55af09ce2aa375a79e482ccd9d3a2d54c8c704338ada795bb5885ffd749579  lua-language-server-submodules-3.13.6.zip.noauto
 d8d34d2ae8073c256b5f98f4cc7db058fbb92d63a5709894fca898ab47fcfcfca2d1419a1060c29464fbad937e3d09f0cde404b4d98609eec934ea4392044849  wrapper
 "

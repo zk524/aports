@@ -2,7 +2,7 @@
 # Contributor: Fabricio Silva <hi@fabricio.dev>
 # Maintainer: Nicolas Lorin <androw95220@gmail.com>
 pkgname=rio
-pkgver=0.2.4
+pkgver=0.2.7
 pkgrel=0
 pkgdesc="A hardware-accelerated GPU terminal emulator powered by WebGPU, focusing to run in desktops and browsers."
 url="https://raphamorim.io/rio"
@@ -53,5 +53,5 @@ terminfo() {
 }
 
 sha512sums="
-7b88884ee5175cf91688c0db4df0a06116f147d530ffdadb5e0e8899baa2f21f4b3514292e3e2fb1b84e07d4a44448b5181dcfb0399134461459f7aca08fef3d  rio-0.2.4.tar.gz
+1961cb17a47b44fe1017031906156ca3fec0eb62a38e60e20049cd4a722b49a727a579b73f53b5262d07e09dfb9d767a0e045024c2814b2af276fba4f97bc7b6  rio-0.2.7.tar.gz
 "

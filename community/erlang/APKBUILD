@@ -9,7 +9,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=erlang
-pkgver=26.2.5.6
+pkgver=26.2.5.8
 pkgrel=0
 pkgdesc="General-purpose programming language and runtime environment"
 url="https://www.erlang.org/"
@@ -61,8 +61,8 @@ esac
 
 build() {
 	# it's a whole language runtime
-	export CFLAGS="$CFLAGS -O2 -D_BSD_SOURCE"
-	export CXXFLAGS="$CXXFLAGS -O2"
+	export CFLAGS="${CFLAGS//-Os/-O2} -D_BSD_SOURCE"
+	export CXXFLAGS="${CXXFLAGS//-Os/-O2}"
 
 	./configure \
 		--prefix=/usr \
@@ -180,5 +180,5 @@ verifydeps() {
 }
 
 sha512sums="
-62df7845e49454576500e3ce92c1bd1251f14897b4c9a95153e17bf25f79908bbe23f076c6b54b250f02f09d359e77f9b61210d206bafabda7a0560722126e19  otp_src_26.2.5.6.tar.gz
+922a11de506dd665f9f086133a2152f59433127785a407026a351af0684918de4c3023e63edab3378f59e84eb4b341facf581299784260c1cf0bf90803b54921  otp_src_26.2.5.8.tar.gz
 "

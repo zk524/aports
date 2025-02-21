@@ -2,14 +2,18 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=gleam
-pkgver=1.7.0
+pkgver=1.8.1
 pkgrel=0
 pkgdesc="Statically-typed language that compiles to Erlang and JS"
 url="https://gleam.run/"
 arch="all"
 license="Apache-2.0"
 depends="erlang-dev"
-makedepends="cargo cargo-auditable"
+makedepends="
+	cargo
+	cargo-auditable
+	"
+checkdepends="git"
 source="$pkgname-$pkgver.tar.gz::https://github.com/gleam-lang/gleam/archive/refs/tags/v$pkgver.tar.gz"
 
 prepare() {
@@ -31,5 +35,5 @@ package() {
 }
 
 sha512sums="
-66adf2130778c215243311165ce67b6028e58757c4e68f729924159b9ca0fa6919a37c7efa624c33879147569eafc73cb8e20bb6c1bd87abb506e0b65001286c  gleam-1.7.0.tar.gz
+c841977e3e4330f4c76b86571d5922cc330b1543a45c0b36fc875057193b8724fe8933966db682796665d867b587576ec9c0c58f10c4b973c4f222d1154e11af  gleam-1.8.1.tar.gz
 "

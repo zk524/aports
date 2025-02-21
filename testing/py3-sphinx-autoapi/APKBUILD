@@ -2,7 +2,7 @@
 # Maintainer: Galen Abell <galen@galenabell.com>
 pkgname=py3-sphinx-autoapi
 _pyname=sphinx-autoapi
-pkgver=3.4.0
+pkgver=3.6.0
 pkgrel=0
 pkgdesc="Automatic API documentation for Sphinx"
 url="https://sphinx-autoapi.readthedocs.io"
@@ -32,5 +32,5 @@ package() {
 		.dist/*.whl
 }
 sha512sums="
-8d85497b620326a62c8abc6c638b1526e6d01b744aa200a37acf3f7e2468bf84fc24ce7b91e172cdfe1c419a635e137f690aa860c0ee6283be2028823842139f  sphinx-autoapi-3.4.0.tar.gz
+9b671e3ca66ae40e95ce6df89952e9c1f2bf644087d9deaeb0e305de217fc8154445ff947ad9806949603f0956d95ae6d97c711fea52dcd44aa8f828b74f6c3d  sphinx-autoapi-3.6.0.tar.gz
 "

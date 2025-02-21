@@ -2,7 +2,7 @@
 # Contributor: fossdd <fossdd@pwned.life>
 # Maintainer: fossdd <fossdd@pwned.life>
 pkgname=py3-pip
-pkgver=24.3.1
+pkgver=25.0.1
 pkgrel=0
 pkgdesc="Tool for installing and managing Python packages"
 url="https://pip.pypa.io"
@@ -18,6 +18,7 @@ makedepends="
 	py3-sphinx
 	py3-sphinx-copybutton
 	py3-sphinx-inline-tabs
+	py3-sphinx-issues
 	py3-wheel
 	"
 checkdepends="
@@ -105,5 +106,5 @@ package() {
 }
 
 sha512sums="
-9cf5f18eefd559cf27bc026e5206b0028ea77fd904a61fea9a6682b519305c962dd19170b841581bd05ff72192a9c458ec0eba173fa66db0438b046111ff5856  pip-24.3.1.tar.gz
+a6850c8567082bbf98483a45e523c4de12132136d2b0aa388ac619c02ffd0c8f6aea7d727f7d84167dadec5f1e56dd478b2233b0caa5d9b3e5cadc9e1f3dc12c  pip-25.0.1.tar.gz
 "

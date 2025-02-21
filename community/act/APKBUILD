@@ -1,15 +1,16 @@
 # Contributor: Meng Zhuo <mengzhuo@iscas.ac.cn>
 # Maintainer: Meng Zhuo <mengzhuo@iscas.ac.cn>
 pkgname=act
-pkgver=0.2.71
-pkgrel=1
+pkgver=0.2.74
+pkgrel=0
 pkgdesc="Run your GitHub Actions locally"
 url="https://github.com/nektos/act"
 arch="all"
 license="MIT"
 depends="npm docker"
 makedepends="go"
-options="net"
+options="net" # go build requires
+subpackages="$pkgname-doc"
 
 source="$pkgname-$pkgver.tar.gz::https://github.com/nektos/act/archive/refs/tags/v$pkgver.tar.gz"
 
@@ -32,8 +33,9 @@ check() {
 
 package() {
 	install -Dm755 ./act -t "$pkgdir"/usr/bin/
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
 sha512sums="
-b1079c2a4eb1ac8bc3c3a6f07333c949a79d7ac248b20f1a744b44fd041facd19fccd1a83fb7a02141bc096dbf7a6728c1a17b486e47cb5d3b9ddebda3ef2476  act-0.2.71.tar.gz
+523f8a9dd2263bee93535450166123a4dd2f7be580e43e9a6ce14df30481b405b504309620137910bbfe6a8dcae98957e3b935c41d901ef3b75a06b45c480c14  act-0.2.74.tar.gz
 "

@@ -1,6 +1,6 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gstreamer
-pkgver=1.24.10
+pkgver=1.24.12
 pkgrel=0
 pkgdesc="GStreamer streaming media framework"
 url="https://gstreamer.freedesktop.org"
@@ -20,6 +20,7 @@ makedepends="$depends_dev
 	rust
 	"
 subpackages="
+	$pkgname-dbg
 	$pkgname-dev
 	$pkgname-doc
 	$pkgname-tools
@@ -100,5 +101,5 @@ ptp_helper() {
 }
 
 sha512sums="
-b8f4200ca073c1cdb3a94dba0d37d5a41fc16f5dae88e0350d647122a5bcaf7f3b65e2894ff87088eeea4f8bb834ba7b4d447a5e81cb73d647a9d04a569ca184  gstreamer-1.24.10.tar.xz
+ffc349689d0b5435a1c690a049dc45316bf4f0b58f24997bce393884939b320009443bdd7f9b23d252fc47e79c36ca2a9da36386bc8a25d40ad66a86bba746fd  gstreamer-1.24.12.tar.xz
 "

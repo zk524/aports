@@ -2,7 +2,7 @@
 # Maintainer: wener <wenermail@gmail.com>
 pkgname=seaweedfs
 pkgver=3.80
-pkgrel=1
+pkgrel=2
 pkgdesc="SeaweedFS is a simple and highly scalable distributed file system to store and serve billions of files fast"
 url="https://github.com/seaweedfs/seaweedfs"
 license="Apache-2.0"
@@ -38,7 +38,7 @@ check() {
 	# unmaintained may fail
 	# s3client uses non-32 int
 	# shellcheck disable=SC2046
-	go test $(go list ./... | grep -v -e 's3/basic$' -e 'weed/operation$' -e 'unmaintained' -e 's3/s3client' )
+	go test -timeout 30m $(go list ./... | grep -v -e 's3/basic$' -e 'weed/operation$' -e 'unmaintained' -e 's3/s3client' )
 }
 
 package() {

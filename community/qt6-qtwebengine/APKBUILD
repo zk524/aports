@@ -2,15 +2,16 @@
 # group=qt6
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtwebengine
-pkgver=6.8.1
-pkgrel=0
+pkgver=6.8.2
+pkgrel=1
 # latest commit of 122-based branch of qtwebengine-chromium
 _chromium_commit="207acfe0ee54df6dc713b2df6c60390fd8bf7748"
 pkgdesc="Provides support for web applications using the Chromium browser project"
 url="https://qt.io/"
 # riscv64, s390x unknown current CPU
 # ppc64le not supported by chromium
-arch="all !riscv64 !s390x !ppc64le"
+# armhf blocked by qt6-qtdeclarative
+arch="all !riscv64 !s390x !ppc64le !armhf"
 license="LGPL-2.1-only AND LGPL-3.0-only AND GPL-3.0-only AND Qt-GPL-exception-1.0"
 depends_dev="
 	alsa-lib-dev
@@ -30,15 +31,12 @@ depends_dev="
 	pipewire-dev
 	pulseaudio-dev
 	qt6-qtbase-dev
+	qt6-qtdeclarative-dev
 	qt6-qtpositioning-dev
 	qt6-qttools-dev
 	qt6-qtwebchannel-dev
 	snappy-dev
 	"
-case "$CARCH" in
-	armhf) ;;
-	*) depends_dev="$depends_dev qt6-qtdeclarative-dev" ;;
-esac
 makedepends="$depends_dev
 	bison
 	bsd-compat-headers
@@ -50,6 +48,7 @@ makedepends="$depends_dev
 	perl
 	py3-html5lib
 	python3
+	qt6-qtdeclarative-private-dev
 	samurai
 	"
 subpackages="$pkgname-dev"
@@ -81,6 +80,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/qt/qtwebengine/archive/refs/
 	qt6-6.8.0.loongarch64_patch
 	qt6-6.8.0.ninja-race-condition_patch
 	qt6-6.8.0.rollup_patch
+	loongarch64-fix-libyuv-link-failed.patch
 	"
 options="!check" # No usable tests
 builddir="$srcdir/qtwebengine-${pkgver/_/-}"
@@ -289,7 +289,7 @@ dev() {
 }
 
 sha512sums="
-d5d3eb09ebdb6e1bfb17e242b5535901801b77fd908bf82542baa98d3d48961653bd9460622ebcf872cabd042bffeadb5e643eed96c943a716432ff3f187562d  qt6-qtwebengine-6.8.1.tar.gz
+9d9aaffe2ecec75eb4cf617c003b7bf9274739e23edb5401c257772cde34752d46c2c236663533017fe7e6a49e1f959fe60da8a06eb133c792c8b252aeaa73a5  qt6-qtwebengine-6.8.2.tar.gz
 28aad4a3567d3cb754a6b0396925bc419c7f9008b33fb22575049c476d500f359614ce630e7dbd5c0a42b4cc34300921963353ee2d1b16556b866bbef8e64007  qtwebengine-chromium-207acfe0ee54df6dc713b2df6c60390fd8bf7748.tar.gz
 9a05c07c4616053d247b1200cdd1883e8067babc5ab5bc169ea1599643d120c445fb4db586f5e247e122711f37e148d13fc8a7443d879877d7c82fb1f778db58  0001-Enable-building-on-musl.patch
 7b6ed37975c55e5ebc20b9a6207044b6f86102d69caa6fdd457078a7ae242026d3de5537651d3d86497ba18ddd1e97523aa082da4dff703a8a4f618bccd4af57  0002-temp-failure-retry.patch
@@ -316,4 +316,5 @@ d14cbdb7e7cc6497d21d98525df0c75ac8df2b4897874987e95631ea1b6bde9175c674c666a5f178
 e104579ae132dff6f7ea54508aac3a0de35b6fb1c012e9ffc92303e2b495e2886e0253e5e2f58749e4387ab4b847dfa986e01dc5ce556b289943df1b723a187d  qt6-6.8.0.loongarch64_patch
 77bfc860e6ffc2e5ded0f5fb85ca0198859a58b731b3a14e9e084271578fd4a8ba7a03c90f6561e4b75a88678ec6934594bcb9c4588f7837ca9568a460466a74  qt6-6.8.0.ninja-race-condition_patch
 f8333675eb97628dbed407bb83763b8a7ecfc2784c9f7cb3c97f5445aa38f52b55cac57c88087d72264fb818ff8fe3881147fe9595d860992f1d3cb4a962e5c4  qt6-6.8.0.rollup_patch
+2ec9495bd54300c56129f4dc1e552aafdf53e418fe99fbc6c97fab583f2e8eadc321a9a99a6ea6d49fc948a97dc31f77ac888f405cb44a201aafe77e4d772110  loongarch64-fix-libyuv-link-failed.patch
 "

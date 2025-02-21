@@ -1,8 +1,7 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
-# Contributor: fossdd <fossdd@pwned.life>
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=aws-c-io
-pkgver=0.15.3
+pkgver=0.15.5
 pkgrel=0
 pkgdesc="Module for the AWS SDK for C handling all IO and TLS work for application protocols"
 url="https://github.com/awslabs/aws-c-io"
@@ -52,11 +51,6 @@ package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
 
-dev() {
-	default_dev
-	amove usr/lib/aws-c-io
-}
-
 sha512sums="
-3ed00ef885c4424651222acecb1a8c090b6db36e0e001937734d26a326ddf363078628a03a6e33952dca52d22cb16b9ed8d422cf036d71ea153856e9a1f11659  aws-c-io-0.15.3.tar.gz
+6aafb80314f435563daca8ed9b765041e9d95b005c83572339ec05b54f68b7a24cbed601cf7be8c54b809fdf75f83eab90d71b63fd6f2face2e13633be4b1f65  aws-c-io-0.15.5.tar.gz
 "

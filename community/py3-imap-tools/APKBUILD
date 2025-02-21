@@ -2,7 +2,7 @@
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=py3-imap-tools
 _pyname="imap-tools"
-pkgver=1.9.0
+pkgver=1.10.0
 pkgrel=0
 arch="noarch"
 pkgdesc="Work with email and mailbox by IMAP"
@@ -49,5 +49,5 @@ package() {
 }
 
 sha512sums="
-8de7e38fdc9ccd9065594cc204b330df668823eb91c606ce2318b9d2ef0b6f5d4bcb57b344aee3c2a64cf76a5f0688da7e5117772111e6f0761b4cff3dc12772  py3-imap-tools-1.9.0.tar.gz
+886a31694bee82e26e6567de1a416bbeebca51568a9a05b07681dfec6256d7420747f56756637fbc56adf2cae9db5f01181476e9dea083f658f1815fbcf20a86  py3-imap-tools-1.10.0.tar.gz
 "

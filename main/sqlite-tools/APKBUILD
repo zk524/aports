@@ -3,7 +3,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=sqlite-tools
-pkgver=3.48.0
+pkgver=3.49.1
 pkgrel=0
 pkgdesc="Helper tools for SQLite"
 url="https://www.sqlite.org/"
@@ -63,6 +63,9 @@ prepare() {
 	fi
 
 	# based on what tool/mkautoconfamal.sh does to build the TEA tarball
+	sed -e "s/@VERSION@/$(cat VERSION)/" \
+		< autoconf/tea/configure.ac.in \
+		> autoconf/tea/configure.ac
 	if grep -Fq "AC_INIT([sqlite],[$pkgver])" autoconf/tea/configure.ac; then
 		msg "TEA version number ok"
 	else
@@ -98,7 +101,8 @@ build() {
 		--enable-static \
 		--enable-fts3 \
 		--enable-fts4 \
-		--enable-fts5
+		--enable-fts5 \
+		--soname=legacy
 
 	msg "Building sqlite3_analyzer"
 	make sqlite3_analyzer \
@@ -114,7 +118,7 @@ build() {
 	# test at the same optimization level as main/sqlite
 	if want_check; then
 		msg "Building testfixture"
-		make CFLAGS="$CFLAGS -O2" testfixture
+		make CFLAGS="${CFLAGS//-Os/-O2}" testfixture
 	fi
 
 	if subpackage_types_has tcl; then
@@ -177,7 +181,7 @@ _tcl_doc() {
 }
 
 sha512sums="
-854832e9a5dc486a81934e36c1f1678ce50db55b8bd3c48ed2d569fb0bb7ce23d4b490c0a0f699274ff11ddf2000db4a620e064557084c54b217e7fdd836f4e1  sqlite-src-3480000.zip
+24c81cee52e5655f4e9d6496a366e4787352b5108ea27eb5ce3dc07ef3e1975205bb250584b0758fb2832add84ca922b09a4d925e0dc2f55dd3613a58b414ec3  sqlite-src-3490100.zip
 6eb41417c4279702e420846f234f04176d2d2b9a81b3e14ed6e080e9698954cc36f1011fce2a87750b83beeb7633e259aa51a98bac475b2598772c686fd220ec  date4-test-musl.patch
 cd976a64a3721dec1fb465bf337f30bb14e35ee94f4fec3d2667630853f30f9f489ef60c96a8789de4ceb05463396c529ee03a0b8aa3745ea161aac008425059  stdout-invalid-argument.patch
 16cf491de20c2eb2188ce9f99363e597cb6580a32ab340963429368f5746c04f130874c6abdd021c5db95e2e8f780670371b2ce7158ec484226352b169933d59  tclsqlite-include-stdint.patch

@@ -1,10 +1,8 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=kwayland
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="Qt-style Client and Server library wrapper for the Wayland libraries"
 arch="all"
@@ -26,9 +24,10 @@ makedepends="$depends_dev
 	"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 subpackages="$pkgname-dev $pkgname-doc $pkgname-dbg"
 _repo_url="https://invent.kde.org/plasma/kwayland.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/kwayland-$pkgver.tar.xz"
@@ -45,7 +44,7 @@ build() {
 }
 
 check() {
-	ctest --test-dir build --output-on-failure
+	ctest --test-dir build
 }
 
 package() {
@@ -53,5 +52,5 @@ package() {
 }
 
 sha512sums="
-5c21be7b6ad89c99221b8f02e92f54125d39c7e83890398b0509d5b637af077c193b57b05ae7a814f77d39b4ba3692c36698306968072e28aeb3dc5e8bc546e6  kwayland-6.2.5.tar.xz
+65a215261a745ca01642fb88b1eb033af36c4a4f05ad5fb8f4ece25de71e8588adcd423d754dcade3a9cb04fe8209bb641cc8b905aaa9e70c1061aa6590bd529  kwayland-6.3.1.tar.xz
 "

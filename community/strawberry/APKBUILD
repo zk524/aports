@@ -1,7 +1,7 @@
 # Contributor: knuxify <knuxify@gmail.com>
 # Maintainer: knuxify <knuxify@gmail.com>
 pkgname=strawberry
-pkgver=1.2.4
+pkgver=1.2.7
 pkgrel=0
 pkgdesc="Strawberry Music Player"
 url="https://strawberrymusicplayer.org"
@@ -21,12 +21,15 @@ makedepends="
 	gst-plugins-base-dev
 	gstreamer-dev
 	icu-dev
+	kdsingleapplication-dev
 	libcdio-dev
+	libebur128-dev
 	libgpod-dev
 	libmtp-dev
 	libxcb-dev
 	pulseaudio-dev
 	qt6-qtbase-dev
+	qt6-qtbase-private-dev
 	qt6-qttools-dev
 	samurai
 	sparsehash
@@ -35,8 +38,7 @@ makedepends="
 "
 checkdepends="gtest-dev xvfb-run"
 subpackages="$pkgname-doc"
-source="https://files.strawberrymusicplayer.org/strawberry-$pkgver.tar.xz
-	fix-tests.patch"
+source="https://files.strawberrymusicplayer.org/strawberry-$pkgver.tar.xz"
 
 build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
@@ -59,6 +61,5 @@ package() {
 }
 
 sha512sums="
-b5b7745bfdbbfe517afa4ff60fb768429a045853bd3ba2b84699e2e71f0fd31bcea677ea7c5ede70e2803cefe8153f5196af6670cd2cda6c4e286d9d40a69c3b  strawberry-1.2.4.tar.xz
-f3e2819ab9357ac5f1eefd387a75987e4c4a6686c8dc4c41c2a9db1b4dd18178994047db9412319be2a33319212765d8e00091a7f72157ec0425359068401f94  fix-tests.patch
+a343abd9c45002acee37d253001181c939c9d9ebe7a888c0f5c436f610825e601b0ed2c789b372b8f07f60e8d5ce8b9f7d6e715f8a0d1a3fb77e7b8260192f4b  strawberry-1.2.7.tar.xz
 "

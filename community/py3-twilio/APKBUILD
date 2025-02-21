@@ -1,7 +1,7 @@
 # Contributor: Antoine Martin (ayakael) <dev@ayakael.net>
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=py3-twilio
-pkgver=9.4.3
+pkgver=9.4.5
 pkgrel=0
 arch="noarch"
 pkgdesc="Twilio API client and TwiML generator"
@@ -58,5 +58,5 @@ package() {
 }
 
 sha512sums="
-dbb3c7533b671d7e9cef97b8df6ac1a36d945ef72cbfb4ab3448ee2f828a91c4d201bf644d5c4c46cfd8907de9c701c260e2028bc015562dbd18849709b0ef53  py3-twilio-9.4.3.tar.gz
+5972bfc199307c82134638bfad8cc5088bd2bbd2f86e0f890818fb9f4fa87837c77989979684c7c883ecdc631ecc3d85a19cb3edee26b0c65f0cbd614344f998  py3-twilio-9.4.5.tar.gz
 "

@@ -2,7 +2,7 @@
 # Contributor: Hugo Osvaldo Barrera <hugo@whynothugo.nl>
 # Maintainer: Struan Robertson <contact@struanrobertson.co.uk>
 pkgname=systemd-boot
-pkgver=257
+pkgver=257.3
 pkgrel=0
 pkgdesc="systemd's EFI boot manager."
 url="https://systemd.io/"
@@ -122,6 +122,6 @@ efistub() {
 }
 
 sha512sums="
-b8cd23ed1a5dff1894f33a831413f9805b2b7bafe93046f163aa4c1c8b929365785d0c04a4c758823624a7536d2a47c8fafae659dd41d4440ddace3d88bb1ff7  systemd-257.tar.gz
+ef395998df4b24537147fa3b2e3ae2d100d3345f386fc39018bca0fe8092b7874bf9a6e6058a142342b3a0caebe1312ea9519bcbb4327a9d3649f593c49b3dab  systemd-257.3.tar.gz
 81e6f311d567ef8b1f8957f25f019e7fa995f640659381757d1abdd7295434810b79a09367d274c5755f1ed1f6d37d7d98e9c93645578daca34acdeca0ba3965  0001-patch-wchar_t-for-musl.patch
 "

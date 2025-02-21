@@ -1,14 +1,13 @@
-# Contributor: Bhushan Shah <bshah@kde.org>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-plasma
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=kwayland-integration
-pkgver=6.2.5
+pkgver=6.3.1
 pkgrel=0
 pkgdesc="KWayland integration"
 url="https://kde.org/plasma-desktop/"
-arch="all !armhf" # armhf blocked by extra-cmake-modules
+# armhf blocked by qt5-qtdeclarative
+arch="all !armhf"
 license="LGPL-2.1-only OR LGPL-3.0-only"
 depends="kglobalaccel5"
 makedepends="
@@ -23,9 +22,10 @@ makedepends="
 	"
 
 case "$pkgver" in
-	*.90*) _rel=unstable;;
+	*.*.9*) _rel=unstable;;
 	*) _rel=stable;;
 esac
+
 _repo_url="https://invent.kde.org/plasma/kwayland-integration.git"
 source="https://download.kde.org/$_rel/plasma/$pkgver/kwayland-integration-$pkgver.tar.xz"
 options="!check" # Broken
@@ -43,5 +43,5 @@ package() {
 }
 
 sha512sums="
-a0c93f58664cc3540c82609b14244cab9214f0b6712fe2409cd2b0aaaa55bad452d06083a2b1800cb7d37c7aceb5edfa210a3686aed442a1b9f5fb34ad2e3967  kwayland-integration-6.2.5.tar.xz
+1b73d4f4c068523e9eff11d7352293f4554360b44a28d972d823cdf55d0aa7bd6254c495e83d355f0e17bc1df7bde7cb2eeff40d91f70e3e4dad22e18e82a3da  kwayland-integration-6.3.1.tar.xz
 "

@@ -4,7 +4,7 @@
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=wxwidgets
 pkgver=3.2.5
-pkgrel=1
+pkgrel=2
 pkgdesc="wxWidgets GUI library"
 url="https://www.wxwidgets.org/"
 arch="all"
@@ -23,7 +23,7 @@ depends_dev="
 	pcre2-dev
 	gtk+3.0-dev
 	mesa-dev
-	sdl2-dev
+	sdl3-dev
 	webkit2gtk-4.1-dev
 	tiff-dev
 	qt5-qtbase-dev

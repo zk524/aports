@@ -11,4 +11,7 @@ if [ "$(apk version -t "$ver_old" '2.53-r1')" = '<' ]; then
 	EOF
 fi
 
+# apk fix may call this script instead of yash.post-install
+add-shell '/usr/bin/yash'
+
 exit 0

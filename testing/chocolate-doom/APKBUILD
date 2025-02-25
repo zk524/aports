@@ -1,12 +1,12 @@
 # Maintainer: Jordan Christiansen <xordspar0@gmail.com>
 pkgname=chocolate-doom
 pkgver=3.1.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Portable release of Doom, Heretic, Hexen, and Strife"
 url="https://www.chocolate-doom.org"
 arch="all"
 license="GPL-2.0-or-later"
-makedepends="autoconf automake sdl2-dev sdl2_net-dev sdl2_mixer-dev libpng-dev
+makedepends="autoconf automake sdl3-dev sdl2_net-dev sdl2_mixer-dev libpng-dev
 	libsamplerate-dev mesa-dev fluidsynth-dev"
 subpackages="$pkgname-doc"
 options="!check" # no test suite

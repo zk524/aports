@@ -2,7 +2,7 @@
 # Maintainer: Díaz Urbaneja Diego <sodomon2@gmail.com>
 pkgname=ppsspp
 pkgver=1.17.1
-pkgrel=3
+pkgrel=4
 pkgdesc="PPSSPP - a fast and portable PSP emulator"
 url="https://www.ppsspp.org/"
 arch="aarch64 x86 x86_64 ppc64le" # other arches fail to build
@@ -18,7 +18,7 @@ makedepends="
 	qt5-qtbase-dev
 	qt5-qtmultimedia-dev
 	samurai
-	sdl2-dev
+	sdl3-dev
 	sdl2_ttf-dev
 	snappy-dev
 	zlib-dev

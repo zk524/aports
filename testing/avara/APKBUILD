@@ -2,7 +2,7 @@
 # Maintainer: shrizza <shrizza@gmail.com>
 pkgname=avara
 pkgver=0.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Port of the original 1996 Mac OS game from Ambrosia Software"
 url="https://github.com/avaraline/Avara"
 # videogame
@@ -11,7 +11,7 @@ license="MIT"
 makedepends="
 	directfb-dev
 	glu-dev
-	sdl2-dev
+	sdl3-dev
 	sdl2_mixer-dev
 	sdl2_net-dev
 	rsync

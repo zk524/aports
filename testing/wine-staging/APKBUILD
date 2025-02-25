@@ -9,7 +9,7 @@
 pkgname=wine-staging
 pkgver=10.1
 _pkgver="${pkgver%".${pkgver#*.*.}"}"
-pkgrel=0
+pkgrel=1
 pkgdesc="Compatibility layer for running Windows programs -- Staging patchset"
 url="https://www.winehq.org"
 arch="x86 x86_64"
@@ -52,7 +52,7 @@ makedepends="
 	pcsc-lite-dev
 	pulseaudio-dev
 	sane-dev
-	sdl2-dev
+	sdl3-dev
 	udisks2-dev
 	v4l-utils-dev
 	vulkan-loader-dev

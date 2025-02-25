@@ -2,7 +2,7 @@
 # Maintainer: Bart Ribbers <bribbers@disroot.org>
 pkgname=qt5-qtgamepad
 pkgver=5.15.10_git20230414
-pkgrel=1
+pkgrel=2
 _module="${pkgname#qt5-}"
 _pkgver=f90bd729eb70d4a0770efed3f9bb1b6dbe67d37c
 _fullname=$_module-$_pkgver
@@ -13,7 +13,7 @@ arch="all !armhf" # armhf blocked by qt5-qtdeclarative
 depends_dev="
 	eudev-dev
 	qt5-qtdeclarative-dev
-	sdl2-dev
+	sdl3-dev
 	"
 makedepends="$depends_dev
 	qt5-qtbase-dev

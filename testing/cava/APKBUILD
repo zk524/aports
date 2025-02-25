@@ -2,7 +2,7 @@
 # Maintainer: Galen Abell <galen@galenabell.com>
 pkgname=cava
 pkgver=0.10.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Console-based Audio Visualizer"
 url="https://github.com/karlstav/cava"
 arch="all"
@@ -18,7 +18,7 @@ makedepends="
 	ncurses-dev
 	pipewire-dev
 	pulseaudio-dev
-	sdl2-dev
+	sdl3-dev
 	xxd
 	"
 source="cava-$pkgver.tar.gz::https://github.com/karlstav/cava/archive/$pkgver.tar.gz"

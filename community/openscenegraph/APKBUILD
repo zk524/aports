@@ -1,7 +1,7 @@
 maintainer="Leonardo Arena <rnalrd@alpinelinux.org>"
 pkgname=openscenegraph
 pkgver=3.6.5
-pkgrel=16
+pkgrel=17
 pkgdesc="High performance 3D graphics toolkit"
 url="http://www.openscenegraph.org/"
 arch="all"
@@ -17,7 +17,7 @@ makedepends="
 	jpeg-dev
 	libxml2-dev
 	samurai
-	sdl2-dev
+	sdl3-dev
 	tiff-dev
 	zlib-dev
 	"

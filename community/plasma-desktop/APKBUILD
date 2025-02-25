@@ -3,7 +3,7 @@
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=plasma-desktop
 pkgver=6.3.1
-pkgrel=0
+pkgrel=1
 pkgdesc="KDE Plasma Desktop"
 # armhf blocked by qt6-qtdeclarative
 # s390x blocked by plasma-workspace
@@ -60,7 +60,7 @@ makedepends="
 	qt6-qtdeclarative-private-dev
 	qt6-qtsvg-dev
 	samurai
-	sdl2-dev
+	sdl3-dev
 	signon-plugin-oauth2-dev
 	xf86-input-evdev-dev
 	xf86-input-libinput-dev

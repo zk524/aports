@@ -5,8 +5,7 @@ pkgver=1.3.34
 pkgrel=0
 pkgdesc="fast and user-friendly Weechat relay client"
 url="https://github.com/LithApp/Lith"
-# riscv64: Variable QMAKE_CXX.COMPILER_MACROS is not defined.
-arch="all !riscv64"
+arch="all"
 license="GPL-2.0"
 makedepends="
 	qt6-qtbase-dev

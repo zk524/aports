@@ -4,7 +4,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=qemu
 pkgver=9.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="QEMU is a generic machine emulator and virtualizer"
 url="https://qemu.org/"
 arch="all"
@@ -62,11 +62,11 @@ pkggroups="qemu"
 install="$pkgname.pre-install $pkgname.post-install $pkgname.pre-upgrade"
 
 # suid needed for qemu-bridge-helper
-# strip fails on .img files
 # some tests does not run on our builders
-options="suid !strip !check textrels"
+options="suid !check textrels"
 
 subpackages="
+	$pkgname-dbg
 	$pkgname-dev
 	$pkgname-doc
 	$pkgname-lang
@@ -453,6 +453,9 @@ package() {
 		"$pkgdir"/etc/init.d/$pkgname-guest-agent
 	install -Dm644 "$srcdir"/$pkgname-guest-agent.confd \
 		"$pkgdir"/etc/conf.d/$pkgname-guest-agent
+
+	# Move outside of default_dbg scan range
+	mv "$pkgdir"/usr/share/qemu/s390-ccw.img "$builddir"/
 }
 
 _subsys() {
@@ -503,7 +506,8 @@ _tools() {
 _s390x_firmware() {
 	pkgdesc="QEMU s390x boot devices"
 	depends=""
-	amove usr/share/qemu/s390-ccw.img
+	mkdir -p "$subpkgdir"/usr/share/qemu/
+	mv "$builddir"/s390-ccw.img "$subpkgdir"/usr/share/qemu/
 }
 
 _hppa_firmware() {

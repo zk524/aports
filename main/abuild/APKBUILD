@@ -20,7 +20,7 @@ depends="
 	tar
 	"
 makedepends_build="pkgconfig scdoc"
-makedepends_host="openssl-dev>3 zlib-dev"
+makedepends_host="openssl-dev>3 openssl-libs-static>3 zlib-dev"
 makedepends="$makedepends_host $makedepends_build"
 checkdepends="cmd:setcap kyua git"
 install="$pkgname.pre-install $pkgname.pre-upgrade"
@@ -28,6 +28,7 @@ subpackages="
 	apkbuild-cpan:cpan:noarch
 	apkbuild-gem-resolver:gems:noarch
 	apkbuild-pypi:pypi:noarch
+	abuild-tar-static:tarstatic
 	abuild-rootbld:_rootbld:noarch
 	abuild-sudo:_sudo
 	$pkgname-doc
@@ -43,7 +44,7 @@ source="https://gitlab.alpinelinux.org/alpine/abuild/-/archive/$pkgver/abuild-$p
 builddir="$srcdir"/abuild-$pkgver
 
 build() {
-	make VERSION="$pkgver-r$pkgrel"
+	make VERSION="$pkgver-r$pkgrel" all abuild-tar.static
 }
 
 check() {
@@ -54,6 +55,7 @@ package() {
 	make install VERSION="$pkgver-r$pkgrel" DESTDIR="$pkgdir"
 
 	install -m 644 abuild.conf "$pkgdir"/etc/abuild.conf
+	install -m 755 abuild-tar.static "$pkgdir"/usr/bin/abuild-tar.static	
 
 	case "$CARCH" in
 	aarch64|x86*|ppc64le)
@@ -105,6 +107,12 @@ pypi() {
 	perl-ipc-system-simple"
 
 	amove usr/bin/apkbuild-pypi
+}
+
+tarstatic() {
+	pkgdesc="abuild-tar - static binary"
+
+	amove usr/bin/abuild-tar.static
 }
 
 _rootbld() {

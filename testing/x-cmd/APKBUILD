@@ -1,5 +1,6 @@
-# Maintainer: Li Junhao <l@x-cmd.com>
-# Contributor: Zheng Qiakai <zhengqiakai@x-cmd.com>
+
+# Contributor: Li Junhao <l@x-cmd.com>
+# Maintainer: zhengqiakai <zhengqiakai@x-cmd.com>
 pkgname=x-cmd
 pkgver=v0.5.5
 _pkgsum=.369a6a4b
@@ -11,6 +12,7 @@ arch="all"
 license=GPLv3
 
 
+# source="$pkgname-$pkgver.tgz::https://oss.resource.x-cmd.com/x-cmd/release/dist/$pkgver/allinone.tgz"
 source="$pkgname-$pkgver.tgz::https://raw.githubusercontent.com/x-cmd/release/main/dist/$pkgver/allinone.tgz"
 install="$pkgname.post-install $pkgname.post-deinstall"
 options="!check"
@@ -21,23 +23,23 @@ build() {
 
 package() {
 	mkdir -p "$pkgdir/usr/share/$pkgname/v"
-	cp -rf "$srcdir/$pkgname-$pkgver.tgz" "$pkgdir/usr/share/$pkgname/v/$_pkgsum.tgz" || return 1
+	cp -rf "$srcdir/$pkgname-$pkgver.tgz" "$pkgdir/usr/share/$pkgname/v/$_pkgsum.tgz"
 
-    local _pkgdir="$pkgdir/usr/share/x-cmd/v/$_pkgsum"
-    local _pkgfile="$pkgdir/usr/share/x-cmd/v/$_pkgsum.tgz"
-    if [ ! -f "$_pkgfile" ]; then
-        printf "%s\n" "- I|x: Not found x-cmd pkg tgz file -> $_pkgfile" >/dev/tty
-        return 1
-    else
-        printf "%s\n" "- I|x: Unpacking $_pkgfile to $_pkgdir" >&2
-        mkdir -p "$_pkgdir"
-        tar -xzf "$_pkgfile" -C "$_pkgdir" || return 1
+	local _pkgdir="$pkgdir/usr/share/x-cmd/v/$_pkgsum"
+	local _pkgfile="$pkgdir/usr/share/x-cmd/v/$_pkgsum.tgz"
+	if [ ! -f "$_pkgfile" ]; then
+		printf "%s\n" "- I|x: Not found x-cmd pkg tgz file -> $_pkgfile" >/dev/tty
+	else
+		printf "%s\n" "- I|x: Unpacking $_pkgfile to $_pkgdir" >&2
+		mkdir -p "$_pkgdir"
+		tar -xzf "$_pkgfile" -C "$_pkgdir"
 
-        printf "%s\n" "- I|x: Create /usr/bin/x-cmd" >&2
-        install -Dm755 "$_pkgdir/mod/x-cmd/lib/bin/x-cmd" "$pkgdir/usr/bin/x-cmd"
-        chmod +x "$pkgdir/usr/bin/x-cmd"
-    fi
+		printf "%s\n" "- I|x: Create /usr/bin/x-cmd" >&2
+		install -Dm755 "$_pkgdir/mod/x-cmd/lib/bin/x-cmd" "$pkgdir/usr/bin/x-cmd"
+		chmod +x "$pkgdir/usr/bin/x-cmd"
+	fi
 }
+
 
 sha512sums="
 97186f820be557ed7b7e21b19a5aee183c21f5122739971137703c8c9cd266c296cc0143eb0db434e5fe1069bdc5481bc441b0ef1ed489c7bd9172f60d94f5b9  x-cmd-v0.5.5.tgz

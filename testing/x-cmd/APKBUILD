@@ -8,7 +8,7 @@ pkgrel=0
 pkgdesc="Bootstrap 1000+ command line tools in seconds"
 url="https://www.x-cmd.com"
 arch="all"
-license=GPLv3
+license=AGPL-3.0
 
 
 # source="$pkgname-$pkgver.tgz::https://oss.resource.x-cmd.com/x-cmd/release/dist/$pkgver/allinone.tgz"

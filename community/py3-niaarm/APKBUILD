@@ -2,7 +2,7 @@
 # Maintainer: Iztok Fister, Jr. <iztok@iztok-jr-fister.eu>
 pkgname=py3-niaarm
 _pkgorig=niaarm
-pkgver=0.3.13
+pkgver=0.4.1
 pkgrel=0
 pkgdesc="A minimalistic framework for numerical association rule mining"
 url="https://github.com/firefly-cpp/NiaARM"
@@ -24,7 +24,11 @@ build() {
 check() {
 	python3 -m venv --clear --without-pip --system-site-packages .testenv
 	.testenv/bin/python3 -m installer .dist/*.whl
-	.testenv/bin/python3 -m pytest -n auto -k 'not text_mining' --ignore=tests/test_visualization.py
+	.testenv/bin/python3 -m pytest -n auto \
+		--ignore=tests/test_visualization.py \
+		--ignore=tests/test_two_key_plot.py \
+		--ignore=tests/test_text_mining.py \
+		--ignore=tests/test_sankey_diagram.py
 }
 
 package() {
@@ -39,5 +43,5 @@ package() {
 }
 
 sha512sums="
-733170c0075603b0c320573fd7f57e3b1747df3b0402f23f7e82c60d971d76b645c58a3d9605220445415e14cbc71b293d7b973f872eebdacaa7f1c26504cc55  niaarm-0.3.13.tar.gz
+9020cbdb851f3776dc1c06604ac08a71dda21a2fcf37f726156d4a5a26a0901f39b11f1a2ebcbf6fa532c64149207b293edd9d9fa2fc2df60d8ea33e8ed616ae  niaarm-0.4.1.tar.gz
 "

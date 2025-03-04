@@ -3,7 +3,7 @@
 maintainer="Holger Jaekel <holger.jaekel@gmx.de>"
 pkgname=gdal
 pkgver=3.10.2
-pkgrel=0
+pkgrel=1
 pkgdesc="A translator library for raster and vector geospatial data formats"
 url="https://gdal.org/"
 arch="all"
@@ -49,7 +49,6 @@ makedepends="
 	openssl-dev
 	poppler-dev
 	proj-dev
-	py3-numpy
 	py3-numpy-dev
 	py3-setuptools
 	python3-dev

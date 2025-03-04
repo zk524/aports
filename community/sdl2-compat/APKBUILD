@@ -1,6 +1,6 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=sdl2-compat
-pkgver=2.30.54
+pkgver=2.32.52
 pkgrel=0
 pkgdesc="SDL2 compatibility layer that uses SDL3 behind the scenes"
 url="https://github.com/libsdl-org/sdl2-compat"
@@ -38,5 +38,5 @@ package() {
 }
 
 sha512sums="
-767dda895e2c8ebd7a446f9a61153d2604003083daae469f047cda86e4c7d3829e555a58e95733593476e05327f18158d4b64d03067a2a26140a88e5876cef15  sdl2-compat-2.30.54.tar.gz
+dfb57dc384bc20361cdd2557f6e1fb09319c1b0226ba14e89678ad7f217e4ba438058b8a8a5508ab04f3163b3fa1655b0fbbb9bb6e26f01d2304813d64120adf  sdl2-compat-2.32.52.tar.gz
 "

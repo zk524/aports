@@ -1,0 +1,47 @@
+# Contributor: Alexey Yerin <yyp@disroot.org>
+# Maintainer: Alexey Yerin <yyp@disroot.org>
+pkgname=wasm-tools
+pkgver=1.226.0
+_testsuite_commit=afe153617d18569ce95b51ad6c2fb6550e488b74
+pkgrel=0
+pkgdesc="CLI for low-level manipulation of WebAssembly modules"
+url="https://github.com/bytecodealliance/wasm-tools"
+arch="all"
+license="Apache-2.0 OR Apache-2.0 WITH LLVM-exception OR MIT"
+makedepends="cargo"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/bytecodealliance/wasm-tools/archive/refs/tags/v$pkgver.tar.gz
+	testsuite-$_testsuite_commit.tar.gz::https://github.com/WebAssembly/testsuite/archive/$_testsuite_commit.tar.gz
+	"
+
+prepare() {
+	default_prepare
+
+	rm -r tests/testsuite
+	cp -r "$srcdir/testsuite-$_testsuite_commit" tests/testsuite
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	# Using regular cargo since cargo-auditable crashes while resolving dependencies, likely due to
+	# https://github.com/rust-secure-code/cargo-auditable/issues/66
+	cargo build --frozen --release --bin wasm-tools
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/wasm-tools "$pkgdir"/usr/bin/wasm-tools
+
+	for license in LICENSE-APACHE LICENSE-Apache-2.0_WITH_LLVM-exception LICENSE-MIT; do
+		install -Dm644 $license "$pkgdir"/usr/share/licenses/wasm-tools/$license
+	done
+}
+
+sha512sums="
+b825085de7381ca5c08a03fb3c65308e836fa0613a5d3b00f0843a2d202e5b33f4bbdc990c7ba8cb57fd5465b5545d2fb456069a5f00cc5b362fcf59db5b32d1  wasm-tools-1.226.0.tar.gz
+cceb2103ba536f9439b45e5d3514285b84cd337bff2ee1d426a2fac9080c1f6915754d0ba516b41f51ef17d0c7edc1c69cc647d7c6c7d6ae0d2a03bbe99aa5f2  testsuite-afe153617d18569ce95b51ad6c2fb6550e488b74.tar.gz
+"

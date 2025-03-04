@@ -1,6 +1,6 @@
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=xml2rfc
-pkgver=3.25.0
+pkgver=3.28.0
 pkgrel=0
 pkgdesc="tool for converting XML documents into internet drafts and RFCs"
 options="!check" # Requires unpackaged i18naddress
@@ -28,5 +28,5 @@ package() {
 }
 
 sha512sums="
-9bf735325e4dab91c661ba66c5ba44d1fe65cc44bbe2891422f0e1dd1f4722ee9a8c39c80a72e37ccd519bbffb927fccae1884cd6157b8b1b023b4ca362bbf52  xml2rfc-3.25.0.tar.gz
+f56af84b525d20223efa6968f3b39f58553f689c145738f8fcaf699c32ba7dfd5c3225eb43a4b37a58f849a50e5a0a6465ca5341fda1ec0b8c13fdc23e7a02c8  xml2rfc-3.28.0.tar.gz
 "

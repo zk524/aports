@@ -1,7 +1,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
-# Maintainer: fossdd <fossdd@pwned.life>
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=py3-authlib
-pkgver=1.4.1
+pkgver=1.5.1
 pkgrel=0
 pkgdesc="Python library for building OAuth and OpenID Connect servers"
 url="https://github.com/lepture/authlib"
@@ -31,5 +31,5 @@ package() {
 }
 
 sha512sums="
-63f25ca5c4bb48e3daac2cf716b7c3dded2c89919ed7af5d2fbd29ff104c311ae20687b0ff7b4dfdb5429e54bfbc7e2f44c6bdc9cab0cdb20d2c1cfbc2dbe1ff  authlib-1.4.1.tar.gz
+595030e90e441cf510b31af820e99041f323a249530648c49973df02e2a7d38738232a4916e39c3ce9d3317e7f3a1accd0cbc9de895b0b22dbe6d3bf7e26405e  authlib-1.5.1.tar.gz
 "

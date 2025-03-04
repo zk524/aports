@@ -1,8 +1,8 @@
 # Contributor: Will Sinatra <wpsinatra@gmail.com>
 # Maintainer: Will Sinatra <wpsinatra@gmail.com>
 pkgname=doctl
-pkgver=1.121.0
-pkgrel=1
+pkgver=1.123.0
+pkgrel=0
 pkgdesc="Official command line interface for the DigitalOcean API"
 url="https://github.com/digitalocean/doctl"
 license="Apache-2.0"
@@ -63,6 +63,6 @@ package() {
 }
 
 sha512sums="
-4a78d112ec49bea68e9ec02f661f119256638ee7f7f58ec6027a9998d6402c6300457483fc63de4b917d5a8908bb558437961cc1c0d50749a22c7e6d34b6c9b8  doctl-1.121.0.tar.gz
+640a7f9e7d7f485ab076b3c0d43bd55a3159ef3a95a161408e6eff5223d04f36468fca3aa6579987683f48146127dfd7abee9aad28f8b1bb97b3ba141caa6cc0  doctl-1.123.0.tar.gz
 3fa9d1668136d3c24922da611f8c27f0eb69d14516c8c4e2bceef161aeadaa0d3bfe5ca562a278a7c56791dd5dbfbbaa8bc2a87235772bd5c455cd46c7654078  enable-cgo-in-tests.patch
 "

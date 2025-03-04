@@ -5,7 +5,7 @@ post_remove() {
 	local _pkgfile="/usr/share/x-cmd/v/$_pkgsum.tgz"
 	[ ! -f "$_pkgfile" ]	|| rm -rf "$_pkgfile"
 	[ ! -f /usr/bin/x-cmd ] || rm -rf /usr/bin/x-cmd
-	[ ! -f /usr/bin/x ]	 || rm -rf /usr/bin/x
+	[ ! -f /usr/bin/x ]	 	|| rm -rf /usr/bin/x
 }
 
 post_remove

@@ -1,7 +1,7 @@
 # Contributor: Gavin Henry <ghenry@sentrypeer.org>
 # Maintainer: Gavin Henry <ghenry@sentrypeer.org>
 pkgname=opendht
-pkgver=3.1.11
+pkgver=3.2.0
 pkgrel=0
 pkgdesc="C++17 Distributed Hash Table implementation"
 url="https://github.com/savoirfairelinux/opendht"
@@ -14,8 +14,8 @@ makedepends="
 	cython
 	fmt-dev
 	gnutls-dev
-	http-parser-dev
 	jsoncpp-dev
+	llhttp-dev
 	msgpack-cxx-dev
 	nettle-dev
 	openssl-dev
@@ -71,5 +71,5 @@ _py3() {
 }
 
 sha512sums="
-266a974047886a06cffacb685ca880bb4c6e4d53ff416c257c14de2cdd02a40b235b7a01e66b0bfef1dd691712d045d6bc44d724f60d897ac70b9c1101294420  opendht-3.1.11.tar.gz
+3731b9549834e27f7a8045e10713a51b004900d8bc45ab4569c42b0346b94793bc0b84332de0d895bb12da19d3686cc26be315dd1982e6462360e67e7ae01b0f  opendht-3.2.0.tar.gz
 "

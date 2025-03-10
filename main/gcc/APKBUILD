@@ -512,6 +512,9 @@ EOF
 		mkdir -p "$pkgdir"/usr/lib/bfd-plugins
 		ln -s /$_gcclibexec/liblto_plugin.so "$pkgdir/usr/lib/bfd-plugins/"
 	fi
+
+	# create vendor-agnostic toolchain symlink for Clang
+	ln -s /usr/lib/gcc/${CTARGET} "$pkgdir"/usr/lib/gcc/${CTARGET_ARCH}-linux-musl
 }
 
 libatomic() {

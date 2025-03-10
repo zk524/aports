@@ -14,7 +14,6 @@ subpackages="$pkgname-doc"
 
 # source="$pkgname-v$pkgver.tgz::https://oss.resource.x-cmd.com/x-cmd/release/dist/v$pkgver/allinone.tgz"
 source="$pkgname-v$pkgver.tgz::https://raw.githubusercontent.com/x-cmd/release/main/dist/v$pkgver/allinone.tgz"
-install="$pkgname.post-install"
 options="!check" # upstream does not provide test
 
 package() {
@@ -30,8 +29,12 @@ package() {
 	mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
 	cp -rf "$_pkgdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/"
 
-	printf "%s\n" "- I|x: Create /usr/bin/x-cmd" >&2
+	printf "%s\n" "- I|x: Creating /usr/bin/x-cmd" >&2
 	install -Dm755 "$_pkgdir/mod/x-cmd/lib/bin/x-cmd" "$pkgdir/usr/bin/x-cmd"
+
+	printf "%s\n" "- I|x: Linking $_pkgsum to /usr/share/x-cmd/v/latest" >&2
+	cd "$pkgdir/usr/share/x-cmd/v"
+	ln -s "$_pkgsum" "$pkgdir/usr/share/x-cmd/v/latest"
 }
 
 

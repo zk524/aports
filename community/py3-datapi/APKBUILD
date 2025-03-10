@@ -2,7 +2,7 @@
 # Maintainer: Iztok Fister, Jr. <iztok@iztok-jr-fister.eu>
 pkgname=py3-datapi
 _pkgorig=datapi
-pkgver=0.2.0
+pkgver=0.3.0
 pkgrel=0
 pkgdesc="ESEE Data Stores API Python Client"
 url="https://github.com/ecmwf-projects/datapi"
@@ -34,5 +34,5 @@ package() {
 }
 
 sha512sums="
-bfb1467e61caff984442078500a6e180c97ef74095ac5cd34da691b1452a07623286be7f235a84b312ed3135fbb786c6d31ac9e1e25d511d31b9287b72bf49a9  py3-datapi-0.2.0.tar.gz
+df125ffc4d63cbe0499f3d454d268f2edc1107ccab9b01a39e3aeff05f32ca834471f5873f4aa6b38c00992fd97841784cb3c33cd05ae6bbace9027c4fd12e79  py3-datapi-0.3.0.tar.gz
 "

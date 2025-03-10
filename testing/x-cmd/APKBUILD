@@ -14,15 +14,10 @@ subpackages="$pkgname-doc"
 
 # source="$pkgname-v$pkgver.tgz::https://oss.resource.x-cmd.com/x-cmd/release/dist/v$pkgver/allinone.tgz"
 source="$pkgname-v$pkgver.tgz::https://raw.githubusercontent.com/x-cmd/release/main/dist/v$pkgver/allinone.tgz"
-install="$pkgname.post-install $pkgname.post-deinstall"
+install="$pkgname.post-install"
 options="!check" # upstream does not provide test
 
-build() {
-	return 0
-}
-
 package() {
-	mkdir -p "$pkgdir/usr/share/$pkgname/v"
 	install -Dm644 "$srcdir/$pkgname-v$pkgver.tgz" "$pkgdir/usr/share/$pkgname/v/$_pkgsum.tgz"
 
 	local _pkgdir="$pkgdir/usr/share/x-cmd/v/$_pkgsum"
@@ -31,13 +26,12 @@ package() {
 	mkdir -p "$_pkgdir"
 	tar -xzf "$_pkgfile" -C "$_pkgdir"
 
-	printf "%s\n" "- I|x: Create /usr/bin/x-cmd" >&2
-	install -Dm755 "$_pkgdir/mod/x-cmd/lib/bin/x-cmd" "$pkgdir/usr/bin/x-cmd"
-
 	printf "%s\n" "- I|x: Preparing license-files" >&2
-	printf "%s\n" "$_pkgdir/LICENSE -> $pkgdir/usr/share/licenses/$pkgname/" >&2
 	mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
 	cp -rf "$_pkgdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/"
+
+	printf "%s\n" "- I|x: Create /usr/bin/x-cmd" >&2
+	install -Dm755 "$_pkgdir/mod/x-cmd/lib/bin/x-cmd" "$pkgdir/usr/bin/x-cmd"
 }
 
 

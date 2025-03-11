@@ -1,6 +1,6 @@
 --- a/crates/zed/resources/zed.desktop.in
 +++ b/crates/zed/resources/zed.desktop.in
-@@ -1,13 +1,13 @@
+@@ -1,18 +1,18 @@
  [Desktop Entry]
  Version=1.0
  Type=Application
@@ -8,13 +8,20 @@
 +Name=Zed
  GenericName=Text Editor
  Comment=A high-performance, multiplayer code editor.
- TryExec=zed
+-TryExec=$APP_CLI
 -StartupNotify=$DO_STARTUP_NOTIFY
--Exec=zed $APP_ARGS
+-Exec=$APP_CLI $APP_ARGS
 -Icon=$APP_ICON
++TryExec=zed
 +StartupNotify=true
 +Exec=/usr/bin/zed-editor
 +Icon=zed
  Categories=Utility;TextEditor;Development;IDE;
  Keywords=zed;
- MimeType=text/plain;inode/directory;
+ MimeType=text/plain;application/x-zerosize;x-scheme-handler/zed;
+ Actions=NewWorkspace;
+ 
+ [Desktop Action NewWorkspace]
+-Exec=$APP_CLI --new $APP_ARGS
++Exec=/usr/bin/zed-editor --new
+ Name=Open a new workspace

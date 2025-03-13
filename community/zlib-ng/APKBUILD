@@ -2,28 +2,38 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=zlib-ng
 pkgver=2.1.8
-pkgrel=0
+pkgrel=1
 pkgdesc="zlib replacement with optimizations for next generation systems"
 url="https://github.com/zlib-ng/zlib-ng"
 arch="all"
 license="Zlib"
 makedepends="cmake samurai"
 checkdepends="gzip xxd zlib-dev"
-subpackages="$pkgname-dev"
-source="https://github.com/zlib-ng/zlib-ng/archive/$pkgver/zlib-ng-$pkgver.tar.gz"
+subpackages="$pkgname-compat $pkgname-dev"
+source="https://github.com/zlib-ng/zlib-ng/archive/$pkgver/zlib-ng-$pkgver.tar.gz
+	zlib-copat.patch"
 
 # secfixes:
 #   2.0.6-r0:
 #     - CVE-2022-37434
 
 build() {
+	_build build
+
+	# build for zlib replacement
+	_build build-compat -DZLIB_COMPAT=ON
+}
+
+_build() {
+	local outdir="$1"; shift
+
 	local crossopts=
 	if [ "$CBUILD" != "$CHOST" ]; then
 		crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
 	fi
 	# WITH_UNALIGNED - unaligned access invokes undefined behaviour,
 	#   see https://github.com/gentoo/gentoo/pull/17167 for more info.
-	cmake -B build -G Ninja \
+	cmake -B "$outdir" -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_VERBOSE_MAKEFILE=ON \
@@ -33,18 +43,28 @@ build() {
 		-DZLIB_ENABLE_TESTS="$(want_check && echo ON || echo OFF)" \
 		-DZLIBNG_ENABLE_TESTS="$(want_check && echo ON || echo OFF)" \
 		-DWITH_GTEST=OFF \
-		$crossopts
-	cmake --build build
+		$crossopts \
+		"$@"
+	cmake --build "$outdir"
 }
 
 check() {
 	ctest --test-dir build --output-on-failure
+	ctest --test-dir build-compat --output-on-failure
 }
 
 package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
 
+compat() {
+	description="$description (zlib replacement)"
+	provides=zlib
+
+	DESTDIR="$subpkgdir" cmake --install "$builddir"/build-compat
+}
+
 sha512sums="
 062c5669791ec7f29e3bc17031c3c4dfec84053d38b39202d2fa91d61e54e6506fe7e086874880caf01a96e0052a69ecc6d749a5a9291d37fdb9d1037d7749e9  zlib-ng-2.1.8.tar.gz
+6cfe7e90fb812a2f608d2086834a78f77d258ce8169b96ce219d10a4aa07ce04a700ef9f90fb18bb2d4fb283faa7f91bc8cd53b629a06330aeaebe4d2c14b678  zlib-copat.patch
 "

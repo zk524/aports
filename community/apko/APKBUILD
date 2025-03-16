@@ -1,7 +1,7 @@
 # Maintainer: Ariadne Conill <ariadne@dereferenced.org>
 pkgname=apko
-pkgver=0.9.0
-pkgrel=12
+pkgver=0.25.1
+pkgrel=0
 pkgdesc="declarative APK-based container building tool with support for Sigstore signatures"
 url="https://github.com/chainguard-dev/apko"
 arch="all"
@@ -14,31 +14,28 @@ subpackages="
 	"
 source="https://github.com/chainguard-dev/apko/archive/v$pkgver/apko-$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	mkdir build
-	go build -o build/ -tags -tags=pivkey,pkcs11key "$builddir"/...
+	go build -o build/ -tags -tags=pivkey,pkcs11key ./...
 
 	for i in bash fish zsh; do
-		"$builddir"/build/apko completion $i > "$builddir"/apko.$i
+		./build/apko completion $i > apko.$i
 	done
 }
 
 check() {
-	go test "$builddir"/...
+	# https://github.com/chainguard-dev/apko/issues/881 (Tests fail if SOURCE_DATE_EPOCH is set)
+	(unset SOURCE_DATE_EPOCH; go test ./...)
 }
 
 package() {
-	install -Dm755 "$builddir"/build/apko "$pkgdir"/usr/bin/apko
+	install -Dm755 build/apko "$pkgdir"/usr/bin/apko
 
-	install -Dm644 "$builddir"/apko.bash "$pkgdir"/usr/share/bash-completion/completions/apko
-	install -Dm644 "$builddir"/apko.fish "$pkgdir"/usr/share/fish/vendor_completions.d/apko.fish
-	install -Dm644 "$builddir"/apko.zsh "$pkgdir"/usr/share/zsh/site-functions/_apko
+	install -Dm644 apko.bash "$pkgdir"/usr/share/bash-completion/completions/apko
+	install -Dm644 apko.fish "$pkgdir"/usr/share/fish/vendor_completions.d/apko.fish
+	install -Dm644 apko.zsh "$pkgdir"/usr/share/zsh/site-functions/_apko
 }
 
 sha512sums="
-c8883955a99811762c3d358549d041c464a1dfe67f24b63666664c72dc2d0bb10b8ff517a8205c14d56a826bd0d02770aa254eefa06c50026e91833319387f24  apko-0.9.0.tar.gz
+88d5bbb2a40d8dab1bfe35fbff34e12d69a3c535f4c40cdb392cb79222b3e4e3dd8b3544a23aa36288d669459ddecfb590ee7a7c5140bf7da33a0438d56abbdd  apko-0.25.1.tar.gz
 "

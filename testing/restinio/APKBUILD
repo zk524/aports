@@ -1,17 +1,27 @@
 # Contributor: Anjandev Momi <anjan@momi.ca>
 # Maintainer: Anjandev Momi <anjan@momi.ca>
 pkgname=restinio
-pkgver=0.6.19
-pkgrel=1
+pkgver=0.7.4
+pkgrel=0
 pkgdesc="Header-only C++14 library that gives you an embedded HTTP/Websocket server"
 url="https://stiffstream.com/en/products/restinio.html"
 arch="noarch"
 license=" BSD-3-Clause"
-makedepends="cmake openssl-dev zlib-dev pcre2-dev boost-dev fmt-dev samurai"
-subpackages="$pkgname-dev"
-source="https://github.com/Stiffstream/restinio/releases/download/v.$pkgver/restinio-$pkgver.tar.bz2
-	lfs64.patch
+makedepends="
+	asio-dev
+	boost-dev
+	catch2
+	cmake
+	expected-lite
+	fmt-dev
+	llhttp-dev
+	openssl-dev
+	pcre2-dev
+	samurai
+	zlib-dev
 	"
+subpackages="$pkgname-dev"
+source="https://github.com/Stiffstream/restinio/releases/download/v.$pkgver/restinio-$pkgver.tar.bz2"
 options="!check" # cant get checks to work
 
 build() {
@@ -23,28 +33,26 @@ build() {
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=True \
 		-DCMAKE_BUILD_TYPE=None \
-		-DRESTINIO_FIND_DEPS=ON \
+		-DRESTINIO_BENCHMARK=OFF \
 		-DRESTINIO_TEST=OFF \
 		-DRESTINIO_SAMPLE=OFF \
-		-DRESTINIO_INSTALL_SAMPLES=OFF \
-		-DRESTINIO_BENCH=OFF \
-		-DRESTINIO_INSTALL_BENCHES=OFF \
-		-DRESTINIO_ALLOW_SOBJECTIZER=OFF \
-		-DRESTINIO_USE_EXTERNAL_HTTP_PARSER=ON \
+		-DRESTINIO_DEP_CATCH2=find \
+		-DRESTINIO_DEP_LLHTTP=system \
+		-DRESTINIO_DEP_FMT=system \
+		-DRESTINIO_DEP_EXPECTED_LITE=system \
+		-DRESTINIO_WITH_SOBJECTIZER=OFF \
 		$_cmake_crossopts
 	cmake --build build
 }
 
 check() {
-	cd build
-	CTEST_OUTPUT_ON_FAILURE=TRUE ctest
+	ctest --test-dir build
 }
 
 package() {
-	  DESTDIR="$pkgdir" cmake --install build
+	DESTDIR="$pkgdir" cmake --install build
 }
 
 sha512sums="
-9b0309b33fb7beb4d7c5b541f5c7eda734f4eb5615cb2114e7f5609b757b94a3e8f22f82d865bbe6530d1443db81289b94c436fb69c808d6d456ce24205a3249  restinio-0.6.19.tar.bz2
-a26b26275c76d720d2502b20d431e7990b42c7f3cae94b4a17521718ee9c9abf0b625e19286d12c53f61a058fd83129428e8a90a0f6c8ab8ad5a142b7ae4fb47  lfs64.patch
+9de66277ced48b150d881499dc7b17b4cde7d6778271c361f9e407d0d2844ce5c83fdcb8017851dc4f1bf017f2306f75925b326ec97a3c479e38b20e5b793f6e  restinio-0.7.4.tar.bz2
 "

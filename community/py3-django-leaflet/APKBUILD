@@ -1,0 +1,28 @@
+# Contributor: Hakan Erduman <hakan@erduman.de>
+# Maintainer: Hakan Erduman <hakan@erduman.de>
+pkgname=py3-django-leaflet
+pkgver=0.31.0
+pkgrel=0
+pkgdesc="Simplifies usage of leaflet with django"
+url="https://github.com/makinacorpus/django-leaflet"
+arch="noarch"
+license="BSD-2-Clause"
+depends="python3 py3-django"
+makedepends="py3-setuptools"
+options="!check" #no testsuite
+#subpackages="$pkgname-pyc"
+source="https://files.pythonhosted.org/packages/2e/df/c0980b44685c1fc7e61f63d8a84820da31b3f34db6c73897936aa0f98657/django_leaflet-$pkgver.tar.gz"
+# source="https://files.pythonhosted.org/packages/source/d/django-leaflet/django-leaflet-$pkgver.tar.gz"
+builddir="$srcdir"/django_leaflet-$pkgver
+
+build() {
+	python3 setup.py build
+}
+
+package() {
+	python3 setup.py install --root "$pkgdir"
+}
+
+sha512sums="
+8c30d810c76d30127534c91391367286c575ef34f91793cf73383f5ae1ccf1c0d9a089808b1e83f510274e57b60924368678cda0362e94a0f95822bddfc1a32a  django_leaflet-0.31.0.tar.gz
+"

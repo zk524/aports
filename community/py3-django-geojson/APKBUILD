@@ -1,0 +1,27 @@
+# Contributor: Hakan Erduman <hakan@erduman.de>
+# Maintainer: Hakan Erduman <hakan@erduman.de>
+pkgname=py3-django-geojson
+pkgver=4.2.0
+pkgrel=0
+pkgdesc="Serve vectorial map layers with Django"
+url="https://django-geojson.readthedocs.io/en/latest/"
+arch="noarch"
+license="BSD-2-Clause"
+depends="python3 py3-django"
+makedepends="py3-setuptools"
+options="!check" #no testsuite
+subpackages="$pkgname-pyc"
+source="https://files.pythonhosted.org/packages/c6/94/b7f83ffa37fbc4e8055243a298198858ead93d8d63c7e4c6aeae2b539765/django_geojson-$pkgver.tar.gz"
+builddir="$srcdir"/django_geojson-$pkgver
+
+build() {
+	python3 setup.py build
+}
+
+package() {
+	python3 setup.py install --skip-build --root="$pkgdir"
+}
+
+sha512sums="
+b150c0268fea1d6777473c6fdc8202d9888c27fb5431c3e079bdf8fbdad0e9ac5e334af8f4bc4e8bd3b9cfa0359bf291ac91de2b0f10a9813540fd2698a976a6  django_geojson-4.2.0.tar.gz
+"

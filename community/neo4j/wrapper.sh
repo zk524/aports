@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # JVM version supported by Neo4j.
-JVM_VERSION=11
+JVM_VERSION=21
 
 export NEO4J_HOME="${NEO4J_HOME:-"/var/lib/neo4j"}"
 export NEO4J_CONF="${NEO4J_CONF:-"/etc/neo4j"}"

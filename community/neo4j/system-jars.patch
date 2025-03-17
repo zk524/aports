@@ -8,46 +8,43 @@ by transport-classes-epoll. It first attempts to load the binary from
 
 --- a/pom.xml
 +++ b/pom.xml
-@@ -950,7 +950,9 @@
+@@ -1122,7 +1122,9 @@
        <dependency>
          <groupId>net.java.dev.jna</groupId>
          <artifactId>jna</artifactId>
--        <version>5.9.0</version>
+-        <version>5.15.0</version>
 +        <version>${alpine.jna.version}</version>
 +        <scope>system</scope>
 +        <systemPath>/usr/share/java/jna.jar</systemPath>
        </dependency>
        <dependency>
          <groupId>org.apache.lucene</groupId>
-@@ -1329,7 +1329,9 @@
+@@ -1555,7 +1557,9 @@
        <dependency>
          <groupId>com.github.luben</groupId>
          <artifactId>zstd-jni</artifactId>
--        <version>1.5.0-4</version>
+-        <version>1.5.6-6</version>
 +        <version>${alpine.zstd-jni.version}</version>
 +        <scope>system</scope>
 +        <systemPath>/usr/share/java/zstd-jni.jar</systemPath>
        </dependency>
-       <dependency>
-         <groupId>io.netty</groupId>
+ 
+       <!--
 --- a/community/bolt/pom.xml
 +++ b/community/bolt/pom.xml
-@@ -88,17 +88,10 @@
+@@ -60,14 +60,7 @@
  
          <dependency>
              <groupId>io.netty</groupId>
 -            <artifactId>netty-transport-native-epoll</artifactId>
 -            <classifier>linux-x86_64</classifier>
-+            <artifactId>netty-transport-classes-epoll</artifactId>
-         </dependency>
- 
+-        </dependency>
+-
 -        <dependency>
 -            <groupId>io.netty</groupId>
 -            <artifactId>netty-transport-native-epoll</artifactId>
 -            <classifier>linux-aarch_64</classifier>
--        </dependency>
--
-         <dependency>
-             <groupId>org.apache.commons</groupId>
-             <artifactId>commons-lang3</artifactId>
++            <artifactId>netty-transport-classes-epoll</artifactId>
          </dependency>
+ 
+         <dependency>

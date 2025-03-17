@@ -2,15 +2,19 @@
 # Maintainer: Michael Pirogov <vbnet.ru@gmail.com>
 pkgname=lua-resty-core
 pkgver=0.1.30
-pkgrel=0
+pkgrel=1
 pkgdesc="New FFI-based API for lua-nginx-module"
 url="https://github.com/openresty/lua-resty-core"
 # luajit
 arch="noarch !riscv64"
 license="BSD-2-Clause"
 depends="luajit lua-resty-lrucache"
+checkdepends="openresty perl-test-nginx perl-utils"
 source="https://github.com/openresty/lua-resty-core/archive/v$pkgver/lua-resty-core-$pkgver.tar.gz"
-options="!check"  # FIXME: tests require OpenResty and additional dependencies
+
+check() {
+	prove -r t
+}
 
 package() {
 	make install DESTDIR="$pkgdir" LUA_LIB_DIR="/usr/share/lua/common"

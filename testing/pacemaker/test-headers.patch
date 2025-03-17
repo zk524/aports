@@ -1,0 +1,13 @@
+Summary: musl implementation of tr doesn't like the pattern syntax
+----
+--- pacemaker-Pacemaker-3.0.0/tests/test-headers.sh
++++ pacemaker-Pacemaker-3.0.0/tests/test-headers.sh.new
+@@ -30,7 +30,7 @@
+ for i in $INCLUDE_FILES
+ do
+     NAME="$(echo $i | sed -e 's#^.*/include/##' | sed -e 's#^.*/lib/##')"
+-    PROTECT="PCMK__$(echo "$NAME" | tr '[:lower:]/\-\.' '[:upper:]___' | sed 's/_H$/__H/')"
++    PROTECT="PCMK__$(echo "$NAME" | tr '[:lower:]-/\.' '[:upper:]___' | sed 's/_H$/__H/')"
+ 
+     cat >"$TESTFILE" <<EOF
+ #include <$NAME>

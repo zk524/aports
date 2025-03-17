@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+
+name="pacemaker_remote"
+description="Pacemaker remote executor"
+pidfile="/run/$RC_SVCNAME.pid"
+command="/usr/sbin/pacemaker-remoted"
+
+depend() {
+    need net
+    after corosync
+}
+
+[ -f /etc/conf.d/pacemaker ] && . /etc/conf.d/pacemaker
+
+start() {
+    ebegin "Starting $name"
+    start-stop-daemon --start --background \
+        --make-pidfile --pidfile "$pidfile" \
+        --exec "$command" -- $command_args \
+        >> /dev/null 2>> /dev/null
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping $name"
+    start-stop-daemon --stop --pidfile "$pidfile" -R 30
+    eend $?
+}

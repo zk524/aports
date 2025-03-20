@@ -1,0 +1,51 @@
+maintainer="Achill Gilgenast <achill@achill.org>"
+pkgname=miracle-wm
+pkgver=0.6.2_git20250822
+_commit=0de438dcdb7261defc512afbd9c601752474efc8
+pkgrel=0
+pkgdesc="Wayland tiling window manager built on Mir"
+url="https://miracle-wm.org/"
+arch="all"
+license="GPL-3.0-or-later"
+depends="xwayland"
+makedepends="
+	cmake
+	gtest-dev
+	json-c-dev
+	libevdev-dev
+	libnotify-dev
+	libxkbcommon-dev
+	mesa-dev
+	mir-dev
+	nlohmann-json
+	samurai
+	yaml-cpp-dev
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/miracle-wm-org/miracle-wm/archive/$_commit.tar.gz"
+builddir="$srcdir/$pkgname-$_commit"
+#source="$pkgname-$pkgver.tar.gz::https://github.com/miracle-wm-org/miracle-wm/archive/refs/tags/v$pkgver.tar.gz"
+
+build() {
+	if [ "$CBUILD" != "$CHOST" ]; then
+		local crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+	fi
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_BUILD_TYPE=None \
+		$crossopts
+	cmake --build build
+}
+
+check() {
+	./build/bin/miracle-wm-tests
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+0f6117e9a945b67d9e13ef484ce58a2e82da3386bcbfea13e4a6810eaf788afe2602664a5d7bc0a56efb95d0bde7f4ff02161031c1c2cd6325637f9b0f154731  miracle-wm-0.6.2_git20250822.tar.gz
+"

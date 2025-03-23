@@ -3,7 +3,7 @@
 pkgname=libheif
 pkgver=1.19.5
 pkgrel=0
-pkgdesc="ISO/IEC 23008-12:2017 HEIF file format decoder and encoder"
+pkgdesc="ISO/IEC 23008-12 HEIF file format decoder and encoder"
 url="https://www.libde265.org/"
 arch="all"
 license="LGPL-3.0-or-later"
@@ -19,14 +19,17 @@ makedepends="
 	libpng-dev
 	gdk-pixbuf-dev
 	samurai
+	openjpeg-dev
+	brotli-dev
 	"
-options="!check"  # no tests provided
 subpackages="
 	$pkgname-dev
 	heif-thumbnailer
 	$pkgname-tools
 	$pkgname-doc
 	$pkgname-pixbuf-loader
+	$pkgname-openjpeg
+	$pkgname-jpeg
 	"
 source="https://github.com/strukturag/libheif/releases/download/v$pkgver/libheif-$pkgver.tar.gz"
 
@@ -45,12 +48,25 @@ build() {
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=None \
-		-DCMAKE_SKIP_INSTALL_RPATH=ON
+		-DCMAKE_SKIP_INSTALL_RPATH=ON \
+		-DWITH_JPEG_DECODER=ON \
+		-DWITH_JPEG_DECODER_PLUGIN=ON \
+		-DWITH_JPEG_ENCODER=ON \
+		-DWITH_JPEG_ENCODER_PLUGIN=ON \
+		-DWITH_OpenJPEG_DECODER=ON \
+		-DWITH_OpenJPEG_DECODER_PLUGIN=ON \
+		-DWITH_OpenJPEG_ENCODER=ON \
+		-DWITH_OpenJPEG_ENCODER_PLUGIN=ON \
+		-DWITH_UNCOMPRESSED_CODEC=ON
 	cmake --build build
 }
 
 package() {
 	DESTDIR="$pkgdir" cmake --install build
+}
+
+check() {
+	make tests
 }
 
 thumbnailer() {
@@ -76,6 +92,22 @@ loader() {
 		usr/share/thumbnailers
 }
 
+openjpeg() {
+	pkgdesc="$pkgdesc (OpenJPEG JPEG-2000 plugin)"
+	depends="openjpeg"
+	amove usr/lib/libheif/libheif-j2kdec.so
+	amove usr/lib/libheif/libheif-j2kenc.so
+}
+
+jpeg() {
+	pkgdesc="$pkgdesc (JPEG plugin)"
+	depends="libjpeg-turbo"
+	amove usr/lib/libheif/libheif-jpegdec.so
+	amove usr/lib/libheif/libheif-jpegenc.so
+}
+
+
 sha512sums="
 3cad96dea5e40ab6182ed9dd577c6cdb06993aad2c7a4ba10e11a9407e4a0378729ecb71dc74cdd57b3493aace4390ace9ae1a96d9e983ce07fb07bc51ac4904  libheif-1.19.5.tar.gz
 "
+

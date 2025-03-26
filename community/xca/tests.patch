@@ -1,0 +1,11 @@
+--- a/lib/test_asn1time.cpp
++++ b/lib/test_asn1time.cpp
+@@ -54,7 +54,7 @@
+ 
+ #if !defined(Q_OS_WIN32)
+ 	a.setTimeZone(QTimeZone("UTC"));
+-	#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
++	#if 0
+ 		#define UTC "GMT"
+ 	#else
+ 		#define UTC "UTC"

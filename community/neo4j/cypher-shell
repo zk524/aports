@@ -3,4 +3,4 @@
 JAVA_CMD="java"
 [ "$JAVA_HOME" ] && JAVA_CMD="$JAVA_HOME/bin/java"
 
-exec "$JAVA_CMD" $JAVA_OPTS -cp /usr/share/java/jna.jar -jar /usr/share/cypher-shell/cypher-shell.jar "$@"
+exec "$JAVA_CMD" $JAVA_OPTS -cp /usr/share/java/jna.jar -jar /usr/share/neo4j/lib/cypher-shell.jar "$@"

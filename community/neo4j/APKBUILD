@@ -1,19 +1,19 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=neo4j
-pkgver=4.4.35
+pkgver=5.26.4
 pkgrel=0
 pkgdesc="Neo4j Community Edition LTS"
 url="https://neo4j.com"
 # other platforms are not supported by upstream
 arch="aarch64 x86_64"
 license="GPL-3.0-or-later"
-# Neo4j 4.x requires JVM 11.
+# Neo4j 5.x requires JVM 21.
 depends="
 	java-jna
 	java-netty-transport-native
 	java-zstd-jni
-	openjdk11-jre-headless
+	openjdk21-jre-headless
 	"
 _depends_shell="
 	java-jna
@@ -22,7 +22,7 @@ _depends_shell="
 	"
 makedepends="
 	$_depends_shell
-	openjdk11
+	openjdk21
 	maven
 	unzip
 	zip
@@ -48,9 +48,9 @@ source="https://github.com/neo4j/neo4j/archive/refs/tags/$pkgver/neo4j-$pkgver.t
 # check: needs ulimit -n 40000
 options="net !check"
 
-# Ensure Neo4j is built with JDK11 if multiple JDKs are installed
+# Ensure Neo4j is built with JDK21 if multiple JDKs are installed
 # to prevent this error: https://github.com/neo4j/neo4j/issues/12933
-export JAVA_HOME="/usr/lib/jvm/java-11-openjdk"
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
 export PATH="$JAVA_HOME/bin:$PATH"
 
 # NOTE: Maven 3 dropped support for the M2_HOME variable.
@@ -81,7 +81,7 @@ build() {
 	cd dist/neo4j-community-*
 
 	# Remove jansi native binaries (they are actually not needed).
-	zip -qd bin/tools/cypher-shell.jar 'org/fusesource/jansi/internal/native/*'
+	zip -qd lib/jansi-*.jar 'org/fusesource/jansi/internal/native/*'
 }
 
 check() {
@@ -92,7 +92,7 @@ package() {
 	cd dist/neo4j-community-*
 
 	install -D -m644 lib/*.jar -t "$pkgdir"/usr/share/neo4j/lib/
-	install -D -m755 bin/neo4j bin/neo4j-admin -t "$pkgdir"/usr/share/neo4j/bin/
+	install -D -m755 bin/neo4j bin/neo4j-admin bin/cypher-shell -t "$pkgdir"/usr/share/neo4j/bin/
 	install -D -m644 LICENSE* NOTICE.txt -t "$pkgdir"/usr/share/licenses/$pkgname/
 	install -D -m644 labs/README.txt -t "$pkgdir"/var/lib/neo4j/labs/
 	install -D -m644 plugins/README.txt -t "$pkgdir"/var/lib/neo4j/plugins/
@@ -105,10 +105,6 @@ package() {
 
 	install -D -m755 "$srcdir"/neo4j.initd "$pkgdir"/etc/init.d/neo4j
 	install -D -m644 "$srcdir"/neo4j.confd "$pkgdir"/etc/conf.d/neo4j
-
-	# cypher-shell
-	install -D -m644 bin/tools/cypher-shell.jar -t "$pkgdir"/usr/share/cypher-shell/
-	install -D -m755 "$srcdir"/cypher-shell -t "$pkgdir"/usr/bin/
 
 	cd "$pkgdir"
 
@@ -140,7 +136,7 @@ _shell() {
 	pkgdesc="Cypher Shell - CLI for Neo4j"
 	depends="$_depends_shell"
 
-	amove usr/bin/cypher-shell
+	amove usr/share/neo4j/lib/cypher-shell
 	amove usr/share/cypher-shell
 }
 
@@ -149,11 +145,11 @@ _jar_version() {
 }
 
 sha512sums="
-d3bfd3bfe45b05964d5b1652116d15ce328954a04bdf3cc0687f5a850e1c318e7b4c6d0a8b815ded51c79c9eb8a0501572de6381a44022542a125f5f5aad8fe0  neo4j-4.4.35.tar.gz
-1967594563adf1aa1c0c9809b0cc9fbefe042c933e556f5cb6d01f6ce0d40efcc054533c784d4e12b8fc5ebdd169fd276f2caeb8921eece634fa918219199706  system-jars.patch
-6810dfe781aa46882dab971f97aefa8a22e68ed6956754bcb824c28839c7229469316ebe6695819a4bb6b701bea18848d467bd9863bf6dc2a2c01b3f55406202  conf.patch
-a1b6f509228dd9925420591803595c67653924ea592c38894f7d3d26e24b40bbc9b35e8b4e67611df9e06a7f0921b13e3f2f1bb54102049c3b1f9c6a2656939d  wrapper.sh
+96eb7b779b1edd631b76d9a834ae69d66a6b052c847b1885230e9744a7d79863d46b9127fa8decacd8e07ca317f8e68157a1384d11d01660116b4aef6fca4200  neo4j-5.26.4.tar.gz
+641c245f384d282c7d2506fce1f19a7f7f9b94b13f2e8f0996c1d92165f9f3791c699c20d791e59d71a35dd99b005447c83b05df4ae33428196016dc6a1f3f93  system-jars.patch
+142a674121134a54ef0b497a1610f1a341a92f5a8cc58fa0bd30e70205409fdf774d9cf822963b10ba604fbad44bc89c3aa4806a8883caf1491487ea07059e0a  conf.patch
+2d94a0c4d9423bfa76d91ecb9f9f7630567920b77af747847953327b808c69389609f6ef1b1cdf8a44a52c32c2f65ff9883df34c00d3f65c230364fd1573c1f0  wrapper.sh
 f61a76246039187dcc61bdfd7482e4928ae7b356571e56c86f7b7a243dced79c8d61f0c6ab807ca7f993a78640cda427316a9b274844c794b769b992ff897498  neo4j.initd
 8530390bb5292318f03b76d3afe23a3029971f90ce4b0e702d18913c01000c6df8644d6c7415ab6dde2d02f9a4af490234ce817aa2d6976554a971e1ff707d4f  neo4j.confd
-45a3b4f9db522eca6dbc616b17005f7ec75a1168242f465dfd6d2475be3cba465573920d34e4fd192d5f0c838e049f4ea6d46d9a56193f4079a8850f4090dfeb  cypher-shell
+2a41ec1999d1fecf09d94033a6133426fff49cb7f47599adb24ccea8b1219c15adede7199525699e517f2529411ce9e13796d39cf33c74eb1997da5603dec17b  cypher-shell
 "

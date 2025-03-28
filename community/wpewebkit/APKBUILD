@@ -21,6 +21,7 @@ makedepends="
 	gst-plugins-base-dev
 	gtk-doc
 	harfbuzz-dev
+	libjxl-dev
 	lcms2-dev
 	libavif-dev
 	libepoxy-dev

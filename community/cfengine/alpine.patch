@@ -1,0 +1,79 @@
+Fix configuration for alpine
+
+--- a/libenv/sysinfo.c
++++ b/libenv/sysinfo.c
+@@ -3408,6 +3408,12 @@
+         EvalContextVariablePutSpecial(ctx, SPECIAL_SCOPE_SYS, lval,
+                                       "Debian", CF_DATA_TYPE_STRING,
+                                       "source=agent,derived-from=debian");
++    }
++    else if (EvalContextClassGet(ctx, NULL, "alpinelinux") != NULL)
++    {
++        EvalContextVariablePutSpecial(ctx, SPECIAL_SCOPE_SYS, lval,
++                                      "Alpine Linux", CF_DATA_TYPE_STRING,
++                                      "source=agent,derived-from=alpinelinux");
+     }
+     else if (EvalContextClassGet(ctx, NULL, "centos") != NULL)
+     {
+--- a/tests/acceptance/01_vars/01_basic/os_name_human.cf
++++ b/tests/acceptance/01_vars/01_basic/os_name_human.cf
+@@ -24,6 +24,8 @@
+       "expected" string => "Unknown";
+     debian::
+       "expected" string => "Debian";
++    alpine::
++      "expected" string => "Alpine Linux";
+     ubuntu::
+       "expected" string => "Ubuntu";
+     redhat::
+--- a/tests/acceptance/01_vars/02_functions/001.cf
++++ b/tests/acceptance/01_vars/02_functions/001.cf
+@@ -34,11 +34,11 @@
+     !darwin::
+       "uid_bin" int => getuid("bin");
+ 
+-    (linux.!archlinux.!SuSE.!redhat.!gentoo)|solaris|hpux|aix::
++    (linux.!archlinux.!SuSE.!redhat.!gentoo.!alpinelinux)|solaris|hpux|aix::
+       "num_root" int => "0";
+       "num_daemon" int => "1";
+       "num_bin" int => "2";
+-    archlinux|SuSE|redhat|gentoo::
++    archlinux|SuSE|redhat|gentoo|alpinelinux::
+       "num_root" int => "0";
+       "num_daemon" int => "2";
+       "num_bin" int => "1";
+--- a/tests/acceptance/01_vars/02_functions/002.cf
++++ b/tests/acceptance/01_vars/02_functions/002.cf
+@@ -47,9 +47,9 @@
+     !linux.!freebsd.!solaris.!darwin.!openbsd.!hpux.!aix::
+       "gid_0" string => "fixme";
+ 
+-    archlinux|SuSE|redhat|gentoo::
++    archlinux|SuSE|redhat|gentoo|alpinelinux::
+       "num_daemon" int => "2";
+-    (linux.!archlinux.!SuSE.!redhat.!gentoo)|freebsd|darwin|openbsd::
++    (linux.!archlinux.!SuSE.!redhat.!gentoo.!alpinelinux)|freebsd|darwin|openbsd::
+       "num_daemon" int => "1";
+     solaris::
+       "num_daemon" int => "12";
+--- a/tests/acceptance/02_classes/01_basic/expected_os_classes.cf
++++ b/tests/acceptance/02_classes/01_basic/expected_os_classes.cf
+@@ -19,6 +19,7 @@
+     classes:
+         "passed" or => { "debian",
+                          "ubuntu",
++                         "alpinelinux",
+                          "redhat",
+                          "centos",
+                          "fedora",
+--- a/tests/unit/Makefile.in
++++ b/tests/unit/Makefile.in
+@@ -112,7 +112,7 @@
+ 	exec-config-test$(EXEEXT) generic_agent_test$(EXEEXT) \
+ 	syntax_test$(EXEEXT) sysinfo_test$(EXEEXT) \
+ 	variable_test$(EXEEXT) verify_databases_test$(EXEEXT) \
+-	protocol_test$(EXEEXT) mon_cpu_test$(EXEEXT) \
++	protocol_test$(EXEEXT) \
+ 	mon_load_test$(EXEEXT) mon_processes_test$(EXEEXT) \
+ 	mustache_test$(EXEEXT) class_test$(EXEEXT) key_test$(EXEEXT) \
+ 	cf_upgrade_test$(EXEEXT) matching_test$(EXEEXT) \

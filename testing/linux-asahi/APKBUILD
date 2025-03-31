@@ -2,7 +2,7 @@
 
 _flavor=asahi
 pkgname=linux-${_flavor}
-pkgver=6.12.10_p2
+pkgver=6.13.8_p1
 
 _rel=${pkgver#*_p}
 kver=${pkgver%_p*}
@@ -209,6 +209,6 @@ _dev() {
 }
 
 sha512sums="
-16f78d839935ab2c5e6adb96b972cf41337584919f8bef824c9e39b4e8db90a6356ecfa9ef1bfeb5f903bb5a24c59d49fed891f6052f051cba875f1cb42df317  linux-asahi-6.12.10-2.tar.gz
-e7470366a9339b301bfe7113aec3c873dc633a3396920664e8246ebd71f3d29e5fe89a485f644f58a4d76c2cc1bfa8bd7edebd01a22343250ce35c932102742a  config-asahi.aarch64
+e88c766be9b1ea4e719245b13ab1c352450ae4483f36ab9c23d51ec04395e50641f891441e6ed14c2312c432502d701fa80f838ca451f8d0790ea70788eeeb66  linux-asahi-6.13.8-1.tar.gz
+7813f356d60f59a62ffdbaa8d45da7b1dc5aecd276b2a2040810bbdc43e0d28c6126e03094906d3d1ec2a422e9bdd14f7bec09ebffd27aafa3f48bf1b7ce2f23  config-asahi.aarch64
 "

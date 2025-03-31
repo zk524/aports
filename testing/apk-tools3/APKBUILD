@@ -1,7 +1,7 @@
 # Maintainer: Sertonix <sertonix@posteo.net>
 pkgname=apk-tools3
-pkgver=3.0.0_rc4_git20250121
-_commit=1458737d58c20462eab9d93cb5f3875ea254466e
+pkgver=3.0.0_rc4_git20250320
+_commit=3abcd400bdbfc61a2f53f7cf7b240130169154b2
 pkgrel=0
 pkgdesc="Alpine Package Keeper v3 - package manager for alpine"
 arch="all"
@@ -100,5 +100,5 @@ pyapk() {
 }
 
 sha512sums="
-c358ec0d64f291c355beccc5098ab09cb6bd53b49ce0551f373bcab2bd86f2eee3cc747c0f78f2cc945ea79f3d3dc56bf17dfbdb7c184d71f4c3eec470ca367c  apk-tools-v3.0.0_rc4_git20250121.tar.gz
+67a4e03094205fc209db04fd4774151c140056124e305e313dd28444320616f09797567562d1c3da14754b16ccb942e94b808bb63a8d0d3fd4af26e5d2ec81d8  apk-tools-v3.0.0_rc4_git20250320.tar.gz
 "

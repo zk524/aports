@@ -1,7 +1,7 @@
 # Contributor: fossdd <fossdd@pwned.life>
 # Maintainer: fossdd <fossdd@pwned.life>
 pkgname=iotas
-pkgver=0.10.2
+pkgver=0.11.0
 pkgrel=0
 pkgdesc="Distraction-free note taking via a mobile-first design"
 url="https://gitlab.gnome.org/World/iotas"
@@ -46,5 +46,5 @@ package() {
 }
 
 sha512sums="
-894a78698eb920e92f7b3a90e9fb11d5ca4e9988fb3eae735a5164173f7c2bafeb95bc57d9e55a516b93144db1c7b39d18220d656190f1695ff9c66da631078b  iotas-0.10.2.tar.gz
+74c54f8475fc793fb0f4da635ac32c55a010b1937fe8ad5753079df45c61288c33c45c4e3bd3c86a409fbd598a59fc9166a63c915f7e483a32bc761fd1cf64a5  iotas-0.11.0.tar.gz
 "

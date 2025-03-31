@@ -1,11 +1,11 @@
 # Contributor: lauren n. liberda <lauren@selfisekai.rocks>
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=electron
-pkgver=33.4.2
+pkgver=34.3.4
 _gittag=v"${pkgver/_beta/-beta.}"
-pkgrel=1
-_chromium=130.0.6723.191
-_copium_tag=129.1
+pkgrel=2
+_chromium=132.0.6834.210
+_copium_tag=131.2
 _depot_tools=495b23b39aaba2ca3b55dd27cadc523f1cb17ee6
 pkgdesc="Electron cross-platform desktop toolkit"
 url="https://github.com/electron/electron"
@@ -138,6 +138,7 @@ source="
 	pvalloc.patch
 	temp-failure-retry.patch
 	yes-musl.patch
+	pipewire-1.4.patch
 
 	electron_icon.patch
 	electron_python-jinja-3.10.patch
@@ -150,10 +151,8 @@ source="
 	electron-launcher.sh
 	"
 _copium_patches="
-	cr124-iwyu-sys-select-dawn-terminal.patch
-	cr126-aarch64-musl-unsupported-relocation.patch
 	cr129-ffmpeg-no-noh264parse.patch
-	cr129-musl-metricts-imports.patch
+	cr131-v8-non4k-pages.patch
 	"
 # Avoid conflicting providers
 sonameprefix="$pkgname:"
@@ -546,10 +545,10 @@ lang() {
 }
 
 sha512sums="
-91876c6010edada6d5929f2c96d24d5b3f502cb22fbbe3a6321c005777887f5b1020860cc6c216a62b43b60ececbb390e510d9885032300a170465b835dc33c8  electron-v33.4.2-130.0.6723.191.tar.zst
-6138b3dbf3903c78f4ca1ed5a6c3c3c485471ded31976010484ce8893d03953df2b8f066a4fe84bbde5ae7ef9bbff664ef917e247b2e95dd471de40f2774d7d0  copium-129.1.tar.gz
+965b8217d890247e422515071ac1c201e5c14a08317fc26e4a60d11b0879979a54b68b00c73babcd6e611989c5e7f00651c20a2cebe737fc97499eec3eb9820d  electron-v34.3.4-132.0.6834.210.tar.zst
+a5217c70ad3c40bbbe75b8c9c62158c69d64bc1e17338b6395718e03baba962fb9bf3bf610f9e569c3c38b5bb1dd7972b1da413776c6ec2afdd42cbbf051cfb1  copium-131.2.tar.gz
 29bb685e03356a77df5fd347cdf55194cc8b3265c421cc76e54d64edefc329dbcb052deb26b22e8f587ce68456876c071de1b7d258dd0fcc6ee66c875ec4a020  chromium-revert-drop-of-system-java.patch
-53b7cdee8f7bfb4c9371cb385c473e34ed3d8ac7efaa43c0af061107560be30d8747b07fb0b16c01079b8c770f2c721bb5a8081313b7c126856ea4078a74da2a  compiler.patch
+d9cc4a37a0311d23ae315a8d8124f8dbf60db8cc4a3943818638174b20387f1d770d00871f6608957b246ad956abca43c22ea0b072724287f2947e1909e47323  compiler.patch
 4057cc78f10bfd64092bc35a373869abb1d68b880cdbca70422f39ffd78a929c19c7728d4d4c40709aaba25581148a93ae5343e724849fd35323062ed68753fa  disable-dns_config_service.patch
 2470904846e3adde2c9506f9e78220daca0932320b628dd3d427bf2b7c17a8f7880cb97e787b046c28de7aca642e1a8d30824d6049905976da77e7473baa64da  disable-failing-tests.patch
 5fc5c012c1db6cf1ba82f38c6f3f4f5ca3a209e47ac708a74de379b018e0649b7694877c9571ef79002dde875ffc07b458a3355425f1c01867f362c66c2bc1bf  fc-cache-version.patch
@@ -569,6 +568,7 @@ f2b08538ff57c50b3772a07ca91845f9d45f4a5112f608b6192d4fb5d7be48f478c0c36194d95ab7
 03f829a2da633533ef3fd0f287f5ec602d936a97a98b53cd2415553c2537ae9d571f35397ca7c9fb3f4b0806c300e3b189569f8d979ca132e1a2a4dae7206396  pvalloc.patch
 e48693e6b7aeebf69a5acbf80d9a35defe4c23835121dfeb58b051ac7c527e758a41004f4d193274fe1b01c0bfb1dbc77b09cb6a404a3fdee507a2918afb0edb  temp-failure-retry.patch
 914ccf649d7771f19f209ab97f99c481aebc6f66174d68e8b539f6ad4a70bc8cb0fae2df6dadbf0415958ffb3574c420fe029079dcce45f5e5add4db2e903566  yes-musl.patch
+1814096bc611e7f56cc5c570214dae715a4cda1fba96a6b585a73a1abc8b9161efaa799dc83887dac531dbafe9479bbe235cabe1a61cb3081e268c53a6144908  pipewire-1.4.patch
 465107da7818b237e3c144a318ab80c3c9343b51ed38b8971ef204692d13346929becbe94cefad4c153788d3a200642143584d5ca070f6304e768ba2139c19ec  electron_icon.patch
 e05180199ee1d559e4e577cedd3e589844ecf40d98a86321bf1bea5607b02eeb5feb486deddae40e1005b644550331f6b8500177aa7e79bcb3750d3c1ceb76c3  electron_python-jinja-3.10.patch
 2aa340854316f1284217c0ca17cbf44953684ad6c7da90815117df30928612eb9fb9ffb734b948dfc309cd25d1a67cd57f77aac2d052a3dd9aca07a3a58cbb30  electron_webpack-hash.patch

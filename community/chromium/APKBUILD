@@ -2,8 +2,8 @@
 # Contributor: Elly Fong-Jones <elly@elly.town>
 # Maintainer: lauren n. liberda <lauren@selfisekai.rocks>
 pkgname=chromium
-pkgver=134.0.6998.35
-pkgrel=0
+pkgver=134.0.6998.117
+pkgrel=1
 _copium_tag=134.0
 # DEPS file -> deps['src/third_party/test_fonts']['objects'][0]['object_name']
 # (for the given version, when it changes)
@@ -143,6 +143,7 @@ source="https://commondatastorage.googleapis.com/chromium-browser-official/chrom
 	partalloc-no-tagging-arm64.patch
 	pvalloc.patch
 	temp-failure-retry.patch
+	pipewire-1.4.patch
 	"
 _copium_patches="
 	cr131-v8-non4k-pages.patch
@@ -532,6 +533,7 @@ prepare() {
 	# libaom - https://aomedia.googlesource.com/aom/+/706ee36dcc82%5E%21/
 	#   but watch this space: https://aomedia-review.googlesource.com/c/aom/+/188606
 	# jsoncpp, re2, snappy, swiftshader-*, woff2 - requires use_custom_libcxx=false
+	# icu 76 does not build - https://bugs.gentoo.org/943216
 	local use_system="
 		brotli
 		crc32c
@@ -542,7 +544,6 @@ prepare() {
 		fontconfig
 		freetype
 		harfbuzz-ng
-		icu
 		libdrm
 		libjpeg
 		libsecret
@@ -898,8 +899,8 @@ swiftshader() {
 }
 
 sha512sums="
-b33051d3960a4dc63f0ef02ca6c4cdc89c5960c50c107ac60b0502a9acef71cd22aca93a893a8f5384aff48d56efef1d13db68159b6605a5a43c354a575cf082  chromium-134.0.6998.35.tar.xz
-d2fa2044dec118eaf65b9fe4ec7f8a21711e2fe4cb9129fb7c83e0de467590f173e955d75d21e68fbf7db85b870a6fa45a101db998d13e067f546f4bc57af599  chromium-134.0.6998.35-testdata.tar.xz
+99aa5c7e20640d5735ee77f38bd71c6b99b5429e65921813a1bf31d6491ef92c1bb6b20572684bb1747f9d05000944d889e62f68d9b043e452ff7cd16582ee33  chromium-134.0.6998.117.tar.xz
+6445ab8a2e7efae2862a050cef12a0169d0e9f1d1b0853dccaffb438be20d6d442b11f83752e63baba4dae210097f51285493ccb5aba14350df05abc2a5c7fe4  chromium-134.0.6998.117-testdata.tar.xz
 bbc928e99ebcd4d953b982688b01526cb754bad018f67be9e777a4f8ac51cdd3e01374e5a63faf55b12e7cee0d52816c88062e012b5bcc4f9bb41f28d8e0b7f7  test_fonts-336e775eec536b2d785cc80eff6ac39051931286.tar.gz
 c1857b5d6975650f915f3db552666f521822b857e39958ccfb54129f3878f272deaafc3dd446bc8441a5e84f075791feeeb62841b74bb555d8c546bfe231d164  copium-134.0.tar.gz
 1b16564f85a03f3eb934ec51289dc6159e2454202d40f48354f947d6ceffac8889e9eb4c0f4dfaafb3a15101566d54039f832bc9a8433c3c463e2d1dac2d2acc  chromium-launcher.sh
@@ -924,4 +925,5 @@ e4c4e5bc6f828f9c883dd418c0ba01887949c29c311f76206a1ec29f620b0c0ba0452949dc2778a9
 f2b08538ff57c50b3772a07ca91845f9d45f4a5112f608b6192d4fb5d7be48f478c0c36194d95ab7bbf933e0278e5c6d578619d8643895cdc40386eebc5b975f  partalloc-no-tagging-arm64.patch
 03f829a2da633533ef3fd0f287f5ec602d936a97a98b53cd2415553c2537ae9d571f35397ca7c9fb3f4b0806c300e3b189569f8d979ca132e1a2a4dae7206396  pvalloc.patch
 e48693e6b7aeebf69a5acbf80d9a35defe4c23835121dfeb58b051ac7c527e758a41004f4d193274fe1b01c0bfb1dbc77b09cb6a404a3fdee507a2918afb0edb  temp-failure-retry.patch
+1814096bc611e7f56cc5c570214dae715a4cda1fba96a6b585a73a1abc8b9161efaa799dc83887dac531dbafe9479bbe235cabe1a61cb3081e268c53a6144908  pipewire-1.4.patch
 "

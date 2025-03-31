@@ -3,7 +3,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 _pkgname=postgresql
 pkgver=16.8
-pkgrel=0
+pkgrel=3
 _majorver=${pkgver%%[_.]*}
 # Should this aport provide libpq* and libecpg*? true/false
 # Exactly one postgresql aport must be the default one!
@@ -34,7 +34,7 @@ makedepends="$depends_dev
 	bison
 	docbook-xsl-nons
 	flex
-	libxml2-dev
+	libxml2-dev~2.13
 	linux-headers
 	llvm$_llvmver-dev
 	openldap-dev

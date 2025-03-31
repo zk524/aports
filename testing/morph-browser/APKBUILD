@@ -1,5 +1,5 @@
 # Maintainer: Luca Weiss <luca@lucaweiss.eu>
-# Contributor: Brandon Boese <brandonboese@protonmail.com>
+# Contributor: Aster Boese <asterboese@mailbox.org>
 pkgname=morph-browser
 pkgver=1.1.2
 pkgrel=0
@@ -49,7 +49,7 @@ build() {
 }
 
 check() {
-	ctest --test-dir build --output-on-failure
+	ctest --test-dir build
 }
 
 package() {

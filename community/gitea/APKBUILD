@@ -2,10 +2,10 @@
 # Contributor: 6543 <6543@obermui.de>
 # Contributor: techknowlogick <techknowlogick@gitea.com>
 # Contributor: Fabricio Silva <hi@fabricio.dev>
-# Maintainer: 6543 <6543@obermui.de>
+# Maintainer: techknowlogick <techknowlogick@gitea.com>
 pkgname=gitea
-pkgver=1.23.1
-pkgrel=2
+pkgver=1.23.6
+pkgrel=0
 pkgdesc="Self-hosted Git service written in Go"
 url="https://about.gitea.com/"
 arch="all"
@@ -117,7 +117,7 @@ package() {
 }
 
 sha512sums="
-ff2a3605333393d708c127bff6b068fce90c143c22f9cfb67c1ba87be1866517ccac562a6721ada6f49454306b2400a5ee1f6d7c407dca35c244b7148e48ae05  gitea-1.23.1.tar.gz
+8d80c9aab85cfd69f90203dc9112a59d78f03a0644e7d52756285cd2b8e92433a0259c52b1b2e3a4c671a89f0e22f8c673f4c684564bd4f3f66c2cad6519a74d  gitea-1.23.6.tar.gz
 71c767f9e851d99e6d87032faa833617ded28a292507c492bce63d0b87208819aa9ccbf8301d885da14901a4bdb93b21859883eaea78f980e8c8deb63ae8e57a  gitea.initd
 431184faffa8996873d92d7b0d16bc4b1a0178d264cd2928d1f49b13ad3e6470d9ede7a18c12112deeeb38f0647ccc0b012e98bcbd96e7b8496a3dc18f5b1fb7  gitea.ini
 "

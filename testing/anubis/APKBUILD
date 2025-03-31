@@ -1,15 +1,14 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=anubis
-pkgver=1.10.0_git20250303
+pkgver=1.14.2
 pkgrel=0
-_commit=19f0d3d0c1b171ebc25176f777d034ffaa98a4be
 pkgdesc="Block AI scrapers using a sha256 proof-of-work challenge"
-url="https://github.com/Xe/x/tree/master/cmd/anubis"
+url="https://github.com/TecharoHQ/anubis"
 arch="all"
-license="CC0-1.0"
+license="MIT"
 makedepends="go"
-source="$pkgname-$pkgver.tar.gz::https://github.com/Xe/x/archive/$_commit.tar.gz"
-builddir="$srcdir/x-$_commit"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/TecharoHQ/anubis/archive/refs/tags/v$pkgver.tar.gz"
 options="net" # go modules
 
 build() {
@@ -22,8 +21,9 @@ check() {
 
 package() {
 	install -Dm755 anubis -t "$pkgdir"/usr/bin/
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
 }
 
 sha512sums="
-c01660644fca2d51803475032727f3c64a146250b626eaf28b295bfda536bb2270d880dce21985482d888602b80d1231f05da3bce27d344a8be85d810b4d48c9  anubis-1.10.0_git20250303.tar.gz
+9c6b8f7598875c0d9dcfbd7c3a2db29df5c78f41827c0d813f59e7543957e2ffe4290247028f4f877e984de091fc0e0d056f9d56ae7e609adbca260bbfb520e0  anubis-1.14.2.tar.gz
 "

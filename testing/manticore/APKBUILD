@@ -2,7 +2,7 @@
 # Maintainer: Noel Kuntze <noel.kuntze@contauro.com>
 pkgname=manticore
 pkgver=7.4.6
-pkgrel=0
+pkgrel=1
 pkgdesc="Easy to use open source fast database for search"
 url="https://manticoresearch.com/"
 # 32-bit systems fail to build, tests fail on s390x, ppc64le doc fail.
@@ -74,7 +74,7 @@ build() {
 
 check() {
 	# Exclude test 'perform indextool' which always fails
-	ctest --test-dir build --output-on-failure -E '(Perform_indextool)' -j1
+	ctest --test-dir build -E '(Perform_indextool)' -j1
 }
 
 package() {

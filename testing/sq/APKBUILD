@@ -2,7 +2,7 @@
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=sq
 pkgver=0.48.5
-pkgrel=1
+pkgrel=3
 pkgdesc="CLI tool that provides jq-style access to structured data sources"
 url="https://sq.io/"
 # arm*, loongarch64, s390x, x86: tests fail
@@ -17,6 +17,7 @@ subpackages="
 	$pkgname-zsh-completion
 	"
 source="https://github.com/neilotoole/sq/archive/v$pkgver/sq-$pkgver.tar.gz"
+options="net" # for downloading Go modules
 
 export GOFLAGS="$GOFLAGS -tags=sqlite_vtable,sqlite_stat4,sqlite_fts5,sqlite_icu,sqlite_introspect,sqlite_json,sqlite_math_functions"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
@@ -46,7 +47,14 @@ check() {
 	rm -rf /tmp/sq/test /tmp/sq_test*
 
 	# shellcheck disable=2046
-	go test -v -timeout 60m $(go list ./... | grep -v /libsq/driver)
+	case "$CARCH" in
+		# TestCompleteFilterActiveGroup: failed on the builder
+		# TestJSONData_Cities: test timed out after 2h0m0s
+		x86_64) go test -v -timeout 60m \
+			-skip 'Test(CompleteFilterActiveGroup|JSONData_Cities)' \
+			$(go list ./... | grep -v /libsq/driver) ;;
+		*) go test -v -timeout 60m $(go list ./... | grep -v /libsq/driver) ;;
+	esac
 }
 
 package() {

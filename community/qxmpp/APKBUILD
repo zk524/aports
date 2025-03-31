@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qxmpp
-pkgver=1.9.4
+pkgver=1.10.3
 pkgrel=0
 pkgdesc="Cross-platform C++ XMPP client and server library"
 arch="all"
@@ -11,12 +11,14 @@ makedepends="
 	doxygen
 	graphviz
 	libomemo-c-dev
-	qca-dev
-	qt5-qtbase-dev
+	qca-qt6-dev
+	qt6-qtbase-dev
+	qt6-qt5compat-dev
 	samurai
 	"
-source="https://github.com/qxmpp-project/qxmpp/archive/v$pkgver/qxmpp-v$pkgver.tar.gz"
+source="https://invent.kde.org/libraries/qxmpp/-/archive/v$pkgver/qxmpp-v$pkgver.tar.gz"
 subpackages="$pkgname-dev $pkgname-doc"
+builddir="$srcdir/$pkgname-v$pkgver"
 
 build() {
 	cmake -B build -G Ninja \
@@ -39,5 +41,5 @@ package() {
 }
 
 sha512sums="
-ae1620af13bc998406258c6997875fe2b5922c4318a9544879bed45b408ea9b585ee56b12c8db6dd04aa28e5bd327bf202a5ce2e47513144f1310fa3f054556f  qxmpp-v1.9.4.tar.gz
+ef08c38563fdc43aa9a5c1e531c25bb87f71541379ead4513c5fdfcb9c8c256d99008099bf59219e60025a4ad3deb18eabc3391c5fb6078e684f515ee189353d  qxmpp-v1.10.3.tar.gz
 "

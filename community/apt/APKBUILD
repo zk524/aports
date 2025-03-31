@@ -1,7 +1,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=apt
-pkgver=2.9.31
+pkgver=2.9.35
 pkgrel=0
 pkgdesc="APT package management tool"
 url="https://salsa.debian.org/apt-team/apt"
@@ -57,7 +57,7 @@ build() {
 }
 
 check() {
-	ctest --test-dir build --output-on-failure
+	ctest --test-dir build
 }
 
 dev() {
@@ -79,6 +79,6 @@ package() {
 }
 
 sha512sums="
-45d48927a5a8acd253444bceb40cdbd91720de85f1fb0967122d49c00837e0dc96a40c9aece3268265c080e1ea0bb6228ec2af72aa3139ae1db792f4fe226358  apt-2.9.31.tar.bz2
+8e9586d46a10ab410c8a0f1f6a2a28b5503cc0424818e83958c27f343753a375ccbea6805f7d3fbcf5fa91cad7bc6821a92f8b4c1a87badaad91f34428e2e87d  apt-2.9.35.tar.bz2
 27d7e1516915bbae025c4c943c7427421662e7c3bee8f1821565ac3cd823e8a823c4ac99efb9cc9a27e338c73b49e2628f0a88c5c2c1d2e935b1c89b9209d18c  fix-basename.patch
 "

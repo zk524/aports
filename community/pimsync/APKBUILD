@@ -1,0 +1,39 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=pimsync
+pkgver=0.4.1
+pkgrel=0
+pkgdesc="Synchronise calendars and contacts using CalDAV, CardDAV and others"
+url="https://pimsync.whynothugo.nl/"
+arch="all"
+license="EUPL-1.2"
+makedepends="cargo sqlite-dev scdoc"
+subpackages="
+	$pkgname-doc
+	"
+source="pimsync-$pkgver.tar.gz::https://git.sr.ht/~whynothugo/pimsync/archive/v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-v$pkgver"
+options="net" # fetch dependencies
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	export PIMSYNC_VERSION=v$pkgver-r$pkgrel
+	mkdir target
+	make build
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	DESTDIR="$pkgdir" PREFIX="/usr" make install --trace
+}
+
+sha512sums="
+c1703f5dc9f843004401e2c0800c0799bf859ece207bd8d823dd87aab1359dbe02622956bab7a54ad932e1049de37d2347b73bf7919536096238180ed97c2de0  pimsync-0.4.1.tar.gz
+"

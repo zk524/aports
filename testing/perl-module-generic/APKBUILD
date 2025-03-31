@@ -2,7 +2,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=perl-module-generic
-pkgver=0.37.7
+pkgver=0.42.0
 pkgrel=0
 #_pkgreal is used by apkbuild-cpan to find modules at MetaCpan
 _pkgreal=Module-Generic
@@ -51,6 +51,6 @@ doc() {
 }
 
 sha512sums="
-762edd7a808326e627ce51c2ecafe8cf478a5efdb3dc9dac86c24c146b80d27054c86d917aa509df5f8f0414fa2e0d891f4f0fac11116b24533ceadac019b1a6  Module-Generic-v0.37.7.tar.gz
+04a8c38aa9c80abb64155dc9340c141698091e5a9e74e70101d571ec914038d89e1f89191a2cd5f6a23088c6547edd647a74ecc95a49706bbf1a13445d1a5c96  Module-Generic-v0.42.0.tar.gz
 af467da801c0884a5994a61c205d4c522cf40905eebc4733ea4deaa755b19bab824879f91866e7622440d9ab823eed207fbe02092559da9660081423585504b3  skip-broken-tests.patch
 "

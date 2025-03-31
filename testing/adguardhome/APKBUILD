@@ -2,11 +2,12 @@
 # Contributor: tetsumaki <yd-alpine@tetsumaki.net>
 maintainer="Fabricio Silva <hi@fabricio.dev>"
 pkgname=adguardhome
-pkgver=0.107.57
+pkgver=0.107.59
 pkgrel=0
 pkgdesc="Network-wide ads & trackers blocking DNS server"
 url="https://adguard.com/adguard-home.html"
-arch="all"
+# s390x: illegal combination MOVWBR ADDR NONE NONE NONE NONE REG
+arch="all !s390x"
 license="GPL-3.0-only"
 options="net setcap" # net for go
 depends="ca-certificates"
@@ -58,8 +59,8 @@ package() {
 }
 
 sha512sums="
-10d76bb4fd8b7f57c72272ae18077e12c5096a29ee8700920dd258b17ad6495310ea8ce47e0e7287b2fda9ef741e12afdfb0ee446e0058d964dc4d6cb56abbc3  adguardhome-0.107.57.tar.gz
-3a6372a4e3d8aad2b1b96da859b738f9425584f24ede188742fed2a29097748c6d3bf10933cc2b1542126bd25c8ea4673685135d15f7784b19b6a765ab66814c  adguardhome-frontend-0.107.57.tar.gz
+eedf4e0425160abfe0510fdf7547c497df921276f7f0cfb3d589987c9610761a75490ed6b19013732ee40baa7c799b7eadedb5ab3c24c48e45e19f987c9fa734  adguardhome-0.107.59.tar.gz
+882f83c0cb1841c16adb0c1041f2c04aa662634114c376613b1173f234390d1e88df5bcdc46e9b27b1a835c870beafa83734ef0b86a436ea13e431edf5faf5ab  adguardhome-frontend-0.107.59.tar.gz
 6d7f68fa8fc08913ffba215dc23877050b508f097fe1dbd7d1bb592169309e1f0499d926d1841dc2e7c8b0679f12e5caa00ad2d9f8c9b2aa213c779047cf748b  adguardhome.initd
 f7b7365079b901cbc08c4d0553160a7e5f15205b509e8dc867351338153820acb705807763c12cd66f5120dfa1c008c04a2f01c60331951146f4938791dfea32  adguardhome.confd
 b0dde70e9fc1ee40916233d884de2d8fae1a29b6036160334497b02ba7061e009b53b98cc49aae5dfde93d6226657a73ef833e2452e91a41f54bf74fdb8dbcb3  cap_check.patch

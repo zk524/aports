@@ -1,7 +1,7 @@
 # Maintainer: team/gnome <fossdd@pwned.life>
 pkgname=at-spi2-core
-pkgver=2.54.1
-pkgrel=2
+pkgver=2.56.1
+pkgrel=0
 pkgdesc="Protocol definitions and daemon for D-Bus at-spi"
 url="https://www.freedesktop.org/wiki/Accessibility/AT-SPI2/"
 arch="all"
@@ -69,5 +69,5 @@ libatk_bridge() {
 }
 
 sha512sums="
-28f94e745b2c563e7515207dc24da0658f68c2badd3085b15b14405e10e128ef776d674d840dfd8c2222bdb8fd88348a1a7e70df0bb19deed0e688d1c0c8b3c3  at-spi2-core-2.54.1.tar.xz
+aa79701fc510608fabe4ed7ec991172e08a8c6a062bc75aa1f8c41c7e2045b3685873c3025c1460406fb6248779685cb5f5717a8fd02d2cee34c59e034325188  at-spi2-core-2.56.1.tar.xz
 "

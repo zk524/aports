@@ -2,7 +2,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=perl-dist-build
-pkgver=0.016
+pkgver=0.018
 pkgrel=0
 #_pkgreal is used by apkbuild-cpan to find modules at MetaCpan
 _pkgreal=Dist-Build
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-608bf00f92c52ca37c28fd85226fe5edefa285b1c7fb10301c6e37eb1f8e51cbe8b67688821b1df5051cf5cdcbd51e658f6d64ec55a580aa94a7514c328b3733  Dist-Build-0.016.tar.gz
+033f2b899c12d5798e61407ff06810764096d77006ffa9a46b66d02ac0f4bd10e8a3ece792ac8f6896b6bc825443d13bac3ff215e87179b3a59a8dce0e11198d  Dist-Build-0.018.tar.gz
 "

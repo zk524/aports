@@ -3,7 +3,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=icewm
-pkgver=3.7.1
+pkgver=3.7.3
 pkgrel=0
 pkgdesc="Window manager designed for speed, usability and consistency"
 url="https://github.com/ice-wm/icewm"
@@ -29,7 +29,6 @@ makedepends="
 	markdown
 	perl
 	samurai
-	gettext-dev
 	"
 subpackages="$pkgname-doc $pkgname-lang"
 source="https://github.com/ice-wm/icewm/releases/download/$pkgver/icewm-$pkgver.tar.lz"
@@ -40,7 +39,7 @@ build() {
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCFGDIR=/etc/icewm \
-		-DENABLE_NLS=ON \
+		-DENABLE_NLS=OFF \
 		-DCONFIG_IMLIB2=ON \
 		-DCONFIG_LIBRSVG=ON \
 		-DENABLE_LTO=ON \
@@ -53,5 +52,5 @@ package() {
 }
 
 sha512sums="
-17c6d44b0c3760700b12136d654f88c6168ee38f63891d0420e7cc4334fbb07e5f0b1440e19a9214c91d8ced29670912e6c7a800e15c3b768965d0edf549c5a4  icewm-3.7.1.tar.lz
+0c9e00324451a673c3cba852611cbe02c85ed1c8de499f21f7b1abda875f0ef6d440bbac30886486bb33bdcb5f2863e48df2fe910264ae2c9da0122597f511ab  icewm-3.7.3.tar.lz
 "

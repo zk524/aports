@@ -1,27 +1,28 @@
 # Contributor: lauren n. liberda <lauren@selfisekai.rocks>
 maintainer="lauren n. liberda <lauren@selfisekai.rocks>"
 pkgname=ghostty
-pkgver=1.1.2
+pkgver=1.1.2_git20250320
 pkgrel=1
 pkgdesc="Fast, feature-rich, and cross-platform terminal emulator"
 url="https://ghostty.org/"
-arch="aarch64 x86_64"	# zig
+arch="x86_64"	# zig. fails to build on aarch64
 license="MIT"
 depends_dev="
 	fontconfig-dev
 	freetype-dev
 	glslang-dev
 	gtk4.0-dev
+	gtk4-layer-shell-dev
 	harfbuzz-dev
 	libadwaita-dev
 	libpng-dev
-	libxml2-dev
 	oniguruma-dev
 	simdutf-dev
 	zlib-dev
 	"
 makedepends="
 	$depends_dev
+	blueprint-compiler
 	ncurses
 	zig
 	"
@@ -30,12 +31,15 @@ makedepends="
 options="!check net"
 subpackages="
 	$pkgname-doc
+	$pkgname-lang
 	$pkgname-bash-completion
 	$pkgname-zsh-completion
 	$pkgname-fish-completion
 	"
+_commit=141b697f9d04bd1fec695477b5c2160d81e087f3
+builddir="$srcdir/ghostty-$_commit"
 source="
-	https://github.com/ghostty-org/ghostty/archive/refs/tags/v$pkgver/ghostty-$pkgver.tar.gz
+	https://github.com/ghostty-org/ghostty/archive/$_commit/ghostty-$_commit.tar.gz
 	0001-ReleaseSafe-is-not-debug.patch
 	"
 
@@ -46,6 +50,7 @@ build() {
 		-fsys=fontconfig \
 		-fsys=freetype \
 		-fsys=glslang \
+		-fsys=gtk4-layer-shell \
 		-fsys=harfbuzz \
 		-fsys=libpng \
 		-fsys=oniguruma \
@@ -62,6 +67,6 @@ package() {
 }
 
 sha512sums="
-21f56eaa7154e67a9120286b1ce9bb4604a734f9be81d2e8db727b3fa29aaac854ce323267c3ff45e1fc978affa34a934866201ada4bdedf036689c3e2beeca6  ghostty-1.1.2.tar.gz
-946fba6145cfcafe7ffdce908eb02fb84c0f235efe74e23feb17fa32dfa88255ab3370730c053b126da6a7469cc6be95b338732dfeb4ecfbdbed9517187c3428  0001-ReleaseSafe-is-not-debug.patch
+8a30cf74ed93c9b47c6f66853e2eb667249967e4cb6fd6dd2475f418be5bd9605b7c800ce1b579da7ef4404297844626a4ee9b4188aec0b718ded807b39718a0  ghostty-141b697f9d04bd1fec695477b5c2160d81e087f3.tar.gz
+004678683aa2161eb1d3e75118d5487c0dca10b18a69d9335df785abbe3d7fda665e2e58e76b7525a29a5fdecdffb4d2abab53d2116959d74c873cb8a8118cde  0001-ReleaseSafe-is-not-debug.patch
 "

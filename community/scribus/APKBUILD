@@ -2,7 +2,7 @@
 # Maintainer: Milan P. Stanić <mps@arvanta.net>
 pkgname=scribus
 pkgver=1.6.3
-pkgrel=2
+pkgrel=4
 pkgdesc="libre desktop publishing"
 url="https://www.scribus.net/"
 arch="all !s390x" # s390x doesn't have podofo package
@@ -58,7 +58,7 @@ build() {
 
 check() {
 	cd build
-	CTEST_OUTPUT_ON_FAILURE=TRUE ctest
+	ctest
 }
 
 package() {

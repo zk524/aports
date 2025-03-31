@@ -1,11 +1,11 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=flux
 pkgver=2.5.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Open and extensible continuous delivery solution for Kubernetes"
 url="https://fluxcd.io/"
 # blocked by kubernetes
-arch="all !armhf !loongarch64"
+arch="all !armhf"
 license="Apache-2.0"
 makedepends="go bash kustomize"
 checkdepends="etcd kube-apiserver"

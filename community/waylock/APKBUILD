@@ -1,0 +1,44 @@
+# Contributor: Jakub Jirutka <jakub@jirutka.cz>
+# Maintainer: Jakub Jirutka <jakub@jirutka.cz>
+pkgname=waylock
+pkgver=1.4.0
+pkgrel=0
+pkgdesc="A small screenlocker for Wayland compositors"
+url="https://codeberg.org/ifreund/waylock"
+arch="aarch64 x86_64"  # blocked by zig
+license="ISC"
+makedepends="
+	libxkbcommon-dev
+	linux-pam-dev
+	scdoc
+	wayland-dev
+	wayland-protocols
+	zig
+	"
+# net: downloads dependencies defined in build.zig.zon
+# !check: no tests
+options="net !check"
+subpackages="$pkgname-doc"
+source="https://codeberg.org/ifreund/waylock/releases/download/v$pkgver/waylock-$pkgver.tar.gz
+	pam-base-auth.patch
+	"
+
+build() {
+	DESTDIR='.dest' zig build \
+		--prefix /usr \
+		-Doptimize=ReleaseSafe \
+		-Dcpu=baseline \
+		-Dpie=true \
+		-Dman-pages=true \
+		--prefix /usr install
+}
+
+package() {
+	mkdir -p "$pkgdir"
+	cp -r .dest/* "$pkgdir"/
+}
+
+sha512sums="
+454fb535ebcc023eadd9da68fe90893e5285cf9a97de301b1d4b32948b0b3515e0888dc077d3d4e1486cedf9ba437c43c4ad58dbbfc8fd95128eeffcebd8e66a  waylock-1.4.0.tar.gz
+e3f5aa479908babbeea2febecdf7c57a5cf6b9153c4cd63731721cdf6d50bd0417077b37effec1520064918a422c4313d24ee9c2b2a77c328be931ffbeb03161  pam-base-auth.patch
+"

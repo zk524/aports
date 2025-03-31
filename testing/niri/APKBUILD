@@ -1,8 +1,8 @@
-# Contributor: Ogromny <ogromnycoding@gmail.com>
-# Maintainer: Ogromny <ogromnycoding@gmail.com>
+# Contributor: Pedro Lucas Porcellis <porcellis@eletrotupi.com>
+# Maintainer: Pedro Lucas Porcellis <porcellis@eletrotupi.com>
 pkgname=niri
-pkgver=0.1.10.1
-pkgrel=2
+pkgver=25.02
+pkgrel=1
 pkgdesc="A scrollable-tiling Wayland compositor"
 url="https://github.com/YaLTeR/niri"
 arch="x86_64 ppc64le aarch64"
@@ -27,6 +27,7 @@ subpackages="
 	$pkgname-portalsconf
 	"
 source="$pkgname-$pkgver.tar.gz::https://github.com/YaLTeR/niri/archive/refs/tags/v$pkgver.tar.gz"
+options="net" # rust crates
 
 build() {
 	cargo auditable build \
@@ -36,6 +37,7 @@ build() {
 }
 
 check() {
+	ulimit -n 4096 # Fails otherwise due to lack of file descriptors
 	cargo test \
 		--release \
 		--no-default-features \
@@ -57,5 +59,5 @@ portalsconf() {
 
 
 sha512sums="
-ba816350bad30debcb961d6c516c96a0a732621e78e08f7f04bbf3bee46cb463318a59acf532660288022a247cfcd636d59159b66fd01c1c702d58f8ddf44e6a  niri-0.1.10.1.tar.gz
+1ed4061cf6267c32a035604314f6c324f3002891ef14bbec5bfdb8b980cab5d2ef94b856cd651d7ebb99e249158be5849c66f661ab731ac6f0c25f2eda8a3745  niri-25.02.tar.gz
 "

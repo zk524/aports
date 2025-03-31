@@ -4,14 +4,14 @@
 pkgname=py3-lxml
 _pkgname=lxml
 pkgver=5.3.1
-pkgrel=0
+pkgrel=2
 pkgdesc="Python3 LXML Library"
 url="https://lxml.de/"
 arch="all"
 license="BSD-3-Clause AND ZPL-2.0 AND ElementTree"
 makedepends="
 	cython
-	libxml2-dev
+	libxml2-dev~2.13
 	libxslt-dev
 	py3-gpep517
 	py3-setuptools

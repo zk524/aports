@@ -105,7 +105,7 @@ additional Alpine packages:
 
   cc_ca_certs           ca-certificates
 
-  cc_disk_setup         blockdev
+  cc_disk_setup         libblockdev
                         lsblk
                         parted
                         sfdisk (for MBR partitioning)

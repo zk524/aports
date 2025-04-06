@@ -1,7 +1,7 @@
 # Contributor: Jakob Meier <comcloudway@ccw.icu>
 # Maintainer: Jakob Meier <comcloudway@ccw.icu>
 pkgname=tractor
-pkgver=5.0.0
+pkgver=5.1.0
 pkgrel=0
 pkgdesc="Setup an onion routing proxy"
 url="https://framagit.org/tractor/tractor"
@@ -43,6 +43,6 @@ package() {
 }
 
 sha512sums="
-aaab3e44e3a9360ed1c89f21d5188d54f84f916627f26310104db8939837c2f2049f9f59a859b83f24d148cec8b13211a3d371ac7888a3879df1fe229f140d88  tractor-5.0.0.tar.gz
+b8d61f6ba5439fdc828153ab4e77918bf340527cb5c6e204ed2b31c204a7c6e25a747388a7a052d9a5f8dbbd6e153ff36255f083aad6d5241d73f29a33d8fed0  tractor-5.1.0.tar.gz
 80f1cbb653fc7e5568c3a21361c2b0ddea8463a9f021d51481ff323c4913b6ef673860d68dfa9d18e8d25564ddb16eda17373e15c33c19b4fba36b2f5ed8af23  recursively_look_for_schemas.patch
 "

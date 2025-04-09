@@ -54,7 +54,7 @@ subpackages="
 	dotnet$_pkgver_name-stage0-artifacts:artifacts:noarch
 	dotnet$_pkgver_name-stage0-bootstrap
 	"
-source="
+_source="
 	dotnet-tarball-$_gittag.tar.gz::https://github.com/dotnet/dotnet/archive/refs/tags/$_gittag.tar.gz
 	dotnet-release-$_gittag.json::https://github.com/dotnet/dotnet/releases/download/$_gittag/release.json
 	dotnet-sdk-$_bootstrapver-linux-musl-x64.noextract::https://dotnetcli.azureedge.net/dotnet/Sdk/$_bootstrapver/dotnet-sdk-$_bootstrapver-linux-musl-x64.tar.gz
@@ -63,6 +63,10 @@ source="
 	dotnet-sdk-$_bootstrapver-linux-musl-riscv64.noextract::https://gitlab.alpinelinux.org/ayakael/dotnet-stage0/-/releases/$_bootstrapver-r0/downloads/sdk/dotnet-sdk-$_bootstrapver-r0-linux-musl-riscv64.tar.zstd
 	Private.SourceBuilt.Artifacts.$_artifactsver.noextract::https://dotnetcli.azureedge.net/source-built-artifacts/assets/Private.SourceBuilt.Artifacts.$_artifactsver.tar.gz
 	$_patches
+	"
+source="
+	https://prv.lesosoftware.com/dotnet9-stage0-bootstrap-$_bootstrapver-r$_bootstraprel.apk
+	Private.SourceBuilt.Artifacts.$_artifactsver.noextract::https://dotnetcli.azureedge.net/source-built-artifacts/assets/Private.SourceBuilt.Artifacts.$_artifactsver.tar.gz
 	"
 
 makedepends_host="
@@ -162,6 +166,7 @@ fi
 
 prepare() {
 	default_prepare
+	return
 
 	mkdir -p "$_cli_root" $_packagesdir $_downloaddir $_outputdir $_nugetdir $_logdir
 
@@ -384,9 +389,10 @@ _aspnetcore() {
 }
 
 build() {
-	_runtime
-	_aspnetcore
-	_sdk
+	# _runtime
+	# _aspnetcore
+	# _sdk
+	echo "[skip] -> use prebuilt checkpoint packages"
 }
 
 package() {
@@ -409,6 +415,10 @@ bootstrap() {
 		"$subpkgdir"/$_libdir/dotnet/bootstrap/$pkgver/docs \
 		"$subpkgdir"/$_libdir/dotnet/bootstrap/$pkgver/comp \
 		"$subpkgdir"/$_libdir/dotnet/artifacts/$pkgver
+
+	(cd "$subpkgdir" && tar --no-same-owner -xf "$srcdir"/dotnet9-stage0-bootstrap-*.apk)
+	rm -f "$subpkgdir"/.PKGINFO "$subpkgdir"/.SIGN.*
+	return
 
 	# unpack build artifacts to bootstrap subdir for use by future builds
 	tar --use-compress-program="pigz" \
@@ -498,22 +508,6 @@ artifacts() {
 }
 
 sha512sums="
-c6ba0972eb21757d70e9dff4fd7e540378fec3eb94931fbe7205234ee53efc976c682154c5224a16ff1dab223f4deea7c2b378d197039e6974b35bd8fa6f62cf  dotnet-tarball-v9.0.2.tar.gz
-feef286a7759d83e16566c5224eed5e24921431c81aaf260de15645225c327f17c96e57ce31d5c9d273120f6fc891ba342781d78ca69f32424577d8b868db558  dotnet-release-v9.0.2.json
-ac4e2116f99999f249c290e9a87c628f6236f59c65eb7672bbb484cc1159bf739c9585dad80b50ff727335e4bf626e175913156b13a283f175dae7f6a965a542  dotnet-sdk-9.0.103-linux-musl-x64.noextract
-bcc5019831f9636d81a87369e1cf56e70dc52c2993eb64468f62029629a610333b23c2062e3f93647bebcbdf7de2aaefa7e9c96d6e96ec161e3a745766ae109f  dotnet-sdk-9.0.103-linux-musl-arm64.noextract
-663c3351edb0d38b25fa854be092a2cf7b6fefd568f4d7458ff40740b9637605390b48a4acdbb35640d40dc9efe666a6ee2947f10fe9c9a16b9743fd75bcf0d0  dotnet-sdk-9.0.103-linux-musl-arm.noextract
-ca44470463e1ae9abc3e901dd04276d7e1bbcbd8a509f211e70b625ea4e49fe48d58cc47fa16337d6d2ce4fcbd0c069cfd81a45d257cc86fb951911a0a896823  dotnet-sdk-9.0.103-linux-musl-riscv64.noextract
+b02138c7254bbdc874c6b9eecc06e04c03bc24fe5ac177fff29bf9182a5bc6fe26bcd802ebac1364baee52dfa274cde1326463689f64f2612459e6bb68905c5b  dotnet9-stage0-bootstrap-9.0.103-r0.apk
 123920b316798a3ad3cd26014e6e5f18a4f0a199406b8e27b784fc37d526e3e10cb623d8dffa14d7d0166f76d95705dc9f8b7fbf747290415f51196e5041d328  Private.SourceBuilt.Artifacts.9.0.103-servicing.25071.1.centos.9-x64.noextract
-fa5a14f7044b1c7a891c6a2752190f9b5752dfeb2ad59e64bb71d1d15cf855bd7c43c66349f1c01dee77a699ba48b090b50462e6ece7ef6e5be920bcdb10e0a6  aspnetcore_remove-internal-sources.patch
-24ecc691fe60195b69d2a4d0b0966d6a087426b569f274e2b55cafcc846a8519018d145e5a20ef92ebf44f42ccf6c5e142bc3c7cc09ba46a6af9eb7dc89aa09f  aspnetcore_upgrade-rollup-riscv64.patch
-d732df247c721c9f677baabdd7f36dbf4b564814ff64164361065bb1c196b767494a1d39f634eadf01a23032c7b3e64102614b7213065c81096bbf3f8022e6a0  runtime_82269-mono-thread-coop-undefine-fortify-source.patch
-c983a1ab7f06ac86691e0fa7a61fcad69a074d984ef4a4116bee43f20be918215963c7ec8ddd7edd70432b29b160ff78288183acc89fda15ce4a75bfdbf99ee3  runtime_83682-specify-notext-on-linux-musl-x86.patch
-be8b98cb93c3d1e23cc72fd1f0c4e228613f8d39e1340b5c966de37c83419719956903d8937cff8e91e91c17e80141a710690c978742284ce9d4d65ecd4b49e7  runtime_disable-fortify-on-ilasm-parser.patch
-9b25c334cb635b7ab414580491faeeb028747a922fad85490f4c0637068256593b6e0ab6bc02173ceecde8a836426e96737352b07b09ced17b483ace17329f1d  runtime_disable-local-exec-tls-on-riscv64.patch
-d3b62668c2d5a1056e698b804a20b933b79ad11b46aa37298b9089396969ce510a9620847c5787b7f95c33ccf5a6aabab41655809168740976c3dadd65f87e2b  runtime_openssl-sha1.patch
-0246634c4c907c1194e2680ad4d3ddbf1ef072f0710a02fa35e2f634826a3be26970ebec0c375b33ee62e42314e871befc1b964aebb27a2d73499c69ff989920  runtime_re-enable-implicit-rejection.patch
-cb007d319174337d81546eff954206c9fa16a0138db103da73674e2c3bd7bf0278a2224be612649aedc0b39ffa68cecad211385d22b0eb84ca16004750e73f27  runtime_arm-pcode-null.patch
-6cdff9ea4154cf153fefb4274f4cceb338a3ae8480e1d6bb60545ab5999afbbadc6cfa989537d2eab79ee92c0791490e126feb3d1ede7ae6011dac6bea761c3f  runtime_nuget-disable-audit-source.patch
-2b1d5d00a45d16f7aa12e74e2a6e543c98d7774e60733e222f442932c21bb67dced18b939e574f84d35ef284641cd740b4e05ae3abc33f31a0fda3188178761d  sdk_set-crossgen2rid-using-buildarchitecture.patch
 "

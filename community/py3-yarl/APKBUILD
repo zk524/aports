@@ -1,22 +1,28 @@
 # Contributor: Fabian Affolter <fabian@affolter-engineering.ch>
-# Maintainer: Fabian Affolter <fabian@affolter-engineering.ch>
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=py3-yarl
-pkgver=1.13.1
+pkgver=1.19.0
 pkgrel=0
 pkgdesc="Yet another URL library"
 url="https://yarl.aio-libs.org/"
 license="Apache-2.0"
 arch="all"
-depends="python3 py3-idna py3-multidict"
+depends="python3 py3-idna py3-multidict py3-propcache"
 makedepends="
 	cython
 	py3-expandvars
 	py3-gpep517
+	py3-propcache
 	py3-setuptools
 	py3-wheel
 	python3-dev
 	"
-checkdepends="py3-pytest-xdist py3-pytest-cov"
+checkdepends="
+	py3-hypothesis
+	py3-pytest-codspeed
+	py3-pytest-cov
+	py3-pytest-xdist
+	"
 subpackages="$pkgname-pyc"
 source="https://github.com/aio-libs/yarl/releases/download/v$pkgver/yarl-$pkgver.tar.gz"
 builddir="$srcdir/yarl-$pkgver"
@@ -40,5 +46,5 @@ package() {
 }
 
 sha512sums="
-8fccb36dbb019d02fc50f006a3a59decd413abfc6387fd7c1220444f4f79412be1d5119c32fd668b3d553fbaf4de64b9135345e8300c7fa025d892c847955f88  yarl-1.13.1.tar.gz
+95cf1f26be8497e39ce150672ac95ff36a4a695b8fbb902edb4811b601cc3f73cf8b72b45625afe957649b7a49d08588db0a7b91b46c449c64c9e55fcbda8e23  yarl-1.19.0.tar.gz
 "

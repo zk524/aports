@@ -2,7 +2,7 @@
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=py3-botocore
 # Verify required version from py3-boto3 on this package before upgrading
-pkgver=1.37.18
+pkgver=1.37.28
 pkgrel=0
 pkgdesc="The low-level, core functionality of Boto3"
 url="https://github.com/boto/botocore"
@@ -39,5 +39,5 @@ package() {
 }
 
 sha512sums="
-54f98f91ccc3195db4a5f07dece2df33e954faa68ef6f926d230a8582db37fd42a6c80789c62c5fcb61bc18cac66cea0437a271515aab082d90a86fe30e21eb4  botocore-1.37.18.tar.gz
+82d9684b04b1663ced1608ac269d8e95baa8cc1a0747b195a56d5b48c2d92957b3da6f4d1737606b08423fca271dd0974d3b23bf5e1ca05768bc322884e04922  botocore-1.37.28.tar.gz
 "

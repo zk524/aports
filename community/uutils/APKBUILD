@@ -1,8 +1,8 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=uutils
-pkgver=0.0.29
-pkgrel=0
+pkgver=0.0.30
+pkgrel=1
 pkgdesc="Rust rewrite of the GNU coreutils"
 arch="all"
 url="https://uutils.github.io/coreutils/"
@@ -140,7 +140,7 @@ _hostname() {
 
 	# busybox path
 	install -dm0755 "$subpkgdir"/bin/
-	ln -s "$pkgname" "$subpkgdir"/bin/hostname
+	ln -s ../usr/bin/"$pkgname" "$subpkgdir"/bin/hostname
 }
 
 _more() {
@@ -149,7 +149,7 @@ _more() {
 
 	# busybox/util-linux-misc path
 	install -dm0755 "$subpkgdir"/bin/
-	ln -s "$pkgname" "$subpkgdir"/bin/more
+	ln -s ../usr/bin/"$pkgname" "$subpkgdir"/bin/more
 }
 
 _more_doc() {
@@ -169,9 +169,9 @@ _stat() {
 
 	# busybox path
 	install -dm0755 "$subpkgdir"/bin/
-	ln -s "$pkgname" "$subpkgdir"/bin/stat
+	ln -s ../usr/bin/"$pkgname" "$subpkgdir"/bin/stat
 }
 
 sha512sums="
-29bd390f761673f63b41baf36501c21da10fcab642f73da09e4ef897096427ff6660e069cec9f539efacbbc96b5ad992c6978f2a7ab5676e7b9a70af52c589e8  uutils-coreutils-0.0.29.tar.gz
+4d9f002329513e4cbf8787d050d852a209a02e9fbea84a63e442ace4fec38ce362dbac5ccee341834ade5f96586be393d6fc64e8421285598dd64804b660e633  uutils-coreutils-0.0.30.tar.gz
 "

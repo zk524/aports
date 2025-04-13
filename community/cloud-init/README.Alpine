@@ -76,25 +76,25 @@ However if you are using a DataSource (i.e. AWS Ec2, Azure, GCE, Hetzner,
 NWCS, OpenStack, Oracle, Scaleway, UpCloud, and Vultr) that needs to set up
 an Ephemeral (temporary) DHCPv4 connection in order to talk to a Metadata
 Server (to retrieve metadata, network configuration, and user-data
-information from) then these DataSources may expect "dhclient" to be installed
+information from) then these DataSources may expect "dhcpd" to be installed
 and may try and execute it directly and therefore retrieving information
-from the metadata server may fail if dhclient is not installed).
+from the metadata server may fail if the dhcpd package is not installed).
 
   Data Source                     Package(s) you should add
   ---------------------------------------------------------
-  Azure                           dhclient, py3-passlib
+  Azure                           dhcpd, py3-passlib
   CloudSigma & SmartOS/Joyent     py3-pyserial
-  Ec2                             dhclient, eudev
-  GCE                             dhclient
-  Hetzner                         dhclient
+  Ec2                             dhcpd, eudev
+  GCE                             dhcpd
+  Hetzner                         dhcpd
   MAAS                            py3-oauthlib
-  NWCS                            dhclient
-  OpenStack                       dhclient, eudev
-  Oracle                          dhclient
-  Scaleway                        dhclient
-  UpCloud                         dhclient
+  NWCS                            dhcpd
+  OpenStack                       dhcpd, eudev
+  Oracle                          dhcpd
+  Scaleway                        dhcpd
+  UpCloud                         dhcpd
   VMware                          py3-netifaces
-  Vultr                           dhclient
+  Vultr                           dhcpd
 
 
 Additional Alpine packages required by specific cloud-init modules

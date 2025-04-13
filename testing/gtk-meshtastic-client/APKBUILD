@@ -1,0 +1,41 @@
+# Maintainer: Alistair Francis <alistair@alistair23.me>
+pkgname=gtk-meshtastic-client
+pkgver=1.1
+pkgrel=0
+pkgdesc="An unofficial client for Meshtastic devices in GTK4/Libadwaita"
+url="https://gitlab.com/kop316/gtk-meshtastic-client"
+# Depends on py3-meshtastic, which depends on py3-dash
+arch="all !s390x !x86 !armhf !armv7 !loongarch64 !riscv64 !ppc64le"
+license="GPL-3.0-or-later"
+depends="gtk4.0 py3-cairo py3-gobject3 py3-meshtastic"
+makedepends="
+	desktop-file-utils
+	gettext
+	glib-dev
+	gobject-introspection-dev
+	gtk4.0-dev
+	libadwaita-dev
+	libshumate-dev
+	meson
+	"
+
+source="
+	https://gitlab.com/kop316/gtk-meshtastic-client/-/archive/$pkgver/gtk-meshtastic-client-$pkgver.tar.gz
+	"
+
+build() {
+	abuild-meson . _build
+	meson compile -C _build
+}
+
+check() {
+	meson test --print-errorlogs -C _build
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C _build
+}
+
+sha512sums="
+0a01025e877aa66387cd44c358f27914ad7c1956a39b33b5f42e09106d425261e5c4e526d188a1eaddec92f1b4e464aa6a54b701fd1a42befefdd0c3a80ee8a7  gtk-meshtastic-client-1.1.tar.gz
+"

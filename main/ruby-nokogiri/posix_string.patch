@@ -1,0 +1,140 @@
+--- a/gumbo-parser/src/svg_tags.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/svg_tags.c	2025-02-19 14:38:06.118896484 -0500
+@@ -6,6 +6,7 @@
+ #include "replacement.h"
+ #include "macros.h"
+ #include "ascii.h"
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ #define TOTAL_KEYWORDS 36
+--- a/gumbo-parser/src/foreign_attrs.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/foreign_attrs.c	2025-02-19 14:38:06.148925781 -0500
+@@ -5,6 +5,7 @@
+ 
+ #include "replacement.h"
+ #include "macros.h"
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ #define TOTAL_KEYWORDS 11
+--- a/gumbo-parser/src/string_piece.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/string_piece.c	2025-02-19 14:38:06.178955078 -0500
+@@ -16,6 +16,7 @@
+ */
+ 
+ #include <stddef.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "nokogiri_gumbo.h"
+ #include "ascii.h"
+--- a/gumbo-parser/src/string_buffer.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/string_buffer.c	2025-02-19 14:38:06.208984375 -0500
+@@ -14,6 +14,7 @@
+  limitations under the License.
+ */
+ 
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "string_buffer.h"
+ #include "util.h"
+--- a/gumbo-parser/src/vector.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/vector.c	2025-02-19 14:38:06.239013671 -0500
+@@ -17,6 +17,7 @@
+ 
+ #include <assert.h>
+ #include <stdlib.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "vector.h"
+ #include "util.h"
+--- a/gumbo-parser/src/util.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/util.c	2025-02-19 14:38:06.269042968 -0500
+@@ -17,6 +17,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "util.h"
+ #include "nokogiri_gumbo.h"
+--- a/gumbo-parser/src/parser.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/parser.c	2025-02-19 14:38:06.309082031 -0500
+@@ -19,6 +19,7 @@
+ #include <stdarg.h>
+ #include <stdint.h>
+ #include <stdlib.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ #include "ascii.h"
+--- a/gumbo-parser/src/tokenizer.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/tokenizer.c	2025-02-19 14:38:06.349121093 -0500
+@@ -44,6 +44,7 @@
+ */
+ 
+ #include <assert.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "tokenizer.h"
+ #include "ascii.h"
+--- a/gumbo-parser/src/utf8.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/utf8.c	2025-02-19 14:38:06.429199218 -0500
+@@ -19,6 +19,7 @@
+ 
+ #include <assert.h>
+ #include <stdint.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ #include "error.h"
+--- a/gumbo-parser/src/error.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/error.c	2025-02-19 14:38:06.459228515 -0500
+@@ -18,6 +18,7 @@
+ #include <inttypes.h>
+ #include <stdarg.h>
+ #include <stdio.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "ascii.h"
+ #include "error.h"
+--- a/gumbo-parser/src/svg_attrs.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/svg_attrs.c	2025-02-19 14:38:06.489257812 -0500
+@@ -6,6 +6,7 @@
+ #include "replacement.h"
+ #include "macros.h"
+ #include "ascii.h"
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ #define TOTAL_KEYWORDS 58
+--- a/gumbo-parser/src/tag_lookup.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/tag_lookup.c	2025-02-19 14:38:06.519287109 -0500
+@@ -6,6 +6,7 @@
+ #include "tag_lookup.h"
+ #include "macros.h"
+ #include "ascii.h"
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ #define TOTAL_KEYWORDS 151
+--- a/gumbo-parser/src/attribute.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/attribute.c	2025-02-19 14:38:06.549316406 -0500
+@@ -17,6 +17,7 @@
+ 
+ #include <assert.h>
+ #include <stdlib.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ #include "attribute.h"
+ #include "ascii.h"
+--- a/gumbo-parser/src/tag.c	2025-02-18 17:03:38.000000000 -0500
++++ a/gumbo-parser/src/tag.c	2025-02-19 14:38:06.579345703 -0500
+@@ -19,6 +19,7 @@
+ #include "tag_lookup.h"
+ 
+ #include <assert.h>
++#define _POSIX_C_SOURCE 200809L
+ #include <string.h>
+ 
+ static const char kGumboTagNames[GUMBO_TAG_LAST+1][15] = {

@@ -1,0 +1,52 @@
+# Contributor: knuxify <knuxify@gmail.com>
+# Maintainer: knuxify <knuxify@gmail.com>
+pkgname=poethepoet
+pkgver=0.33.1
+pkgrel=0
+pkgdesc="A batteries included task runner that works well with poetry or uv"
+url="https://poethepoet.natn.io/"
+arch="noarch"
+license="MIT"
+depends="python3 py3-pastel py3-yaml"
+makedepends="py3-gpep517 py3-poetry-core"
+checkdepends="poetry uv pytest py3-pytest-cov py3-virtualenv bash git"
+subpackages="$pkgname-pyc"
+source="https://github.com/nat-n/poethepoet/archive/v$pkgver/poethepoet-$pkgver.tar.gz"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	# Build test helpers subpackage
+	cd "$builddir"/tests/fixtures/packages/poe_test_helpers
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+
+	cd "$builddir"
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m installer "$builddir"/tests/fixtures/packages/poe_test_helpers/.dist/*.whl
+
+	# test_poetry_plugin_v1.py: creates a venv with old poetry versions which
+	#                           breaks on non-x86_64/aarch64
+	# test_uv_executor.py: network errors on riscv64 for whatever reason
+	PATH="$builddir"/.testenv/bin:"$PATH" .testenv/bin/python3 -m pytest \
+		--deselect tests/test_poetry_plugin_v1.py \
+		--deselect tests/test_poetry_plugin_v2.py \
+		--deselect tests/test_cli.py::test_pass_dry_run_and_verbosity_to_script \
+		--deselect tests/test_includes.py::test_docs_for_only_includes \
+		--deselect tests/test_uv_executor.py
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+8b88297c67088da775559396a472197fb03067254160899cbf43a606d5d71cb235a9f0500d617972ed80ce8b8a60084906af93934650ed34f89710b6bdc4b9bc  poethepoet-0.33.1.tar.gz
+"

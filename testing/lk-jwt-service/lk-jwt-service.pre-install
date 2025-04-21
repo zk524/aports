@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S lk-jwt-service 2>/dev/null
+adduser -S -D -H -h /dev/null -s /sbin/nologin -G lk-jwt-service -g lk-jwt-service lk-jwt-service 2>/dev/null
+
+exit 0

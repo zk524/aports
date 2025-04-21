@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cat 1>&2 <<EOF
+*
+* Don't forget to read the documentation before using lk-jwt-service!
+* You'll find it at <https://github.com/element-hq/lk-jwt-service>.
+*
+EOF
+
+exit 0

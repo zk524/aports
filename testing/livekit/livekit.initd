@@ -1,0 +1,25 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name="Livekit"
+description="Scalable, multi-user conferencing based on WebRTC"
+
+: "${livekit_config:="/etc/livekit/livekit.yaml"}"
+
+command="/usr/bin/livekit-server"
+command_args="--config '$livekit_config' $livekit_opts"
+command_user="livekit:livekit"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.info"
+
+depend() {
+        need net
+        use logger redis valkey turnserver
+        after firewall
+}
+
+start_pre() {
+        checkpath --file --owner "$command_user" --mode 640 "$livekit_config"
+}

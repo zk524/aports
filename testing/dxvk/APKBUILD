@@ -1,0 +1,62 @@
+# Contributor: Leo <thinkabit.ukim@gmail.com>
+# Contributor: Nicolas Lorin <androw95220@gmail.com>
+# Contributor:: Saif AlSubhi <saifalsubhi@live.com>
+# Maintainer:: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
+pkgname=dxvk
+pkgver=2.6.1
+pkgrel=0
+pkgdesc="Vulkan-based implementation of D3D8, 9, 10 and 11"
+options="!check"
+url="https://github.com/doitsujin/dxvk"
+arch="x86_64 x86"
+license="Zlib"
+makedepends="
+	glslang-dev
+	meson
+	mingw-w64-gcc
+	vulkan-headers
+	vulkan-loader-dev
+	wine-dev
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/doitsujin/dxvk/archive/v$pkgver.tar.gz"
+options="!check" #No upstream testsuite defined
+case "$CARCH" in
+	x86_64)
+		_outdir=build/x64
+		_crossfile=build-win64.txt
+		_prefix=/usr/share/dxvk/x64
+		;;
+	x86)
+		_outdir=build/x32
+		_crossfile=build-win32.txt
+		_prefix=/usr/share/dxvk/x32
+		;;
+esac
+
+build() {
+	abuild-meson \
+		--cross-file=$_crossfile \
+		--prefix=$_prefix \
+		--bindir="" \
+		--libdir="" \
+		--datadir="" \
+		--includedir="" \
+		--infodir="" \
+		--libexecdir="" \
+		--localedir="" \
+		--mandir="" \
+		--sbindir="" \		
+		$_outdir
+	meson compile ${JOBS:+-j ${JOBS}} -C $_outdir
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C $_outdir
+	install -Dm644 setup_dxvk.sh "$pkgdir"/usr/share/dxvk/setup_dxvk.sh
+	mkdir -p "$pkgdir"/usr/bin
+	ln -s /usr/share/dxvk/setup_dxvk.sh "$pkgdir"/usr/bin/setup_dxvk
+	chmod +x "$pkgdir"/usr/share/dxvk/setup_dxvk.sh
+}
+sha512sums="
+0fcdfcacfecbcac2c638e2746d78759d144288975c7ee493b69d5dbcb3f13099e1472fd9ae50e52c12702f9fd74c91da8b1da5f8e6f96467826135947317829b  dxvk-2.6.1.tar.gz
+"

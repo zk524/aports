@@ -13,6 +13,7 @@ makedepends="
 	glu-dev
 	inih-dev
 	libheif-dev
+	libjxl-dev
 	libxkbcommon-dev
 	mesa-dev
 	meson

@@ -4,7 +4,7 @@
 # Maintainer: Duncan Bellamy <dunk@denkimushi.com>
 _pkgname=ceph
 pkgver=18.2.5
-pkgrel=0
+pkgrel=1
 _majorver=${pkgver%%.*}
 pkgname=$_pkgname$_majorver
 pkgdesc="Ceph is a distributed object store and file system, version $_majorver"
@@ -155,8 +155,6 @@ source="https://download.ceph.com/tarballs/ceph-$pkgver.tar.gz
 	gcc13.patch
 	gcc14-2.patch
 	"
-# to prevent things from installing wrong ceph libs, since they have the same SOMAJOR
-sonameprefix="ceph$_majorver:"
 options="!check net" # todo
 subpackages="
 	$pkgname-doc
@@ -206,11 +204,18 @@ esac
 
 # Whether this package is the default (latest) ceph version.
 _default_ceph="no"
-[ "$_default_ceph" = "yes" ] && subpackages="$subpackages ceph-dev:_dev"
 
 if [ "$_default_ceph" = yes ]; then
 	provides="ceph=$pkgver-r$pkgrel"
 	replaces="ceph"
+	subpackages="$subpackages ceph-dev:_dev"
+	_libdir=usr/lib
+	_rpath=""
+else
+	# to prevent things from installing wrong ceph libs, since they have the same SOMAJOR
+	sonameprefix="ceph$_majorver:"
+	_libdir=usr/lib/ceph$_majorver
+	_rpath="-DCMAKE_INSTALL_RPATH=/$_libdir;/$_libdir/ceph"
 fi
 
 _ceph_uid=167
@@ -234,7 +239,7 @@ build() {
 	cmake -B build -G Ninja -Wno-dev \
 		-DCMAKE_BUILD_TYPE=MinSizeRel \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
+		-DCMAKE_INSTALL_LIBDIR=/$_libdir \
 		-DCMAKE_INSTALL_LOCALSTATEDIR=/var \
 		-DCMAKE_INSTALL_SYSCONFDIR=/etc \
 		-DNINJA_MAX_COMPILE_JOBS=$JOBS \
@@ -260,7 +265,7 @@ build() {
 		-DWITH_SYSTEM_ROCKSDB=ON \
 		-DWITH_SYSTEM_ZSTD=ON \
 		-DWITH_TESTS="$(want_check && echo ON || echo OFF)" \
-		-DWITH_THREAD_SAFE_RES_QUERY=ON
+		-DWITH_THREAD_SAFE_RES_QUERY=ON $_rpath
 
 	export NODE_OPTIONS="--openssl-legacy-provider"
 	cmake --build build --target common-options-objs
@@ -338,11 +343,11 @@ base() {
 		usr/bin/ceph-run \
 		usr/sbin/ceph-create-keys \
 		usr/libexec/ceph/ceph_common.sh \
-		usr/lib/rados-classes/*.so* \
-		usr/lib/ceph/erasure-code/libec_*.so* \
-		usr/lib/ceph/compressor/libceph_*.so* \
-		usr/lib/ceph/crypto/libceph_*.so* \
-		usr/lib/ceph/extblkdev/*.so* \
+		$_libdir/rados-classes/*.so* \
+		$_libdir/ceph/erasure-code/libec_*.so* \
+		$_libdir/ceph/compressor/libceph_*.so* \
+		$_libdir/ceph/crypto/libceph_*.so* \
+		$_libdir/ceph/extblkdev/*.so* \
 		etc/logrotate.d/ceph
 	for dir in crash crash/posted tmp bootstrap-osd bootstrap-mds \
 			bootstrap-rgw bootstrap-mgr bootstrap-rbd \
@@ -512,7 +517,7 @@ librados() {
 	depends=
 	_default_replace_majorversion
 
-	amove usr/lib/librados.so.* usr/lib/ceph/libceph-common.so.*
+	amove $_libdir/librados.so.* $_libdir/ceph/libceph-common.so.*
 }
 
 _py3_rados() {
@@ -528,7 +533,7 @@ libradosstriper() {
 	depends=
 	_default_replace_majorversion
 
-	amove usr/lib/libradosstriper.so.*
+	amove $_libdir/libradosstriper.so.*
 }
 
 librbd() {
@@ -536,7 +541,7 @@ librbd() {
 	depends=
 	_default_replace_majorversion
 
-	amove usr/lib/librbd.so.*
+	amove $_libdir/librbd.so.*
 }
 
 _py3_rbd() {
@@ -552,7 +557,7 @@ libcephsqlite() {
 	depends=
 	_default_replace_majorversion
 
-	amove usr/lib/libcephsqlite.so*
+	amove $_libdir/libcephsqlite.so*
 }
 
 libcephfs() {
@@ -560,7 +565,7 @@ libcephfs() {
 	depends=
 	_default_replace_majorversion
 
-	amove usr/lib/libcephfs.so.*
+	amove $_libdir/libcephfs.so.*
 }
 
 mirror() {
@@ -568,7 +573,7 @@ mirror() {
 	depends=
 	_default_replace_majorversion
 
-	amove /usr/bin/cephfs-mirror
+	amove usr/bin/cephfs-mirror
 }
 
 shell() {
@@ -577,7 +582,7 @@ shell() {
 	_default_replace_majorversion
 
 	amove "$(_py3_sitelib)"/cephfs_shell*
-	amove /usr/bin/cephfs-shell
+	amove usr/bin/cephfs-shell
 }
 
 top() {
@@ -586,7 +591,7 @@ top() {
 	_default_replace_majorversion
 
 	amove "$(_py3_sitelib)"/cephfs_top*
-	amove /usr/bin/cephfs-top
+	amove usr/bin/cephfs-top
 }
 
 _py3_cephfs() {
@@ -615,7 +620,7 @@ utils() {
 		usr/bin/ceph-syn \
 		usr/bin/cephfs-data-scan \
 		usr/bin/ceph-dencoder \
-		usr/lib/ceph/denc \
+		$_libdir/ceph/denc \
 		usr/bin/cephfs-journal-tool \
 		usr/bin/cephfs-table-tool \
 		usr/bin/rbd-replay* \

@@ -41,9 +41,8 @@ check() {
 package() {
 	make DESTDIR="$pkgdir" install
 
-	rm -rf "$pkgdir"/usr/lib/charset.alias
+	rm "$pkgdir"/usr/lib/charset.alias
 	rm -rf "$pkgdir"/usr/share/locale/locale.alias
-	rmdir -p "$pkgdir"/usr/lib 2>/dev/null || true
 }
 
 sha512sums="

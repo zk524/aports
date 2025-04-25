@@ -35,9 +35,6 @@ check() {
 package() {
 	make DESTDIR=$pkgdir install
 
-	rm -rf "$pkgdir"/usr/lib/charset.alias
-	rmdir -p "$pkgdir"/usr/lib 2>/dev/null || true
-
 	mkdir -p "$pkgdir"/bin
 	local i; for i in gzip gunzip zcat; do
 		mv "$pkgdir"/usr/bin/$i "$pkgdir"/bin/

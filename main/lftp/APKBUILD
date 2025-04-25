@@ -38,7 +38,6 @@ build() {
 
 package() {
 	make -j1 install DESTDIR="$pkgdir"
-	rm -f "$pkgdir"/usr/lib/charset.alias
 	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
 	mv "$pkgdir"/usr/share/$pkgname "$pkgdir"/usr/share/doc/
 }

@@ -42,7 +42,6 @@ check() {
 
 package() {
 	make DESTDIR="$pkgdir" install
-	rm -f "$pkgdir"/usr/lib/charset.alias
 	rm -f "$pkgdir"/usr/libexec/rmt # part of the tar pkg
 	rm "$pkgdir"/usr/share/man/*/rmt.*
 }

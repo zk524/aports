@@ -100,7 +100,7 @@ _add_driver() {
 	eval "${varprefix}_libname='$libname'; ${varprefix}_typ='$typ'; ${varprefix}_descr='$descr'"
 	subpackages="$subpackages $subpkgname:_driver"
 	_all_drivers="$_all_drivers $subpkgname=$pkgver-r$pkgrel"
-	eval "export $(echo $typ | tr '[:lower:]' '[:upper:]')_DRIVER_$(echo $libname | tr '[:lower:]' '[:upper:]')_PLUGIN_INSTALLATION_MESSAGE=\"You may install it with 'apk add $subpkgname'\""
+	export "$(echo $typ | tr '[:lower:]' '[:upper:]')_DRIVER_$(echo $libname | tr '[:lower:]' '[:upper:]')_PLUGIN_INSTALLATION_MESSAGE=You may install it with 'apk add $subpkgname'"
 }
 
 # Optional dependency netcdf-dev is not available on s390x
@@ -363,15 +363,10 @@ tools() {
 	pkgdesc="$pkgdesc (command line utilities)"
 	depends="py3-$pkgname"
 
-	cd "$builddir"/swig/python/gdal-utils
-	chmod a+x scripts/*
+	install -Dm755 -t "$subpkgdir/usr/bin/" \
+		"$builddir"/swig/python/gdal-utils/scripts/*.py
 
-	install -d "$subpkgdir/usr/bin"
-	install -m755 scripts/*.py "$subpkgdir/usr/bin/"
-
-	for b in "$pkgdir"/usr/bin/*; do
-		amove usr/bin/"$(basename $b)"
-	done
+	amove usr/bin/*
 }
 
 check() {

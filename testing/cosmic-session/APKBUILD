@@ -3,7 +3,7 @@
 pkgname=cosmic-session
 pkgver=1.0.0_alpha7
 _upstreamver="${pkgver/_alpha/-alpha.}"
-pkgrel=2
+pkgrel=3
 pkgdesc="Session manager for the COSMIC Desktop Environment"
 url="https://github.com/pop-os/cosmic-session"
 arch="x86_64 aarch64"
@@ -28,6 +28,7 @@ depends="
 	cosmic-settings-daemon
 	cosmic-workspaces
 	dbus
+	orca
 	xwayland
 "
 makedepends="

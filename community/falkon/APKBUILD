@@ -29,7 +29,7 @@ makedepends="
 	samurai
 	xcb-util-dev
 	"
-checkdepends="xvfb-run"
+checkdepends="xwayland-run"
 subpackages="
 	$pkgname-lang
 	$pkgname-bash-completion:bashcomp:noarch
@@ -52,7 +52,7 @@ build() {
 check() {
 	# Requires working OpenGL
 	# qmlhistoryapitest, qmlcookiesapitest, qmltabsapitest and qmlwindowsapitest are SIGTRAP'ing
-	xvfb-run -a ctest --test-dir build -E "falkon-(locationbar|webtab|qml-qml(tabsapi|topsitesapi)|sitesettings)test" -j1
+	wlheadless-run -- ctest --test-dir build -E "falkon-(locationbar|webtab|qml-qml(tabsapi|topsitesapi)|sitesettings)test" -j1
 }
 
 package() {

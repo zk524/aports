@@ -1,0 +1,28 @@
+# Contributor: hon <greek.team.blog2@gmail.com>
+# Maintainer: hon <greek.team.blog2@gmail.com>
+maintainer="hon <greek.team.blog2@gmail.com>"
+pkgname=htorrentcreator
+pkgver=0.0.1
+pkgrel=0
+pkgdesc="An open source C++ command line torrent creator."
+url="https://github.com/hon4/hTorrentCreatorCLI"
+arch="all"
+license="GPL-2.0-or-later"
+makedepends="openssl-dev"
+options="!check" # no tests
+source="https://github.com/hon4/hTorrentCreatorCLI/releases/download/v$pkgver/hTorrentCreatorCLI-$pkgver.tar.gz
+	symlink.patch"
+builddir="$srcdir/hTorrentCreatorCLI-$pkgver"
+
+build() {
+	make
+}
+
+package() {
+	make BINDIR="$pkgdir/usr/bin" install
+}
+
+sha512sums="
+81c60c224af5fee5cc404ecb9dcca7581581b4e0d5ecccfbdb2af1b68018f6aca8d5d38bce1b46d582112b97856b236e97f4f6e0aaa88d92e0163978da7d5dd5  hTorrentCreatorCLI-0.0.1.tar.gz
+ab07f85dd4886bf11513592b53d96f9eb60944f3f4b070c24d19efff942c3cfac7b7724dd13323a323e9b0e37c3f8321a201f3bd7c7fd34a59bdd551c0a9a3da  symlink.patch
+"

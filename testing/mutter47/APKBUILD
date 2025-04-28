@@ -1,0 +1,106 @@
+# Contributor: Rasmus Thomsen <oss@cogitri.dev>
+# Maintainer: team/gnome <pabloyoyoista@postmarketos.org>
+pkgname=mutter47
+pkgver=47.7
+pkgrel=0
+pkgdesc="clutter-based window manager and compositor"
+url="https://wiki.gnome.org/Projects/Mutter/"
+arch="all"
+license="GPL-2.0-or-later"
+depends="
+	gnome-settings-daemon
+	gsettings-desktop-schemas
+	xkeyboard-config
+	"
+makedepends="
+	at-spi2-core-dev
+	cairo-dev
+	dbus-dev
+	elogind-dev
+	eudev-dev
+	fribidi-dev
+	gdk-pixbuf-dev
+	glib-dev
+	gnome-desktop-dev
+	gnome-settings-daemon-dev
+	gobject-introspection-dev
+	graphene-dev
+	gtk4.0-dev
+	json-glib-dev
+	lcms2-dev
+	libcanberra-dev
+	libdisplay-info-dev
+	libdrm-dev
+	libei-dev
+	libgudev-dev
+	libice-dev
+	libinput-dev
+	libsm-dev
+	libwacom-dev
+	libx11-dev
+	libxau-dev
+	libxcb-dev
+	libxcomposite-dev
+	libxcursor-dev
+	libxdamage-dev
+	libxext-dev
+	libxfixes-dev
+	libxi-dev
+	libxinerama-dev
+	libxkbcommon-dev
+	libxkbfile-dev
+	libxrandr-dev
+	libxrender-dev
+	libxtst-dev
+	mesa-dev
+	meson
+	pango-dev
+	pipewire-dev
+	py3-argcomplete
+	py3-docutils
+	startup-notification-dev
+	wayland-dev
+	wayland-protocols
+	xkeyboard-config-dev
+	xwayland-dev
+	"
+options="!check" # Can't be run with release builds
+subpackages="$pkgname-dbg $pkgname-dev $pkgname-doc $pkgname-lang $pkgname-schemas::noarch"
+source="https://download.gnome.org/sources/mutter/${pkgver%.*}/mutter-$pkgver.tar.xz
+	fixudev-req.patch
+	pcversion.patch
+	"
+provides="mutter=$pkgver-r$pkgrel"
+builddir="$srcdir/mutter-$pkgver"
+
+build() {
+	abuild-meson \
+		-Db_lto=true \
+		-Dudev=true \
+		-Dnative_backend=true \
+		-Dintrospection=true \
+		-Dremote_desktop=true \
+		-Dprofiler=false \
+		-Dtests="$(want_check && echo enabled || echo disabled)" \
+		. output
+	meson compile -C output
+}
+
+schemas() {
+	pkgdesc="Mutter schemas related files"
+	depends=""
+
+	amove usr/share/glib-2.0/schemas
+	amove usr/share/GConf/gsettings
+	amove usr/share/gnome-control-center/keybindings
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+7c8b86a520d08dcce32e459b4a6acb090192f9e388f0f8e9e4120115795b9014c28ea86384f0b5c75abdf6b82138b433eca677b8bfc7f36c506f6e621e6b412a  mutter-47.7.tar.xz
+3e5dd59f2f2fd80edde13f64d70d52a023dec303fd8dbfa3ded0d77faf7643179f2ad74d4acd3450decb67deaf6ac85a7af5146fa96f33917b4363f884413af9  fixudev-req.patch
+ec94fdecb7a3213903d013c1e6f48e02f8a1972ded16c3604627984cfce0936a0276d284c20e746eb91bf97249785bcf827f6fa55f1629e5290e19423d554e4d  pcversion.patch
+"

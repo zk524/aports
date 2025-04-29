@@ -1,8 +1,8 @@
 # Contributor: Michał Polański <michal@polanski.me>
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=py3-anyio
-pkgver=4.3.0
-pkgrel=2
+pkgver=4.9.0
+pkgrel=0
 pkgdesc="High level compatibility layer for multiple asynchronous event loop implementations"
 url="https://github.com/agronholm/anyio"
 license="MIT"
@@ -11,6 +11,7 @@ depends="python3 py3-idna py3-sniffio"
 makedepends="py3-gpep517 py3-setuptools py3-wheel py3-pytest-xdist"
 # change this when 4.x releases and upgrade py3-trio
 checkdepends="
+	py3-blockbuster
 	py3-hypothesis
 	py3-psutil
 	py3-pytest
@@ -35,7 +36,8 @@ check() {
 	.testenv/bin/python3 -m installer .dist/*.whl
 	# disable tests that requires network
 	.testenv/bin/python3 -m pytest -n auto \
-		--ignore tests/test_sockets.py
+		--ignore tests/test_sockets.py \
+		-k "not test_nonexistent_main_module"
 }
 
 package() {
@@ -43,6 +45,6 @@ package() {
 }
 
 sha512sums="
-f069a2feb6464a429eb24921969eb13cf92f0c6bfb6b3a3b0b770c54621a7c663343267e7df7444c74b26643002b24bd7ce4df8a9e0662a38def2ec5a6f1d54c  py3-anyio-4.3.0.tar.gz
-7785e7d730cb83bf112340cf043324b2b5873cfe21e87906977aed275bc0fe99cce232dae7311299b8055c4681023d75851884e567d53a984826483dfc3f6139  test-excgroup.patch
+1e257f5424fe86f7b0599bfc98eaadb6fc01039022a2b0e5425e2550cdd5f36ee3218f68400009176f91e45e4e4f0e7634fd9eb0d7dfbd967884e9548a725dc1  py3-anyio-4.9.0.tar.gz
+bdad28c56c769c5c79943be999518fdb004059bfb1b5d0081705b6150ee99021f90da032186fd5aa2978763582b2376237f9e331de2b16ef650216769a731f05  test-excgroup.patch
 "

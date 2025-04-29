@@ -1,8 +1,8 @@
 # Contributor: Michael Pirogov <vbnet.ru@gmail.com>
 # Contributor: Łukasz Jendrysik <scadu@yandex.com>
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
-# Contributor: Thomas Böhler <witcher@wiredspace.de>
-# Maintainer: Jeff Bilyk <jbilyk@gmail.com>
+# Maintainer: Thomas Böhler <witcher@wiredspace.de>
+maintainer="Thomas Böhler <witcher@wiredspace.de>"
 pkgname=nagios-plugins
 pkgver=2.4.12
 pkgrel=1

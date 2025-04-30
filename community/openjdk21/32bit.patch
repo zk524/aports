@@ -1,0 +1,133 @@
+Remove -fno-PIC which causes compilation failure
+Fixes -musleabi not detected as musl.
+Remove/replace fpu_control.h include.
+Only use mcontext_t workaround for glibc.
+Replace non-portable __uint*_t with uint*_t.
+
+--- a/make/hotspot/lib/JvmOverrideFiles.gmk
++++ b/make/hotspot/lib/JvmOverrideFiles.gmk
+@@ -80,7 +80,6 @@
+     # Declare variables for each source file that needs the pic flag like this:
+     # BUILD_JVM_<srcfile>_CXXFLAGS := -fno-PIC
+     # This will get implicitly picked up by SetupNativeCompilation below.
+-    $(foreach s, $(NONPIC_SRC), $(eval BUILD_LIBJVM_$(notdir $s)_CXXFLAGS := -fno-PIC))
+   endif
+ 
+ else ifeq ($(call isTargetOs, macosx), true)
+--- a/src/hotspot/os_cpu/linux_x86/os_linux_x86.cpp
++++ b/src/hotspot/os_cpu/linux_x86/os_linux_x86.cpp
+@@ -73,7 +73,8 @@
+ # include <poll.h>
+ # include <ucontext.h>
+ #ifndef AMD64
+-# include <fpu_control.h>
++#define _FPU_GETCW(cw) __asm__ __volatile__ ("fnstcw %0" : "=m" (*&cw))
++#define _FPU_SETCW(cw) __asm__ __volatile__ ("fldcw %0" : : "m" (*&cw))
+ #endif
+ 
+ #ifdef AMD64
+--- a/make/autoconf/platform.m4
++++ b/make/autoconf/platform.m4
+@@ -238,7 +238,7 @@ AC_DEFUN([PLATFORM_EXTRACT_VARS_FROM_OS],
+ AC_DEFUN([PLATFORM_EXTRACT_VARS_FROM_LIBC],
+ [
+   case "$1" in
+-    *linux*-musl)
++    *linux*-musl*)
+       VAR_LIBC=musl
+       ;;
+     *linux*-gnu)
+--- a/src/hotspot/os_cpu/linux_arm/os_linux_arm.cpp
++++ b/src/hotspot/os_cpu/linux_arm/os_linux_arm.cpp
+@@ -70,7 +70,6 @@
+ # include <pwd.h>
+ # include <poll.h>
+ # include <ucontext.h>
+-# include <fpu_control.h>
+ # include <asm/ptrace.h>
+ 
+ #define SPELL_REG_SP  "sp"
+@@ -98,6 +97,7 @@ char* os::non_memory_address_word() {
+ }
+ 
+ 
++#ifdef __GLIBC__
+ #if NGREG == 16
+ // These definitions are based on the observation that until
+ // the certain version of GCC mcontext_t was defined as
+@@ -109,6 +109,7 @@ char* os::non_memory_address_word() {
+ #define arm_fp gregs[11]
+ #define arm_r0 gregs[0]
+ #endif
++#endif
+ 
+ #define ARM_REGS_IN_CONTEXT  16
+ 
+--- a/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
++++ b/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
+@@ -70,19 +70,12 @@
+ // by defining binary compatible statx structs in this file and
+ // not relying on included headers.
+ 
+-#ifndef __GLIBC__
+-// Alpine doesn't know these types, define them
+-typedef unsigned int       __uint32_t;
+-typedef unsigned short     __uint16_t;
+-typedef unsigned long int  __uint64_t;
+-#endif
+-
+ /*
+  * Timestamp structure for the timestamps in struct statx.
+  */
+ struct my_statx_timestamp {
+         int64_t   tv_sec;
+-        __uint32_t  tv_nsec;
++        uint32_t  tv_nsec;
+         int32_t   __reserved;
+ };
+ 
+@@ -92,27 +85,27 @@ struct my_statx_timestamp {
+  */
+ struct my_statx
+ {
+-  __uint32_t stx_mask;
+-  __uint32_t stx_blksize;
+-  __uint64_t stx_attributes;
+-  __uint32_t stx_nlink;
+-  __uint32_t stx_uid;
+-  __uint32_t stx_gid;
+-  __uint16_t stx_mode;
+-  __uint16_t __statx_pad1[1];
+-  __uint64_t stx_ino;
+-  __uint64_t stx_size;
+-  __uint64_t stx_blocks;
+-  __uint64_t stx_attributes_mask;
++  uint32_t stx_mask;
++  uint32_t stx_blksize;
++  uint64_t stx_attributes;
++  uint32_t stx_nlink;
++  uint32_t stx_uid;
++  uint32_t stx_gid;
++  uint16_t stx_mode;
++  uint16_t __statx_pad1[1];
++  uint64_t stx_ino;
++  uint64_t stx_size;
++  uint64_t stx_blocks;
++  uint64_t stx_attributes_mask;
+   struct my_statx_timestamp stx_atime;
+   struct my_statx_timestamp stx_btime;
+   struct my_statx_timestamp stx_ctime;
+   struct my_statx_timestamp stx_mtime;
+-  __uint32_t stx_rdev_major;
+-  __uint32_t stx_rdev_minor;
+-  __uint32_t stx_dev_major;
+-  __uint32_t stx_dev_minor;
+-  __uint64_t __statx_pad2[14];
++  uint32_t stx_rdev_major;
++  uint32_t stx_rdev_minor;
++  uint32_t stx_dev_major;
++  uint32_t stx_dev_minor;
++  uint64_t __statx_pad2[14];
+ };
+ 
+ // statx masks, flags, constants

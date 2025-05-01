@@ -1,0 +1,56 @@
+# Contributor: X&r <46404-xrbnvd@gitlab.alpinelinux.org>
+maintainer="X&r <46404-xrbnvd@gitlab.alpinelinux.org>"
+pkgname=pdfpc
+pkgver=4.7.0
+pkgrel=0
+pkgdesc="A presenter console with multi-monitor support for PDF files"
+url="https://pdfpc.github.io/"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	cmake
+	ninja-is-really-ninja
+	vala
+	libgee-dev
+	poppler-dev
+	discount-dev
+	json-glib-dev
+	libsoup3-dev
+	webkit2gtk-4.1-dev
+	libqrencode-dev
+	gstreamer-dev
+	gst-plugins-base-dev
+	gst-plugins-good-gtk
+	"
+source="
+	pdfpc.desktop
+	$pkgname-$pkgver.tar.gz::https://github.com/pdfpc/pdfpc/archive/v$pkgver.tar.gz
+	"
+options="!check" # no tests
+
+build() {
+	if [ "$CBUILD" != "$CHOST" ]; then
+		local crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+	fi
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_BUILD_TYPE=None \
+		$crossopts
+	cmake --build build
+}
+
+package() {
+	install -Dm755 "$builddir"/build/bin/pdfpc -t "$pkgdir"/usr/bin/
+	install -Dm644 "$builddir"/rc/pdfpcrc -t "$pkgdir"/etc/
+	install -Dm644 "$builddir"/icons/*.svg -t "$pkgdir"/usr/share/pdfpc/icons/
+	install -Dm644 "$builddir"/css/*.css -t "$pkgdir"/usr/share/pdfpc/css/
+	install -Dm644 "$srcdir"/pdfpc.desktop -t "$pkgdir"/usr/share/applications/
+}
+
+sha512sums="
+e56beda0855f5ab2c095a4120d83c3a859df9b0d605aafeaaa87444727bcb190deb9bf5f18dc5139ec2f0518a409911d621cc5b3e8be469202630cbd6ef310b0  pdfpc.desktop
+2ee0bec8ed1d6c330042a0fd296511e73d88bd1bba153fd3f19ca43135662c8d93670e503c1db1822f927c67097a5c5112f783545063f47c29f3c7160d07be49  pdfpc-4.7.0.tar.gz
+"
+

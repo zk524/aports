@@ -1,0 +1,58 @@
+maintainer="Ryan Walklin <ryan@testtoast.com>"
+pkgname=libdicom
+pkgver=1.2.0
+pkgrel=0
+pkgdesc="C library for reading DICOM files"
+url="https://github.com/ImagingDataCommons/libdicom"
+arch="all !armhf !loongarch64 !riscv64 !s390x" # valgrind not available on armhf and loongarch64 and fails on riscv64 and s390x
+license="MIT"
+depends="uthash"
+makedepends="
+	check-dev
+	clang-dev
+	meson
+	ninja
+	py3-hawkmoth
+	py3-clang
+	py3-sphinx
+	py3-sphinx_rtd_theme
+	sphinx
+	uthash-dev
+"
+checkdepends="valgrind"
+subpackages="$pkgname-doc"
+source="
+	$pkgname-$pkgver.tar.xz::$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz
+	libdicom-use-system-sphinx.patch
+"
+
+build() {
+	abuild-meson . build --buildtype release
+	meson compile -C build
+	meson compile -C build html
+}
+
+check() {
+	meson test -C build
+	valgrind --leak-check=full build/dcm-dump data/test_files/sm_image.dcm
+}
+
+doc() {
+	pkgdesc="$pkgdesc (documentation)"
+
+	default_doc
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C build
+
+	# collate HTML docs
+	mkdir -p "$pkgdir"/usr/share/doc/"$pkgname"/html
+	cp build/html/*.html build/html/searchindex.js "$pkgdir"/usr/share/doc/"$pkgname"/html/
+
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+sha512sums="
+afafd3bc3fcf0627336d788a1078e2741ed235ffb2fa7fd358d8f36b9fe2fdd22f06f8e75fc55f39a199625a8238ba29ab01801bccf5e3e9568ee780fbfa05cd  libdicom-1.2.0.tar.xz
+e40c8122e0f0e02376d88cb786a16574cd5db58770e49bc87d4ee1207247af503ff94e91e58db5dd11e972c5c906006099602d94c6bffe0f04875fbe4e0202a0  libdicom-use-system-sphinx.patch
+"

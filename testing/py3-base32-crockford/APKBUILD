@@ -1,0 +1,34 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=py3-base32-crockford
+_pyname=base32-crockford
+pkgver=0.3.0
+pkgrel=0
+pkgdesc="Python implementation of Douglas Crockford's base32 encoding scheme"
+url="https://github.com/jbittel/base32-crockford"
+arch="noarch"
+license="BSD-3-Clause"
+makedepends="
+	py3-build
+	py3-installer
+	py3-setuptools
+	py3-wheel
+	"
+subpackages="$pkgname-pyc"
+source="base32-crockford-$pkgver.tar.gz::https://github.com/jbittel/base32-crockford/archive/refs/tags/$pkgver.tar.gz"
+builddir="$srcdir/base32-crockford-$pkgver/"
+
+build() {
+	python3 -m build --no-isolation
+}
+
+check() {
+	python3 test.py
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" dist/base32_crockford-$pkgver-py2.py3-none-any.whl
+}
+
+sha512sums="
+08983784299ffa5acbb454d75c89be576b175e6e900ec8d75ad89956883ab1771dda42f1a2a65438b364d3760000a1fe0b69100295fd56dbdbc898c95aa987d8  base32-crockford-0.3.0.tar.gz
+"

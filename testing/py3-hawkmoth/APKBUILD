@@ -1,0 +1,28 @@
+maintainer="Ryan Walklin <ryan@testtoast.com>"
+pkgname=py3-hawkmoth
+_pyname=hawkmoth
+pkgver=0.20.0
+pkgrel=0
+pkgdesc="Sphinx Autodoc for C"
+url="https://github.com/jnikula/hawkmoth"
+arch="noarch"
+license="BSD-2-Clause"
+depends="py3-clang"
+makedepends="py3-gpep517 py3-hatchling
+"
+subpackages="$pkgname-pyc"
+source="$_pyname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+builddir="$srcdir/$_pyname-$pkgver"
+options="!check" # relies on unpackaged strictyaml
+
+build() {
+	gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 1>&2
+}
+
+package() {
+	gpep517 install-wheel --destdir "$pkgdir" .dist/*.whl
+}
+
+sha512sums="
+7d0a27d35f955140b3f29ae541207bbc9530d44375c93efb88e273100e1937d5628e5f9d52c0f40cfab8dd5c806ed1851f2395c1e58b4797be6b4d22ad20e2dd  hawkmoth-0.20.0.tar.gz
+"

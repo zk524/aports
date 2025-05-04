@@ -1,0 +1,28 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=readability-extractor
+pkgver=0_git20240411
+_gitrev=057f2046f9535cfc6df7b8d551aaad32a9e6226c
+pkgrel=0
+pkgdesc="Command line wrapper around Mozilla's Readability to extract text from a page's article"
+url="https://github.com/pirate/readability-extractor"
+license="MIT"
+arch="noarch"
+depends="nodejs"
+makedepends="npm"
+source="https://github.com/pirate/readability-extractor/archive/$_gitrev.tar.gz"
+options="!check" # no tests
+builddir="$srcdir/readability-extractor-$_gitrev/"
+
+unpack() {
+	# skipping unpacking, installing archive directly
+	verify
+}
+
+package() {
+	npm install --omit=dev --global --prefix "$pkgdir/usr" "$srcdir/$_gitrev.tar.gz"
+	chown -R root: "$pkgdir"
+}
+
+sha512sums="
+dc456c2a3ec364b1c48868570e0a3a2d8c9d7e91e2ab3eb8b4fd4b17cecfba56c5a6c2f287f0a3dda3b326b47679995e1ad490eba9d5fb10e3f2cd3f76eb1bce  057f2046f9535cfc6df7b8d551aaad32a9e6226c.tar.gz
+"

@@ -1,0 +1,22 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=single-file-cli
+pkgver=2.0.75
+pkgrel=0
+pkgdesc="CLI tool for saving a complete web page in a single HTML file."
+url="https://github.com/gildas-lormeau/single-file-cli"
+license="AGPL-3.0-or-later"
+arch="noarch"
+depends="nodejs"
+makedepends="npm"
+source="single-file-cli-$pkgver.tar.gz::https://github.com/gildas-lormeau/single-file-cli/archive/v$pkgver.tar.gz"
+options="!check" # no tests
+builddir="$srcdir/parser-$pkgver/"
+
+package() {
+	npm install --omit=dev --global --prefix "$pkgdir/usr" "$srcdir/single-file-cli-$pkgver.tar.gz"
+	chown -R root: "$pkgdir"
+}
+
+sha512sums="
+c4c41735b84f7850f7ac60f1947716a1dff643003b078bf6ce3effb4b1f549594f4abcfe5e49d620c3c217f07ad4fda57a30b379c608bfb09c0af8d7cf06f536  single-file-cli-2.0.75.tar.gz
+"

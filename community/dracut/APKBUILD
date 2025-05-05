@@ -1,7 +1,7 @@
 # Maintainer: Jo Zzsi <jozzsicsataban@gmail.com>
 pkgname=dracut
 pkgver=106
-pkgrel=1
+pkgrel=2
 pkgdesc="An event driven initramfs infrastructure"
 url="https://github.com/dracut-ng/dracut/wiki"
 arch="noarch !armhf" # checkdepends fails
@@ -16,7 +16,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/dracut-ng/dracut/archive/ref
 provides="initramfs-generator"
 provider_priority=100 # low, somewhat experimental
 builddir="$srcdir/$pkgname-ng-$pkgver"
-_coredepends="bash coreutils blkid findmnt grep"
+_coredepends="bash coreutils cpio blkid findmnt grep"
 _moduledepends="eudev util-linux-misc sed losetup"
 
 checkdepends="

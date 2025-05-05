@@ -1,7 +1,7 @@
 # Maintainer: team/gnome <pabloyoyoista@postmarketos.org>
 pkgname=gvfs
 pkgver=1.57.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Backends for the gio framework in GLib"
 url="https://gitlab.gnome.org/GNOME/gvfs"
 arch="all"

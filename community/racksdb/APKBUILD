@@ -9,8 +9,8 @@ arch="noarch"
 license="GPL-3.0-or-later"
 depends="py3-$pkgname=$pkgver-r$pkgrel"
 _pydepends="python3
-	py3-clustershell
 	pango
+	py3-clustershell
 	py3-cairo
 	py3-gobject3
 	py3-pyaml
@@ -22,6 +22,8 @@ _webdepends="py3-flask
 makedepends="asciidoctor npm py3-gpep517 py3-setuptools py3-wheel"
 checkdepends="$_pydepends
 	$_webdepends
+	cairo-dev
+	pango-dev
 	py3-parameterized
 	py3-pytest
 	py3-pytest-cov

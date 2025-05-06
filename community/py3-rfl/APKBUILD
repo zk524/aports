@@ -1,0 +1,130 @@
+# Contributor: omni <omni+alpine@hack.org>
+# Maintainer: omni <omni+alpine@hack.org>
+pkgname=py3-rfl
+pkgver=1.4.0
+pkgrel=0
+pkgdesc="Rackslab Foundation Library"
+url="https://github.com/rackslab/RFL"
+arch="noarch"
+license="GPL-3.0-or-later"
+depends="python3"
+makedepends="py3-gpep517 py3-setuptools py3-wheel"
+checkdepends="py3-pytest
+	py3-flask
+	py3-jwt
+	py3-ldap
+	py3-pyaml
+	"
+subpackages="$pkgname-core:_core
+	$pkgname-authentication:_authentication
+	$pkgname-build:_build
+	$pkgname-log:_log
+	$pkgname-permissions:_permissions
+	$pkgname-settings:_settings
+	$pkgname-web:_web
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/rackslab/RFL/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/RFL-$pkgver"
+
+build() {
+	gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2
+
+	for subpkg in core authentication build log permissions settings web; do
+		cd "$builddir"/src/"$subpkg"
+		gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2
+	done
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	for subpkg in core authentication build permissions settings web; do
+		.testenv/bin/python3 -m installer src/"$subpkg"/.dist/*.whl
+		echo "TESTING SUBPACKAGE $subpkg"
+		.testenv/bin/python3 -m unittest discover -v src/"$subpkg"/rfl
+	done
+	# TODO: test log subpackage
+}
+
+package() {
+	pkgdesc="$pkgdesc: meta package"
+	depends="$pkgname-core
+		$pkgname-authentication
+		$pkgname-build
+		$pkgname-log
+		$pkgname-permissions
+		$pkgname-web
+		"
+
+	mkdir -p "$pkgdir"
+}
+
+_core() {
+	pkgdesc="$pkgdesc: core package"
+	depends="python3"
+
+	cd "$builddir"/src/core
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+_authentication() {
+	pkgdesc="$pkgdesc: authentication package"
+	depends="$pkgname-core
+		py3-ldap
+		py3-jwt
+		"
+
+	cd "$builddir"/src/authentication
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+_build() {
+	pkgdesc="$pkgdesc: build package"
+	depends="$pkgname-core
+		py3-tomli
+		"
+
+	cd "$builddir"/src/build
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+_log() {
+	pkgdesc="$pkgdesc: log package"
+	depends="$pkgname-core"
+
+	cd "$builddir"/src/log
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+_permissions() {
+	pkgdesc="$pkgdesc: permissions package"
+	depends="$pkgname-core $pkgname-authentication
+		py3-pyaml
+		"
+
+	cd "$builddir"/src/permissions
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+_settings() {
+	pkgdesc="$pkgdesc: settings package"
+	depends="$pkgname-core
+		py3-pyaml
+		"
+
+	cd "$builddir"/src/settings
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+_web() {
+	pkgdesc="$pkgdesc: web package"
+	depends="$pkgname-core $pkgname-permissions
+		py3-flask
+		"
+
+	cd "$builddir"/src/web
+	python3 -m installer -d "$subpkgdir" .dist/*.whl
+}
+
+sha512sums="
+4ec68270d7eab2fa93a2552cea1e0c6133e0c9478757badb797c8822b0b98c3027f888cc0b8b91ca892cc16e444d8f6ae02ecd071b4260abc09921ece1b770c4  py3-rfl-1.4.0.tar.gz
+"

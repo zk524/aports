@@ -1,0 +1,37 @@
+maintainer="Dominic <git@msrd0.de>"
+pkgname=py3-cryptg
+pkgver=0.5
+pkgrel=0
+pkgdesc="Official Telethon extension to provide much faster cryptography for Telegram API requests"
+url="https://github.com/cher-nov/cryptg"
+arch="all"
+license="CC0-1.0"
+makedepends="
+	py3-gpep517
+	py3-setuptools
+	py3-setuptools-rust
+	py3-wheel
+	"
+checkdepends="
+	py3-pytest
+	py3-pytest-asyncio
+	"
+subpackages="$pkgname-pyc"
+source="https://github.com/cher-nov/cryptg/archive/v$pkgver/cryptg-v$pkgver.tar.gz"
+builddir="$srcdir/cryptg-$pkgver"
+options="!check" # no tests
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+8b24ecb2469e51f706e122a7feca88467686cbc57a3741716e03ab7e8435ea406eb8baccaae92b8677492ea27f176633e3e5fabdaa2e98512a8b4ed3cf6577fc  cryptg-v0.5.tar.gz
+"

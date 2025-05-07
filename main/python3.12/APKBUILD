@@ -1,10 +1,13 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 # Contributor: Sheila Aman <sheila@vulpine.house>
-pkgname=python3
-# the python3-tkinter's pkgver needs to be synchronized with this.
+pkgname=python
+# the python3-tkinter's pkgver needs to be synchronized with default python.
 pkgver=3.12.11
 _basever="${pkgver%.*}"
-pkgrel=0
+_majorver="${_basever%.*}"
+_default=no
+pkgname=$pkgname$_basever
+pkgrel=1
 pkgdesc="High-level scripting language"
 url="https://www.python.org/"
 arch="all"
@@ -20,7 +23,6 @@ subpackages="
 	$pkgname-pycache-pyc1
 	$pkgname-pycache-pyc0
 	$pkgname-gdbm
-	pyc:_pyc_meta:noarch
 	"
 depends="libssl3>=3.3.0"
 makedepends="
@@ -49,6 +51,13 @@ source="https://www.python.org/ftp/python/$pkgver/Python-$pkgver.tar.xz
 	"
 options="net" # Required for tests
 builddir="$srcdir/Python-$pkgver"
+
+if [ "$_default" = yes ]; then
+	subpackages="$subpackages pyc:_pyc_meta:noarch"
+
+	provides="python3=$pkgver-r$pkgrel"
+	replaces="python3"
+fi
 
 # secfixes:
 #   3.12.11-r0:
@@ -100,9 +109,6 @@ builddir="$srcdir/Python-$pkgver"
 #     - CVE-2019-16935
 #   3.6.8-r1:
 #     - CVE-2019-5010
-
-# was briefly present, and is in 3.16
-provides="pythonispython3=$pkgver-r$pkgrel"
 
 prepare() {
 	default_prepare
@@ -200,7 +206,9 @@ EOF
 }
 
 package() {
-	make -j1 DESTDIR="$pkgdir" EXTRA_CFLAGS="$CFLAGS" install maninstall
+	[ "$_default" = no ] && _alt=alt
+	make -j1 DESTDIR="$pkgdir" EXTRA_CFLAGS="$CFLAGS" ${_alt}install maninstall
+
 	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 
 	install -Dm644 "$srcdir"/externally-managed \
@@ -210,8 +218,14 @@ package() {
 	rm -r "$pkgdir"/usr/bin/idle* "$pkgdir"/usr/lib/python*/idlelib \
 		"$pkgdir"/usr/lib/python*/tkinter
 
-	ln -s python3 "$pkgdir"/usr/bin/python
-	ln -s python3-config "$pkgdir"/usr/bin/python-config
+	if [ "$_default" = yes ]; then
+		ln -s python3 "$pkgdir"/usr/bin/python
+		ln -s python3-config "$pkgdir"/usr/bin/python-config
+	else
+		# conflicts with default python
+		rm "$pkgdir"/usr/lib/libpython$_majorver.so
+		rm "$pkgdir"/usr/share/man/man1/python$_majorver.1
+	fi
 }
 
 dev() {

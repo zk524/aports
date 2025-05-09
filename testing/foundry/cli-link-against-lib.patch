@@ -1,0 +1,21 @@
+we dont want to ship two libfoundries. we can just let the CLI depend on
+$pkgname-libs which also ships the schemas
+---
+--- a/meson.build
++++ b/meson.build
+@@ -210,9 +210,11 @@ foundry_shared = shared_library('foundry-@0@'.format(api_version),
+ )
+ 
+ foundry_exe = executable('foundry', 'foundry.c',
+-  dependencies: [foundry_static_dep],
+-        c_args: foundry_c_args,
+-       install: true,
++         dependencies: foundry_deps,
++            link_with: [foundry_shared] + foundry_static,
++  include_directories: foundry_include_directories,
++               c_args: foundry_c_args,
++              install: true,
+ )
+ 
+ install_headers(foundry_headers, subdir: 'libfoundry-@0@'.format(api_version))
+

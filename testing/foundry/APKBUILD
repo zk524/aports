@@ -1,0 +1,62 @@
+maintainer="fossdd <fossdd@pwned.life>"
+pkgname=foundry
+pkgver=0_git20250627
+_commit="a113efdd1683b1a88031a2c7bb165acc4f1c4448"
+pkgrel=0
+pkgdesc="Companion command-line tool for IDE features of GNOME Builder"
+url="https://gitlab.gnome.org/chergert/foundry"
+arch="all !armhf" # libpeas2
+license="LGPL-2.1-or-later"
+depends_libs="flatpak-xdg-utils"
+makedepends="
+	flatpak-dev
+	glib-dev
+	gobject-introspection-dev
+	gom-dev
+	json-glib-dev
+	jsonrpc-glib-dev
+	libdex-dev
+	libgit2-dev
+	libpeas2-dev
+	libxml2-dev
+	meson
+	sysprof-dev
+	sysprof-static
+	yaml-dev
+	"
+subpackages="
+	$pkgname-bash-completion
+	$pkgname-dev
+	$pkgname-libs
+	"
+source="https://gitlab.gnome.org/chergert/foundry/-/archive/$_commit/foundry-$_commit.tar.gz
+	fix-pc-ver.patch
+	cli-link-against-lib.patch
+	"
+builddir="$srcdir/$pkgname-$_commit"
+
+build() {
+	abuild-meson \
+		. output
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+libs() {
+	default_libs
+	amove usr/lib/girepository-1.0
+	amove usr/share/glib-2.0/schemas
+}
+
+sha512sums="
+44c8e8c46f191a7d4a7a3318d6a32c5ee78e021ab4eeb53c6b95d5bff584c5966187f868f1bdbd6207bce3faead559a8431832d1bcc04778071af9db4b9a4e50  foundry-a113efdd1683b1a88031a2c7bb165acc4f1c4448.tar.gz
+e3d2cb768391296e09ae3dce4e3a0e53189d642c6b4a3e79eabe3c7cdd1c0532024c8814259f931a667314773825bc9f0ee1a431d84d0cfa0fbbbc7b691d4871  fix-pc-ver.patch
+a9e2d56293c451889289193c7c39b1eaba983b590cd68dffdcb7cb7d3e681f5fe60f332ff70bda18b11d314a1db5857865c617dfb37a1b77fb1d9865075aef1e  cli-link-against-lib.patch
+"

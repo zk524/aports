@@ -1,9 +1,10 @@
 # Contributor: Peter Bui <pnutzh4x0r@gmail.com>
 # Contributor: Sören Tempel <soeren+alpine@soeren-tempel.net>
 # Contributor: Bartłomiej Piotrowski <nospam@bpiotrowski.pl>
+# Contributor: hon <greek.team.blog2@gmail.com>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=rtorrent
-pkgver=0.15.2
+pkgver=0.15.3
 pkgrel=0
 pkgdesc="Ncurses BitTorrent client based on libTorrent"
 url="https://rakshasa.github.io/rtorrent/"
@@ -52,5 +53,5 @@ package() {
 }
 
 sha512sums="
-a5687bc1e1eb315af2189ced819a0804331f4f20c783475283777e16decbba61bb0ab0fbb1e9e4b8e7c7397c610d82f4daf8ae3ee61084a2cea44c790b0018f8  rtorrent-0.15.2.tar.gz
+7c49c14cba61e60c317f5e7dd34fa6913c744ec9a4abf40e6c68d9779142d0df7c8f9a810ece54d07ab56cc469d81ac2506f7ec3eae7abed7b37d8eabec648c5  rtorrent-0.15.3.tar.gz
 "

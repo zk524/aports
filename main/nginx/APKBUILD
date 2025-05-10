@@ -45,7 +45,7 @@ pkgname=nginx
 # NOTE: Upgrade only to even-numbered versions (e.g. 1.14.z, 1.16.z)!
 # Odd-numbered versions are mainline (development) versions.
 pkgver=1.28.0
-pkgrel=0
+pkgrel=1
 # Revision of nginx-tests to use for check().
 _tests_rev=d964853731321ed99827916355dff54d983e57c0
 _njs_ver=0.8.10
@@ -90,7 +90,7 @@ _grp_ngx="nginx"
 _grp_www="www-data"
 pkggroups="$_grp_ngx $_grp_www"
 install="$pkgname.pre-install $pkgname.post-install $pkgname.pre-upgrade $pkgname.post-upgrade"
-subpackages="$pkgname-debug $pkgname-doc $pkgname-openrc $pkgname-vim::noarch"
+subpackages="$pkgname-debug $pkgname-doc $pkgname-openrc $pkgname-vim::noarch $pkgname-src::noarch"
 source="https://nginx.org/download/nginx-$pkgver.tar.gz
 	$pkgname-tests-$_tests_rev.tar.gz::https://github.com/nginx/nginx-tests/archive/$_tests_rev.tar.gz
 	$pkgname-njs-$_njs_ver.tar.gz::https://github.com/nginx/njs/archive/$_njs_ver.tar.gz
@@ -304,6 +304,60 @@ prepare() {
 	rm -f "$srcdir"/nginx-tests-*/upstream_ip_hash_ipv6.t
 }
 
+# --without-pcre2 - Lua module is not compatible with PCRE2 yet
+#   https://github.com/openresty/lua-nginx-module/issues/1984
+
+_configure_common="
+	--prefix=/var/lib/$pkgname
+	--sbin-path=/usr/sbin/$pkgname
+	--modules-path=/$_modules_dir
+	--conf-path=/etc/$pkgname/$pkgname.conf
+	--pid-path=/run/$pkgname/$pkgname.pid
+	--lock-path=/run/$pkgname/$pkgname.lock
+	--http-client-body-temp-path=/var/lib/$pkgname/tmp/client_body
+	--http-proxy-temp-path=/var/lib/$pkgname/tmp/proxy
+	--http-fastcgi-temp-path=/var/lib/$pkgname/tmp/fastcgi
+	--http-uwsgi-temp-path=/var/lib/$pkgname/tmp/uwsgi
+	--http-scgi-temp-path=/var/lib/$pkgname/tmp/scgi
+	--with-perl_modules_path=/usr/lib/perl5/vendor_perl
+
+	--user=$pkgusers
+	--group=$_grp_ngx
+	--with-threads
+	--with-file-aio
+
+	--without-pcre2
+
+	--with-http_ssl_module
+	--with-http_v2_module
+	--with-http_v3_module
+	--with-http_realip_module
+	--with-http_addition_module
+	--with-http_xslt_module=dynamic
+	--with-http_image_filter_module=dynamic
+	--with-http_geoip_module=dynamic
+	--with-http_sub_module
+	--with-http_dav_module
+	--with-http_flv_module
+	--with-http_mp4_module
+	--with-http_gunzip_module
+	--with-http_gzip_static_module
+	--with-http_auth_request_module
+	--with-http_random_index_module
+	--with-http_secure_link_module
+	--with-http_degradation_module
+	--with-http_slice_module
+	--with-http_stub_status_module
+	--with-http_perl_module=dynamic
+	--with-mail=dynamic
+	--with-mail_ssl_module
+	--with-stream=dynamic
+	--with-stream_ssl_module
+	--with-stream_realip_module
+	--with-stream_geoip_module=dynamic
+	--with-stream_ssl_preread_module
+	"
+
 _build() {
 	if $_has_luajit; then
 		export LUAJIT_LIB="$(pkgconf --variable=libdir luajit)"
@@ -318,57 +372,8 @@ _build() {
 	# Enable support for Redis store in the http-keyval module.
 	export NGX_HTTP_KEYVAL_ZONE_REDIS=1
 
-	# --without-pcre2 - Lua module is not compatible with PCRE2 yet
-	#   https://github.com/openresty/lua-nginx-module/issues/1984
 	./configure \
-		--prefix=/var/lib/$pkgname \
-		--sbin-path=/usr/sbin/$pkgname \
-		--modules-path=/$_modules_dir \
-		--conf-path=/etc/$pkgname/$pkgname.conf \
-		--pid-path=/run/$pkgname/$pkgname.pid \
-		--lock-path=/run/$pkgname/$pkgname.lock \
-		--http-client-body-temp-path=/var/lib/$pkgname/tmp/client_body \
-		--http-proxy-temp-path=/var/lib/$pkgname/tmp/proxy \
-		--http-fastcgi-temp-path=/var/lib/$pkgname/tmp/fastcgi \
-		--http-uwsgi-temp-path=/var/lib/$pkgname/tmp/uwsgi \
-		--http-scgi-temp-path=/var/lib/$pkgname/tmp/scgi \
-		--with-perl_modules_path=/usr/lib/perl5/vendor_perl \
-		\
-		--user=$pkgusers \
-		--group=$_grp_ngx \
-		--with-threads \
-		--with-file-aio \
-		\
-		--without-pcre2 \
-		\
-		--with-http_ssl_module \
-		--with-http_v2_module \
-		--with-http_v3_module \
-		--with-http_realip_module \
-		--with-http_addition_module \
-		--with-http_xslt_module=dynamic \
-		--with-http_image_filter_module=dynamic \
-		--with-http_geoip_module=dynamic \
-		--with-http_sub_module \
-		--with-http_dav_module \
-		--with-http_flv_module \
-		--with-http_mp4_module \
-		--with-http_gunzip_module \
-		--with-http_gzip_static_module \
-		--with-http_auth_request_module \
-		--with-http_random_index_module \
-		--with-http_secure_link_module \
-		--with-http_degradation_module \
-		--with-http_slice_module \
-		--with-http_stub_status_module \
-		--with-http_perl_module=dynamic \
-		--with-mail=dynamic \
-		--with-mail_ssl_module \
-		--with-stream=dynamic \
-		--with-stream_ssl_module \
-		--with-stream_realip_module \
-		--with-stream_geoip_module=dynamic \
-		--with-stream_ssl_preread_module \
+		$_configure_common \
 		\
 		${_njs_mods:+"--add-dynamic-module=$srcdir/njs-$_njs_ver/nginx"} \
 		$_extra_flags \
@@ -460,6 +465,18 @@ vim() {
 
 	mkdir -p "$subpkgdir"/usr/share/vim
 	cp -r "$builddir"/contrib/vim "$subpkgdir"/usr/share/vim/vimfiles
+}
+
+src() {
+	pkgdesc="Source code of nginx $pkgver, useful for building modules"
+
+	# We need the build dependencies along with nginx source, e.g. to build other modules
+	depends="$depends $makedepends"
+
+	install -d "$subpkgdir/usr/src"
+	cp -r "$builddir" "$subpkgdir/usr/src/nginx"
+	echo "$_configure_common" >"$subpkgdir"/usr/src/nginx/configure_common
+	rm -rf "$subpkgdir"/usr/src/nginx/objs*
 }
 
 _module() {

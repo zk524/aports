@@ -39,7 +39,6 @@ build() {
 
 package() {
 	make DESTDIR="$pkgdir" install
-	rm -f "$pkgdir"/usr/lib/charset.alias
 }
 
 sha512sums="

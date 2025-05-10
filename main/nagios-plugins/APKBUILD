@@ -86,8 +86,8 @@ package() {
 		rm "$pkgdir/$_plugins_dir"/check_$name
 	done
 
-	rm -rf "$pkgdir"/usr/lib/charset.alias
-	rmdir -p "$pkgdir"/usr/lib "$pkgdir"/usr/include 2>/dev/null || true
+	rm "$pkgdir"/usr/lib/charset.alias
+	rmdir -p "$pkgdir"/usr/include 2>/dev/null || true
 }
 
 tcp() {

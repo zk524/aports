@@ -37,8 +37,7 @@ check() {
 
 package() {
 	make DESTDIR="$pkgdir" install
-	rm -rf "$pkgdir"/usr/lib/charset.alias
-	rmdir -p "$pkgdir"/usr/lib 2>/dev/null || true
+	rm "$pkgdir"/usr/lib/charset.alias
 }
 
 sha512sums="c0f9fca7b58d6acd00b90a5184dbde9ba3ffc5bf4d69512743e450649a272baf1f6af98b15d79d2b53990eaf84ef402c986035e6b615a19e35ed424348143903  fastjar-0.98.tar.gz

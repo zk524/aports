@@ -29,8 +29,7 @@ check() {
 
 package() {
 	make DESTDIR="$pkgdir" install
-	rm -rf "$pkgdir"/usr/lib/charset.alias
-	rmdir -p "$pkgdir"/usr/lib 2>/dev/null || true
+	rm "$pkgdir"/usr/lib/charset.alias
 
 	# Prevent conflict with mandoc-doc
 	rm -f "$pkgdir"/usr/share/man/man1/soelim.1 \

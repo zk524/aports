@@ -183,7 +183,6 @@ package() {
 		_install_flavor $f
 	done
 
-	rm -f "$pkgdir"/usr/lib/charset.alias
 	# remove grub-install warning of missing directory
 	mkdir -p "$pkgdir"/usr/share/locale
 

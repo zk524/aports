@@ -41,7 +41,6 @@ check() {
 
 package() {
 	make DESTDIR="$pkgdir" install
-	rm -rf "$pkgdir"/usr/lib/charset.alias
 	# Upstream packaging mistake, this should never have been installed
 	rm -f "$pkgdir"/usr/bin/dump
 

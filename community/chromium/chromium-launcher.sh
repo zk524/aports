@@ -1,12 +1,16 @@
 #!/bin/sh
 
+# Fetch initial CHROMIUM_FLAGS since loading of *.conf may override these flags
+ENV_CHROMIUM_FLAGS=$CHROMIUM_FLAGS
+CHROMIUM_FLAGS=""
+
 for f in /etc/chromium/*.conf; do
   [ -f "$f" ] && . "$f"
 done
 
 # Append CHROMIUM_USER_FLAGS (from env) on top of system
 # default CHROMIUM_FLAGS (from /etc/chromium/chromium.conf).
-CHROMIUM_FLAGS="$CHROMIUM_FLAGS ${CHROMIUM_USER_FLAGS:+"$CHROMIUM_USER_FLAGS"}"
+CHROMIUM_FLAGS="$ENV_CHROMIUM_FLAGS $CHROMIUM_FLAGS ${CHROMIUM_USER_FLAGS:+"$CHROMIUM_USER_FLAGS"}"
 
 # Let the wrapped binary know that it has been run through the wrapper
 export CHROME_WRAPPER="$(readlink -f "$0")"

@@ -3,7 +3,7 @@
 pkgname=njs
 # Keep it in sync with njs in main/nginx.
 pkgver=0.8.10
-pkgrel=0
+pkgrel=1
 pkgdesc="njs scripting language CLI utility"
 url="https://nginx.org/en/docs/njs/"
 arch="all"
@@ -15,9 +15,14 @@ makedepends="
 	libxml2-dev
 	openssl-dev
 	pcre-dev
+	quickjs-dev
 	"
 checkdepends="expect"
-subpackages="$pkgname-debug $pkgname-libs-static"
+subpackages="
+	$pkgname-quickjs
+	$pkgname-debug
+	$pkgname-libs-static
+	"
 source="$pkgname-$pkgver-1.tar.gz::https://github.com/nginx/njs/archive/$pkgver.tar.gz
 	mktemp-busybox-compat.patch
 	no-werror.patch
@@ -39,10 +44,21 @@ esac
 build() {
 	./configure \
 		--build-dir='build-debug' \
+		--with-quickjs \
 		--debug=YES
 	make njs
 
-	./configure --cc-opt='-Os' --ld-opt='-Os'
+	./configure \
+		--build-dir='build-njs' \
+		--no-quickjs \
+		--cc-opt='-Os' \
+		--ld-opt='-Os'
+	make njs
+
+	./configure \
+		--with-quickjs \
+		--cc-opt='-Os' \
+		--ld-opt='-Os'
 	make njs
 }
 
@@ -51,14 +67,27 @@ check() {
 }
 
 package() {
-	install -m 755 -D build/njs "$pkgdir"/usr/bin/njs
+	pkgdesc="$pkgdesc with njs engine only"
+	provider_priority=100
 
-	install -m 644 -D build/libnjs.a "$pkgdir"/usr/lib/libnjs.a
-	install -m 644 -D build-debug/libnjs.a "$pkgdir"/usr/lib/libnjs-debug.a
+	install -m 755 -D build-njs/njs "$pkgdir"/usr/bin/njs
+
+	local lib; for lib in libnjs libqjs; do
+		install -m 644 -D build/$lib.a -t "$pkgdir"/usr/lib/
+		install -m 644 -D build-debug/$lib.a "$pkgdir"/usr/lib/$lib-debug.a
+	done
+}
+
+quickjs() {
+	pkgdesc="$pkgdesc with njs and QuickJS engine"
+	provider_priority=50
+	provides="$pkgname=$pkgver-r$pkgrel"
+
+	install -m 755 -D "$builddir"/build/njs "$subpkgdir"/usr/bin/njs
 }
 
 debug() {
-	pkgdesc="njs built with additional runtime checks and debug symbols"
+	pkgdesc="njs with both engines built with additional runtime checks and debug symbols"
 	options="!strip"
 
 	install -m 755 -D "$builddir"/build-debug/njs "$subpkgdir"/usr/bin/njs-debug

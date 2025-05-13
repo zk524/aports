@@ -201,7 +201,6 @@ extra() {
 	pkgdesc="$pkgdesc (extra weights and variants)"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	mkdir -p "$builddir"/.tmp
 
 	local font weight

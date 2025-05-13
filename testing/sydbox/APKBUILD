@@ -79,10 +79,10 @@ oci() {
 utils() {
 	pkgdesc="Sydbox utilities"
 
-	local bin; for bin in $(ls -1 "$pkgdir"/usr/bin/); do
-		case "$bin" in
+	local bin; for bin in usr/bin/*; do
+		case "${bin#usr/bin/}" in
 			syd | syd-chk | syd-exec | syd-oci) ;;  # main programs
-			*) amove usr/bin/$bin;;
+			*) amove $bin;;
 		esac
 	done
 }

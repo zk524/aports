@@ -140,8 +140,8 @@ dev() {
 }
 
 private_dev() {
-	local file; find "$pkgdir"/usr/include -type d -name private | while read -r file; do
-		amove "${file#"$pkgdir"}"
+	local file; find usr/include -type d -name private | while read -r file; do
+		amove "$file"
 	done
 	amove usr/lib/cmake/*Private
 	amove usr/lib/qt6/metatypes/*private_*_metatypes.json

@@ -372,7 +372,6 @@ _git_perl() {
 	install_if="git=$pkgver-r$pkgrel perl"
 
 	mkdir -p "$subpkgdir"/usr/lib
-	cd "$pkgdir"
 	find . -type f -print0 | xargs -0 file --mime-type | grep perl | cut -d: -f1 | while read -r f; do
 		amove "$f"
 	done

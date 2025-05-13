@@ -99,8 +99,6 @@ _libdev() {
 	depends="ocaml-$pkgname=$pkgver-r$pkgrel"
 	local sitelib="usr/lib/ocaml/$pkgname"
 
-	cd "$pkgdir"
-
 	local path; find $sitelib \( \
 			-name '*.cmt' -o \
 			-name '*.cmti' -o \

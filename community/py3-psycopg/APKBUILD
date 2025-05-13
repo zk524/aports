@@ -72,7 +72,6 @@ _c_pyc() {
 	pkgdesc="Precompiled Python bytecode for ${subpkgname%-pyc}"
 	install_if="${subpkgname%-pyc}=$pkgver-r$pkgrel pyc"
 
-	cd "$pkgdir"
 	# shellcheck disable=SC3003
 	local IFS=$'\n'
 	# shellcheck disable=SC2046

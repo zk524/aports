@@ -62,8 +62,6 @@ dev() {
 	default_dev
 	provides="ocaml-nottui-dev=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
-
 	local path; find usr/lib/ocaml \( \
 			-name '*.cmt' -o \
 			-name '*.cmti' -o \

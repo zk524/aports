@@ -50,8 +50,8 @@ dev() {
 
 	amove usr/bin/enc2xs
 
-	local file; find "$pkgdir" -name "*.e2x" | while read -r file; do
-		amove "${file#"$pkgdir"}"
+	local file; find . -name "*.e2x" | while read -r file; do
+		amove "$file"
 	done
 }
 
@@ -59,8 +59,8 @@ doc() {
 	default_doc
 	replaces="perl-doc"
 
-	local file; find "$pkgdir" -name "*.pod" | while read -r file; do
-		amove "${file#"$pkgdir"}"
+	local file; find . -name "*.pod" | while read -r file; do
+		amove "$file"
 	done
 }
 

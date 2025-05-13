@@ -94,7 +94,7 @@ dtmerge_doc() {
 	depends="$pkgname-dtmerge=$pkgver-r$pkgrel"
 	install_if="$pkgname-dtmerge=$pkgver-r$pkgrel docs"
 
-	gzip -n -9 "$pkgdir"/usr/share/man/man1/dt*.1
+	gzip -n -9 usr/share/man/man1/dt*.1
 	amove usr/share/man/man1/dt*.1.gz
 }
 
@@ -224,7 +224,7 @@ vcgencmd_doc() {
 	depends="$pkgname-vcgencmd=$pkgver-r$pkgrel"
 	install_if="$pkgname-vcgencmd=$pkgver-r$pkgrel docs"
 
-	gzip -n -9 "$pkgdir"/usr/share/man/man1/vcgencmd.1
+	gzip -n -9 usr/share/man/man1/vcgencmd.1
 	amove usr/share/man/man1/vcgencmd.1.gz
 }
 
@@ -247,13 +247,13 @@ vcmailbox_doc() {
 	depends="$pkgname-vcmailbox=$pkgver-r$pkgrel"
 	install_if="$pkgname-vcmailbox=$pkgver-r$pkgrel docs"
 
-	gzip -n -9 "$pkgdir"/usr/share/man/man1/vcmailbox.1
+	gzip -n -9 usr/share/man/man1/vcmailbox.1
 	amove usr/share/man/man1/vcmailbox.1.gz
 
-	gzip -n -9 "$pkgdir"/usr/share/man/man7/vcmailbox.7
+	gzip -n -9 usr/share/man/man7/vcmailbox.7
 	amove usr/share/man/man7/vcmailbox.7.gz
 
-	gzip -n -9 "$pkgdir"/usr/share/man/man7/raspi*.7
+	gzip -n -9 usr/share/man/man7/raspi*.7
 	amove usr/share/man/man7/raspi*.7.gz
 }
 

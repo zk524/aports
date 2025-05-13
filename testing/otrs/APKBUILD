@@ -129,7 +129,7 @@ doc() {
 	amove var/lib/$pkgname/doc
 
 	local IFS=$'\n'
-	amove $(cd "$pkgdir"; find . -name "*.md" -o -name "*.pod" \
+	amove $(find . -name "*.md" -o -name "*.pod" \
 		-o -name "*.txt" -o -name "ARCHIVE" -o -name "README"  \
 		-o -name "UPGRADING" -o -name "COPYING*")
 }

@@ -91,7 +91,6 @@ _mv_sub() {
 conference() {
 	pkgdesc="Conferencing application for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/conference.conf \
 		usr/lib/sems/plug-in/conference.so \
 		usr/share/sems/audio/conference
@@ -100,14 +99,12 @@ conference() {
 diameter_client() {
 	pkgdesc="A simple DIAMETER client implementation for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub usr/lib/sems/plug-in/diameter_client.so
 }
 
 dsm() {
 	pkgdesc="The state machine interpreter for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/dsm* \
 		usr/lib/sems/plug-in/dsm.so \
 		usr/lib/sems/dsm
@@ -116,7 +113,6 @@ dsm() {
 early_announce() {
 	pkgdesc="Early announce application for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/early_announce.conf \
 		usr/lib/sems/plug-in/early_announce.so
 }
@@ -159,7 +155,6 @@ opus() {
 webconference() {
 	pkgdesc="Conference bridge via DI (xmlrpc) for SEMS"
 	depends="sems sems-xmlrpc2di"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/webconference.conf \
 		usr/share/sems/audio/webconference \
 		usr/lib/sems/plug-in/webconference.so
@@ -168,7 +163,6 @@ webconference() {
 annrecorder() {
 	pkgdesc="Allow user to record personal greeting for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/annrecorder.conf \
 		usr/share/sems/audio/annrecorder \
 		usr/lib/sems/plug-in/annrecorder.so
@@ -177,7 +171,6 @@ annrecorder() {
 voicebox() {
 	pkgdesc="Voicebox (call in for messsages) for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/voicebox.conf \
 		usr/share/sems/audio/voicebox \
 		usr/lib/sems/plug-in/voicebox.so \
@@ -187,7 +180,6 @@ voicebox() {
 voicemail() {
 	pkgdesc="Play greeting and record voicemail for SEMS"
 	depends="sems"
-	cd "$pkgdir"
 	_mv_sub etc/sems/etc/voicemail.conf \
 		usr/share/sems/audio/voicemail \
 		usr/lib/sems/plug-in/voicemail.so

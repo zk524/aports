@@ -109,8 +109,6 @@ login() {
 	provider_priority=10  # lowest (other provider is util-linux-login)
 	replaces="$pkgname"  # for backward compatibility (Alpine <3.16)
 
-	cd "$pkgdir"
-
 	local cmd dir
 	for cmd in $_login_cmds; do
 		for dir in bin sbin usr/bin usr/sbin; do

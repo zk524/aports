@@ -61,8 +61,8 @@ dev() {
 	depends_dev="$depends_dev $pkgname=$pkgver-r$pkgrel"
 	default_dev
 
-	local file; find "$pkgdir" -name '*Config.sh' | while read -r file; do
-		amove "${file#"$pkgdir"}"
+	local file; find . -name '*Config.sh' | while read -r file; do
+		amove "$file"
 	done
 }
 

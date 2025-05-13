@@ -44,8 +44,6 @@ dev() {
 	default_dev
 	replaces="camlp4"  # for backward compatibility
 
-	cd "$pkgdir"
-
 	mkdir -p "$subpkgdir"/usr
 	mv usr/bin "$subpkgdir"/usr/
 }

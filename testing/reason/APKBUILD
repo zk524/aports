@@ -87,8 +87,6 @@ _libdev() {
 
 	default_dev
 
-	cd "$pkgdir"
-
 	local path; find usr/lib/ocaml/$pkgname \( \
 			-name '*.cmt' -o \
 			-name '*.cmti' -o \

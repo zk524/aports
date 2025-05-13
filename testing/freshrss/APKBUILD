@@ -107,10 +107,10 @@ lang() {
 	pkgdesc="translations for $pkgname"
 	install_if="$pkgname=$pkgver-r$pkgrel lang"
 	local lang
-	for lang in "$pkgdir"/usr/share/webapps/freshrss/app/i18n/*; do
+	for lang in usr/share/webapps/freshrss/app/i18n/*; do
 		# keep in base for default language
 		if [ "$(basename "$lang")" != "en" ]; then
-			amove usr/share/webapps/freshrss/app/i18n/"$(basename "$lang")"
+			amove "$lang"
 		fi
 	done
 }
@@ -118,12 +118,12 @@ lang() {
 themes() {
 	pkgdesc="themes for $pkgname"
 	local theme
-	for theme in "$pkgdir"/usr/share/webapps/freshrss/p/themes/*; do
+	for theme in usr/share/webapps/freshrss/p/themes/*; do
 		if [ -d "$theme" ]; then
 			case "$(basename "$theme")" in
 			# keep base-theme and default files, split the rest
 			base-theme | fonts | icons | Origine) ;;
-			*) amove usr/share/webapps/freshrss/p/themes/"$(basename "$theme")" ;;
+			*) amove "$theme" ;;
 			esac
 		fi
 	done

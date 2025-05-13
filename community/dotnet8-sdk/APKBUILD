@@ -87,7 +87,6 @@ dbg() {
 	install -dm 755	"$subpkgdir"/$_libdir/dotnet
 
 	# move pdb files
-	cd "$pkgdir" || return 0
 	find . -type f ! -name "$(printf "*\n*")" -name '*.pdb' > tmp
 	while IFS= read -r i; do
 		d="$subpkgdir/${i%/*}" # dirname $i

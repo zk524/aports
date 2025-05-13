@@ -185,7 +185,6 @@ package() {
 
 _plugin_defaults() {
 	depends="$pkgname=$pkgver-r$pkgrel"
-	cd "$pkgdir"
 	mkdir -p "$subpkgdir"/usr/lib/vdr
 	local plugin_name
 	for plugin_name in "$@"; do

@@ -137,7 +137,6 @@ _folder() {
 	provider_priority=1
 
 	local linkedbins= bin=
-	cd "$pkgdir"
 	# Move things that symlink into the target folder
 	# this fixes the -other deps, because
 	# - there are top-level files that are in -other (non-folder)
@@ -160,7 +159,7 @@ other() {
 	# Requires subfolders to be split in subpackages
 	local leftover=""
 	local i
-	for i in "$pkgdir"/lib/firmware/*; do
+	for i in lib/firmware/*; do
 		[ -d "$i" ] && leftover="$leftover $(basename $i)"
 	done
 	if [ "$leftover" != "" ]; then

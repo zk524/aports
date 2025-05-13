@@ -68,7 +68,6 @@ package() {
 gl() {
 	local _conf
 	pkgdesc="An enhanced set of screensavers that require OpenGL"
-	cd "$pkgdir"
 	mkdir -p "$subpkgdir"/$_confdir
 	scanelf -Rn . | awk '$2 ~ /libE?GL/ { print $3 }' | while read -r f; do
 		mkdir -p "$subpkgdir"/${f%/*}

@@ -81,7 +81,6 @@ pyc() {
 	pkgdesc="Precompiled Python bytecode for ${subpkgname%-pyc}"
 	install_if="${subpkgname%-pyc}=$pkgver-r$pkgrel pyc"
 
-	cd "$pkgdir" || return 0
 	local IFS=$'\n'
 	amove $(find usr/lib -type d -name __pycache__)
 }

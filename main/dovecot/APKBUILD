@@ -244,7 +244,6 @@ _protocol() {
 	local name="$1"
 	local protocolsd="$subpkgdir/usr/share/dovecot/protocols.d"
 
-	cd "$pkgdir"
 	_submv usr/libexec/dovecot/"$name"*
 #	_submv etc/dovecot/conf.d/*-"$name".conf
 
@@ -257,7 +256,6 @@ _sieve() {
 	pkgdesc="Sieve and managesieve plugin for Dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot sieve_extprograms
 	_find usr/lib/dovecot sieve_imapsieve
 	_find usr/bin sieve
@@ -271,7 +269,6 @@ _sieve_ldap() {
 	pkgdesc="Sieve and managesieve plugin for Dovecot (LDAP support)"
 	depends="$pkgname-pigeonhole-plugin=$pkgver-r$pkgrel $pkgname-ldap=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find  usr/lib/dovecot _sieve_storage_ldap_
 }
 
@@ -279,7 +276,6 @@ pgsql() {
 	pkgdesc="PostgreSQL driver for Dovecot"
 	depends="$pkgname-sql=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot _pgsql
 }
 
@@ -287,7 +283,6 @@ lua() {
 	pkgdesc="Lua plugins for Dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot lua
 }
 
@@ -295,7 +290,6 @@ mysql() {
 	pkgdesc="MySQL driver for Dovecot"
 	depends="$pkgname-sql=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot _mysql
 }
 
@@ -303,7 +297,6 @@ sqlite() {
 	pkgdesc="SQLite driver for Dovecot"
 	depends="$pkgname-sql=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot _sqlite
 }
 
@@ -311,7 +304,6 @@ gssapi() {
 	pkgdesc="GSSAPI auth plugin for Dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot _gssapi
 }
 
@@ -319,7 +311,6 @@ ldap() {
 	pkgdesc="LDAP auth plugin for Dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot ldap.so
 	_find etc/dovecot -ldap.conf
 }
@@ -328,7 +319,6 @@ sql() {
 	pkgdesc="SQL plugin for dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot -sql.
 	_find etc/dovecot -sql.conf
 }
@@ -337,7 +327,6 @@ _fts_solr() {
 	pkgdesc="FTS-Solr plugin for dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot fts\*solr
 }
 
@@ -345,7 +334,6 @@ _fts_flatcurve() {
 	pkgdesc="FTS-flatcurve plugin for dovecot"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	_find usr/lib/dovecot fts\*flatcurve
 }
 

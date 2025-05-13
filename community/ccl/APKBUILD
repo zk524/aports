@@ -76,11 +76,10 @@ dev() {
 			--ignore-fail-on-non-empty
 	done
 
-	local file; find "$pkgdir"/usr/lib/ccl -type f \
+	local file; find usr/lib/ccl -type f \
 		\( -name '*.o' -o -name '*.*fsl' \) \
 		| while read -r file
 	do
-		file=${file#"$pkgdir"/}
 		amove "$file"
 	done
 }

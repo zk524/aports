@@ -39,7 +39,6 @@ _git() {
 	pkgdesc="Git support for thunar-vcs-plugin"
 	depends=""
 	install_if="$pkgname=$pkgver-r$pkgrel git"
-	cd "$pkgdir"
 	_mv_files usr/lib/xfce4/tvp-git-helper \
 		usr/share/icons/hicolor/*/apps/git.png
 }
@@ -48,7 +47,6 @@ _svn() {
 	pkgdesc="Subversion support for thunar-vcs-plugin"
 	depends=""
 	install_if="$pkgname=$pkgver-r$pkgrel subversion"
-	cd "$pkgdir"
 	_mv_files usr/lib/xfce4/tvp-svn-helper \
 		usr/share/icons/hicolor/*/apps/subversion.png
 }

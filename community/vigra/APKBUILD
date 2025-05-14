@@ -54,7 +54,7 @@ package() {
 }
 
 _py() {
-	amove usr/lib/python\*
+	amove usr/lib/python*
 }
 
 sha512sums="

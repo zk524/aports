@@ -1,0 +1,53 @@
+maintainer="Zach DeCook <zachdecook@librem.one>"
+pkgname=pyspread
+pkgver=2.4
+pkgrel=0
+pkgdesc="Non-traditional spreadsheet that is based on the programming language Python"
+url="https://gitlab.com/pyspread/pyspread"
+arch="all"
+license="GPL-3.0"
+source="https://gitlab.com/pyspread/pyspread/-/archive/v$pkgver/pyspread-v$pkgver.tar.gz"
+depends="python3 py3-qt6 qt6-qtsvg py3-numpy py3-markdown2"
+makedepends="py3-gpep517 py3-setuptools py3-wheel python3-dev"
+builddir="$srcdir/$pkgname-v$pkgver"
+#subpackages="$pkgname-matplotlib $pkgname-pyenchant $pkgname-rpy2 $pkgname-plotnine"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --system-site-packages testenv
+	testenv/bin/python3 -m installer dist/*.whl
+	testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		dist/*.whl
+}
+
+#matplotlib() {
+#	depends="pyspread py3-matplotlib"
+#	pkgdesc="Create charts in pyspread using matplotlib"
+#}
+#pyenchant() {
+#	depends="pyspread py3-enchant"
+#	pkgdesc="Spell checker for pyspread using pyenchant"
+#}
+#rpy2() {
+#	depends="pyspread py3-rpy2"
+#	pkgdesc="Create R charts in pyspread"
+#}
+#plotnine() {
+#	depends="pyspread py3-plotnine"
+#	pkgdesc="Create ggplot charts in pyspread using plotnine"
+#}
+
+
+
+sha512sums="
+c1eadbce14625526974ef69ae19ee327c08e058ded17c2acc07ceb08efc4ff8eae86da931d5fada065dd192e47446a778f306d7e659a7f4efe94e717b2e4f8e5  pyspread-v2.4.tar.gz
+"

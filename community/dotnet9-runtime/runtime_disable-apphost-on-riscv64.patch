@@ -1,0 +1,12 @@
+diff --git a/repo-projects/Directory.Build.props b/repo-projects/Directory.Build.props
+index 3db84f2..9765e1d 100644
+--- a/repo-projects/Directory.Build.props
++++ b/repo-projects/Directory.Build.props
+@@ -84,6 +84,7 @@
+     <!-- Pass locations for assets -->
+     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetsDir=$(ArtifactsAssetsDir)</BuildArgs>
+     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetManifestsDir=$(RepoAssetManifestsDir)</BuildArgs>
++    <BuildArgs Condition="'$(TargetArchitecture)' == 'riscv64'">$(BuildArgs) /p:DefaultSubsets=clr+libs+tools+packs /p:_RuntimeIdentifierUsesAppHost=false</BuildArgs>
+   </PropertyGroup>
+ 
+   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">

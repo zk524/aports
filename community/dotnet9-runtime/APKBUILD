@@ -2,7 +2,7 @@
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=dotnet9-runtime
 pkgver=9.0.4
-pkgrel=0
+pkgrel=1
 _gittag=v$pkgver
 _giturl="https://github.com/dotnet/dotnet"
 _testtag=26cdb2d8d62a60ddc6114ca585581626ae5e11bd
@@ -12,6 +12,8 @@ _patches="
 	build_44361-ignore-clean-while-building-errors.patch
 	sdk_hard-dereference-tar-gz.patch
 	runtime_82269-mono-thread-coop-undefine-fortify-source.patch
+	runtime_disable-apphost-on-riscv64.patch
+	runtime_disable-local-exec-tls-on-riscv64.patch
 	runtime_openssl-sha1.patch
 	runtime_re-enable-implicit-rejection.patch
 	runtime_arm-pcode-null.patch
@@ -29,10 +31,9 @@ fi
 pkgdesc="The .NET $_pkgver_macro Core runtime"
 # x86: blocked by https://github.com/dotnet/runtime/issues/77667
 # armhf: blocked by https://github.com/dotnet/runtime/issues/77663
-# riscv64: blocked by https://github.com/dotnet/runtime/issues/84834
 # s390x | ppc64le: mono-based builds are not yet stable on musl
 # loongarch64: blocked by dotnet8-stage0
-arch="all !x86 !armhf !riscv64 !s390x !ppc64le !loongarch64"
+arch="all !x86 !armhf !s390x !ppc64le !loongarch64"
 url=https://dotnet.microsoft.com
 license="MIT"
 provides="dotnet$_pkgver_name=$pkgver-r$pkgrel"
@@ -283,7 +284,8 @@ build() {
 	# was not integrated in 7.0.1xx yet
 	# UseSharedCompilation=false also reduces chances of hangups on mono-based builds
 	case $CARCH in
-		riscv64|s390x|ppc64le) local args="$args /p:SourceBuildUseMonoRuntime=true /p:UseSharedCompilation=false";;
+		riscv64) local args="$args /p:UseSharedCompilation=false";;
+		s390x|ppc64le) local args="$args /p:SourceBuildUseMonoRuntime=true /p:UseSharedCompilation=false";;
 	esac
 
 	# Sets TargetRid manually as dotnet cannot be trusted to reliably
@@ -618,6 +620,8 @@ c3f31956976b77198e72a3fef3427338b6b2961f8c121416040c1105de0ce8073e46f4c2e9ef22a0
 42811464ecb2fa2e04bc190067c556f764c23876a5d129a346eca7b2968703010ddd2ef9c3d8b53a653b25014b99fc1c33fa59e6ce234f14e5b8fa432781710f  build_44361-ignore-clean-while-building-errors.patch
 99111c002e541aceb2b71bd7d2a12c10b84201340108de7bad724b3db7b75601af536c10539a67751ef5a7730eec401a49e8b07e756fec6706e83fdb43c7daaf  sdk_hard-dereference-tar-gz.patch
 d732df247c721c9f677baabdd7f36dbf4b564814ff64164361065bb1c196b767494a1d39f634eadf01a23032c7b3e64102614b7213065c81096bbf3f8022e6a0  runtime_82269-mono-thread-coop-undefine-fortify-source.patch
+7533ab62b7192cde48e02e33b67da3d65d7adc690675cc3bea086a443299b6f0e5ce026391bcccc3bea4e673e7cd750271d2fdf761c6f609dab33f5fb01abb27  runtime_disable-apphost-on-riscv64.patch
+9b25c334cb635b7ab414580491faeeb028747a922fad85490f4c0637068256593b6e0ab6bc02173ceecde8a836426e96737352b07b09ced17b483ace17329f1d  runtime_disable-local-exec-tls-on-riscv64.patch
 d3b62668c2d5a1056e698b804a20b933b79ad11b46aa37298b9089396969ce510a9620847c5787b7f95c33ccf5a6aabab41655809168740976c3dadd65f87e2b  runtime_openssl-sha1.patch
 0246634c4c907c1194e2680ad4d3ddbf1ef072f0710a02fa35e2f634826a3be26970ebec0c375b33ee62e42314e871befc1b964aebb27a2d73499c69ff989920  runtime_re-enable-implicit-rejection.patch
 cb007d319174337d81546eff954206c9fa16a0138db103da73674e2c3bd7bf0278a2224be612649aedc0b39ffa68cecad211385d22b0eb84ca16004750e73f27  runtime_arm-pcode-null.patch

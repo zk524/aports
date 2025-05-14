@@ -1,0 +1,40 @@
+diff --git a/src/runtime/src/coreclr/vm/riscv64/asmhelpers.S b/src/runtime/src/coreclr/vm/riscv64/asmhelpers.S
+index 85ee7c3..3390603 100644
+--- a/src/runtime/src/coreclr/vm/riscv64/asmhelpers.S
++++ b/src/runtime/src/coreclr/vm/riscv64/asmhelpers.S
+@@ -941,6 +941,6 @@ NESTED_END OnCallCountThresholdReachedStub, _TEXT
+ 
+ // Load offset of native thread local variable `t_ThreadStatics` in TCB and return it in `a0` register.
+ LEAF_ENTRY GetThreadStaticsVariableOffset, _TEXT
+-    la.tls.ie   a0, t_ThreadStatics
++    la.tls.gd   a0, t_ThreadStatics
+     EPILOG_RETURN
+ LEAF_END GetThreadStaticsVariableOffset, _TEXT
+diff --git a/src/runtime/src/coreclr/jit/helperexpansion.cpp b/src/runtime/src/coreclr/jit/helperexpansion.cpp
+index 529bbfd..f3acffd 100644
+--- a/src/runtime/src/coreclr/jit/helperexpansion.cpp
++++ b/src/runtime/src/coreclr/jit/helperexpansion.cpp
+@@ -814,7 +814,7 @@ bool Compiler::fgExpandThreadLocalAccessForCall(BasicBlock** pBlock, Statement*
+     }
+     else
+     {
+-#ifdef TARGET_ARM
++#if defined(TARGET_ARM) || defined(TARGET_RISCV64)
+         // On Arm, Thread execution blocks are accessed using co-processor registers and instructions such
+         // as MRC and MCR are used to access them. We do not support them and so should never optimize the
+         // field access using TLS.
+diff --git a/src/runtime/src/coreclr/vm/threadstatics.cpp b/src/runtime/src/coreclr/vm/threadstatics.cpp
+index 8854530..c17f351 100644
+--- a/src/runtime/src/coreclr/vm/threadstatics.cpp
++++ b/src/runtime/src/coreclr/vm/threadstatics.cpp
+@@ -906,6 +906,10 @@ bool CanJITOptimizeTLSAccess()
+         return false;
+     }
+ 
++#if defined(TARGET_RISCV64)
++    return false;
++#endif
++
+     bool optimizeThreadStaticAccess = false;
+ #if defined(TARGET_ARM)
+     // Optimization is disabled for linux/windows arm

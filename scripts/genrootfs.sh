@@ -54,4 +54,4 @@ https://dl-cdn.alpinelinux.org/alpine/$branch/main
 https://dl-cdn.alpinelinux.org/alpine/$branch/community
 EOF
 
-tar --numeric-owner --exclude='dev/*' -c -C "$tmp" . | gzip -9n > "$outfile"
+tar --numeric-owner --exclude='dev/?*' -c -C "$tmp" . | gzip -9n > "$outfile"

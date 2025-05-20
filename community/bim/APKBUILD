@@ -1,5 +1,5 @@
-# Contributor: NerdNextDoor <47074-AFellowSpeedrunner@users.gitlab.alpinelinux.org>
-# Maintainer: NerdNextDoor <47074-AFellowSpeedrunner@users.gitlab.alpinelinux.org>
+# Contributor: NerdNextDoor <thenerdbehind@nerdnextdoor.net>
+# Maintainer: NerdNextDoor <thenerdbehind@nerdnextdoor.net>
 pkgname=bim
 pkgver=3.1.0
 pkgrel=0

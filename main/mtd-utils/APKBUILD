@@ -1,6 +1,6 @@
 # Maintainer: Olliver Schinagl <oliver@schinagl.nl>
 pkgname=mtd-utils
-pkgver=2.2.1
+pkgver=2.3.0
 pkgrel=0
 pkgdesc="Utilities for handling MTD devices, and for dealing with FTL, NFTL JFFS2, etc."
 options="!check" # Tests fail on builder
@@ -33,6 +33,11 @@ _subpackages="
 	"
 subpackages="$pkgname-doc $_subpackages"
 source="https://infraroot.at/pub/mtd/mtd-utils-$pkgver.tar.bz2"
+
+prepare() {
+	default_prepare
+	autoreconf -vif
+}
 
 build() {
 	./configure \
@@ -129,5 +134,5 @@ package() {
 }
 
 sha512sums="
-ef1cf4d6fa5219b8bbe4728282d0d73fd3234c36743cdfb901908269632f55a7993fdbeb22cc2b6841add1a9f320c4504a42980f5856626e259401e8e2f17f7d  mtd-utils-2.2.1.tar.bz2
+42f5f28c79c23d9e8bc089f4c1fd7f4bcd9ebb27e56368d16ac8a2cecce8ff0e00c1d0709edb1ed252adb00c549f0099129cdeff0c85a95cab06d0d42bb57298  mtd-utils-2.3.0.tar.bz2
 "

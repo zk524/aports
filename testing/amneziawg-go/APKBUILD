@@ -1,0 +1,38 @@
+# Contributor: Stefan Reiff <kroko87@hotmail.com>
+# Contributor: Nicolas Lorin <androw95220@gmail.com>
+# Maintainer: Nicolas Lorin <androw95220@gmail.com>
+pkgname=amneziawg-go
+pkgver=0.2.15
+pkgrel=0
+pkgdesc="Contemporary version of the WG protocol offering protection against detection by DPI systems: userspace implementation in go"
+url="https://github.com/amnezia-vpn/amneziawg-go"
+license="MIT"
+arch="all !s390x"
+makedepends="go"
+subpackages="$pkgname-doc"
+options="net"
+source="$pkgname-$pkgver.tar.gz::https://github.com/amnezia-vpn/amneziawg-go/archive/refs/tags/v$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+	printf 'package main\n\nconst Version = "%s"\n' "$pkgver" > version.go
+}
+
+
+build() {
+	make GOFLAGS="$GOFLAGS -ldflags=-checklinkname=0"
+}
+
+check() {
+	go test ./...
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	install -Dm644 README.md "$pkgdir"/usr/share/doc/$pkgname/README.md
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+b033cad5764d8661960062100e2ed6e151131085a9e61c364fff7c4711761dd161d4c23c8424c14e7f41b99955d1d247116fcdf7ee80d766d8e23afcf9f9d61f  amneziawg-go-0.2.15.tar.gz
+"

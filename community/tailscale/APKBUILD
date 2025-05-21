@@ -5,13 +5,13 @@
 # Maintainer: Robert Günzler <r@gnzler.io>
 pkgname=tailscale
 pkgver=1.82.5
-pkgrel=1
+pkgrel=2
 pkgdesc="The easiest, most secure way to use WireGuard and 2FA"
 url="https://tailscale.com/"
 license="BSD-3-Clause"
 # s390x: upstream still doesn't have hardware to debug this
 arch="all !s390x"
-options="chmod-clean"
+options="chmod-clean net"
 makedepends="
 	go
 	linux-headers
@@ -35,6 +35,8 @@ subpackages="
 	$pkgname-bash-completion
 	$pkgname-fish-completion
 	$pkgname-zsh-completion
+	derper
+	derper-openrc:derper_openrc
 	"
 source="$pkgname-$pkgver.tar.gz::https://github.com/tailscale/tailscale/archive/v$pkgver.tar.gz
 	$pkgname.confd
@@ -44,6 +46,8 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/tailscale/tailscale/archive/
 	$pkgname.doasd
 	resolvconf
 	test-bump-conn-max-overhead.patch
+	derper.initd
+	derper.confd
 	"
 
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
@@ -77,6 +81,8 @@ build() {
 
 	go build -v -tags "$tags" -ldflags "$ldflags" ./cmd/tailscaled
 	ln -sv ./tailscaled ./tailscale
+
+	go build -v -tags "$tags" -ldflags "$ldflags" ./cmd/derper
 
 	mkdir -p completions
 	local shell; for shell in bash fish zsh; do
@@ -114,6 +120,20 @@ package() {
 	install -m640 -D "$srcdir"/$pkgname.doasd "$pkgdir"/etc/doas.d/$pkgname.conf
 
 	install -d -m750 -o tailscale -g tailscale "$pkgdir"/var/lib/$pkgname
+
+	install -m755 -D derper -t "$pkgdir"/usr/bin
+}
+
+derper() {
+	pkgdesc="DERP relay server for tailscale"
+	amove usr/bin/derper
+}
+
+derper_openrc() {
+	install_if="derper=$pkgver-r$pkgrel openrc"
+
+	install -Dm644 "$srcdir"/derper.initd "$subpkgdir"/init.d/derper
+	install -Dm644 "$srcdir"/derper.confd "$subpkgdir"/conf.d/derper
 }
 
 sha512sums="
@@ -125,4 +145,6 @@ bed02f09c4905cba13fd3de3d45e027511420d76ece211312e153b6e50d8a10d2fb968a09ec1121f
 2a5b939bef6fc81909e81dc48a4aeb71c9e0bbeeeb2e6ea19f5c9502d1d327435baee9e42528fb9fd4061eab6fa9ecb969416d0e1e1c7a7e4aa8c20e0593fb2b  tailscale.doasd
 5b986e8e8bb66a8e8e959958b73d74941b81b45785d339fae203343a584b743f96e1443456ef45a7a4ef6a8c4be0506824891906f4e85532b5cf0760f9485369  resolvconf
 8e7cae496f9910c202cdf7216affcddb6f54df3f8fffb35257fe77bf90c4508b5025498b340b4f38d08a42f62d387ffcdaff24b33aeeadfdb4663fd9f7c2c03b  test-bump-conn-max-overhead.patch
+d428c0dd8c7dfe414619af5cdce8df768738ab26d99be4f29483951a328345763604a0d3a5a5c1839ac409f214d6ff437272edcb2da7a1851d13e2ba5147614f  derper.initd
+6b85a8f1a07ff3b3bfcd714a89efc5805002c8cb5e5799ba087c38cbb302747cf9d3ee6eb26a9e2f232d08061596973d784b91640d3e265976b2543eb2f79e22  derper.confd
 "

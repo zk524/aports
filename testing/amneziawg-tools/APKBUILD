@@ -1,0 +1,70 @@
+# Contributor: Stuart Cardall <developer@it-offshore.co.uk>
+# Contributor: Nicolas Lorin <androw95220@gmail.com>
+# Maintainer: Nicolas Lorin <androw95220@gmail.com>
+pkgname=amneziawg-tools
+pkgver=1.0.20250903
+pkgrel=0
+pkgdesc="Contemporary version of the WG protocol offering protection against detection by DPI systems: userspace tools"
+arch="all"
+url="https://github.com/amnezia-vpn/amneziawg-tools"
+# SPDX identifier headers tells us 'GPL-2.0' but considering it
+# is based on a kernel project i think it is safe to assume it is GPL-2.0-only just
+# like the kernel.
+license="GPL-2.0-only"
+_awg_quick_deps="
+	bash
+	cmd:resolvconf
+	iproute2
+	"
+makedepends="libmnl-dev $_awg_quick_deps"
+depends="$pkgname-awg $pkgname-awg-quick"
+install="$pkgname-openrc.post-install"
+subpackages="
+	$pkgname-doc
+	$pkgname-bash-completion
+	$pkgname-awg:_split
+	$pkgname-awg-quick:_split:noarch
+	$pkgname-openrc
+	"
+options="!check"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/amnezia-vpn/amneziawg-tools/archive/refs/tags/v$pkgver.tar.gz
+	awg-quick.initd
+	awg-quick-different-sudo.patch
+	"
+
+build() {
+	make -C src
+}
+
+package() {
+	mkdir -p "$pkgdir/usr/share/doc/$pkgname"
+
+	make -C src \
+		DESTDIR="$pkgdir" \
+		WITH_BASHCOMPLETION=yes \
+		WITH_WGQUICK=yes \
+		WITH_SYSTEMDUNITS=no \
+		install
+
+	find "$builddir"/contrib -name '.gitignore' -delete
+	cp -rf "$builddir"/contrib "$pkgdir/usr/share/doc/$pkgname/"
+
+	install -Dm755 "$srcdir"/awg-quick.initd "$pkgdir"/etc/init.d/awg-quick
+}
+
+_split() {
+	local cmd=${subpkgname/$pkgname-}
+	pkgdesc="$pkgdesc ($cmd)"
+	case $cmd in
+		awg-quick) depends="$pkgname-awg=$pkgver-r$pkgrel $_awg_quick_deps" ;;
+		*) depends= ;;
+	esac
+	amove usr/bin/$cmd
+}
+
+sha512sums="
+a69f3911b18cd5abb73ba1f695802c87205ed6be10be035a5d06ca266c5de3c0b88c0aeac7670bc302112288f1b58937608e7b2835a22d2b4fc45a8f63b218ad  amneziawg-tools-1.0.20250903.tar.gz
+443590d0c0779522e218d0a3a3e6ec2fb496783d5148f9dc2e2fafb7117351646ca6279631e6eefac40af841df90996fe2ce5f562168c33fa05523687e37b6ea  awg-quick.initd
+757116d566b669bbac29178ff75dac6e3b0c0cffb5c5b66b2325575f273f5a275fc8d26dd36703882edd6d5f0d53d19d152b31e0287fa6d11d5d9a4d6e9d7b5a  awg-quick-different-sudo.patch
+"

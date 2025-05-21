@@ -1,0 +1,14 @@
+--- a/src/wg-quick/linux.bash
++++ b/src/wg-quick/linux.bash
+@@ -82,7 +82,7 @@ read_bool() {
+ }
+ 
+ auto_su() {
+-	[[ $UID == 0 ]] || exec sudo -p "$PROGRAM must be run as root. Please enter the password for %u to continue: " -- "$BASH" -- "$SELF" "${ARGS[@]}"
++	[[ $UID == 0 ]] || exec "${SUDO:-sudo}" -- "$BASH" -- "$SELF" "${ARGS[@]}"
+ }
+ 
+ add_if() {
+-- 
+2.47.1
+

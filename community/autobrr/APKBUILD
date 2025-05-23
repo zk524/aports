@@ -1,8 +1,8 @@
 # Contributor: Fabricio Silva <hi@fabricio.dev>
 maintainer="Fabricio Silva <hi@fabricio.dev>"
 pkgname=autobrr
-pkgver=1.60.0
-pkgrel=0
+pkgver=1.62.0
+pkgrel=1
 pkgdesc="The modern download automation tool for torrents"
 url="https://autobrr.com/"
 arch="all"
@@ -53,8 +53,8 @@ package() {
 }
 
 sha512sums="
-b5732c49fc386a5f7afa14a7a90948a0498f4b5d674022b15746a834fd7c8c301e8c3f9ab8f8079a51ac2fc77a259f79c026a3f224f7e8ea2421211ad1dedd80  autobrr-1.60.0.tar.gz
-41d72c79debf95269e093cb8a1efe893dd36f9e2c3af2adc1b8af6019c51528ee086a7dca7cf0db9f28c10c26f205dcd4bb5d26fda59a8c16388890131bc952b  autobrr-web-dist-1.60.0.tar.gz
+8347f22005b1e87a06f800e8ba0199f15747d6094ab89212aa32aac4dc3929abadd97dbe5343c519f3aa9107a5ffbd629e2e3439e9d50cf6d2b3e6523512610d  autobrr-1.62.0.tar.gz
+c33edcb6325a43c9c6f802e2ba6d46b06fb66fe504b25587f05ac00ab1adde45255c37cbf65d4d1f521b394f2a66d7357f29a34ff612b2fee8e1658bb537bee1  autobrr-web-dist-1.62.0.tar.gz
 42ce693eca67ca8b4c863440ebfb3efb41c197302274ccecd1b080c3e1f01e03078ab46b2fae8ca6cf5add4153296adb10e324b02dbe89c939465305be49f760  autobrr.initd
 4072cabb7131a23283b1fecdd1370eb935ae156284972a5e503de36054a358f74112a40e200662386e85af51507213e3f25afdf343a2673e6ef372b7b5e04a80  autobrr.confd
 "

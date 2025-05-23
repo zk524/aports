@@ -2,7 +2,7 @@
 # Maintainer: TBK <alpine@jjtc.eu>
 pkgname=rizin
 pkgver=0.6.3
-pkgrel=1
+pkgrel=2
 pkgdesc="UNIX-like reverse engineering framework and command-line toolset"
 url="https://rizin.re/"
 # 32bit - 15/78 big	FAIL 0.26s (exit status 1)
@@ -71,7 +71,7 @@ check() {
 	# Include the build rizin otherwise
 	# unit/test_rzpipe.c will fail
 	export PATH="$PATH:$builddir/output/binrz/rizin/"
-	meson test --no-rebuild --print-errorlogs -C output
+	meson test --print-errorlogs -C output
 }
 
 package() {

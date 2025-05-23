@@ -2,8 +2,8 @@
 # Contributor: Sören Tempel <soeren+alpine@soeren-tempel.net>
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=nix
-pkgver=2.26.3
-pkgrel=0
+pkgver=2.28.3
+pkgrel=1
 pkgdesc="The purely functional package manager"
 url="https://nixos.org/nix/"
 arch="x86 x86_64 aarch64"  # supported platforms
@@ -14,6 +14,7 @@ makedepends="
 	$depends_dev
 	bash
 	bison
+	blake3-dev
 	brotli-dev
 	busybox-static
 	bzip2-dev
@@ -96,7 +97,7 @@ build() {
 }
 
 check() {
-	meson test --no-rebuild -C build
+	meson test -C build
 }
 
 package() {
@@ -157,9 +158,9 @@ perl() {
 }
 
 sha512sums="
-844f852c94c9b8d253e774f0628a565aa35e898cc2d6f2961d44d6d23fd444dedaa5f52dc856180af126a0b3b0f6d0dd269464aa11096080d8a1da1f664aad0b  nix-2.26.3.tar.gz
+3a71c00664b626cd8a0806394a21cb2792fc3a81b53bb05f8548b1e917dc8907e4a0b59cb7e6d1e647e11f4937e9e9ec490d9a901dfb7e3227a148acb8864dc9  nix-2.28.3.tar.gz
 f6a8d67003a6f0cd54dc4dc26051e9f3d18d9c1c1d66c99324e3db017891a6fdd88d7be53de05ab21fa8f7635164a093069416a89cf322ea6f6888df066ea60b  README.alpine
 ad02313f026fe3286c7c2271f26bf074ba2966c12777d7109275555f1a616bf0f99c8f5e45a57161f383091867f1dfd4d84cfae7a6d8a075312608456975dc81  nix-remote.sh
 9e4568db987fbae5097f7bb086e8ad51742c2d229703104fb7e6f240ffb0ca72e57dc305fb238bcee4ec8002d780007af60f241b1f32b6aa413dd579d9c59e75  nix-daemon.initd
-4bf84827e2757a23680d4f3ad118d92d15010801343083dd362d291672a357d566a94f518afc36265628baaea2a0b1e4d87d33e53ba71e3c3ec7545fac66613e  no-linkcheck.patch
+205d109cba691e1382112b69f5504cdcad083c7d4de8b0b2bfc98d51a5648f29cd507f860c6b627727f413db7ffdb806e92a6217fb68420eee3ef1326af778ed  no-linkcheck.patch
 "

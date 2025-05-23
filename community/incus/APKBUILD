@@ -4,7 +4,7 @@
 # Maintainer: Leonardo Arena <rnalrd@alpinelinux.org>
 pkgname=incus
 pkgver=6.0.4 #LTS releases only
-pkgrel=0
+pkgrel=3
 pkgdesc="Powerful system container and virtual machine manager"
 url="https://github.com/lxc/incus"
 arch="all"
@@ -162,7 +162,7 @@ conversion() {
 
 utils() {
 	pkgdesc="Incus utilities and scripts"
-	depends="$pkgname py3-lxc jq"
+	depends="$pkgname py3-lxc jq losetup"
 
 	amove usr/bin
 }
@@ -195,6 +195,8 @@ openrc() {
 }
 
 check() {
+	export CGO_LDFLAGS="$LDFLAGS -lintl"
+
 	# FIXME: disable failing tests
 	go test -v -skip "TestCluster_*|TestIntegration_UnixSocket|TestContainerTestSuite_*|TestDotGo|TestParse|TestPackages|TestConvertNetworkConfig|TestSnapshotCommon|TestHttpRequest" ./...
 }

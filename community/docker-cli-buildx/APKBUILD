@@ -1,9 +1,9 @@
 # Contributor: Jake Buchholz Göktürk <tomalok@gmail.com>
 # Maintainer: Jake Buchholz Göktürk <tomalok@gmail.com>
 pkgname=docker-cli-buildx
-pkgver=0.22.0
+pkgver=0.24.0
 pkgrel=0
-_commit=18ccba072076ddbfb0aeedd6746d7719b0729b58
+_commit=d0e5e86c8b88ae4865040bc96917c338f4dd673c
 pkgdesc="A Docker CLI plugin for extended build capabilities"
 url="https://docs.docker.com/engine/reference/commandline/buildx_build"
 arch="all"
@@ -34,11 +34,9 @@ check() {
 }
 
 package() {
-	# this is circular to have top-level, so depend on it in package itself
-	depends="docker-cli"
 	install -Dm755 docker-buildx "$pkgdir$_buildx_installdir"/docker-buildx
 }
 
 sha512sums="
-d0ae30433b8ea6ae9dbf785e9da8366369f26be3c0f0bda816c7c85ebd08792304da645f2ded47d11d35737c7c6d71b998796d170ebe6baf72af5afb77f54ad4  buildx-0.22.0.tar.gz
+423dd8e8b7ebb5d94be5f6f791f746aaff3570b473172877806cf1a2d265fca1bb65902dd001da3263002867ecd82a18b9062467f4a6da276788109abde34a25  buildx-0.24.0.tar.gz
 "

@@ -1,7 +1,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=py3-zstd
-pkgver=1.5.6.7
+pkgver=1.5.7.0
 pkgrel=0
 pkgdesc="Simple Python bindings to Yann Collet ZSTD compression library"
 url="https://pypi.org/project/zstd/"
@@ -37,5 +37,5 @@ package() {
 }
 
 sha512sums="
-fc518a3650553f1d210dc5eedf078da5bfa794a1b678542fcc56e89f571719c695a759a0ebbb82a500e8d70a0f17a6b4041e8a0081c4176cf6e01cc4e6c4961b  py3-zstd-1.5.6.7.tar.gz
+5c0e6e9462f388fec091d1a3036d26a17cb7d3b5f5a3530e611595386fef8aabe3cb79068c2fe8649896306377c4b40ba32d7d2098fdcf26adf926af09d2ae7d  py3-zstd-1.5.7.0.tar.gz
 "

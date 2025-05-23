@@ -2,8 +2,8 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=passt
-pkgver=2025.03.20
-_commit=32f6212
+pkgver=2025.05.12
+_commit=8ec1341
 _tag=${pkgver//./_}.$_commit
 pkgrel=0
 pkgdesc="Plug A Simple Socket Transport"
@@ -36,5 +36,5 @@ package() {
 }
 
 sha512sums="
-ac6cab6515b85c7b3f4888bc4c4b18200d1f3181e2ed301a712dc05a3535c240ec6e3bdc3bb3ffecdae00701bb317b26ea7fde0f57533116d645b3f622935494  passt-2025_03_20.32f6212.tar.gz
+6ef15f98378cc75d70bf56d8334ad680e36868b503e86ea70fde679135b20f31eb3f1434917564f61cc440c3aa05aa5e104143f1a812cf4eb86c87758b42dc0e  passt-2025_05_12.8ec1341.tar.gz
 "

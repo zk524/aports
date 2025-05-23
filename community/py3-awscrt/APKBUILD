@@ -1,6 +1,6 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=py3-awscrt
-pkgver=0.25.7
+pkgver=0.27.2
 pkgrel=0
 pkgdesc="Python bindings for the AWS Common Runtime"
 url="https://github.com/awslabs/aws-crt-python"
@@ -55,5 +55,5 @@ package() {
 }
 
 sha512sums="
-4bf4842065b5ef3609ae76211406c2d036aa480f78b31afd0ace4b90f62a48f77a56e23474a9c28643dbd68980502c63b45b24d28c7fb38699285643f474a2e7  py3-awscrt-0.25.7.tar.gz
+3c2117fb74f1814ca5b3846c5dc8051fb74397529273536c3e1d2522182812f8cd7bbf6998aa9cffaeaadd0023a7003e018f363d8021ea469454abd34a3df788  py3-awscrt-0.27.2.tar.gz
 "

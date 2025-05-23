@@ -5,7 +5,7 @@
 # Maintainer: Lindsay Zhou <i@lin.moe>
 maintainer="Lindsay Zhou <i@lin.moe>"
 pkgname=ibus-libpinyin
-pkgver=1.16.1
+pkgver=1.16.3
 pkgrel=0
 pkgdesc="Intelligent Pinyin engine based on libpinyin for IBus"
 url="https://github.com/libpinyin/ibus-libpinyin"
@@ -36,9 +36,9 @@ package() {
 	make install DESTDIR=$pkgdir
 
 	# remove duplicate python bytecode
-	find "$pkgdir" -name "*.opt-1.pyc" -delete
+	find "$pkgdir" \( -name "*.opt-1.pyc" -o -name "*.opt-2.pyc" \) -delete
 }
 
 sha512sums="
-683c75d1a76680e270a8ee88cea92190917d2c257bb9eb6c268ce8d0684a4aa2a82b37cbedc032505921eb9dc82b9117543198541a20975cfd1666c027870574  ibus-libpinyin-1.16.1.tar.gz
+0649facda00ffa24fc4c07eaa3baf3eae798fb3a407c5830a14fac997d7cffe5e03496148998b5879539bd55c415448880ab6f702ab8c4fad240414343154d39  ibus-libpinyin-1.16.3.tar.gz
 "

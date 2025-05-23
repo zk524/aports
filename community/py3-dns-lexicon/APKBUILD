@@ -1,7 +1,7 @@
 # Contributor: Duncan Bellamy <dunk@denkimushi.com>
 # Maintainer: Duncan Bellamy <dunk@denkimushi.com>
 pkgname=py3-dns-lexicon
-pkgver=3.20.1
+pkgver=3.21.1
 pkgrel=0
 pkgdesc="Manipulate DNS records on various DNS providers in a standardized/agnostic way"
 url="https://github.com/dns-lexicon/dns-lexicon"
@@ -61,5 +61,5 @@ package() {
 }
 
 sha512sums="
-98a29bc67596e58ada43373fd1dfa2a5c35512dd33924969df0d16c10cf2e53cf2bc564488c9f7a1b682b63a7959cd2073207a8d77435aa62a04f408024d85fd  py3-dns-lexicon-github-3.20.1.tar.gz
+0f53001edf2425afe7b7c4315e974ee47c956b659964998b942943788711c57634eea2d7974e21005be7f0edf16800e6577c49c8789e34f2133c4f5be8ac7ac1  py3-dns-lexicon-github-3.21.1.tar.gz
 "

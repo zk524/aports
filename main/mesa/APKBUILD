@@ -1,7 +1,7 @@
 # Contributor: David Heidelberg <david@ixit.cz>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=mesa
-pkgver=24.3.4
+pkgver=25.1.1
 pkgrel=0
 pkgdesc="Mesa DRI OpenGL library"
 url="https://www.mesa3d.org"
@@ -13,19 +13,17 @@ subpackages="
 	$pkgname-dri-gallium:_gallium
 	$pkgname-va-gallium:_va
 	$pkgname-vdpau-gallium:_vdpau
-	$pkgname-glapi
 	$pkgname-egl
 	$pkgname-gl
 	$pkgname-gles
 	$pkgname-xatracker
-	$pkgname-osmesa
 	$pkgname-gbm
 	$pkgname-vulkan-ati:_vulkan
 	$pkgname-vulkan-swrast:_vulkan
 	$pkgname-vulkan-layers:_vulkan_layers
 	$pkgname-libd3dadapter9
 	"
-_llvmver=19
+_llvmver=20
 depends_dev="
 	libdrm-dev
 	libxext-dev
@@ -37,18 +35,18 @@ makedepends="
 	$depends_dev
 	binutils
 	bison
+	elfutils-dev
 	eudev-dev
 	expat-dev
 	findutils
 	flex
 	gettext
-	elfutils-dev
 	glslang-dev
 	libtool
-	libxfixes-dev
 	libva-dev
 	libvdpau-dev
 	libx11-dev
+	libxfixes-dev
 	libxml2-dev
 	libxrandr-dev
 	libxxf86vm-dev
@@ -84,8 +82,12 @@ case "$CARCH" in
 x86*)
 	_gallium_drivers="$_gallium_drivers,svga,i915,iris,crocus"
 	;;
-armhf|armv7|aarch64)
+armhf|armv7)
 	_gallium_drivers="$_gallium_drivers,vc4,v3d,freedreno,lima,panfrost,etnaviv,tegra"
+	_gallium_drivers="${_gallium_drivers//r300,}"
+	;;
+aarch64)
+	_gallium_drivers="$_gallium_drivers,vc4,v3d,freedreno,lima,panfrost,etnaviv,tegra,asahi"
 	_gallium_drivers="${_gallium_drivers//r300,}"
 	;;
 riscv64|loongarch64)
@@ -103,9 +105,10 @@ x86*)
 		"
 	;;
 aarch64)
-	_vulkan_drivers="$_vulkan_drivers,broadcom,freedreno,panfrost"
+	_vulkan_drivers="$_vulkan_drivers,asahi,broadcom,freedreno,panfrost"
 	subpackages="
 		$subpackages
+		$pkgname-vulkan-asahi:_vulkan
 		$pkgname-vulkan-broadcom:_vulkan
 		$pkgname-vulkan-freedreno:_vulkan
 		$pkgname-vulkan-panfrost:_vulkan
@@ -150,6 +153,18 @@ armv7|aarch64|x86|x86_64)
 		$pkgname-rusticl
 		"
 	;;
+armhf)
+	# still requires clc for panfrost (https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/32720)
+	makedepends="
+		$makedepends
+		clang$_llvmver-dev
+		libclc-dev~$_llvmver
+		rust
+		rust-bindgen
+		spirv-llvm-translator-dev
+		"
+	_rusticl=false
+	;;
 *)
 	_rusticl=false
 	;;
@@ -183,11 +198,10 @@ build() {
 		-Dplatforms=x11,wayland \
 		-Dllvm=enabled \
 		-Dshared-llvm=enabled \
-		-Dshared-glapi=enabled \
 		-Dgbm=enabled \
 		-Dglx=dri \
 		-Dopengl=true \
-		-Dosmesa=true \
+		-Dosmesa=false \
 		-Dgles1=enabled \
 		-Dgles2=enabled \
 		-Degl=enabled \
@@ -208,8 +222,6 @@ build() {
 }
 
 # Tests workarounds
-# TODO: remove --no-suite glx with 24.3 (already dropped from mesa-git)
-_tests_opts="--no-suite glx"
 case "$CARCH" in
 armhf|armv7|riscv64|loongarch64|ppc64le)
 	# https://gitlab.alpinelinux.org/alpine/aports/-/issues/16525
@@ -223,7 +235,7 @@ s390x)
 esac
 
 check() {
-	LC_ALL=C.UTF=8 meson test --no-rebuild --print-errorlogs $_tests_opts -C output
+	LC_ALL=C.UTF=8 meson test --print-errorlogs $_tests_opts -C output
 }
 
 package() {
@@ -247,14 +259,6 @@ gl() {
 	amove usr/lib/libGL.so*
 }
 
-glapi() {
-	pkgdesc="Mesa shared glapi"
-	replaces="$pkgname-gles=$pkgver-r$pkgrel"
-	provider_priority=100
-
-	amove usr/lib/libglapi.so.*
-}
-
 gles() {
 	pkgdesc="Mesa libGLESv2 runtime libraries"
 	depends="mesa=$pkgver-r$pkgrel"
@@ -269,14 +273,6 @@ xatracker() {
 	provider_priority=100
 
 	amove usr/lib/libxatracker*.so.*
-}
-
-osmesa() {
-	pkgdesc="Mesa offscreen rendering libraries"
-	depends="mesa=$pkgver-r$pkgrel"
-	provider_priority=100
-
-	amove usr/lib/libOSMesa.so.*
 }
 
 gbm() {
@@ -370,6 +366,8 @@ _vulkan() {
 	case $n in
 	ati)
 		_mv_vulkan radeon ;;
+	asahi)
+		_mv_vulkan asahi ;;
 	intel)
 		_mv_vulkan intel ;;
 	broadcom)
@@ -403,7 +401,7 @@ _vulkan_layers() {
 }
 
 sha512sums="
-9c23cd86fda4cf0289c5a78b08ceea8b01e5b141d86ee3e659fa46e62ff9586ff92a4984d2a340b5bf209c4c7f3414bf99f3ced19feee8fb39ef99fe572dbd55  mesa-24.3.4.tar.xz
+8000fec61da3b7c0355b74458c52f8faeb562398a1882d68cd31a253848edd3333072521ec52f8c5c1a62d909afd6667803d43cb54027d0af3d944f1add27aae  mesa-25.1.1.tar.xz
 4cfd6532a96103589efd885240ce12414b473aed05956507e0b78a46e44216974adac1a8dc22db0d185e6c8a98988ebaed79ac0e83156c75a41199591f52f944  23575.patch
 ce1887fb7d425b94c375a0547bee40c308809c01f5ce1bcddabcc69a7fcb445efb9d5f5c7bac49b2778ab40687c7bce204d278b0bf028d124c75e59083107fba  riscv64-tls.patch
 "

@@ -1,7 +1,7 @@
 # Contributor: Hoang Nguyen <folliekazetani@protonmail.com>
-# Maintainer: Hoang Nguyen <folliekazetani@protonmail.com>
+maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=primecount
-pkgver=7.15
+pkgver=7.17
 pkgrel=0
 pkgdesc="Fast prime counting C/C++ library"
 url="https://github.com/kimwalisch/primecount"
@@ -22,8 +22,7 @@ build() {
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DBUILD_SHARED_LIBS=ON \
 		-DBUILD_TESTS=ON \
-		-DBUILD_LIBPRIMESIEVE=OFF \
-		-DWITH_POPCNT=OFF
+		-DBUILD_LIBPRIMESIEVE=OFF
 	cmake --build build
 }
 
@@ -37,5 +36,5 @@ package() {
 }
 
 sha512sums="
-6058c7526aa3e1a01b6b110e67bfa4aded90276245830073b72eb479f54a460786088182fe9d9a354ed7f24cdda2c93dbf12a7e432e3e7b578ce6d3c9c435916  primecount-7.15.tar.gz
+02e345131acf8c5901704e097bbab7daae237accc9dcc523b297206b7364634c4f93a9fb54e8de9a5fe5aa742fef674da968c026313d5a46b01fa24ed9800ad0  primecount-7.17.tar.gz
 "

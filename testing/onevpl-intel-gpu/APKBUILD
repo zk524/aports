@@ -1,8 +1,8 @@
 # Contributor: Assaf Inbal <shmuelzon@gmail.com>
 # Maintainer: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
 pkgname=onevpl-intel-gpu
-pkgver=23.2.4
-pkgrel=1
+pkgver=25.2.3
+pkgrel=0
 pkgdesc="Intel oneVPL GPU Runtime"
 options="!check" # tests can't run in check(), only on install
 url="https://github.com/oneapi-src/oneVPL-intel-gpu"
@@ -16,7 +16,7 @@ makedepends="
 	"
 subpackages="$pkgname-dev"
 source="$pkgname-$pkgver.tar.gz::https://github.com/oneapi-src/oneVPL-intel-gpu/archive/refs/tags/intel-onevpl-$pkgver.tar.gz"
-builddir="$srcdir/oneVPL-intel-gpu-intel-onevpl-$pkgver"
+builddir="$srcdir/vpl-gpu-rt-intel-onevpl-$pkgver"
 
 build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
@@ -36,5 +36,5 @@ package() {
 }
 
 sha512sums="
-4edadb45eac2246f15301f08ad90af5695b1d848391a639447ff292ec9df85d64ea9bd04cfb52fdb751ed3707601515b09988cebcbd06b03411cb2d69970512d  onevpl-intel-gpu-23.2.4.tar.gz
+5e6bf3733f20b379f2216432eae6c1218b8e2ff3496f2ea824431b49a740b2b2b3b7a1334b2befe1d8183b49e193a74a6e24d87d45d79261cdcb036908d2b2ef  onevpl-intel-gpu-25.2.3.tar.gz
 "

@@ -1,8 +1,8 @@
 # Contributor: Sören Tempel <soeren+alpinelinux@soeren-tempel.net>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=harfbuzz
-pkgver=10.2.0
-pkgrel=1
+pkgver=11.2.1
+pkgrel=0
 pkgdesc="Text shaping library"
 url="https://harfbuzz.github.io/"
 arch="all"
@@ -54,7 +54,7 @@ build() {
 }
 
 check() {
-	meson test --no-rebuild --print-errorlogs -C output
+	meson test --print-errorlogs -C output
 }
 
 package() {
@@ -96,5 +96,5 @@ dev() {
 }
 
 sha512sums="
-522028a5de91a042832b1634fc4b7636b1b42c5ee258882d155bc33fca7b30de19ca714b4f9ea8dc3d3f537142ca2305fcf5af04bec4edbf608f557c12742e54  harfbuzz-10.2.0.tar.xz
+56d4819f63d6040bff008e64a0d5b597c1cfa105047f7970b1dae2894aeed27a92d0c0780fee0beda53685767d86cb864256d6388cb4439e7d51a7ee717a0bd7  harfbuzz-11.2.1.tar.xz
 "

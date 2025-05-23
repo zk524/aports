@@ -1,7 +1,7 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=melange
-pkgver=0.23.5
-pkgrel=0
+pkgver=0.23.8
+pkgrel=1
 pkgdesc="Build apk packages using declarative pipelines"
 url="https://github.com/chainguard-dev/melange"
 # 32-bit: /home/buildozer/go/pkg/mod/go.step.sm/crypto@v0.58.1/internal/utils/convert.go:33:18: cannot convert math.MaxUint32 (untyped int constant 4294967295) to type T
@@ -37,5 +37,5 @@ package() {
 }
 
 sha512sums="
-e0dc0e77c22847e919a1dce1d9bf1465326005bb0f7a91389df566952646e3b1996785a8532cb37ff05b1ce042eda4814cdc8edba269bb3f12bcf7d8742cb08f  melange-0.23.5.tar.gz
+b6897988a658e1a990c5d141964384c42adf0b3ccc3079eb2d803924754cc4d95e7df17ed8937f34565306293901b90dceaf4efcd82f98dfe3b44359ab4132a3  melange-0.23.8.tar.gz
 "

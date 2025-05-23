@@ -5,7 +5,7 @@
 # Contributor: Sodface <sod@sodface.com>
 # Maintainer: lauren n. liberda <lauren@selfisekai.rocks>
 pkgname=yt-dlp
-pkgver=2025.03.31
+pkgver=2025.05.22
 pkgrel=0
 pkgdesc="Command-line program to download videos from YouTube"
 url="https://github.com/yt-dlp/yt-dlp"
@@ -88,5 +88,5 @@ core() {
 }
 
 sha512sums="
-d517cba7d05e643c4977d2ee4b29c820b6ada6652ae8dabd066eae9764df0d3360cbfdd60c567043d0582f33d9a48d33b0449478867bebd932fedb6fcca995c9  yt-dlp-2025.03.31.tar.gz
+2507617245b280d5038d23766d787b4ad8ab854789f6d1f459b4643c1b4cfa902685f8cbb9fb3dbe2dad4a7e74c34e943cb06c4a7974a52245f2e74cec15b423  yt-dlp-2025.05.22.tar.gz
 "

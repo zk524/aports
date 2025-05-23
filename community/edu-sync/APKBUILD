@@ -1,7 +1,7 @@
 # Contributor: fossdd <fossdd@pwned.life>
 # Maintainer: fossdd <fossdd@pwned.life>
 pkgname=edu-sync
-pkgver=0.2.5
+pkgver=0.3.2
 pkgrel=0
 pkgdesc="Moodle synchronization utility"
 url="https://github.com/mkroening/edu-sync"
@@ -30,5 +30,5 @@ package() {
 }
 
 sha512sums="
-a928ac28a2529f0ab3e512ef86ddafc2b14bde5e53070deeb17f25303aedf79004dd622f348fec75f745236e345c34f325ab91c20ef9c395ccfbeb2d478b453a  edu-sync-0.2.5.tar.gz
+1524f87606d3cfc6192b1e36e4903e67e38a5d04c2d205786c7ca6ffee2a2d8b8b2e84dfd9fe753ba9667ef61df9f40b0d1031d41e88dd252d660d31cad581c1  edu-sync-0.3.2.tar.gz
 "

@@ -2,7 +2,7 @@
 # Maintainer: Clayton Craft <clayton@craftyguy.net>
 pkgname=vvmd
 pkgver=1.1
-pkgrel=1
+pkgrel=3
 pkgdesc="lower level daemon that retrieves Visual Voicemail"
 url="https://gitlab.com/kop316/vvmd"
 arch="all"
@@ -33,7 +33,7 @@ build() {
 }
 
 check() {
-	meson test --no-rebuild --print-errorlogs -C output
+	meson test --print-errorlogs -C output
 }
 
 package() {

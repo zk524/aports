@@ -9,7 +9,7 @@ _pkgname=erlang
 # Contributor: Daniel Isaksen <d@duniel.no>
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
-pkgver=26.2.5.10
+pkgver=26.2.5.12
 pkgrel=0
 _majorver=${pkgver%%.*}
 _prevmajorver=$((_majorver - 1))
@@ -210,5 +210,5 @@ _default_provide() {
 }
 
 sha512sums="
-26fb42250ce6aef98e32d1fa9b4031f9a6f1d676f2c2b92ec5c344e7f1df30b1aedcdd4b3031a366f11ae056bd606fc5ec34c28844e5f37ae6f5c4f0870d344d  otp_src_26.2.5.10.tar.gz
+b196fcb47e547cca902b8d4cc4fbe1c33e1e5d765c94bd74d0f58879cc7a5b499bcf8c12358981ff0cb809b5fa3f4fdb86d3d91f14c5a66a252d3eb1fb6ab959  otp_src_26.2.5.12.tar.gz
 "

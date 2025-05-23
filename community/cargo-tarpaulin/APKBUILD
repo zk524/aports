@@ -1,10 +1,10 @@
-# Maintainer: kpcyrd <git@rxv.cc>
+maintainer="Leon White <badfunkstripe@gmail.com>"
 pkgname=cargo-tarpaulin
-pkgver=0.32.0
+pkgver=0.32.7
 pkgrel=0
 pkgdesc="Code coverage tool for Rust projects"
 url="https://github.com/xd009642/tarpaulin"
-arch="all !x86" # build fails on x86: https://github.com/xd009642/tarpaulin/issues/1468
+arch="all"
 license="Apache-2.0 OR MIT"
 depends="cargo"
 makedepends="
@@ -41,5 +41,5 @@ package() {
 }
 
 sha512sums="
-0bcea10a0e1b8930cda03329e513c473db1cfa035e449e339038bf916546df95d7a1497bbf2c5fd49c329bd97358a5cf72580087a5f31fbe7ebbafc1db10e783  cargo-tarpaulin-0.32.0.tar.gz
+3f950a7c938ab6aa6e1d45a368a6f605a5c39e78391327e1ac694e0f4ebcf66236289022fc555761725ba06a98e00d4c575dff054fe116bc349bff2c4bea2c7a  cargo-tarpaulin-0.32.7.tar.gz
 "

@@ -2,7 +2,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=parallel
-pkgver=20250322
+pkgver=20250522
 pkgrel=0
 pkgdesc="Shell tool for executing jobs in parallel"
 arch="noarch"
@@ -29,5 +29,5 @@ package() {
 }
 
 sha512sums="
-8ed4084ae18e9e1796ed209a25ea24db60d71e112eab816fe4d64c96bcf6ae49489b3b4d3acca7d32857e7410fcbc9259310557c2902ce3250b38d27753b140c  parallel-20250322.tar.bz2
+10d5f34c191f6dfb1206a46ba563cecdee3350e1a13c70cc5ea79bc617a7232d920f78a3e3dab8390cf0c7ba77d039061d58d2bd5fe1147274cdfe58652c2419  parallel-20250522.tar.bz2
 "

@@ -1,7 +1,7 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 # Contributor: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=kicad-library
-pkgver=9.0.0
+pkgver=9.0.2
 pkgrel=0
 pkgdesc="KiCad component and footprint libraries"
 url="https://kicad.github.io/"
@@ -50,7 +50,7 @@ three_d() {
 }
 
 sha512sums="
-dbfdbdce43a369823897fa96a22fcb12dcad85472d9c52e9b9b576989f6978981708f543d619d00d9d6bdc78d7bd84506c9bf544a0998e75e685ef5747684689  kicad-symbols-9.0.0.tar.gz
-34761b1111d7802b92af660a5bca030f1ac536f24946aaff9630a005d20b7e525e126db0c5aa6c01aee97f48d3f3408b948177522b29c2a851a7f3987efdca5e  kicad-footprints-9.0.0.tar.gz
-2703f3a03610a31f63dc7802628aa6b70bcff0870490035eaa45a54e3fc88b0438ee08ddb85365159771052891f57a0ff6739c580e7f02a135368962ccf1f420  kicad-packages3D-9.0.0.tar.gz
+30c14f70083401fad8ae936dc89555c0fe575bf94a65cd7b74df4ef8d68ac26e83f2a4fe85321a336aa1bb4a2f1886bff75db252132f7cc67d45308f2021425d  kicad-symbols-9.0.2.tar.gz
+c1b6fe855d5dc44a38464d5fac40716b55fcc54df5d18ee385edb1a3c29aaa0d81bd1260393d5578794026c544e8710268f670eb00f4577405da35f00e65ea0e  kicad-footprints-9.0.2.tar.gz
+24cb6322809e4958c07df2263b8838b319fa1afe514f4a2d259b0a121696433bfc27e05228cf91b3a475592af8ad85fefb4675e87281f5928edd68ea528bba8f  kicad-packages3D-9.0.2.tar.gz
 "

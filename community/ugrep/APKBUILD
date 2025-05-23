@@ -2,7 +2,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=ugrep
-pkgver=7.3.0
+pkgver=7.4.3
 pkgrel=0
 pkgdesc="Ultra fast grep with interactive query UI and fuzzy search"
 url="https://ugrep.com/"
@@ -49,5 +49,5 @@ package() {
 }
 
 sha512sums="
-a13c305ffc9626858734e3f2b48841bf1929f62f204a888116649789c64d67f107fd8b81d53f147c761b689136320d295aa8f1c0bb26e83a693e23af82cc9ed8  ugrep-7.3.0.tar.gz
+fb3386fbb25d3ecbd49d68423ee587a406467fc46f1ca487bbf79ef5cc3afb1971df12dfbe822c528ffa5a96f28c9837bfbd920484615201225f43e481939112  ugrep-7.4.3.tar.gz
 "

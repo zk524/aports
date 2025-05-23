@@ -3,7 +3,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=dune
-pkgver=3.18.0
+pkgver=3.19.0
 pkgrel=0
 pkgdesc="A composable build system for OCaml (formerly Jbuilder)"
 url="https://dune.build/"
@@ -104,5 +104,5 @@ scan_python3_dependency() {
 }
 
 sha512sums="
-5ea3923ccba5edd10c5b18df9b175c52096a21b62fc76269cd3be1ac93fa7589c9472403430161410995db75b1b419de4d3dd4d7e140b64d8151e29ba3137cbb  dune-3.18.0.tar.gz
+0d3210ecf34a6ed4a43fe76697067ef756902d444159f1ea676d228651d063290fb2a22f3077dfdf66dbf6b345ee68f0ad41f27cb62facdbca2672f75c989b03  dune-3.19.0.tar.gz
 "

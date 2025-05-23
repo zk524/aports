@@ -7,9 +7,9 @@
 # Contributor: omni <omni+alpine@hack.org>
 # Maintainer: team/rust <alpine@ptrcnull.me>
 pkgname=rust
-pkgver=1.86.0
-_llvmver=19
-_bootver=1.85.0
+pkgver=1.87.0
+_llvmver=20
+_bootver=1.86.0
 pkgrel=0
 # Source tarballs for beta releases are listed here:
 # https://static.rust-lang.org/dist/channel-rust-beta.toml
@@ -34,6 +34,7 @@ depends="gcc musl-dev"
 makedepends_build="
 	!libgit2-dev
 	cargo-bootstrap>=$_bootver
+	clang$_llvmver
 	coreutils
 	curl-dev
 	file
@@ -83,17 +84,18 @@ subpackages="cargo"
 	$pkgname-gdb::noarch
 	$pkgname-lldb::noarch
 	$pkgname-src::noarch
+	$pkgname-wasm
 	cargo-bash-completions:_cargo_bashcomp:noarch
 	cargo-zsh-completion:_cargo_zshcomp:noarch
 	cargo-doc:_cargo_doc:noarch
 	rustc-dev:_rustc_dev
 	rustfmt
 	"
-# rust-wasm requires lld, which is disabled on s390x
-[ "$CARCH" != "s390x" ] && subpackages="
-	$subpackages
-	$pkgname-wasm
-	"
+[ -z "$BOOTSTRAP" ] && case "$CHOST" in
+	aarch64*|x86_64*)
+	subpackages="$subpackages $pkgname-uefi"
+	;;
+esac
 source="https://static.rust-lang.org/dist/rustc-$pkgver-src.tar.xz
 	alpine-move-py-scripts-to-share.patch
 	alpine-target.patch
@@ -105,6 +107,7 @@ source="https://static.rust-lang.org/dist/rustc-$pkgver-src.tar.xz
 	need-ssp_nonshared.patch
 	no-export-ld-library-path.patch
 	system-wasm-ld.patch
+	system-uefi-ld.patch
 	check-rustc
 	"
 builddir="$srcdir/rustc-$pkgver-src"
@@ -142,7 +145,7 @@ fi
 # 2. Compile again, now with our triplets selected as build/target, now that
 #    rustc knows about them
 _build="$CBUILD"
-_target="$CTARGET"
+_target="$CHOST"
 
 _rlibdir="usr/lib/rustlib/$_target/lib"
 _sharedir="usr/share/rust"
@@ -221,6 +224,8 @@ build() {
 		esac
 	fi
 
+	export PATH="/usr/lib/llvm$_llvmver/bin:$PATH"
+
 	# absolutely do not set these here, rust "knows" what it's doing
 	unset CARGO_PROFILE_RELEASE_LTO
 	unset CARGO_PROFILE_RELEASE_OPT_LEVEL
@@ -259,6 +264,14 @@ build() {
 			--set=target.wasm32-wasip2.wasi-root=/usr/share/wasi-sysroot
 			'
 	fi
+	local _uefi_target=${CHOST%%-*}-unknown-uefi
+	if subpackage_types_has uefi; then
+		targets="$targets,$_uefi_target"
+		# Too many jobs uses too much memory and fails with OOM error.
+		# This compounds when building this extra target.
+		cores=$(nproc)
+		JOBS=$((cores / 3 + 1))
+	fi
 
 	# ./configure will not run when config.toml exists,
 	# so assume we are restarting the build with ./x.py
@@ -281,7 +294,8 @@ build() {
 		--enable-vendor \
 		--dist-compression-formats=gz \
 		--python="python3" \
-		--set="change-id=136941" \
+		--set="change-id=138986" \
+		--set="build.description=Alpine Linux $pkgver-r$pkgrel" \
 		--set="rust.musl-root=/usr" \
 		--set="rust.backtrace-on-ice=true" \
 		--set="rust.codegen-units=1" \
@@ -289,7 +303,6 @@ build() {
 		--set="rust.deny-warnings=false" \
 		--set="rust.remap-debuginfo=true" \
 		--set="rust.lld=false" \
-		--set="rust.description=Alpine Linux $pkgver-r$pkgrel" \
 		$lto \
 		$local_rebuild \
 		--set="target.$_target.llvm-config=/usr/lib/llvm$_llvmver/bin/llvm-config" \
@@ -299,6 +312,10 @@ build() {
 		--set="target.$_target.cxx=${CROSS_COMPILE}c++" \
 		--set="target.$_target.ar=${CROSS_COMPILE}ar" \
 		--set="target.$_target.linker=${CROSS_COMPILE}cc" \
+		--set="target.$_uefi_target.crt-static=true" \
+		--set="target.$_uefi_target.cc=clang-$_llvmver" \
+		--set="target.$_uefi_target.profiler=false" \
+		--set="target.$_uefi_target.optimized-compiler-builtins=false" \
 		--set="target.$_build.musl-root=/usr" \
 		--set="target.$_build.crt-static=false" \
 		--set="target.$_build.cc=cc" \
@@ -317,7 +334,7 @@ build() {
 }
 
 check() {
-	# At this moment lib/rustlib/$CTARGET/lib does not contain a complete
+	# At this moment lib/rustlib/$CHOST/lib does not contain a complete
 	# copy of the .so libs from lib (they will be copied there during
 	# 'x.py install'). Thus we must set LD_LIBRARY_PATH for tests to work.
 
@@ -333,7 +350,7 @@ check() {
 		_bootstrap_install "$builddir/test-rustc"
 	fi
 
-	export LD_LIBRARY_PATH="$builddir/test-rustc/lib/rustlib/$CTARGET/lib"
+	export LD_LIBRARY_PATH="$builddir/test-rustc/lib/rustlib/$CHOST/lib"
 
 	msg "Sanity checks..."
 	"$srcdir"/check-rustc "$builddir"/test-rustc/bin/rustc
@@ -383,6 +400,9 @@ package() {
 		_unpack_build_dist rust-std-wasm32-wasip1 "$pkgdir/usr" &
 		_unpack_build_dist rust-std-wasm32-wasip1-threads "$pkgdir/usr" &
 		_unpack_build_dist rust-std-wasm32-wasip2 "$pkgdir/usr" &
+	fi
+	if subpackage_types_has uefi; then
+		_unpack_build_dist rust-std-${_target%%-*}-unknown-uefi "$pkgdir/usr" &
 	fi
 	wait
 
@@ -449,6 +469,13 @@ wasm() {
 	depends="rust=$pkgver-r$pkgrel lld wasi-libc"
 
 	amove usr/lib/rustlib/wasm32-*
+}
+
+uefi() {
+	pkgdesc="UEFI targets for rust"
+	depends="rust=$pkgver-r$pkgrel lld"
+
+	amove usr/lib/rustlib/*-uefi
 }
 
 analysis() {
@@ -542,16 +569,17 @@ _mv() {
 }
 
 sha512sums="
-9ce195e24a03765f7163de16271e3d19d731d4b80fcc2bfd919106c9d42543eade018f712f6947ea3c6e57c6cb2e6841596aa668d608b8da15101a7da14f3097  rustc-1.86.0-src.tar.xz
+2ef08c9be45434401f916d54b3739f52d255f8a3a4ce05a717499250c2333eeaf601f1d18085b878c027c609f44da74d0151f5bfc2c9ae1e01166919a91a1d2b  rustc-1.87.0-src.tar.xz
 9de9d7ad05584e3cafddedcac409a4605a1d67e82260220deb3efd965603ee3148062b081c0cd736e50d82daad3a723fb6a7493fdf4dddfe36288645425a7946  alpine-move-py-scripts-to-share.patch
 43fba7aa9d9491e4b46ad44061f12990ce0dc8858a330c0f35e1fd6a16c9fd09b2e51ca44ca9b60889540d7f047111129bd4ce8bcbfba068fb44fd581dee8d8b  alpine-target.patch
 aafaf76a3969666bbc5f8423cdbb6fdd62080298a5c9dd018cb157fcfa4a0ea9e7f9cf9313a70ad3f9453990ba3cbcae7b066c851a94b5608c0f0236dbd4937a  do-not-install-libunwind-source.patch
-463c8e9cce94bf173d2f29364fd93663daaad0ae85a5534f4c9f1557b55a08094336f9f8959b86f7a3cfc132d2136489c651a305a27c8441f7f908d5a879e7ef  gcc-eh-libunwind.patch
+71f9af2281deb4bf869446b4639f15b51f8671896157214be2ff92b6d84885a97f76f39e90896972a27d78d1ccddf4fd825b1fed9fdfba7eba578efa5618c687  gcc-eh-libunwind.patch
 b283d31cc8d6559aa639d44f776e97c2a1e0f23c717b6784e549861b881555bd467fa6023180866aae81a9a58c5f83e306940ee645f3c6733a1bdef6130036c9  install-template-shebang.patch
 9139d55df968eac0d80b582f9809633f8ed62882b08da06da67d841b23fbd2163b9723ccee916f4543ad84fb216d2e033a448fb8802620b58e125e77f20ea7eb  musl-fix-linux_musl_base.patch
 0eb49827ec812e6ba093aa274d7cd4e9e79fb67846d90bdaa946db8ba3fb6083785692b150e0b36d6d97ba13f3c08afa30f77035492db5891e233f5e61b44976  need-rpath.patch
 7c8644f5aa9138d72ef8d9d5bddc90d2767df171f92518bb5376f8ee676a62305533cb6ac045e323d6191d808f43c43cd741e8d2f09f70b41f1ef48283817e17  need-ssp_nonshared.patch
 5f2aca58a64eaa24fbcf894f8e6532fad69ba25c9e3e915fa5045de179b72053c12c7f1e87213b8bcde61acb94fa35ec79e45429cf444a62b5de81dc4c239123  no-export-ld-library-path.patch
 0a6ac7d297a49973f420c8bb678def4ceb69f74d16c542d654d37d93d55e3349acf0143a99b9aa4c39c546a5fcc92be9fead6b94e668254cdb834048f54af75a  system-wasm-ld.patch
+f3ddb29ef6055eae2112836242123eb2d2643662827a38c789d608526dc15201fe6b2e1f32a4023b86a89831497045910ca5b0f0b831e78d080169c3ef60abd5  system-uefi-ld.patch
 c31fdfe8a9b3411576c75da46645cf0465b9053000a2ab49cf9b2f2733f679d6d33acbf236d67a20e14935d094a685453b7f1840180249f39d610fd0902c3125  check-rustc
 "

@@ -1,8 +1,8 @@
 # Contributor: Bart Ribbers <bribbers@disroot.org>
-# Maintainer: fossdd <fossdd@pwned.life>
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=libdjinterop
-pkgver=0.20.2 # This needs to be the exact version testing/mixxx expects
-pkgrel=1
+pkgver=0.24.3 # This needs to be the exact version testing/mixxx expects
+pkgrel=0
 pkgdesc="C++ library for access to DJ record libraries"
 url="https://github.com/xsco/libdjinterop"
 arch="all"
@@ -16,9 +16,7 @@ makedepends="$depends_dev
 	samurai
 	"
 subpackages="$pkgname-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/xsco/libdjinterop/archive/refs/tags/$pkgver.tar.gz
-	0001-Fix-build.patch
-	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/xsco/libdjinterop/archive/refs/tags/$pkgver.tar.gz"
 options="!check" # no tests
 
 build() {
@@ -39,6 +37,5 @@ package() {
 }
 
 sha512sums="
-591cbf8102e16b11337ec25ad90ef035bf65dbbd18591802d959044874f36bb61bce3d5db974b00ecee14b45c7ea2488542b226d823d9087c92a0b452d804ff3  libdjinterop-0.20.2.tar.gz
-092aee79d8ef027d5011bee71af759706ea09f567897fd34a96aa147c418693398b720689e0e2047fa484d33db8bfdc8c41481567b6ac8d1b397d69ddf1add0e  0001-Fix-build.patch
+8107f2e6461c6c8f45592caf90b3a0775330960bc565724a53ae91b39f7911dab52725b6993182c0bc663c588acab6ee9e58a3c10426bf2d81a801bcfe540569  libdjinterop-0.24.3.tar.gz
 "

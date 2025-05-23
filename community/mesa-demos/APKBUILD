@@ -2,7 +2,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=mesa-demos
 pkgver=9.0.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Mesa demos"
 url="https://mesa3d.org"
 arch="all"
@@ -52,7 +52,7 @@ package() {
 }
 
 check() {
-	meson test --print-errorlogs --no-rebuild -C output
+	meson test --print-errorlogs -C output
 }
 
 _utils() {

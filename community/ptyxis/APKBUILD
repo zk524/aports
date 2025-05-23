@@ -1,0 +1,42 @@
+maintainer="fossdd <fossdd@pwned.life>"
+pkgname=ptyxis
+pkgver=48.3
+pkgrel=0
+pkgdesc="Container-oriented terminal"
+url="https://gitlab.gnome.org/chergert/ptyxis"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	desktop-file-utils
+	gtk4.0-dev
+	json-glib-dev
+	libadwaita-dev
+	libportal-dev
+	meson
+	vte3-dev
+	"
+subpackages="$pkgname-doc $pkgname-lang"
+source="https://download.gnome.org/sources/ptyxis/${pkgver%.*}/ptyxis-$pkgver.tar.xz
+	fix-W_EXITCODE.patch
+	no-libc-compat.patch
+	"
+
+build() {
+	abuild-meson \
+		output .
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+c1f1fea03a4ed5a9453819568d624e760849e30439bf9216cb0c2fadb3b47e5fa1a844211c7df199a40f95e932b95bf876c4291019c1ec0e11653b5e8789b571  ptyxis-48.3.tar.xz
+4fffa58511b7fd3056dc3dc0e7f3bb536850fbe554c692171ece5e2945503c070422b4beffbd3708284ffc542188f8446555982ef997c95136cdb5c2986a9804  fix-W_EXITCODE.patch
+8c491cd6d9f741f7537c3e73205c328dd325797929cf3676dad3e4f683ffbc76ddca55d495e5751bfe5e7b27e93a4175b65f94ee87c55e894c42740ed8651ba7  no-libc-compat.patch
+"

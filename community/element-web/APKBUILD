@@ -2,7 +2,7 @@
 # Contributor: Galen Abell <galen@galenabell.com>
 maintainer="lauren n. liberda <lauren@selfisekai.rocks>"
 pkgname=element-web
-pkgver=1.11.97
+pkgver=1.11.100
 pkgrel=0
 pkgdesc="A glossy Matrix collaboration client for the web"
 url="https://element.io/"
@@ -67,6 +67,6 @@ package() {
 }
 
 sha512sums="
-8f3932487fd6efb2f8dbbbb24592e2a5de4e63130ce14fc79e78347c06f244eab27054b1101e478b25988493e8cbdcaea78e03a44aa3689e5b00b123f2e59243  element-web-1.11.97.tar.gz
+e3e50fd867f9b7388eb22778ccb97d6504a480ab4e2aa9eba10fd0f4d0324a1525c2afe6c80181567d8e554f03086a9e0994a6221cfcb0ca29700754c8f31cac  element-web-1.11.100.tar.gz
 ec635fde026f7fce8e8cc57960b5b9dcec4418416d4867ed47711422d48f068bb58a3c9ceb7715efc9c177beca3788da6b0babc9b689ea8c0724a0395f2b85f8  no-source-maps.patch
 "

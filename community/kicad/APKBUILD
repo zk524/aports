@@ -1,8 +1,8 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 # Contributor: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=kicad
-pkgver=9.0.0
-pkgrel=0
+pkgver=9.0.2
+pkgrel=1
 pkgdesc="Cross Platform and Open Source Electronics Design Automation Suite"
 url="https://www.kicad.org/"
 # No support for s390x/riscv64 in libcontext (shipped with kicad)
@@ -92,5 +92,5 @@ demos() {
 }
 
 sha512sums="
-b5a819aa81958b5f52f46c55671c2cef50a378565d3ddaaea589c22725acaf7b40959e7f86baffc828bd3bba62cf45350d20c40955046f3f2fd5b5184c8e8625  kicad-9.0.0.tar.gz
+8235b2f1c53c83374cef7a2704bf40e7f0fc4d8f748d57e25ae80b19c1e6390008d0c5e822c0e8745290c734dcf23e7c404deb33d47810c3cd70dacb106c4c0b  kicad-9.0.2.tar.gz
 "

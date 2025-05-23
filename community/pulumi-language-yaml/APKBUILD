@@ -1,7 +1,7 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=pulumi-language-yaml
-pkgver=1.13.0
-pkgrel=3
+pkgver=1.19.0
+pkgrel=0
 pkgdesc="Infrastructure as Code SDK (YAML language provider)"
 url="https://pulumi.com/"
 # blocked by pulumi
@@ -32,8 +32,12 @@ check() {
 	# Unset -trimpath, since some tests create run_plugin_version_test.go file using relative path.
 	# Skipped tests depend externally downloaded schema files (scripts/get_schemas.sh is broken upstream) and pulumi resource plugins.
 	# TestLanguage depends on the main pulumi repository
-	GOFLAGS="${GOFLAGS/-trimpath/}" PULUMI_SKIP_UPDATE_CHECK=true \
-		go test -skip 'Test(GenerateProgram|ImportTemplate|GenerateExamples|Parameterized|ResourceOrderingWithDefaultProvider|Language)' ./...
+	GOFLAGS="${GOFLAGS/-trimpath/}" \
+		PULUMI_SKIP_UPDATE_CHECK=true \
+		PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=true \
+		go test \
+		-skip 'Test(GenerateProgram|ImportTemplate|GenerateExamples|Parameterized|ResourceOrderingWithDefaultProvider|Language|RemoteComponent|TypeCheckError|ResourcePropertiesConfig|ResourceSecret|Random|AuthoredComponent)' \
+		./...
 }
 
 package() {
@@ -41,5 +45,5 @@ package() {
 }
 
 sha512sums="
-dd0b1c2fb6e2f4a5b48b9cab2e66b88c0b152af03e986b3a9d1eddfa0071c1249b1aee15801a64b69ed1d8f6d331e2a78f2ef583b4d9ab73a14ef8981e4659da  pulumi-language-yaml-1.13.0.tar.gz
+9429a9f0c6b583cfca04a8cfc0e8ff870f107ccf104ac562635957c45542ec5fa7a98df19b44a046bc4f1816ada43c3d49b2dacf981273d218bba0e4eea2aadb  pulumi-language-yaml-1.19.0.tar.gz
 "

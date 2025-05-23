@@ -3,7 +3,7 @@
 # Contributor: Duncan Bellamy <dunk@denkimushi.com>
 # Maintainer: Duncan Bellamy <dunk@denkimushi.com>
 _pkgname=ceph
-pkgver=19.2.1
+pkgver=19.2.2
 pkgrel=2
 _majorver=${pkgver%%.*}
 pkgname=$_pkgname$_majorver
@@ -157,6 +157,10 @@ source="https://download.ceph.com/tarballs/ceph-$pkgver.tar.gz
 	gcc13.patch
 	boost-url.patch
 	ppc64le.patch
+	py3-importlib-metadata-5.0.0.patch
+	ceph-19.2.2-py313-1.patch
+	ceph-19.2.2-py313-2.patch
+	ceph-19.2.2-py313-3.patch
 	"
 # to prevent things from installing wrong ceph libs, since they have the same SOMAJOR
 sonameprefix="ceph$_majorver:"
@@ -746,7 +750,7 @@ _default_replace_majorversion() {
 }
 
 sha512sums="
-223e9dcacdc05cb1cb56bf1572c5758ed9ad9daac98e858aac535f31d28afbb4a6f46a4724d9b95e325aef82012a98a5c72c011895999bdd16a30077336c03b3  ceph-19.2.1.tar.gz
+ee47c1cb7cb5084b87bcc5a35b3df88fb49683524bba8f2e1ced9d2f8891af53e4b5fb5aa153ed6bce31683625d9bf5176bab9f55bc71671f0e34667948f7285  ceph-19.2.2.tar.gz
 110bdbcb40216c7ed155a8d23020784741b4992d895f4f04a146d275506e4e68053854d3b063b41e9c9b3e3e4f95b6b90602f92c185c853c0d8f47ad0c6b7121  ceph.confd
 ce5f162501f6b67fe254546dddf880d1a5b1d1a0fa69e0b1918de17e8da45c5c6124512b8cbd98b76f29d931403de0d11c5ffd330ed8ee1f4dc75bb04baecae3  ceph.initd
 3b5d0e7082755598c0f8d5a3bc26bcecd2dd110d80a4dfb0673568b837b8e4a565ec41742a43ffbd992538756ac1fc819f115544c5878bbbc0c0864aef4aef5f  10-isal_crypto.patch
@@ -763,4 +767,8 @@ df20d148f0a2aec170d2ef5afa2fda30ecb2f91ea206d00556736936529fa8ef8b47c6e6b88f29a4
 afef1cc7e43f500d95d2ffd1687cfcb756e9d8dec729186a25d513d4401b38f00edac922562a161575b1da1a65ded3e99d01cf34f9bc329f6d08cf2b896acd0c  gcc13.patch
 8290fdfe74573ad5558066425f59185230f040e01c6a5437116b27715914dc56fda86a1b73fbed7abf727a574f1d50fe643c62958d9ce7162e769b6eaf880d80  boost-url.patch
 c2e047da6f721bf64053571bbad60c5948a2bfd7c28f01b4816a274c2f0b8a60812344030d9b2cfd224edaf54fcfa94858d7ba5d3c0d3e2519585f3e61d34cda  ppc64le.patch
+bf088eeeac8554a66012f076745714326ab31632021ca2eeffa3b525bfa7fa5263096f2b0e0157e16c50c77ecf8b7771ee388e9472852e6860b160e1417e7ee1  py3-importlib-metadata-5.0.0.patch
+bdb5e3bc3e2449b92570ddd2874982f4286ab3406a149d222d4ad4d6362ae3d20c519999b83efea4febab1cf01522b0bee9c0334cd059394e54004def14658e9  ceph-19.2.2-py313-1.patch
+e393c7754c9977a3aeba85db29d4b9ed66a1687cc7d164849af50030a2c55ee5980a2619deb0e80395cde9679982fc42cf77e28e6c4242a6e4819ded6dee5e07  ceph-19.2.2-py313-2.patch
+780f327b6d86511eb8128b4742a082d79ab617fbb11203090e01bd0b35ba887d9f33ef515f35d4d2fbee36d28a63548591b4a5ea8dd42aee0a93cb6b849e32e4  ceph-19.2.2-py313-3.patch
 "

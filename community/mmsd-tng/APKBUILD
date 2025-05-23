@@ -2,7 +2,7 @@
 # Maintainer: Clayton Craft <clayton@craftyguy.net>
 pkgname=mmsd-tng
 pkgver=2.6.3
-pkgrel=1
+pkgrel=3
 pkgdesc="daemon for receiving and managing GSM MMS messages"
 url="https://gitlab.com/kop316/mmsd"
 arch="all"
@@ -37,7 +37,7 @@ build() {
 }
 
 check() {
-	meson test --no-rebuild --print-errorlogs -C output
+	meson test --print-errorlogs -C output
 }
 
 package() {

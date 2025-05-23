@@ -2,7 +2,7 @@
 # Contributor: fossdd <fossdd@pwned.life>
 # Maintainer: fossdd <fossdd@pwned.life>
 pkgname=py3-pip
-pkgver=25.0.1
+pkgver=25.1.1
 pkgrel=0
 pkgdesc="Tool for installing and managing Python packages"
 url="https://pip.pypa.io"
@@ -106,5 +106,5 @@ package() {
 }
 
 sha512sums="
-a6850c8567082bbf98483a45e523c4de12132136d2b0aa388ac619c02ffd0c8f6aea7d727f7d84167dadec5f1e56dd478b2233b0caa5d9b3e5cadc9e1f3dc12c  pip-25.0.1.tar.gz
+ce61c9861265139b3c5ea9be9dc246097cd75c21687cf8301f80a377d02420c4524f0d6307d2ca0232ff8715b1105343bcfdb9cac6b69503780ab2c4645558dc  pip-25.1.1.tar.gz
 "

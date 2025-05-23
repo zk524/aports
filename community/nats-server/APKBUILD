@@ -1,7 +1,7 @@
 # Contributor: Henrik Riomar <henrik.riomar@gmail.com>
 # Maintainer: Henrik Riomar <henrik.riomar@gmail.com>
 pkgname=nats-server
-pkgver=2.10.26
+pkgver=2.11.3
 pkgrel=1
 pkgdesc="High-Performance server for NATS.io"
 url="https://github.com/nats-io/nats-server"
@@ -14,6 +14,8 @@ source="https://github.com/nats-io/nats-server/archive/v$pkgver/nats-server-$pkg
 	"
 
 # secfixes:
+#   2.10.27-r0:
+#     - CVE-2025-30215
 #   2.10.4-r0:
 #     - CVE-2023-46129
 
@@ -44,6 +46,6 @@ package() {
 }
 
 sha512sums="
-0b8317b8cdf838356795e71395de0a9aefde79a7cce5f2b8d64199b7f4f3ed0821bc852c24c12ed3dbea2ed20f1ea7e6e60f1f4cbeac6e09fede366ec1a87602  nats-server-2.10.26.tar.gz
-7c6ce083da431b5fa807b69ac2bbabb9813152af1ce1bcb6bbd60d3476b5b97b8c14aaf5469b841f49137a66d1998ec94beed73cdce5ca21f52840e9b7ef4bcd  make-TestNoRaceSeqSetRelativeSpeed-more-forgiving.patch
+f690820c4cd807bc2ee44f9b0fba82f4ab12d2c741247137966ed36078bd1481c960b35c19e9ac6f6ad6b20fc4bcf87e49804f79901c742963d9e04bbd096e75  nats-server-2.11.3.tar.gz
+b4b5072d5d0fa5c0ecf6dfad77b668d1a470d7fac89a99daeb48f6be69d2620b5f15a37d173c497810485802341c030b0e94073ce9c0ef7d5e1396d1c62471c5  make-TestNoRaceSeqSetRelativeSpeed-more-forgiving.patch
 "

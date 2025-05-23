@@ -3,8 +3,8 @@
 # Maintainer:
 pkgname=lldb
 # Note: Update together with llvm.
-pkgver=19.1.7
-pkgrel=2
+pkgver=20.1.5
+pkgrel=0
 _llvmver=${pkgver%%.*}
 pkgdesc="Next generation, high-performance debugger"
 arch="all"
@@ -15,6 +15,7 @@ makedepends="
 	clang$_llvmver-dev
 	clang$_llvmver-static
 	cmake
+	curl-dev
 	doxygen
 	gtest-dev
 	libedit-dev
@@ -105,7 +106,7 @@ py3() {
 }
 
 sha512sums="
-332e8766cb074bc83ef6c5526ef53a56714d6f08629649c49b956fe166fbf69da41df82f7c3a29397e36664cce2ff8b846dcc4e3d88a610614d1660040a6f44a  lldb-19.1.7.src.tar.xz
-3ff56e1a61dbace35d8c168ad5c94c5a09d92eb683494bfe1deabcb3640cf79b7422d44903d049d2298d54c2874f9a60c4f13f6795a3949e7eaefd5d42e62621  cmake-19.1.7.src.tar.xz
+eb917aa5e163d3960167aeb440a38dfd7b19f0747d6557d55fcae39a5f1b6b4d234b09f8e1ea8bc3d29585b00a0b8e0334e2a0a2ad1c2212df56179ad6983ac1  lldb-20.1.5.src.tar.xz
+5c10be7d89dc9e1b402d78652852f16e2a53022f42e40112e5d621bda5326c49d52cc4013553f9ccc1c6b59e267cb7f1d0dfd2a8ffc31cbfbb59291e516acede  cmake-20.1.5.src.tar.xz
 5b65acf109e4b1e22411216d4b023f9975ea1fb04ec011fa71741fa7d13e3a0f1af2f9d4886782a73172f21c9debadf618fd814db04cfd98462a42b0f39e4c4a  llvm_slug.py
 "

@@ -1,8 +1,8 @@
 # Contributor: Hygna <hygna@proton.me>
 # Maintainer: Hygna <hygna@proton.me>
 pkgname=tree-sitter-comment
-pkgver=0.1.0
-pkgrel=1
+pkgver=0.3.0
+pkgrel=0
 pkgdesc="Tree-sitter grammar for comment tags like TODO, FIXME(user)"
 url="https://github.com/stsewd/tree-sitter-comment"
 arch="all"
@@ -21,5 +21,5 @@ package() {
 }
 
 sha512sums="
-987327ebad35d9d1cc63862b45b333ccd6a83d854436abc4df150321db326fc30ac0bbc9a4601c72faf3aa8c592393d1e562fb4085a2c5e2705ab91dd363ef7d  tree-sitter-comment-0.1.0.tar.gz
+7eccc708fa620df19a3e514cca0267d257886843f11c454de9d399cf520d6ae5cbc7f33543a4bc4c6cf1772e54e45ab7dfbca6511bcf634bff71db02ef8ecd63  tree-sitter-comment-0.3.0.tar.gz
 "

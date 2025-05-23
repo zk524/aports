@@ -1,7 +1,7 @@
 # Contributor: Leo <thinkabit.ukim@gmail.com>
 maintainer="Matthias Ahouansou <matthias@ahouansou.cz>"
 pkgname=intel-media-driver
-pkgver=25.2.0
+pkgver=25.2.2
 pkgrel=0
 pkgdesc="Intel Media Driver for VAAPI"
 options="!check" # tests can't run in check(), only on install
@@ -39,5 +39,5 @@ package() {
 }
 
 sha512sums="
-0b6666d17fe9ce552a42c1d83ff80888fd64aae2cbcfb0906d21bc4009f26533edc7a9c6cdba04e2fb81f9f9a43820da38e4ca896aa5e44af39634d7a8704b0f  intel-media-driver-25.2.0.tar.gz
+da524b8708abb0312fef370bca3014fd617b1797c65a6b5bebcbb17e1b8af49c74476b35d32a8347e9434e0128a3ce65a536fe19bc9d853581f57e027a5472fb  intel-media-driver-25.2.2.tar.gz
 "

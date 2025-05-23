@@ -1,7 +1,7 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gst-plugins-bad
-pkgver=1.24.12
-pkgrel=2
+pkgver=1.26.1
+pkgrel=1
 pkgdesc="GStreamer streaming media framework bad plug-ins"
 url="https://gstreamer.freedesktop.org/"
 arch="all"
@@ -42,6 +42,7 @@ makedepends="
 	libnice-dev
 	librsvg-dev
 	libsndfile-dev
+	libsrt-dev
 	libsrtp-dev
 	libusrsctp-dev
 	libva-glx-dev
@@ -115,6 +116,7 @@ build() {
 		-Dpackage-name="GStreamer bad plug-ins (Alpine Linux)" \
 		-Dintrospection=enabled \
 		-Dsctp=enabled \
+		-Dsrt=enabled \
 		-Dtests="$(want_check && echo enabled || echo disabled)" \
 		. output
 	meson compile -C output
@@ -122,7 +124,7 @@ build() {
 
 check() {
 	XDG_RUNTIME_DIR="$(mktemp -d)" \
-		meson test --no-rebuild -C output --print-errorlogs
+		meson test -C output --print-errorlogs
 }
 
 package() {
@@ -130,6 +132,6 @@ package() {
 }
 
 sha512sums="
-00212ab3f80f4dd3a007e0d44245196ddcf6cf91b0bb4a39bc12da32d5680ba12a9132a500d520ca6973375c2480f7ff07138aa34a602631186450b83942574e  gst-plugins-bad-1.24.12.tar.xz
+69c78970f0396c08fbddbd44e080142688fcd1ecdc0fa88709b934f6c546754904338469ceecd0f16c6a6b8585bf5faec3230426272b7eb2b63a21b9034d94db  gst-plugins-bad-1.26.1.tar.xz
 0c79d4cf065656dc8d783c5aa11c44e4ee35ab9930cc9f2bfb0ac990a73818aaa0aa6788b3ae9a7182a79427027facb490ee26fefad4db3ec39437d67a54b2fb  0001-jifmux-Make-copies-of-parsed-image-buffer-parts.patch
 "

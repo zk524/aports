@@ -2,11 +2,11 @@
 # Maintainer: Francesco Colista <fcolista@alpinelinux.org>
 pkgname=sipexer
 pkgver=1.2.0
-pkgrel=1
+pkgrel=3
 pkgdesc="Modern and flexible SIP (RFC3261) command line tool."
 url="https://github.com/miconda/sipexer"
 arch="all"
-license="GPL-3.0"
+license="GPL-3.0-only"
 makedepends="go"
 options="net"
 source="$pkgname-$pkgver.tar.gz::https://github.com/miconda/sipexer/archive/refs/tags/v$pkgver.tar.gz"

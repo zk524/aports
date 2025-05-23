@@ -2,8 +2,8 @@
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=zotero
 pkgver=7.0.15
-pkgrel=0
-_fxver=115.16.0
+pkgrel=2
+_fxver=115.23.1
 _gittag=$pkgver
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 url="https://www.zotero.org/"
@@ -102,6 +102,7 @@ source="https://ftp.mozilla.org/pub/firefox/releases/${_fxver}esr/source/firefox
 	zotero_test-fix-chars.patch
 	zotero_test-push-timeout-to-30sec.patch
 	zotero_drop-jazzer.patch
+	avoid-bash-runtime-dependency.patch
 	"
 
 builddir="$srcdir"/firefox-$_fxver
@@ -386,7 +387,7 @@ package() {
 }
 
 sha512sums="
-b6f93ec3d6acac5df177253c65b833c017e65ed6e78e96ff029098443928d291f6f67164aedb83d80aa28ee9dee305086597798238d3330e35183030e53e3550  firefox-115.16.0esr.source.tar.xz
+56b9786014db1fb3c8cecef363a390ef4be82bcfd479073823324b558c6cf5d359af3cf083a380f01958702b38bf7eb68aeccf72e396f4243495cea40a55f2fc  firefox-115.23.1esr.source.tar.xz
 3e0501ae7a650346c667dfdc0ae0ca286084f22e89ab2ac671cc0d7315673dc5b6dcb9f9882f6f39d26e9a31e57f7a0fd53d6b805e520224e22b8976850e2eb8  audio-lfs64.patch
 454ea3263cabce099accbdc47aaf83be26a19f8b5a4568c01a7ef0384601cf8315efd86cd917f9c8bf419c2c845db89a905f3ff9a8eb0c8e41042e93aa96a85c  disable-moz-stackwalk.patch
 2f4f15974d52de4bb273b62a332d13620945d284bbc6fe6bd0a1f58ff7388443bc1d3bf9c82cc31a8527aad92b0cd3a1bc41d0af5e1800e0dcbd7033e58ffd71  fix-fortify-system-wrappers.patch
@@ -419,4 +420,5 @@ e1a0a4ff5cc1b53f13776ca11927d671426b0691e78e74a4adf2166d57bb2ae8ac409cc11a37ce5e
 f0e4f09496531222e8400959f9ef12852bca269eb3bf4c3b87ccaf92f28a12b9374461a1c79ad294a4393dbe30800aa1c85497033d0bc304fa8c198dfab3efd2  zotero_test-fix-chars.patch
 9dc390d8bae42e645cae45fe5551751d8f38d5c1b8b2cc0eec1c2191f4bde293ffb2c67cfc4de765f2d48b1da4d5fcd4f1c03711e5da3180cd1b63710ccf5599  zotero_test-push-timeout-to-30sec.patch
 7fb791a386d30594a11ae3856295d5081000de7525036eb0b5836505bd4f0b13a4fe706400ad7efe00b75c2112cf3d59ea3542b6179ccd80f7ee1889349f441d  zotero_drop-jazzer.patch
+c5ac1226c029295cb70c43e21894da1347cf98c156bd6acdcf77edabe803d7969c8e774e78d67f9b2e730943c09767b6f58e3a976de8cff4aa635e8aae5099a1  avoid-bash-runtime-dependency.patch
 "

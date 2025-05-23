@@ -1,7 +1,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=celluloid
-pkgver=0.27
+pkgver=0.29
 pkgrel=0
 pkgdesc="A simple GTK+ frontend for mpv (formerly gnome-mpv)"
 url="https://celluloid-player.github.io/"
@@ -27,7 +27,7 @@ build() {
 }
 
 check() {
-	meson test --no-rebuild --print-errorlogs -C output
+	meson test --print-errorlogs -C output
 }
 
 package() {
@@ -35,5 +35,5 @@ package() {
 }
 
 sha512sums="
-fbfd340ca95f55772f764ef92b155168f1bf59640106e03444713c6df8c9585f6fbf4e53b2994cc204cd6db23bfc5eb5a091fa15972b43f278e0244d81aa57e4  celluloid-0.27.tar.xz
+5df44379473f9f5aaca80aff25bf1f3d2d6e8bc634657292e9d57a06c7a35b29e4dfb0310b8a0381c37f5325c9225c8de72aa2dcf324af3c60141e8f8e445b03  celluloid-0.29.tar.xz
 "

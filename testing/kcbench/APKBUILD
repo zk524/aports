@@ -1,0 +1,41 @@
+maintainer="fossdd <fossdd@pwned.life>"
+pkgname=kcbench
+pkgver=0.9.12
+pkgrel=0
+pkgdesc="Linux kernel compile benchmark"
+url="https://gitlab.com/knurd42/kcbench"
+arch="noarch"
+license="MIT"
+depends="
+	bash
+	binutils
+	bison
+	coreutils
+	elfutils-dev
+	flex
+	gcc
+	grep
+	lscpu
+	make
+	openssl
+	openssl-dev
+	perl
+	pkgconf
+	time
+	xz
+	musl-dev
+	"
+subpackages="$pkgname-doc"
+source="https://gitlab.com/knurd42/kcbench/-/archive/v$pkgver/kcbench-v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-v$pkgver"
+options="!check" # no tests
+
+package() {
+	make DESTDIR="$pkgdir" PREFIX=/usr/ install
+
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+948611b7b58eeaadfccddb6a9e7f31d076c25473baffb15a7a38761b4abacc6d8870899c35081a281f36c76c44ff41c83cc63ab539ade1b694389d5d09d86366  kcbench-v0.9.12.tar.gz
+"

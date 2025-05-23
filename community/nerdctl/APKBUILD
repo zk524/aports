@@ -1,6 +1,6 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=nerdctl
-pkgver=2.0.4
+pkgver=2.1.1
 pkgrel=0
 pkgdesc="Docker-compatible CLI for containerd"
 url="https://github.com/containerd/nerdctl/"
@@ -55,5 +55,5 @@ package() {
 }
 
 sha512sums="
-850010e459eac1461cdcdffcc3af93721f429913a99033c6d15aa49f32b4e3d16ec95543cf9b6c026a32e54edd168ef3835c4ce024ddc4f0b45a6b82523db38a  nerdctl-2.0.4.tar.gz
+ea80a2ebb0705614c5d67333e2467649e44b420fae3639b0d94cbc782145ab9f280a9f4089b2a0ae84d608a62118d5a3ea9f38d773b9db0b66058e3f7f1f2f51  nerdctl-2.1.1.tar.gz
 "

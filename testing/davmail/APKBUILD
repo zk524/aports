@@ -1,0 +1,35 @@
+# Maintainer: Struan Robertson <contact@struan.tech>
+pkgname=davmail
+pkgver=6.3.0
+pkgrel=0
+pkgdesc="DavMail POP/IMAP/SMTP/Caldav/Carddav/LDAP Exchange and Office 365 Gateway"
+url="https://davmail.sourceforge.net"
+# riscv64: blocked by openjdk8
+arch="noarch !riscv64"
+license="GPL-2.0-only"
+makedepends="
+	apache-ant
+	openjdk8
+"
+depends="
+	java-jdk
+"
+source="$pkgname-$pkgver.tar.gz::https://github.com/mguessan/davmail/archive/$pkgver/davmail-$pkgver.tar.gz"
+options="net !check"
+
+build() {
+	ant
+}
+
+package() {
+	  cd dist
+	  mkdir -p "$pkgdir"/usr/share/"$pkgname"/lib
+	  install -Dm644 "$pkgname".jar "$pkgdir"/usr/share/"$pkgname"
+	  install -D lib/* "$pkgdir"/usr/share/"$pkgname"/lib
+	  mkdir -p "$pkgdir"/usr/bin/
+	  install -Dm755 "$pkgname" "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+f2fff85d97b17fdec31c534bf94f1e1978c7c18d67ac39967c0b51d1fd7653bb099e3b71f2c5b1ce7c8e6b5aea264afa232306b2db9f6edb19d97825344662ef  davmail-6.3.0.tar.gz
+"

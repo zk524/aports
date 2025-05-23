@@ -1,0 +1,162 @@
+# Contributor: Alexander Bocken <alexander@bocken.org>
+# Contributor: Frank Oltmanns <alpine@oltmanns.dev>
+maintainer="Callum Andrew <contact@candrew.net>"
+pkgname=anki
+pkgver=25.02.5
+pkgrel=0
+# Remember to update the following lines when updating the pkgver
+# 1. checkout the release tag
+# 2. anki -> git rev-parse --short=8 $pkgver
+# 3. ftl -> git submodule
+_tags_ftl_core="0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e"
+_tags_ftl_desktop="17216b03db7249600542e388bd4ea124478400e5"
+_anki_commit="d5a7a0d1"
+
+# This APKBUILD and the patches use the PKGBUILD for Anki 23.10 as
+# a basis.
+_caches_yarn="yarn-cache"
+_caches_cargo="cargo-cache"
+
+# For translations
+_core_i18n_repo="anki-core-i18n"
+_qtftl_i18n_repo="anki-desktop-ftl"
+
+pkgdesc="Flashcard program using spaced repetition"
+url="https://apps.ankiweb.net/"
+
+# py3-pyqt6-webengine is only available for
+#  - x86_64
+#  - aarch64
+#  - x86
+# But upstream only supports 64-bit architectures:
+arch="x86_64 aarch64"
+license="AGPL-3.0-or-later"
+options="!check net" # no test suite provided, cargo deps
+
+# The makedepends and depends are copied from the PKGBUILD
+# for 23.10 in the Arch User Repository, with the exception
+# that libxcrypt-compat has been removed from that list.
+makedepends="
+	bash
+	cargo
+	git
+	nodejs
+	protoc
+	py3-installer
+	py3-wheel
+	rsync
+	samurai
+	yarn
+	"
+
+depends="
+	python3
+	py3-beautifulsoup4
+	py3-requests
+	py3-stringcase
+	py3-waitress
+
+	py3-decorator
+	py3-distro
+	py3-markdown
+	py3-orjson
+	py3-protobuf
+	py3-pysocks
+
+	py3-certifi
+	py3-flask-cors
+	py3-jsonschema
+	py3-pyqt6-webengine
+	py3-qt6
+	qt6-qtmultimedia
+	qt6-qtsvg
+	py3-send2trash
+	"
+subpackages="$pkgname-pyc"
+install="$pkgname.post-install $pkgname.post-upgrade"
+source="
+	anki-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs/tags/$pkgver.tar.gz
+	anki-core-i18n-$_tags_ftl_core.tar.gz::https://github.com/ankitects/anki-core-i18n/archive/$_tags_ftl_core.tar.gz
+	anki-desktop-ftl-$_tags_ftl_desktop.tar.gz::https://github.com/ankitects/anki-desktop-ftl/archive/$_tags_ftl_desktop.tar.gz
+	no-update.patch
+	strip-formatter-deps.patch
+	strip-type-checking-deps.patch
+	"
+
+prepare() {
+	default_prepare
+
+	# Notes:
+	# - The original PKGBUILD changes the optimization level to "3". Instead
+	#   the APKBUILD sticks to upstream's optimization settings.
+	# - The original PKGBUILD changes the rust toolchain channel to
+	#   "stable". Since, the APKBUILD doesn't use rustup, we can skip that.
+
+	# Build process wants .git/HEAD to be present. Workaround to be able to use tarballs.
+	mkdir -p out .git
+	touch .git/HEAD
+	echo "$_anki_commit" > out/buildhash	# manually write the buildhash into out/buildhash to avoid git dependency in build
+
+	# place translations in build dir
+	rm -r ftl/core-repo ftl/qt-repo
+	mv "$srcdir"/anki-core-i18n-$_tags_ftl_core ftl/core-repo
+	mv "$srcdir"/anki-desktop-ftl-$_tags_ftl_desktop ftl/qt-repo
+
+	# fetch rust packages
+	export CARGO_HOME="$srcdir/$_caches_cargo"       # do not litter in ~
+	cargo fetch --target="$CTARGET" --locked
+
+	# Remove any corepack references to build with normal system yarn
+	rm -f yarn.lock
+	sed -i 's/"type": "module",/"type": "module"/' package.json
+	sed -i '/packageManager/d' package.json
+	sed -i 's/"corepack enable yarn"/"true"/' ./build/ninja_gen/src/node.rs
+
+	# fetch node packages already in prepare()
+	export YARN_CACHE_FOLDER="$srcdir/$_caches_yarn" # do not litter in ~
+	yarn install --modules-folder out/node_modules --ignore-scripts
+	ln -sf out/node_modules ./
+
+	# mask pip-sync as we provide dependencies ourselves
+	local venv="out/pyenv"
+	python3 -m venv --system-site-packages --without-pip "$venv"
+	printf '#!/bin/bash\nexit 0' > "$venv/bin/pip-sync"
+	chmod +x "$venv/bin/pip-sync"
+}
+
+build() {
+	export YARN_CACHE_FOLDER="$srcdir/$_caches_yarn" # do not litter in ~
+
+	#use local binaries instead of downloading them
+	export PYTHON_BINARY=$(which python3)
+	export PROTOC_BINARY=$(which protoc)
+	export NODE_BINARY=$(which node)
+	export YARN_BINARY=$(which yarn)
+
+	export CARGO_HOME="$srcdir/$_caches_cargo"    # do not litter in ~
+	export RELEASE=2        # anki-internal variable for optimization
+	                        # set to "1" for faster but less optimized build
+	export LDFLAGS="$LDFLAGS -fuse-ld=lld"
+
+	export OFFLINE_BUILD=1 # do not download anything, disables git update check
+
+	./ninja wheels
+}
+
+package() {
+	for file in out/wheels/*.whl; do
+		python3 -m installer -d "$pkgdir" $file
+	done
+
+	install -Dm644 qt/bundle/lin/anki.desktop "$pkgdir"/usr/share/applications/anki.desktop
+	install -Dm644 qt/bundle/lin/anki.png "$pkgdir"/usr/share/pixmaps/anki.png
+}
+
+sha512sums="
+39f98052d8869e3170b65eca472b02edd61d83f6b4c2628c0351c239a68ccea7da4d8488e11cb23ea1d3df7b9be6d1b1ef84b9ea0e14650ab0d4e65b06e38656  anki-25.02.5.tar.gz
+c72eaea9e0f350d092a44f7623a7cfdcb74ff99a97ca4b53c51b1b26af387c9c6cd64bfca3dc4577c14c3ee4040b8ce1a7a50f2e209b0fa47c5297f97c92a910  anki-core-i18n-0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e.tar.gz
+6d91607c6b0805e6dfce8a93dbf46ac945e9b1631aa054cb98e513d7a6da64d905035b8da8ea5d10c0d700a0aa96b056748d956342fe4ddf7232f7f7540ee88a  anki-desktop-ftl-17216b03db7249600542e388bd4ea124478400e5.tar.gz
+36c3bddb5de84f0f5eebe46b506b9723ecc80dd69281b3d2ffc9842fa2db181ececd8232ae0b3366bcfd5cb68a4d760abcadd3dada2a7ce2d2da26586a132e09  no-update.patch
+f71b45b08b8f05d98faab3a88d7ba2847a948a12ca26c682d58541dc423ad72ae8aac5b34155472869ebbf195e5e5c488cfc4e640df7247c7674e5dfad053d60  strip-formatter-deps.patch
+2c7d1ab46d81e65f22e63cb5af37daef27a78d348f240570f9250730d6b33311670876027fd1c54d4c69922c18a7458e82211cb232e98591e182ac11c49877db  strip-type-checking-deps.patch
+"

@@ -2,8 +2,8 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=yyjson
-pkgver=0.10.0
-pkgrel=1
+pkgver=0.11.1
+pkgrel=0
 pkgdesc="High performance JSON library written in ANSI C"
 url="https://github.com/ibireme/yyjson"
 arch="all"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-d0274bfdae6291cc54d7c306f7f9064333d3e0fd8d235428148fa5695e151e0fdd0982247a5e82fe60b27e9182ba27d5704aca4546a8dc9545117bd3a017bfb5  yyjson-0.10.0.tar.gz
+26c93768e96080ca88e9c9acf6620ca26c54a7198bb7a5efe0294bf89102ab30e15f196597a79171b7e51f3dca1b5b0075136701007ecdc142293156031e21de  yyjson-0.11.1.tar.gz
 "

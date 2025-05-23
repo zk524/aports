@@ -4,14 +4,15 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=sbcl-stage0
-pkgver=2.5.3
+pkgver=2.5.4
 pkgrel=0
 pkgdesc="Steel Bank Common Lisp (for bootstrapping)"
 url="https://www.sbcl.org/"
-arch="all !ppc64le !s390x !riscv64 !loongarch64"
+arch="all !s390x !riscv64 !loongarch64"
 license="custom"
 makedepends="linux-headers"
 source="sbcl-$pkgver.tar.bz2::https://prdownloads.sourceforge.net/sbcl/sbcl-$pkgver-source.tar.bz2
+	ppc-musl.patch
 	musl-time64.patch
 	"
 builddir="$srcdir/sbcl-$pkgver"
@@ -57,6 +58,7 @@ package() {
 }
 
 sha512sums="
-2b1abc173a62b38b7edb9067e480780ed0ad31b8e7844320d174fc0e5bb4487635ca3af4dbb6274916b4283f3f3d8146f11c963d07720b0c42a7d2a86c1093a8  sbcl-2.5.3.tar.bz2
+f0e6c25c37d7c83c0ee8ae94f78438b2c0ed6491f080afec84c5cd7bc1eb65ba43982d8092b637b77d8764d6cb0de4b337c250f840184f27fe21e3944fdce31c  sbcl-2.5.4.tar.bz2
+549cc9936ddbd4c19067a455dfad151bd0ce59200b2dce761de67e259e621e4174beefaa5a322886bcd731d2470d229a3e1b75a55a194c54e2feb7c0bcdffb37  ppc-musl.patch
 c5b23ac36478943370156e8a499393c6923a069d8a38e4bf3b651ea91521353398cd813ef18dbcf9e76e97a24bfd85fb1d9cfb8da90951345a6f7ab0d28d65fc  musl-time64.patch
 "

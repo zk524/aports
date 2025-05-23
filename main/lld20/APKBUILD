@@ -2,7 +2,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
-pkgver=20.1.2
+pkgver=20.1.5
 pkgrel=0
 _llvmver=${pkgver%%.*}
 _prevllvmver=$((_llvmver - 1))
@@ -36,7 +36,7 @@ source="https://github.com/llvm/llvm-project/releases/download/llvmorg-${pkgver/
 builddir="$srcdir/lld-${pkgver//_/}.src"
 
 # whether this is the default lld version (keep in sync with llvm)
-_default_lld="no"
+_default_lld="yes"
 
 if [ "$_default_lld" = yes ]; then
 	provides="lld=$pkgver-r$pkgrel"
@@ -91,6 +91,6 @@ doc() {
 }
 
 sha512sums="
-db3ec30399d45ce2ef1d0a8eb16e2628d8b4a72bcdef377b6c6bbc2119c7a53d5d5b63d38d24e3a95c5a357f9cd293ce9fa812727e465d3c7f5f4f111ee5e139  lld-20.1.2.src.tar.xz
-8825b0161e167ca2ae31c86df7cf9b3499d10a3f93bd1af9711fb5f86e46a1253d7ee2a104fd33816f27deee57033afcda96eb45a6f45bb25fbaabe87330ca88  cmake-20.1.2.src.tar.xz
+26493e82636817065ad75d4e728f84fb61e5a81639718eaf96d901ec8da93851987da3efb8575dfb7258e42ee38a8425aac9bc7ebbaf0df63b566270ebdc6b0e  lld-20.1.5.src.tar.xz
+5c10be7d89dc9e1b402d78652852f16e2a53022f42e40112e5d621bda5326c49d52cc4013553f9ccc1c6b59e267cb7f1d0dfd2a8ffc31cbfbb59291e516acede  cmake-20.1.5.src.tar.xz
 "

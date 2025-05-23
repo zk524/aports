@@ -1,8 +1,8 @@
 # Contributor: Jonas <3426-spameier@users.gitlab.alpinelinux.org>
 # Maintainer: Jonas <3426-spameier@users.gitlab.alpinelinux.org>
 pkgname=goshs
-pkgver=1.0.2
-pkgrel=1
+pkgver=1.0.8
+pkgrel=0
 pkgdesc="A SimpleHTTPServer written in Go, enhanced with features and with a nice design."
 url="https://goshs.de"
 arch="all"
@@ -26,5 +26,5 @@ package() {
 }
 
 sha512sums="
-2d21bddb7f3f22878250f54e082dae642a52f5d4da20c9c76f7740e2a873720c79d9846c4fdedebae04a95f6b9dba040b2edf272bfeedd81b279a7853f029566  goshs-1.0.2.tar.gz
+bd0bb1a5bd039ee6734a0b6a9b9f41f716efe1a559a217667af926920e090244837d67aea8d03de96a42b7799a4d332047e585a696015de9dacfba5083a03d12  goshs-1.0.8.tar.gz
 "

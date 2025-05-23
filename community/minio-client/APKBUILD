@@ -3,10 +3,10 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=minio-client
-pkgver=0.20250403.170756
+pkgver=0.20250416.181326
 # 0.20230323.200304 -> 2023-03-23T20-03-04Z
 _pkgver="${pkgver:2:4}-${pkgver:6:2}-${pkgver:8:2}T${pkgver:11:2}-${pkgver:13:2}-${pkgver:15:2}Z"
-pkgrel=0
+pkgrel=1
 pkgdesc="The MinIO Client"
 url="https://min.io/"
 arch="all"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-781aa975978d25109f4665ff519f8924a265fefaae03db6d4260d4ded46df0dd1ec645f0ecd6a6df309b00e66e154ac4d09a199dd2032064f6c012d723ee8a48  minio-client-0.20250403.170756.tar.gz
+01c535901f46ef39c7f75c40834271d2f57c402e2403f2cd39e4baf0eb438ba23269e6b625eaa1ece0d075aafaa661f34b97c051860e956d9bc69cbd89dc6329  minio-client-0.20250416.181326.tar.gz
 "

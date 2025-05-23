@@ -1,7 +1,7 @@
 # Contributor: Carlo Landmeter <clandmeter@alpinelinux.org>
 # Maintainer: Simon Rupf <simon@rupf.net>
 pkgname=xterm
-pkgver=397
+pkgver=399
 pkgrel=0
 pkgdesc="X Terminal Emulator"
 options="!check" # Requires vttest
@@ -66,5 +66,5 @@ package() {
 }
 
 sha512sums="
-cc9770f566199b5e0050c6443eb8382acda02501f14001027fafcaaa3146d9fe3185f304f784d8c61c571d57d33b84a771113658aa4e3aa7f3e66d129781eb73  xterm-397.tgz
+dcd49cecabf434727acd11da4f676cf222821cdb55dd837a55f60c109d41406ae31ed362e9c65230c30aeb80db848842fc11d56bea5fe5051605a0d29c91793d  xterm-399.tgz
 "

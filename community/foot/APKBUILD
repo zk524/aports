@@ -1,6 +1,6 @@
 # Maintainer: Alex McGrath <amk@amk.ie>
 pkgname=foot
-pkgver=1.21.0
+pkgver=1.22.3
 pkgrel=0
 pkgdesc="Fast, lightweight and minimalistic Wayland terminal emulator"
 url="https://codeberg.org/dnkl/foot"
@@ -75,5 +75,5 @@ _themes() {
 }
 
 sha512sums="
-6fa9a98f59da9c35235ea82b5b927815cb14f7c66af5757bcbc32433ee90da169d41211ca68a5f6cb3dad7d8f65aacbfb4189ac1be678a6d34cf4add998b1977  foot-1.21.0.tar.gz
+f4aa3c15f4fae75e008a6c42e2b4f1ed7ec5c598b85691b1f26f32c23de9a4c90ec62f152580582e54cecbc4281cf81cb6fb8ae82ea7f5a626475ee5b4d1b038  foot-1.22.3.tar.gz
 "

@@ -1,7 +1,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: team/gnome <pabloyoyoista@postmarketos.org>
 pkgname=epiphany
-pkgver=48.0
+pkgver=48.3
 pkgrel=0
 pkgdesc="Simple, clean, beautiful view of the web"
 url="https://apps.gnome.org/Epiphany"
@@ -63,7 +63,7 @@ build() {
 
 check() {
 	# https://gitlab.gnome.org/GNOME/epiphany/issues/829
-	env PATH="$PATH:$builddir/output/src" xvfb-run meson test --no-rebuild --print-errorlogs -C output
+	env PATH="$PATH:$builddir/output/src" xvfb-run meson test --print-errorlogs -C output
 }
 
 package() {
@@ -71,5 +71,5 @@ package() {
 }
 
 sha512sums="
-5bc45433acd931af011be7a962425c0551f890987f054f274d45a471443620810482e1c3afa279cc3f8db5745fbf044c9783bae94ff098a6008c9af1561587ea  epiphany-48.0.tar.xz
+297df0d500477134c12877bc4255ea5f8e22b782a08fa5e06a1b012d4ff18f85f09850f7bf12ff61c35d0aba82cd87afd50dbdbecda62319cea86314c2947923  epiphany-48.3.tar.xz
 "

@@ -2,7 +2,7 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=newsraft
-pkgver=0.29
+pkgver=0.30
 pkgrel=0
 pkgdesc="Feed reader with ncurses user interface"
 url="https://codeberg.org/newsraft/newsraft"
@@ -14,7 +14,6 @@ makedepends_host="
 	gumbo-parser-dev
 	ncurses-dev
 	sqlite-dev
-	yajl-dev
 	"
 subpackages="$pkgname-doc"
 source="https://codeberg.org/newsraft/newsraft/archive/newsraft-$pkgver.tar.gz"
@@ -29,9 +28,9 @@ check() {
 }
 
 package() {
-	make DESTDIR="$pkgdir" PREFIX=/usr install
+	make DESTDIR="$pkgdir" PREFIX=/usr install install-desktop
 }
 
 sha512sums="
-ba05b5cb1936da104b13e1bc11143520f5ae1b3f831e11889101474f81a05609f97c0caa2462f9b9f42ad21cfadcf1d5b05a9be5a2f19db22d5d60721286a922  newsraft-0.29.tar.gz
+b2f9b52d7169f7c51252e9b6f05d65620b1235a811aa0232b254be8e4f1d43b581189615d04c4d4c5b8ccd0e284d98850a8a85015c1f0dd69abe76c9d8644fb6  newsraft-0.30.tar.gz
 "

@@ -1,9 +1,9 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=mitra
-pkgver=3.22.0
+pkgver=4.3.1
 pkgrel=0
-_mitraweb=$pkgver #"${pkgver%.*}.0"
+_mitraweb="${pkgver%.*}.0"
 pkgdesc="ActivityPub microblogging platform written in Rust"
 url="https://mitra.social/@mitra"
 # loongarch64, ppc64le, riscv64, s390x: mitra v3 removed native-tls feature
@@ -43,6 +43,7 @@ prepare() {
 
 build() {
 	RUSTFLAGS="--cfg=ammonia_unstable" \
+	DEFAULT_CONFIG_PATH="/etc/mitra/config.yaml" \
 	cargo auditable build $_cargo_opts --release
 
 	cd "$srcdir/mitra-web"
@@ -74,7 +75,6 @@ check() {
 
 package() {
 	install -Dm755 target/release/mitra -t "$pkgdir"/usr/bin
-	install -Dm755 target/release/mitractl -t "$pkgdir"/usr/bin
 
 	mkdir -p "$pkgdir"/usr/share/webapps
 	cp -r "$srcdir"/mitra-web/dist \
@@ -88,14 +88,14 @@ package() {
 
 	install -Dm640 -g mitra "$srcdir"/config.yaml -t "$pkgdir"/etc/mitra
 	install -dm755 -o mitra -g mitra "$pkgdir"/var/lib/mitra
-	install -Dm644 "$srcdir"/init.sql -t "$pkgdir"/var/lib/mitra
+	install -Dm644 "$srcdir"/init.sql -t "$pkgdir"/usr/share/mitra
 	install -Dm755 "$srcdir"/mitra.initd "$pkgdir"/etc/init.d/mitra
 }
 
 sha512sums="
-1a0ab55bc5265d2431d92ba4ebe62f841b1d246b182166320280a4cd068169bb1aedbfafdca4b837036542632d3500ba67ffd4f2052204343ba4c239b89e6040  mitra-3.22.0.tar.gz
-fce744a7405260eb42796bd6f5d080af19a4f6485c456e5696118453952595c5a558fcdb68bab4be53d646d5eb5a33e9c362751e68e91b91ed200c7a38c3b49a  mitra-web-3.22.0.tar.gz
-691f84f5dfdddc176e75792ab03ff167054246e75ced51be47a89f405ae55ebe5eb6280b73c1b467b5ecbe8539f6108fb3d86873d50fcc4f4b8c5b182632acb0  mitra.initd
+cc03a1cf83f8567fff6bbf777f2e4823049e5ce442dae88038f0550f68109aa54be744d4f101e8e067a921ca9379a141d7a7ff09f7c3a67a5391e33e88018859  mitra-4.3.1.tar.gz
+b5d0baf01ede2110935669ebe097131d8d3b3eb2aad3b268707121fb2924f6ea2b4d45f2846d9a8900bb0329330c86bc1f42e1a2d1680a4ae73577290e02c592  mitra-web-4.3.0.tar.gz
+549646eff4fcc03109d6eddb6f2540f4d0d3f5994273c00f688ea616a4f02c6866b4ef88fdc00e8fb06e50d7d22cd882beb40926e9931d16fa0332ad06f6a677  mitra.initd
 180a47f5072534418b4aac3ce7c885a4f7e4dc38aca80d6d81c79848d12fbe24799788c3575bd195030a10da5e0372f87fa2809a4ef99a48eaa6df52f4d053dd  init.sql
-c69fba9cc376fb2a92c64a5d9994be4ddadc011539855b7a93fc351a393dfa072d85007a3049e57359db705db6ab33ec1bb2c207cc8e57a8638141ff74fb3843  config.yaml
+b8452853d1a04088c66836271e6c8984fb4f6bb2be22c4b8652107d87c22710c65b83021231cf540521dbb33e216096c8379fab000bb2c74223cfb5777d63f0a  config.yaml
 "

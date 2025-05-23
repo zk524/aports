@@ -1,0 +1,40 @@
+maintainer="fossdd <fossdd@pwned.life>"
+pkgname=nfcd
+pkgver=1.2.2
+pkgrel=0
+pkgdesc="NFC daemon providing access to NFC hardware via D-Bus interfaces"
+url="https://github.com/sailfishos/nfcd"
+arch="all"
+license="BSD-3-Clause"
+makedepends="
+	file-dev
+	glib-dev
+	libdbusaccess-dev
+	libglibutil-dev
+	libnfcdef-dev
+	"
+subpackages="$pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/sailfishos/nfcd/archive/refs/tags/$pkgver.tar.gz
+	usr-dbus.patch
+	"
+
+build() {
+	make
+	make -C tools
+}
+
+check() {
+	make test
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+
+	# We don't ship systemd
+	rm -r "$pkgdir"/usr/lib/systemd/
+}
+
+sha512sums="
+8ad2cd47048e06a4af24e0b97de2acc7a594032e19a22c275750419ed185e4825e034326cd794563d2aea22a4e9309b0610fda567dfaf3affc9cb8b68f35e62e  nfcd-1.2.2.tar.gz
+4288358161f83e259ae17fcf21abd940c79fb0f6cf5d05269da588be5e559fcc2fc8c452058f65090cc3c4caeda914cb6aac84007302ed97de7132a34b2fa0a8  usr-dbus.patch
+"

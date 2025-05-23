@@ -1,13 +1,12 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=freerdp
 _pkgname=FreeRDP
-pkgver=3.10.3
-pkgrel=1
+pkgver=3.15.0
+pkgrel=0
 pkgdesc="FreeRDP client"
 url="https://www.freerdp.com/"
 arch="all"
 license="Apache-2.0"
-options="!check" # As of 2.0.0_rc4 no test suite is available
 makedepends="
 	alsa-lib-dev
 	bsd-compat-headers
@@ -30,8 +29,8 @@ makedepends="
 	linux-headers
 	openssl-dev>3
 	samurai
-	sdl2-dev
-	sdl2_ttf-dev
+	sdl3-dev
+	sdl3_ttf-dev
 	wayland-dev
 	webkit2gtk-4.1-dev
 	"
@@ -96,6 +95,7 @@ build() {
 		-DCMAKE_BUILD_TYPE=MinSizeRel \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
 		-DUWAC_FORCE_STATIC_BUILD=ON \
 		-DWITH_BINARY_VERSIONING=ON \
 		-DWITH_ALSA=ON \
@@ -122,6 +122,10 @@ build() {
 	cmake --build build
 }
 
+check() {
+	ctest --test-dir build
+}
+
 package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
@@ -132,5 +136,5 @@ libs() {
 }
 
 sha512sums="
-b3cbdbefe0aaa3ad533fd1b2959aeb3dd9bfa7fba56e47db2fd711741a25d1875c8191b43330b2aaf10e21787df16ec6eb8888e7cff3d59429fe6298a26f1ecd  freerdp-3.10.3.tar.gz
+920f4da6d9fd44066cf4b96ec2eced389cb4a864bf4dba33dd6ec68c1eaf8b6ddb2d710a087ea5d6b722b9d5b9511b3a6c98a493c6ffb1c06d13a963e0db9e5d  freerdp-3.15.0.tar.gz
 "

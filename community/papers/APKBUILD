@@ -1,6 +1,6 @@
 # Maintainer: team/gnome <pabloyoyoista@postmarketos.org>
 pkgname=papers
-pkgver=48.0
+pkgver=48.3
 pkgrel=0
 pkgdesc="simple document viewer for GNOME desktop"
 url="https://apps.gnome.org/Papers/"
@@ -57,7 +57,7 @@ build() {
 }
 
 check() {
-	meson test --no-rebuild -v -C output
+	meson test -v -C output
 }
 
 package() {
@@ -85,5 +85,5 @@ doc() {
 }
 
 sha512sums="
-fad546bae06ac68e0e231fbca6b5cd02a5c01a17702ace15385a829ea16ee5f6aa2f118f6f041d489ecbdd25f939ed2c5c0b41a57c1f321ef8e3e741cdeaf771  papers-48.0.tar.xz
+4d582eb2c8b41e401b80ba56df8474c67eccc5aa5619383a93543de4b044e8082e580c2652b65d15a06a4a69a045d11e470d01adf9b47b8c45ab87e1df5cc1e6  papers-48.3.tar.xz
 "

@@ -1,6 +1,6 @@
 # Maintainer: Simon Zeni <simon@bl4ckb0ne.ca>
 pkgname=sdl3
-pkgver=3.2.10
+pkgver=3.2.14
 pkgrel=0
 pkgdesc="development library designed to provide low level access to audio, keyboard, mouse, joystick and graphics"
 url="https://www.libsdl.org"
@@ -12,6 +12,7 @@ makedepends="
 	cmake
 	eudev-dev
 	jack-dev
+	libdecor-dev
 	libsamplerate-dev
 	libx11-dev
 	libxcursor-dev
@@ -71,5 +72,5 @@ package() {
 }
 
 sha512sums="
-e919749ded768ed15c2014efcacfb8ee6614d47727ceb45bbfd4248b36c3790640b4dcbd66de46e4f6870182e13d0d4ceb35da4eb064f9feabdde30ca6eae30d  SDL3-3.2.10.tar.gz
+7e501bda73cc7b42b860e6ba6f9a0450fdb5014f5999afa64ccd6b4eb633edf6646fd1e251d58189649755a883d7dd51e5bcc53e841974180ed73d56fb8e29cd  SDL3-3.2.14.tar.gz
 "

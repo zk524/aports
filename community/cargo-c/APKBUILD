@@ -1,7 +1,7 @@
 # Contributor: Oleg Titov <oleg.titov@gmail.com>
 # Maintainer: Oleg Titov <oleg.titov@gmail.com>
 pkgname=cargo-c
-pkgver=0.10.11
+pkgver=0.10.13
 pkgrel=0
 pkgdesc="cargo subcommand to build and install C-ABI compatibile dynamic and static libraries"
 url="https://github.com/lu-zero/cargo-c"
@@ -52,9 +52,10 @@ package() {
 	install -Dm755 target/release/cargo-* -t "$pkgdir"/usr/bin/
 
 	install -Dm644 -t "$pkgdir/usr/share/doc/cargo-c" README.md
+	install -Dm644 -t "$pkgdir/usr/share/doc/cargo-c" LICENSE
 }
 
 sha512sums="
-6a5e98e5cce3a7b6efbdf40ff31c1f59d7b7673d807676d294a8e9d997f3c25c715f57bab2046ec190e0e9a8f1fae7006efb5004872d54e677ab7656e4ff26b4  cargo-c-0.10.11.tar.gz
-2094f3be387331fddd5aac14fb0335cdecf3fe85008e4aa867630fa67632701950e0a4d182e197caabd3f009883db89212617b1e86111f9d6b78ddc2d231717a  cargo-c-0.10.11-Cargo.lock
+dbd861692bc6b8de2f0a5377e3e187c69f22fe2e2ba9a6b64bc644af935215bc1362ad490ad255b2b5775bbef617f47665a37b8c6d747e8dc2fb4f655fe1384c  cargo-c-0.10.13.tar.gz
+820f8b02374dcdd6a3b217739b19145f5af9c5123673ca5d26cf395ae238f9f1e3eab64a8224f36dd0f0e3ce87a583be1fbab540e1c3bccd9bc7b71fb3b4a528  cargo-c-0.10.13-Cargo.lock
 "

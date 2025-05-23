@@ -1,0 +1,33 @@
+# Contributor: Dmitry Zakharchenko <dmitz@disroot.org>
+# Maintainer: Celeste <cielesti@protonmail.com>
+maintainer="Celeste <cielesti@protonmail.com>"
+pkgname=pdfcpu
+pkgver=0.10.2
+pkgrel=0
+pkgdesc="PDF processor written in Go"
+url="https://pdfcpu.io"
+arch="all"
+license="Apache-2.0"
+makedepends="go"
+options="!check" # test suite fails
+source="$pkgname-$pkgver.tar.gz::https://github.com/pdfcpu/pdfcpu/archive/v$pkgver.tar.gz"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	go build -o bin/pdfcpu ./cmd/...
+}
+
+check() {
+	go test ./...
+}
+
+package() {
+	install -Dvm755 bin/pdfcpu -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+a6eb2738a4aca2ce1ff3a1826f6e0e7ba44b9c95f6319f7b52eb37801c17713e6f8a76b2506dbe7b8a83104b746b1c7ffd042d0a9804cecc94a39dd585466883  pdfcpu-0.10.2.tar.gz
+"

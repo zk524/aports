@@ -1,7 +1,7 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=pulumi-language-dotnet
-pkgver=3.72.0
-pkgrel=2
+pkgver=3.81.0
+pkgrel=0
 pkgdesc="Infrastructure as Code SDK (.NET language provider)"
 url="https://pulumi.com/"
 # blocked by pulumi
@@ -35,5 +35,5 @@ package() {
 }
 
 sha512sums="
-e7e3e8092a24be09e9a8f93a398441548ae4cfb0ce2c6f1661cb1f2d3d50964f3e2b5ac7cdcb48cfb07a5a95aa27a723caf74fa8fa8a2e6c2746de9f7d7cc637  pulumi-language-dotnet-3.72.0.tar.gz
+63b521e348cdb2d8854f9cabbe4d0e3cd329023f4cdd2f8ecb575f693afd16a661a626b0adcd9249ccaab2b526f32e8747bc9decea784c25d779cfe003ac01d2  pulumi-language-dotnet-3.81.0.tar.gz
 "

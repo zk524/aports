@@ -4,7 +4,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: team/phosh <newbyte@postmarketos.org>
 pkgname=phosh
-pkgver=0.46.0
+pkgver=0.47.0
 pkgrel=0
 pkgdesc="Wayland shell for GNOME on mobile devices"
 # armhf: blocked by gnome-shell-schemas
@@ -91,7 +91,7 @@ build() {
 }
 
 check() {
-	xvfb-run -a meson test --no-rebuild --print-errorlogs -C output
+	xvfb-run -a meson test --print-errorlogs -C output
 }
 
 package() {
@@ -116,6 +116,6 @@ libphosh_dev() {
 }
 
 sha512sums="
-ff6c9d95f4a09d75f0f7ae667a06b0424a1a4266177227195981326da7967e337cf9de1b686febcb66b5776ffcec293ef6c6d899e0d7955b2e8b871d93e2db8c  phosh-0.46.0.tar.xz
+19c150d28921b383269e4c95d353b7ea69e62cc4075a7a1e1523aa0977b347898d16df7d88861e5d029469a881623e15673ee270c3c514db123aec683ec8194d  phosh-0.47.0.tar.xz
 8ca4893a751311de326e198314669f5a276092ade99c6353c4c9ce070713fb1a5b1615e7fecb93b428dc79fd4001a9af43d24eafaf2545d7db464963fda25330  phosh.desktop
 "

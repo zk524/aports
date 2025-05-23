@@ -2,8 +2,8 @@
 # group=kde-frameworks
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=kxmlgui
-pkgver=6.12.0
-pkgrel=0
+pkgver=6.13.0
+pkgrel=1
 pkgdesc="User configurable main windows"
 # armhf blocked by qt6-qtdeclarative -> ki18n, qt6-qtmultimedia -> ktextwidgets
 arch="all !armhf"
@@ -32,7 +32,26 @@ checkdepends="
 	mesa-dri-gallium
 	xvfb-run
 	"
-subpackages="$pkgname-dev $pkgname-doc $pkgname-lang"
+subpackages="
+	$pkgname-dev
+	$pkgname-doc
+	$pkgname-lang
+	"
+case "$CARCH" in
+	riscv64) ;;
+	*)
+		makedepends="$makedepends
+			py3-build
+			py3-setuptools
+			py3-shiboken6
+			pyside6-dev
+			python3-dev
+			"
+		subpackages="$subpackages
+			py3-$pkgname:_py3
+			"
+		;;
+esac
 _repo_url="https://invent.kde.org/frameworks/kxmlgui.git"
 source="https://download.kde.org/stable/frameworks/${pkgver%.*}/kxmlgui-$pkgver.tar.xz"
 
@@ -54,6 +73,10 @@ package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
 
+_py3() {
+	amove usr/lib/python*
+}
+
 sha512sums="
-b824ef4f9fb3f2b871dc278f3eb8e2f25d7e9246cc0f14c26f9389d7f4ac65c3ce0e25ecdd1ae6c55c0d7baa54737ef96fde1deea339e37aee5cae08410925d0  kxmlgui-6.12.0.tar.xz
+bbe8089958399cdc8e9908dd9655094228cfff4132bcc5ccbe9e493385c6d044314170fc14f13f40be3dd415e6c9235973a924b19d789983056c0ba074d3976d  kxmlgui-6.13.0.tar.xz
 "

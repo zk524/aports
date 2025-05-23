@@ -1,8 +1,8 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=py3-pylsqpack
-pkgver=0.3.19
-_lsqpack_ver=1.0.3
+pkgver=0.3.22
+_lsqpack_ver=2.6.1
 pkgrel=0
 pkgdesc="Python bindings for ls-qpack"
 url="https://pypi.org/project/pylsqpack/"
@@ -49,6 +49,6 @@ package() {
 }
 
 sha512sums="
-e98a7d1ba58424bbcff1a4df543fc7fa914252dd87cb06941bf91b49b77548f5be2c06341d346144fcedc06e5b293eb5d13a489242c95cc9dcee54bbe9729455  py3-pylsqpack-0.3.19.tar.gz
-dd6e14a86272c9784775e757d8a494f8d850ec98a5331e39be1f5e265ac94202e86ade963217ed5f3304512a3ce8a0dfc28e7798f9d6f19f496700ab5d5250a9  ls-qpack-1.0.3.tar.gz
+f844e039132acb96d89940e53d9f5f963bdcce0c36f86d4360ef8c721b243a9ed9794ad34e36d5d263119531bb648be51c9955e870b8e04eeeb906fad8427c48  py3-pylsqpack-0.3.22.tar.gz
+2ca90df7660b315a61a657f7b1f56ac5706ad51fe3edaa07b0cc24405a4c691419f2ae17315d9ad6cb13779ed5d6714b3cd932c670b4d571c6bf1dde10540f84  ls-qpack-2.6.1.tar.gz
 "

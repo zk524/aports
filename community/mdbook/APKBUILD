@@ -1,6 +1,6 @@
 # Maintainer: crapStone <crapstone01@gmail.com>
 pkgname=mdbook
-pkgver=0.4.45
+pkgver=0.4.49
 pkgrel=0
 pkgdesc="mdBook is a utility to create modern online books from Markdown files"
 url="https://rust-lang.github.io/mdBook/"
@@ -43,5 +43,5 @@ package() {
 }
 
 sha512sums="
-747ef1f9b5b286ad8a89f657eed609a1fcb1a1ad5e26cfb4023253eea6965a8a7fecd75507c9037449ba9eda76de00eba99bfeccc78410d807bbd39a11270a39  mdbook-0.4.45.tar.gz
+92046a3f4f38914b9b868a11d58c2807e865e9f84b0e11e12db51718c6673f7776c63c62270a01aab357622b11608388a388a00bc94abd706b5459b20cceeb12  mdbook-0.4.49.tar.gz
 "

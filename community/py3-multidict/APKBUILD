@@ -3,7 +3,7 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=py3-multidict
 _pkgname=multidict
-pkgver=6.3.2
+pkgver=6.4.4
 pkgrel=0
 pkgdesc="multidict implementation"
 url="https://github.com/aio-libs/multidict/"
@@ -35,5 +35,5 @@ package() {
 }
 
 sha512sums="
-aec44734a3255eefcce5f0bf037b465eb536f65860fe410f1c249042286471cee2933004a0380579a701475a63931ca6615cde85b0c840af70db87268e6e3f8a  multidict-6.3.2.tar.gz
+ccf07263672abfcaa44b4e1b89e82d7a2843da9805cfb52644f44363b196bb025427478e7cf355d1c2692a1713ccd612761939ac32e30c21f5ad2d99012435c5  multidict-6.4.4.tar.gz
 "

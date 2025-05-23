@@ -1,6 +1,6 @@
 # Maintainer: Thiago Perrotta <tbperrotta@gmail.com>
 pkgname=argocd
-pkgver=2.14.2
+pkgver=3.0.0
 pkgrel=1
 pkgdesc="Declarative continuous deployment for Kubernetes"
 url="https://argo-cd.readthedocs.io/"
@@ -33,5 +33,5 @@ package() {
 }
 
 sha512sums="
-b42d617b3a07904ae0ccebb1c84e51a235845ec7b674df8e9afdc9a960a968c2907fc5d0fdc6193a6fdf1348cf5f92fb4610d0231d0cb689a1aa8ad83c47c591  argo-cd-2.14.2.tar.gz
+f70443e61fb44c5bbe051d5109fd8aea9e98bf024e77c9425906126dadef0c1e0bfdd6d5b383a48365443dd6159f1fe30a130c73ce9db9481f2cac13c0416c06  argo-cd-3.0.0.tar.gz
 "

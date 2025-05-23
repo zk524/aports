@@ -5,7 +5,7 @@ _flavor=edge
 pkgname=linux-$_flavor
 # NOTE: this kernel is intended for testing
 # please resist urge to upgrade it blindly
-pkgver=6.14.0
+pkgver=6.14.7
 _kernver=${pkgver%.*}
 pkgrel=0
 pkgdesc="Linux latest stable kernel"
@@ -31,7 +31,7 @@ _config=${config:-config-edge.$CARCH}
 subpackages="$pkgname-dev:_dev:$CBUILD_ARCH $pkgname-doc:_doc"
 source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver.tar.xz"
 case $pkgver in
-	*.*.0)	source="$source";;
+	*.*.0)	;;
 	*.*.*)	source="
 		patch-$pkgver.patch.xz::https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/patch-$pkgver.xz
 		$source" ;;
@@ -262,10 +262,11 @@ _doc() {
 }
 
 sha512sums="
+45f34aad29c28361e7023ea72187ab42eb05ab01837fd2ef985f0314f4a90c3af812c2001b8783a59bec7b85d9ecc3356eb137eeacfed1701e789753d5db5e9e  patch-6.14.7.patch.xz
 71dcaa3772d8d9797c3ae30cae9c582b11a7047a3bbcb8dfd479a4dffb40ff0da74cf3d45175f50cc9992e338bcadd46c9c570f54054ca3bde6661768d3d22eb  linux-6.14.tar.xz
-b113bb887c94b79a1dc33839fa4f0f11ba5676f8b1f84fc2a0572c821bbfdfbcfd03f0e7a51c25d42ff36c97a91d596b245d42b84ebb652f52c7a7ec117d8ef3  config-edge.aarch64
-11aed082371e5906b087522126ced28b265f27b381ade3439d53625a274d595842b2ec82adff4985cd808c6f0acfcf8bce5a558c1438168f3a1b718e74bc1682  config-edge.armv7
-7694ae5ea5f2e1dfd6acf5801ee67ce548dfc73c7f0b4fb85e2f596edb56fe011f9fd9e78bfd78ed06ccf9d25a83d960702e1345e3aefbf6ffab9c78cc4d620e  config-edge.loongarch64
-106ff6ac1dd3efbb25461b2d7f8db807cbf6e2dd203c22bb6da0641841963ec3a8e22738c4d1295ae67350f2570fecfa6c0c5aa28e735765ca10f511fc4cb3f8  config-edge.x86_64
-e2651a46f430eb91223431d3965f8c8486600a9775b41d03a1e78c3cce35e31af6be7bb41be06b1ee13400be3a4726481faa19fcd40c312ec67c6e2e6e6316e7  config-edge.riscv64
+0952cb367f586ae6e13801c9b860c22b37e0d5c3751d5fd206acbf8545746a8e9dbfc0f7de2db9f2cc93da4a371accc7ce7fbb828b00973a076b43adf7ac3a9b  config-edge.aarch64
+2f3d8b846c0b55147746db46e4b1331191772ca166d6501a9d4cfb158811662cb6f5f8b5a8969b72df095f6cf78158f5ae35964a8abc346800e66346679d4400  config-edge.armv7
+531a4ad6673af0be8cb6c60d3e99c05002e284f6eb85a03a03d5e0a8dfe2925260c2a97d74b4ea4c37d5b3370078345e7d04d5962d79895bfab14752316f8ae7  config-edge.loongarch64
+fdd53f689d53126a0e8f01bc0302191178b12ab9c183ff72ae27f5b60d9ea23f13ca84ebb8e54f8c1e842646b9416f362e3e7ddd4617ef82113d9d1f328077c9  config-edge.x86_64
+ed62e1ff95cf9ad35d8f27565050f6bd5f78bae41cb2e325c1192ad56ef5a649519b7aaa4a203dcdab59a8a7c8d3746784c0ff066a813d749b811f7f58434e52  config-edge.riscv64
 "

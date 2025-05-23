@@ -4,7 +4,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: team/phosh <newbie13xd@gmail.com>
 pkgname=phoc
-pkgver=0.46.0
+pkgver=0.47.0
 pkgrel=0
 pkgdesc="wlroots based Phone compositor for the Phosh shell"
 arch="all"
@@ -70,7 +70,7 @@ build() {
 }
 
 check() {
-	xvfb-run -a meson test --no-rebuild --print-errorlogs -C output
+	xvfb-run -a meson test --print-errorlogs -C output
 }
 
 package() {
@@ -85,5 +85,5 @@ package() {
 }
 
 sha512sums="
-cb089a48dd12e2885fa7fa23df62b4ee60f3701900327195f74afda528cc736322e7f29440fcff5fa81cfebf6ffcffee5c4b67a127823b438da577d3fc3c3747  phoc-0.46.0.tar.xz
+b36c413edea91fa5bde2fb8f7761f2fb9f5ad5f546da4d712dce90a083300e99d902b43e38268a87922870296f705bae8402fc81d95f83f866956cf33ecbf00c  phoc-0.47.0.tar.xz
 "

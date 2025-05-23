@@ -1,7 +1,7 @@
 # Contributor: Iztok Fister, Jr. <iztok@iztok-jr-fister.eu>
 # Maintainer: Iztok Fister, Jr. <iztok@iztok-jr-fister.eu>
 pkgname=py3-niaarmts
-pkgver=0.1.4
+pkgver=0.1.7
 pkgrel=0
 pkgdesc="Time series numerical association rule mining variants"
 url="https://github.com/firefly-cpp/NiaARMTS"
@@ -33,5 +33,5 @@ package() {
 }
 
 sha512sums="
-899383ab2c7b50e9688c7b2d6da4e01a7a8114a8ac7a22a92cd0ea243946ea416023962bb60e50d7cd13e9042a95001207f83c785f385b700191b942ea5ba566  niaarmts-0.1.4.tar.gz
+22942123fe80b3b660517e7d41965c2ee2e7c15b067c7bbf5d18e07adbd7cf81b148252eb2d8b675c6e2477fcfe27db3a3ccba16c9e9a34de3273ee8580e76fa  niaarmts-0.1.7.tar.gz
 "

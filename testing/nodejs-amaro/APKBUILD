@@ -1,0 +1,97 @@
+# Contributor: Jakub Jirutka <jakub@jirutka.cz>
+# Maintainer: Jakub Jirutka <jakub@jirutka.cz>
+
+# NOTE: The primary use of this library is for main/nodejs and community/nodejs-current.
+pkgname=nodejs-amaro
+_npmname=amaro
+pkgver=0.4.1
+pkgrel=0
+pkgdesc="Node.js TypeScript wrapper"
+url="https://github.com/nodejs/amaro"
+arch="noarch"
+license="MIT"
+makedepends="
+	binaryen
+	cargo
+	cargo-auditable
+	esbuild
+	wasm-pack
+	"
+checkdepends="nodejs"
+source="https://github.com/nodejs/amaro/archive/v$pkgver/amaro-$pkgver.tar.gz
+	wasm_bg-path.patch.txt
+	"
+builddir="$srcdir/$_npmname-$pkgver"
+options="net"  # fetches crates
+
+# NOTE: Switching to idna_adapter 1.0.0 has no effect on the WASM size, so it's
+#  it's the url crate is unused in the resulting WASM binary.
+
+prepare() {
+	default_prepare
+
+	# Remove prebuilt WASM.
+	rm -r lib/*
+
+	# Adds -Zshare-generics=y to rustflags which require nightly rustc.
+	rm deps/swc/.cargo/config.toml
+
+	cd deps/swc/bindings/binding_typescript_wasm
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	# Fix "wasm-ld: error: unknown argument: -Wl,-z,pack-relative-relocs"
+	unset LDFLAGS
+	unset RUSTFLAGS
+
+	# The following is based on tools/build-wasm.js
+
+	cd deps/swc/bindings/binding_typescript_wasm
+
+	# This is copied from scripts/build.sh.
+	# We don't run scripts/patch.mjs because we don't wanna bundle WASM in
+	# JS file as base64-encoded string. See https://github.com/nodejs/amaro/issues/244.
+	CARGO_PROFILE_RELEASE_LTO="fat" \
+	CARGO_PROFILE_RELEASE_OPT_LEVEL="z" \
+	wasm-pack build --out-name wasm --release --scope=swc --target nodejs --no-opt
+
+	# We have to run wasm-opt ourselves because when cargo executes
+	# wasm-opt, it doesn't pass these --enable-* options which results in
+	# errors.
+	msg2 "Running wasm-opt..."
+	wasm-opt --enable-bulk-memory-opt --enable-nontrapping-float-to-int -Os \
+		pkg/wasm_bg.wasm -o pkg/wasm_bg.wasm
+	patch -p1 < "$srcdir"/wasm_bg-path.patch.txt
+
+	cp -r pkg/* ../../../../lib
+
+	cd - >/dev/null
+
+	# Based on esbuild.config.mjs. This way we don't have to install npm
+	# deps and deal with missing lock file.
+	local src; for src in errors.ts strip-loader.ts transform-loader.ts; do
+		esbuild src/$src --platform=node --target=node22 --outdir=dist
+	done
+	esbuild --bundle src/index.ts --platform=node --target=node22 --outdir=dist
+
+	# package.json is really needed in dist to override "type" in the amaro's
+	# package.json. Yeah, it's stupid...
+	install -m644 lib/LICENSE lib/package.json lib/wasm_bg.wasm src/register/* -t dist/
+}
+
+check() {
+	AMARO_WASM_BG_PATH="$PWD/dist/wasm_bg.wasm" node --test "**/*.test.js"
+}
+
+package() {
+	local destdir="$pkgdir/usr/lib/node_modules/amaro"
+
+	install -d "$destdir"
+	cp -r dist package.json "$destdir"/
+}
+
+sha512sums="
+d3748cb80d4372959d20789590ff1aeac223ed6448299939e5fc920feb67c8be589dfe34d96a7b58022ef06e60b528c91facfdc5efb3ef26e9fc10b46fcf549b  amaro-0.4.1.tar.gz
+f25d5e331755a6f421da98490285ccec5b0c4d65713fbf30ad22e9d809dfc3013a1ba65a05d2dafaa0c9961efe897ab4f22f7ef67021e7788dc151599580f8c6  wasm_bg-path.patch.txt
+"

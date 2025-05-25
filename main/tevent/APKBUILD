@@ -1,6 +1,6 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=tevent
-pkgver=0.16.1
+pkgver=0.16.2
 pkgrel=0
 pkgdesc="The tevent library"
 url="https://tevent.samba.org/"
@@ -43,5 +43,5 @@ _py3() {
 }
 
 sha512sums="
-cda001d91728b2f28dd081e9c5f6d8ede345dcd9ce1dca04394860cd83090c15aa8dfef1c53b73e120bd17f0d95551fa9301eb4927963314556d016fe5420a39  tevent-0.16.1.tar.gz
+c644771227fd1ee9f221e8cac1be9db97043953670a29415a20f3f8933d4fa93c7421b991a4ecaac0b9b29e922d1ec2f436160f2d2eaf77c6d392f1dec212417  tevent-0.16.2.tar.gz
 "

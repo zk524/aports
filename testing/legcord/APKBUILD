@@ -1,0 +1,75 @@
+# Contributor: NeYurii <neyuriizkh@proton.me>
+# Maintainer: NeYurii <neyuriizkh@proton.me>
+pkgname=legcord
+_pkgname=Legcord
+pkgver=1.1.5
+pkgrel=0
+pkgdesc="Legcord is a custom client designed to enhance your Discord experience while keeping everything lightweight"
+url="https://legcord.app"
+arch="all"
+license="OSL-3.0"
+depends="electron"
+makedepends="pnpm patch"
+source="
+	$_pkgname-$pkgver.tar.gz::https://github.com/Legcord/Legcord/archive/refs/tags/v$pkgver.tar.gz
+	no_electron.patch
+	"
+builddir="$srcdir/$_pkgname-$pkgver"
+options="!strip !tracedeps"
+
+prepare() {
+	default_prepare
+	pnpm install --ignore-scripts --prefer-frozen-lockfile
+}
+
+build() {
+	NODE_ENV=production pnpm run build
+}
+
+check() {
+	cd "$builddir"
+	pnpm run lint
+}
+
+package() {
+	cd "$builddir"
+
+	install -dm0755 "$pkgdir"/usr/lib/"$pkgname" \
+		"$pkgdir"/usr/share/applications \
+		"$pkgdir"/usr/share/icons/hicolor/512x512/apps \
+		"$pkgdir"/usr/bin
+
+	# Clean up
+	NODE_ENV=production pnpm install --prod --ignore-scripts --prefer-frozen-lockfile
+
+	# Install app
+	cp -a -t "$pkgdir"/usr/lib/"$pkgname" \
+		assets node_modules ts-out package.json dist
+
+	# Install desktop file
+	install -m644 /dev/stdin "$pkgdir"/usr/share/applications/"$pkgname".desktop << EOF
+[Desktop Entry]
+Name=$_pkgname
+Exec=/usr/bin/$pkgname %U
+Terminal=false
+Type=Application
+Icon=$pkgname
+Comment=Legcord is a custom client designed to enhance your Discord experience while keeping everything lightweight
+GenericName=Internet Messenger
+Categories=Network;InstantMessaging;
+EOF
+
+	# Install app icon
+	install -m644 build/icon.png "$pkgdir"/usr/share/icons/hicolor/512x512/apps/"$pkgname".png
+
+	# Install run script
+	install -m755 /dev/stdin "$pkgdir"/usr/bin/"$pkgname" << EOF
+#!/bin/sh
+exec /usr/bin/electron /usr/lib/"$pkgname"
+EOF
+}
+
+sha512sums="
+afe23548eaa717e47da8915f1afacd3d7c101e2ac08b4012186ad2c0ea0e7f05f549d99912f95540ca97e21b7eb3937a1345c7f98dfd9df56692d44bea192831  Legcord-1.1.5.tar.gz
+eaa079b20d810ddafc503a4ce0025dd252cd7229f2bd46f390561c3c91ab24cc49b6f71aae320b74df4b4353b4f4001312d912866bead0cb181f87be2e3ac7a9  no_electron.patch
+"

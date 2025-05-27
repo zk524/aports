@@ -1,11 +1,9 @@
-# Contributor: Leo <thinkabit.ukim@gmail.com>
-
 # The group tag is just to easily find this APKBUILD by some scripts for automation
 # group=kde-applications
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=falkon
 pkgver=25.04.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Cross-platform Qt Web Browser"
 url="https://github.com/KDE/falkon"
 # armhf, ppc64le, s390x and riscv64 blocked by qt6-qtwebengine
@@ -31,10 +29,15 @@ makedepends="
 	samurai
 	xcb-util-dev
 	"
-checkdepends="xvfb-run"
-subpackages="$pkgname-lang $pkgname-bash-completion:bashcomp:noarch"
+checkdepends="xwayland-run"
+subpackages="
+	$pkgname-lang
+	$pkgname-bash-completion:bashcomp:noarch
+	"
 _repo_url="https://invent.kde.org/network/falkon.git"
-source="https://download.kde.org/stable/release-service/$pkgver/src/falkon-$pkgver.tar.xz"
+source="https://download.kde.org/stable/release-service/$pkgver/src/falkon-$pkgver.tar.xz
+	0001-falkon-Fix-crash-when-creating-bookmarks-toolbar.patch
+	"
 
 build() {
 	cmake -B build -G Ninja \
@@ -49,7 +52,7 @@ build() {
 check() {
 	# Requires working OpenGL
 	# qmlhistoryapitest, qmlcookiesapitest, qmltabsapitest and qmlwindowsapitest are SIGTRAP'ing
-	xvfb-run -a ctest --test-dir build -E "falkon-(locationbar|webtab|qml-qml(tabsapi|topsitesapi)|sitesettings)test" -j1
+	wlheadless-run -- ctest --test-dir build -E "falkon-(locationbar|webtab|qml-qml(tabsapi|topsitesapi)|sitesettings)test" -j1
 }
 
 package() {
@@ -66,4 +69,5 @@ bashcomp() {
 
 sha512sums="
 4f1b0eb491398386a0d2028f65e743a99d86caeba7ae1f8be140fc77314775a3ef70032a4b0863763d249431e294956fddeb7a0e97d606b920e31fed9e068043  falkon-25.04.0.tar.xz
+4c6b2df47ad80e899ce390a0f86fb16c6bb2bfbbb8db13a12ec5faf74e2b65cbddfd994a7461566c50be3c3021c3e204b42c53d2a286b9a761418fb33e407781  0001-falkon-Fix-crash-when-creating-bookmarks-toolbar.patch
 "

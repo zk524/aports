@@ -14,8 +14,11 @@ makedepends="
 	python3-dev
 	"
 checkdepends="py3-pytest"
+# Keep in sync with project's submodules.
+_glm_gitrev=58e0db58cc860c0c6f7f6ee3a462e17a431646a4
 source="
 	$pkgname-$pkgver.tar.gz::https://github.com/Zuzu-Typ/PyGLM/archive/refs/tags/$pkgver.tar.gz
+	https://github.com/Zuzu-Typ/glm/archive/$_glm_gitrev/glm-$_glm_gitrev.tar.gz
 "
 builddir="$srcdir/PyGLM-$pkgver/"
 
@@ -23,7 +26,7 @@ prepare() {
 	default_prepare
 
 	rm -r glm
-	ln -s "$srcdir/glm-$_glm_gitrev" glm
+	ln -s "$srcdir/glm-$_glm_gitrev" PyGLM_lib/glm
 }
 
 build() {
@@ -44,4 +47,5 @@ package() {
 
 sha512sums="
 a3753ba104e772c744284fc9171accb48e5c56d70d7425ad09fff4a743eebec2e6144162ac06706a4a5a9b86e9edeffc04cd0fb659360c37a01bc50018bf8922  py3-pyglm-2.8.2.tar.gz
+2261bbe1ea8dd2f573842ec809e5343ff703a72c9975e83f0da709188f8ff16ac6ee014217430dac8057420787519e53b36b743bd847355de064612cc36da0c0  glm-58e0db58cc860c0c6f7f6ee3a462e17a431646a4.tar.gz
 "

@@ -1,7 +1,7 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=sddm
 pkgver=0.21.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Simple Desktop Display Manager"
 url="https://github.com/sddm/sddm/"
 # armhf blocked by qt6-qtdeclarative
@@ -32,7 +32,7 @@ subpackages="
 	$pkgname-openrc
 	$pkgname-weston::noarch
 	"
-install="sddm.pre-install"
+install="sddm.pre-install sddm.pre-upgrade"
 langdir="/usr/share/sddm/translations"
 pkgusers="sddm"
 pkggroups="sddm"
@@ -61,7 +61,8 @@ build() {
 		-DUSE_ELOGIND=ON \
 		-DUID_MIN=500 \
 		-DUID_MAX=65000 \
-		-DDBUS_CONFIG_DIR=/usr/share/dbus-1/system.d
+		-DDBUS_CONFIG_DIR=/usr/share/dbus-1/system.d \
+		-DSDDM_INITIAL_VT=7
 	cmake --build build
 }
 

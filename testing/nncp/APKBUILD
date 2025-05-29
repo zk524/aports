@@ -1,0 +1,50 @@
+# Contributor: Jean-Louis Fuchs <safe.pen2857@rhizoome.ch>
+# Maintainer: Jean-Louis Fuchs <safe.pen2857@rhizoome.ch>
+pkgname=nncp
+pkgver=8.11.0
+pkgrel=0
+pkgdesc="Node-to-Node Copy Protocol utilities for secure store-and-forward"
+url="http://www.nncpgo.org/"
+arch="all"
+license="GPL-3.0-or-later"
+options="net"
+makedepends="go coreutils"
+subpackages="$pkgname-doc"
+source="http://www.nncpgo.org/download/nncp-$pkgver.tar.xz"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	export CGO_ENABLED=1
+	export CGO_CPPFLAGS="$CPPFLAGS"
+	export CGO_CFLAGS="$CFLAGS"
+	export CGO_CXXFLAGS="$CXXFLAGS"
+	export CGO_LDFLAGS="$LDFLAGS"
+
+	export PREFIX=/usr
+	export CFGPATH="/etc/nncp/nncp.hjson"
+	bin/build
+}
+
+check() {
+	while IFS= read -r line
+	do
+		bin/$line -version
+	done < bin/cmd.list
+}
+
+package() {
+	export PREFIX="/usr"
+	export CFGPATH="/etc/nncp/nncp.hjson"
+
+	export DESTDIR="$pkgdir"
+	export INFODIR="$pkgdir/usr/share/info"
+
+	./install
+}
+
+sha512sums="
+5a19d08e144deaf7c1ab59a9a008da44f4a29e380ae8ffa3ccfb30cb38a85b8a1a330405efc97d29bf47d4ba345380940a6c58d0c4eef0bde7079f8369b16a55  nncp-8.11.0.tar.xz
+"

@@ -17,10 +17,6 @@ source="https://github.com/caddyserver/caddy/releases/download/v$pkgver/caddy_${
 	$pkgname.initd
 	Caddyfile
 	"
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 builddir="$srcdir"
 
 build() {

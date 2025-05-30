@@ -25,10 +25,6 @@ source="https://github.com/juanfont/headscale/archive/v$pkgver/headscale-$pkgver
 	"
 options="net" # fetch dependencies
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 prepare() {
 	default_prepare
 

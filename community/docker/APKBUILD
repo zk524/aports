@@ -90,10 +90,6 @@ _moby_builddir="$srcdir/moby-$pkgver"
 _buildtags="seccomp"
 
 export GO111MODULE=off # go1.16 defaults to on
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export CGO_ENABLED=1 # go1.22 needs this
 
 build() {
 	export AUTO_GOPATH=1

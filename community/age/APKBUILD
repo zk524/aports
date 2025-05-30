@@ -21,10 +21,6 @@ s390x)
 	;;
 esac
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	mkdir bin
 	go build -ldflags "-X main.Version=$pkgver" -o bin ./cmd/...

@@ -20,10 +20,6 @@ source="
 builddir="$srcdir/$_pkgname-$pkgver"
 subpackages="$pkgname-openrc"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	make PROMU=/usr/bin/promu build
 }

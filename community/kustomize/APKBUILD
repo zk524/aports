@@ -16,10 +16,6 @@ subpackages="
 source="https://github.com/kubernetes-sigs/kustomize/archive/kustomize/v$pkgver/kustomize-$pkgver.tar.gz"
 builddir="$srcdir/kustomize-kustomize-v$pkgver/kustomize"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local builddate="$(date -u "+%Y-%m-%dT%TZ" ${SOURCE_DATE_EPOCH:+-d @$SOURCE_DATE_EPOCH})"
 

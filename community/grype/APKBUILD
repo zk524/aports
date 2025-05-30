@@ -16,10 +16,6 @@ subpackages="
 source="https://github.com/anchore/grype/archive/v$pkgver/grype-$pkgver.tar.gz"
 options="!check" # tests need docker
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build -ldflags "
 		-X main.version=$pkgver

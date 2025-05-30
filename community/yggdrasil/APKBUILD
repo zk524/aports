@@ -18,10 +18,6 @@ options="net" # for downloading Go modules
 builddir="$srcdir/$pkgname-go-$pkgver"
 subpackages="$pkgname-openrc"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go mod vendor
 	pkgsrc=github.com/yggdrasil-network/yggdrasil-go/src/version

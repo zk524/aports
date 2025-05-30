@@ -14,10 +14,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/gcla/termshark/archive/v$pkg
 	loongarch64-support.patch"
 
 export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build -v ./cmd/...
 }

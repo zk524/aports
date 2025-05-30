@@ -12,10 +12,6 @@ makedepends="go"
 checkdepends="bash"
 source="https://github.com/candid82/joker/archive/v$pkgver/joker-$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go generate -v ./...
 	go vet -v ./...

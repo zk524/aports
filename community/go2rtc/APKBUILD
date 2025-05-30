@@ -27,10 +27,6 @@ source="
 	"
 options="!check net" # No tests available
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	export CGO_ENABLED=1
 	go build -gccgoflags "-include stddef.h" -tags cgo -o go2rtc

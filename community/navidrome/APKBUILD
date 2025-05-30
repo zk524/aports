@@ -24,10 +24,6 @@ source="
 	"
 
 export GOFLAGS="$GOFLAGS -tags=embed,netgo,libsqlite3"
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 # secfixes:
 #   0.47.5-r0:
 #     - CVE-2022-23857

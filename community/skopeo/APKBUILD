@@ -37,10 +37,6 @@ source="https://github.com/containers/skopeo/archive/v$pkgver/skopeo-$pkgver.tar
 #   1.5.2-r0:
 #     - CVE-2021-41190
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	# https://github.com/mattn/go-sqlite3/issues/1164
 	export CGO_CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"

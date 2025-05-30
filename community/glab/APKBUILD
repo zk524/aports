@@ -19,10 +19,6 @@ subpackages="
 source="$pkgname-$pkgver.tar.gz::https://gitlab.com/gitlab-org/cli/-/archive/v$pkgver/cli-v$pkgver.tar.gz"
 builddir="$srcdir/cli-v$pkgver"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	# date seems a little broken to override
 	go build -ldflags "

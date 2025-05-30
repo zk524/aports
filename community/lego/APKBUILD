@@ -16,10 +16,6 @@ source="https://github.com/go-acme/lego/archive/v$pkgver/lego-$pkgver.tar.gz
 	go-mod-yandex-go-genproto-v0.4.0.patch
 	"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build -v -trimpath -ldflags "-X main.version=$pkgver" -o ./bin/lego ./cmd/lego
 }

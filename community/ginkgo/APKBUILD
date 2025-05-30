@@ -13,10 +13,6 @@ source="https://github.com/onsi/ginkgo/archive/v$pkgver/ginkgo-$pkgver.tar.gz
 	"
 options="net"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build -v -o bin/ginkgo ./ginkgo
 }

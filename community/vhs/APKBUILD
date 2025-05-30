@@ -20,10 +20,6 @@ source="https://github.com/charmbracelet/vhs/archive/v$pkgver/vhs-$pkgver.tar.gz
 	disable-rod-gpu.patch
 	"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-
 build() {
 	mkdir builddir
 

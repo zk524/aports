@@ -15,10 +15,6 @@ subpackages="
 source="https://github.com/hetznercloud/cli/archive/v$pkgver/hcloud-$pkgver.tar.gz"
 builddir="$srcdir/cli-$pkgver"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build \
 		-trimpath \

@@ -22,10 +22,6 @@ builddir="$srcdir/$_pkgname-$pkgver"
 #   1.5.0-r0:
 #     - CVE-2022-46146
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build \
 		-ldflags "-X github.com/prometheus/common/version.Version=$pkgver" \

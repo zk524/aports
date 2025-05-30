@@ -13,10 +13,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/linuxkit/linuxkit/archive/re
 	add-loongarch64-riscv64-support.patch"
 builddir="$srcdir/$pkgname-$pkgver/src/cmd/linuxkit"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _goldflags="
 	-X github.com/linuxkit/linuxkit/src/cmd/linuxkit/version.GitCommit=AlpineLinux

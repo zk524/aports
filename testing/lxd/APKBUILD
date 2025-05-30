@@ -64,10 +64,6 @@ _tools="lxc fuidshift lxc-to-lxd lxd-benchmark lxd-agent lxd-migrate"
 _project="github.com/lxc/lxd"
 
 export GOFLAGS="$GOFLAGS -tags=libsqlite3"
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 prepare() {
 	default_prepare
 	go mod download

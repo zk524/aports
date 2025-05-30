@@ -14,10 +14,6 @@ source="
 	"
 builddir="$srcdir/krew-$pkgver"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	GOLDFLAGS="
 	-X sigs.k8s.io/krew/internal/version.gitCommit=AlpineLinux

@@ -16,10 +16,6 @@ subpackages="
 	"
 source="https://github.com/charmbracelet/glow/archive/v$pkgver/glow-$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build -v -ldflags "-X main.Version=$pkgver"
 

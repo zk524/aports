@@ -15,9 +15,6 @@ subpackages="$pkgname-doc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/ginuerzh/gost/archive/refs/tags/v$pkgver.tar.gz
 	update-go-mod.patch"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go-mod"}"
-
 prepare() {
 	default_prepare
 }

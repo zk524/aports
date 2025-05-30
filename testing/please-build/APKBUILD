@@ -21,10 +21,6 @@ source="
 builddir="$srcdir/please-$pkgver"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _buildargs="--plain_output --noupdate --profile=alpine"
 	go run src/please.go build $_buildargs //src:please

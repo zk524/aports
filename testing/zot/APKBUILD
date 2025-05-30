@@ -30,10 +30,6 @@ source="
 	"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 prepare() {
 	default_prepare
 	go mod vendor -v

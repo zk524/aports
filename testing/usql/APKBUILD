@@ -16,10 +16,6 @@ makedepends="go unixodbc-dev icu-dev"
 source="$pkgname-$pkgver.tar.gz::https://github.com/xo/usql/archive/refs/tags/v$pkgver.tar.gz"
 
 export CGO_ENABLED=1 # needed for godror and odbc drivers
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 export _GOTAGS="all sqlite_app_armor sqlite_fts5 sqlite_introspect sqlite_json1 sqlite_stat4 sqlite_userauth sqlite_vtable sqlite_icu"
 
 build() {

@@ -11,10 +11,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/opcr-io/policy/archive/refs/
 builddir="$srcdir/policy-$pkgver"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _goldflags="
 	-X github.com/opcr-io/policy/pkg/version.ver=$pkgver

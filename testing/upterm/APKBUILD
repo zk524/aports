@@ -22,10 +22,6 @@ source="
 	"
 options="net !check" # fail on network flakiness
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	for cli in upterm uptermd; do
 		go build -v -o out/$cli ./cmd/$cli

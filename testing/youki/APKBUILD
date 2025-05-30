@@ -1,16 +1,14 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=youki
-pkgver=0.4.1
+pkgver=0.5.3
 pkgrel=0
 pkgdesc="Container runtime written in Rust"
 url="https://github.com/containers/youki"
-# ppc64le: syscalls crate inline asm is unstable for ppc64le
-# s390x: nix crate lacks support
-# riscv64: syscalls crate lacks support
-# armhf: nc crate fails on invalid instruction
-# armv7: need for rustc to catch to up pass thumb-mode properly
-arch="all !armhf !armv7 !ppc64le !s390x !riscv64"
+# armv7: error: cannot use register `r7`: the frame pointer (r7) cannot be used as an operand for inline asm
+# loongarch64: error[E0425]: cannot find value `SA_RESTORER` in the crate root
+# x86: error: symbol 'rustix_int_0x80' is already defined
+arch="all !armv7 !loongarch64 !x86"
 license="Apache-2.0"
 makedepends="
 	cargo
@@ -30,6 +28,8 @@ provider_priority=80
 # secfixes:
 #   0.4.1-r0:
 #     - CVE-2024-21626
+#   0.5.3-r0:
+#     - CVE-2025-27612
 
 # Disable systemd_cgroups
 _cargo_opts='--frozen --no-default-features --features=libcgroups/v1,libcgroups/v2'
@@ -53,5 +53,5 @@ package() {
 }
 
 sha512sums="
-ff3c6a416844f25093630f19d8e92812fbb5d7359c148ae72abacc614a4ebc3d8263cf40429431c2f55c912cea12d91194bae49889d8998ed509b450c58a57a1  youki-0.4.1.tar.gz
+99e8aba8e70d80b0e600ae26ebc604ff6b02399172466fd9528e8d0a20c975ac732dd3eb0e78c114ec2260e0cea84e237c8c18b6badb85c765affb9a6ae6c861  youki-0.5.3.tar.gz
 "

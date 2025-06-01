@@ -19,7 +19,7 @@ export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
-export GOFLAGS="$GOFLAGS -mod=mod -modcacherw"
+export GOFLAGS="$GOFLAGS -mod=mod"
 
 build() {
 	make build GOFLAGS="$GOFLAGS"

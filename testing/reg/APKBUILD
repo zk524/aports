@@ -25,7 +25,6 @@ export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
 	go build \
-		-trimpath \
 		-ldflags "
 			-X github.com/genuinetools/reg/version.GITCOMMIT=v$pkgver
 			-X github.com/genuinetools/reg/version.VERSION=$pkgver-r$pkgrel

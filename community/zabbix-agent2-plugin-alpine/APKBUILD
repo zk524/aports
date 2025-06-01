@@ -14,7 +14,6 @@ options="!check" # no test suite
 builddir="$srcdir/zabbix-agent2-plugins-v$pkgver"
 provides="zabbix-agent2-alpine=$pkgver-r$pkgrel"
 
-export GOFLAGS="$GOFLAGS -modcacherw"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

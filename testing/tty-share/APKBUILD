@@ -23,8 +23,7 @@ prepare() {
 	go mod vendor
 }
 build() {
-	go build \
-		-trimpath
+	go build
 }
 
 package() {

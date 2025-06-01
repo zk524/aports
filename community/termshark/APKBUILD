@@ -13,7 +13,7 @@ options="net"
 source="$pkgname-$pkgver.tar.gz::https://github.com/gcla/termshark/archive/v$pkgver.tar.gz
 	loongarch64-support.patch"
 
-export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw"
+export GOFLAGS="$GOFLAGS -mod=readonly"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

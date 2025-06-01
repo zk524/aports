@@ -21,7 +21,7 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	go build -v -trimpath -ldflags "-X main.version=$pkgver" -o ./bin/lego ./cmd/lego
+	go build -v -ldflags "-X main.version=$pkgver" -o ./bin/lego ./cmd/lego
 }
 
 check() {

@@ -20,7 +20,6 @@ options="!check" # no tests
 pkgusers="$pkgname"
 pkggroups="$pkgname"
 
-export GOFLAGS="$GOFLAGS -modcacherw"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

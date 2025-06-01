@@ -28,7 +28,6 @@ build() {
 	mkdir builddir
 
 	go build -v \
-		-trimpath \
 		-ldflags "-X main.Version=$pkgver -extldflags \"$LDFLAGS\"" \
 		-o builddir .
 

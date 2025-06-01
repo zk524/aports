@@ -29,7 +29,6 @@ build() {
 	for cmd in yggdrasil yggdrasilctl
 	do
 		go build \
-			-trimpath \
 			-mod=vendor \
 			-ldflags "-extldflags \"$LDFLAGS\" $ldflags" \
 			./cmd/$cmd

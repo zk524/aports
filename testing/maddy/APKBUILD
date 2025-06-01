@@ -21,7 +21,7 @@ source="https://github.com/foxcpp/maddy/archive/v$pkgver/maddy-$pkgver.tar.gz
 #   0.6.3-r0:
 #     - CVE-2023-27582
 
-export GOFLAGS="$GOFLAGS -trimpath -mod=readonly -modcacherw -tags=libsqlite3"
+export GOFLAGS="$GOFLAGS -mod=readonly -tags=libsqlite3"
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"

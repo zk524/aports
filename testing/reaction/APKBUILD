@@ -23,7 +23,7 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	go build -v -o reaction -buildvcs=false -ldflags "-s -X main.version=$pkgver" .
+	go build -v -o reaction -ldflags "-s -X main.version=$pkgver" .
 	make ip46tables
 	make nft46
 }

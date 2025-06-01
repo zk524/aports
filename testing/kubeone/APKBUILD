@@ -18,10 +18,6 @@ subpackages="
 source="$pkgname-$pkgver.tar.gz::https://github.com/kubermatic/kubeone/archive/refs/tags/v$pkgver.tar.gz"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _goldflags="
 	-X k8c.io/kubeone/pkg/cmd.commit=AlpineLinux

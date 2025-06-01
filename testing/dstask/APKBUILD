@@ -19,10 +19,6 @@ source="https://github.com/naggie/dstask/archive/v$pkgver/dstask-$pkgver.tar.gz
 	"
 
 export GOFLAGS="$GOFLAGS -trimpath -modcacherw"
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	_git_commit=$(zcat "$srcdir"/dstask-$pkgver.tar.gz | git get-tar-commit-id)
 	_build_date=$(date -u "+%Y-%m-%dT%TZ" ${SOURCE_DATE_EPOCH:+-d @$SOURCE_DATE_EPOCH})

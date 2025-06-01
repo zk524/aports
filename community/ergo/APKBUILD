@@ -19,10 +19,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/ergochat/ergo/archive/refs/t
 	ircd.yaml
 	"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	make CGO_ENABLED=1 build
 }

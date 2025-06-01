@@ -22,10 +22,6 @@ subpackages="
 source="$pkgname-$pkgver.tar.gz::https://github.com/pulumi/pulumi/archive/v$pkgver.tar.gz"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export PULUMI_SKIP_UPDATE_CHECK=true
 
 build() {
 	local _goldflags="-X github.com/pulumi/pulumi/sdk/v${pkgver%%.*}/go/common/version.Version=v$pkgver"

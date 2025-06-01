@@ -26,10 +26,6 @@ case "$CARCH" in
 	riscv64|ppc64le|s390x) options="$options !check"
 esac
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	for binary in buf protoc-gen-buf-breaking protoc-gen-buf-lint; do
 		go build -v ./cmd/$binary

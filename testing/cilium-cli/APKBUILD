@@ -17,10 +17,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/cilium/cilium-cli/archive/re
 	byteorder-add-loongarch-support.patch
 	"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build -v \
 		-ldflags "-X github.com/cilium/cilium-cli/internal/cli/cmd.Version=v$pkgver" \

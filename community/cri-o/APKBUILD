@@ -60,10 +60,6 @@ source="
 #   1.26.2-r0:
 #     - CVE-2022-4318
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export GOBIN="$GOPATH/bin"
 
 build() {
 	# https://github.com/cri-o/cri-o/blob/master/install.md#build-tags

@@ -22,10 +22,6 @@ options="!check" # needs to mount various things as root
 #     - CVE-2024-23652
 #     - CVE-2024-23653
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	mkdir -p out
 	go build -v \

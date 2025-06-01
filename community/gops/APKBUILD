@@ -11,10 +11,6 @@ makedepends="go"
 subpackages="$pkgname-bash-completion $pkgname-fish-completion $pkgname-zsh-completion"
 source="https://github.com/google/gops/archive/v$pkgver/gops-$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build
 

@@ -15,10 +15,6 @@ subpackages="
 source="$pkgname-$pkgver.tar.gz::https://github.com/oras-project/oras/archive/refs/tags/v$pkgver.tar.gz"
 builddir="$srcdir/oras-$pkgver"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _goldflags="
 	-X oras.land/oras/internal/version.Version=$pkgver

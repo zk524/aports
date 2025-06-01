@@ -17,10 +17,6 @@ source="https://gitlab.com/WhyNotHugo/darkman/-/archive/v$pkgver/darkman-v$pkgve
 builddir="$srcdir/$pkgname-v$pkgver"
 options="!check net"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-# tarballs lack git version metadata required for buildling
 export VERSION="$pkgver"
 
 build() {

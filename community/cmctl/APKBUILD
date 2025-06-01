@@ -16,10 +16,6 @@ subpackages="
 source="https://github.com/cert-manager/cmctl/archive/v$pkgver/cmctl-$pkgver.tar.gz"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	go build \
 		-ldflags "-X github.com/cert-manager/cert-manager/pkg/util.AppVersion=v$pkgver"

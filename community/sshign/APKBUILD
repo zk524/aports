@@ -11,10 +11,6 @@ source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~minus/sshign/archive/$pkgver
 	update-go-mod.patch"
 subpackages="$pkgname-doc"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	make PREFIX=/usr
 }

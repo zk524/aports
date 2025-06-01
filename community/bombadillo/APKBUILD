@@ -14,10 +14,6 @@ builddir="$srcdir/bombadillo"
 
 export GOPATH="$srcdir"
 export GOFLAGS="$GOFLAGS -trimpath -modcacherw"
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	make build
 }

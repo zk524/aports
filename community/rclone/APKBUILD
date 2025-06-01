@@ -16,10 +16,6 @@ source="
 	"
 options="!check net" # tests fail in CI due filesystem access
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 # secfixes:
 #   1.69.3-r0:
 #     - CVE-2025-30204

@@ -19,10 +19,6 @@ source="https://humungus.tedunangst.com/r/azorius/d/azorius-$pkgver.tgz
 	upgradedb.patch
 	"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	make
 }

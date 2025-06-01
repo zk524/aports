@@ -15,10 +15,6 @@ subpackages="
 source="$pkgname-$pkgver.tar.gz::https://github.com/kubevirt/kubevirt/archive/refs/tags/v$pkgver.tar.gz"
 builddir="$srcdir/kubevirt-$pkgver"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _goldflags="
 	-X kubevirt.io/client-go/version.gitVersion=v$pkgver

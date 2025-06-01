@@ -11,10 +11,6 @@ makedepends="go"
 checkdepends="bash"
 source="https://github.com/maaslalani/slides/archive/v$pkgver/slides-v$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export GOFLAGS="$GOFLAGS -modcacherw"
 
 build() {
 	make build

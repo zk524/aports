@@ -11,12 +11,6 @@ source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~cowingtonpost/maildir2rss/ar
 builddir="$srcdir/maildir2rss-v$pkgver"
 options="net !check" # no tests
 
-export GOPATH="$srcdir/go"
-export GOCACHE="$srcdir/go-build"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-export GOFLAGS="$GOFLAGS -modcacherw"
-
 build() {
 	make
 }

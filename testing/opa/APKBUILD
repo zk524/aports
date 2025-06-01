@@ -24,10 +24,6 @@ options="net" # go mod vendor
 #   1.4.2-r0:
 #     - CVE-2025-46569
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 prepare() {
 	default_prepare
 

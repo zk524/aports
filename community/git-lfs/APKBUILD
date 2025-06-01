@@ -38,10 +38,6 @@ options="!check net" # tests are failing during the Go 1.22.2 rebuild, downloadi
 #   address on ARM builders and so caused test failures.
 _goflags="$GOFLAGS -v -tags netcgo"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 prepare() {
 	default_prepare
 

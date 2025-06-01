@@ -15,10 +15,6 @@ subpackages="
 	"
 source="https://github.com/ahmetb/kubectx/archive/v$pkgver/kubectx-$pkgver.tar.gz"
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	for cmd in kubectx kubens; do
 		go build \

@@ -17,10 +17,6 @@ source="https://github.com/knative/client/archive/refs/tags/knative-v$pkgver.tar
 builddir="$srcdir/client-knative-v$pkgver"
 options="net" # download Go modules
 
-export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
-export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
-export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
-
 build() {
 	local _goldflags="
 	-X knative.dev/client/pkg/commands/version.Version=v$pkgver

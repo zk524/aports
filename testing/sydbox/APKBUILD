@@ -1,8 +1,9 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=sydbox
-pkgver=3.34.0
+pkgver=3.34.0_git20250602
 pkgrel=0
+_commit="093cb7e42489b39440b0a8c38a69bd59e310dc4a"
 pkgdesc="Rock-solid user-space kernel to sandbox applications on Linux"
 url="https://gitlab.exherbo.org/sydbox/sydbox"
 # ppx64le: error: literal out of range for `i32` --> src/hook.rs
@@ -24,12 +25,18 @@ subpackages="
 	$pkgname-utils
 	$pkgname-vim::noarch
 	"
-source="https://gitlab.exherbo.org/sydbox/sydbox/-/archive/v$pkgver/sydbox-v$pkgver.tar.gz
+#source="https://gitlab.exherbo.org/sydbox/sydbox/-/archive/v$pkgver/sydbox-v$pkgver.tar.gz
+#	make-install-no-build.patch
+#	make-fix-install.patch
+#	no-systemd.patch
+#	"
+#builddir="$srcdir/$pkgname-v$pkgver"
+source="https://gitlab.exherbo.org/sydbox/sydbox/-/archive/$_commit/sydbox-$_commit.tar.gz
 	make-install-no-build.patch
 	make-fix-install.patch
 	no-systemd.patch
 	"
-builddir="$srcdir/$pkgname-v$pkgver"
+builddir="$srcdir/$pkgname-$_commit"
 
 case "$CARCH" in
 armv7|loongarch64|x86)
@@ -127,7 +134,7 @@ vim() {
 }
 
 sha512sums="
-b5cb5e2c36d9d27857a8552d9569c34e663bd9d24b350d9ebaa87183fb93f73ad34507161cec26791afb109397072211cc40dc351fd47fd9bbe4f5c0e7b9881f  sydbox-v3.34.0.tar.gz
+9942bfcc6dbd671febb4d459e3b6c16b53f9b0120ddf40b145dfc972d10baf4ded7984bd8a78f13638e892ee7f67cf3c632f32091b657ec7658f320566d0f102  sydbox-093cb7e42489b39440b0a8c38a69bd59e310dc4a.tar.gz
 4360660412765a0b6985a8e164c4d8861f8db3b697b5f379dfbb656174652c4feb2e804002e03e8deb6e6fca76ae96c35d45e5e381bcfecf3758f05a447b51fa  make-install-no-build.patch
 d374ffe9b5d3b6fb9f148413d0c42018f8bf5b82513588f4e279bf562a0c14f715214f5efc0311b4e9bc3c72ca087633ecbe6a0ddb005544c3c981a3134c8adf  make-fix-install.patch
 262a718845c1008ed7e2c613e163ac34bc89c97bdfff67f7ea7a1cdbc4c70b152000094a06d0b2530a36b4f0ddcbfd0040a1daea2fdfaa68fa7a3d64a1bdcea0  no-systemd.patch

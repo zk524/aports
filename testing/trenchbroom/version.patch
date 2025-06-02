@@ -1,0 +1,15 @@
+Use version from environment instead of git
+
+--- TrenchBroom-2025.3/cmake/Utils.cmake
++++ TrenchBroom-2025.3-patched/cmake/Utils.cmake
+@@ -237,8 +237,8 @@
+     endif()
+ 
+     if(NOT ${GIT_DESCRIBE})
+-        set(${GIT_DESCRIBE} "unknown")
+-        message(WARNING "Unable to determine version description; using \"${${GIT_DESCRIBE}}\"")
++        set(${GIT_DESCRIBE} $ENV{OVERRIDE_VERSION})
++        message(STATUS "Using version description \"${${GIT_DESCRIBE}}\" from OVERRIDE_VERSION")
+     endif()
+ endmacro(GET_GIT_DESCRIBE)
+ 

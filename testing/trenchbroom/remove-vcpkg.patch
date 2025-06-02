@@ -1,0 +1,47 @@
+Patch out vcpkg and use system libs instead
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f23e9b971..ea1fdb572 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,9 +16,6 @@ if(POLICY CMP0063)
+   cmake_policy(SET CMP0063 NEW)
+ endif()
+ 
+-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+-set(VCPKG_OVERLAY_PORTS "${CMAKE_SOURCE_DIR}/vcpkg-overlay-ports/freeimage;${CMAKE_SOURCE_DIR}/vcpkg-overlay-ports/openexr")
+-
+ set(CMAKE_C_VISIBILITY_PRESET hidden)
+ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+@@ -115,14 +112,14 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+ # Prevent gtest from being installed
+ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+ 
++find_package(PkgConfig REQUIRED)
+ find_package(assimp CONFIG REQUIRED)
+-find_package(freeimage CONFIG REQUIRED)
+-find_package(freetype CONFIG REQUIRED)
++pkg_check_modules(freetype REQUIRED IMPORTED_TARGET GLOBAL freetype2)
+ find_package(Catch2 CONFIG REQUIRED)
+ find_package(fmt CONFIG REQUIRED)
+ find_package(GLEW REQUIRED)
+ find_package(miniz CONFIG REQUIRED)
+-find_package(tinyxml2 CONFIG REQUIRED)
++pkg_check_modules(tinyxml2 REQUIRED IMPORTED_TARGET GLOBAL tinyxml2)
+ 
+ # Find Qt and OpenGL
+ find_package(OpenGL REQUIRED)
+diff --git a/common/CMakeLists.txt b/common/CMakeLists.txt
+index c4e0ad248..ff332835b 100644
+--- a/common/CMakeLists.txt
++++ b/common/CMakeLists.txt
+@@ -1045,7 +1045,7 @@ set_target_properties(common PROPERTIES AUTOMOC TRUE)
+ target_include_directories(common PUBLIC ${COMMON_SOURCE_DIR})
+ target_link_libraries(common 
+   PUBLIC kdl vm Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Svg
+-  PRIVATE GLEW::GLEW OpenGL::GL upd tinyxml2::tinyxml2 miniz::miniz freeimage::FreeImage freetype assimp::assimp fmt::fmt-header-only)
++  PRIVATE GLEW::GLEW OpenGL::GL upd PkgConfig::tinyxml2 miniz::miniz "-lfreeimage" PkgConfig::freetype assimp::assimp fmt::fmt-header-only)
+ 
+ # use precompiled headers on CMake 3.16 or later
+ if (TB_ENABLE_PCH AND ${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")

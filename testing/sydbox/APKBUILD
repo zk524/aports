@@ -23,6 +23,7 @@ checkdepends="coreutils"
 subpackages="
 	$pkgname-doc
 	$pkgname-utils
+	$pkgname-pandora
 	$pkgname-vim::noarch
 	"
 #source="https://gitlab.exherbo.org/sydbox/sydbox/-/archive/v$pkgver/sydbox-v$pkgver.tar.gz
@@ -56,13 +57,16 @@ prepare() {
 
 	# NOTE: --targetu="$CTARGET" doesn't work here.
 	cargo fetch --locked
+
+	cd "$builddir"/pandora && cargo fetch --locked
 }
 
 build() {
 	cargo auditable build $_cargo_opts --release
 
-	cd lib
-	cargo auditable build --frozen --release
+	cd "$builddir"/lib && cargo auditable build --frozen --release
+
+	cd "$builddir"/pandora && cargo auditable build --frozen --release
 }
 
 check() {
@@ -95,6 +99,13 @@ oci() {
 	depends="$pkgname=$pkgver-r$pkgrel"
 
 	amove usr/bin/syd-oci
+}
+
+pandora() {
+	pkgdesc="Sydbox's log inspector & profile writer"
+
+	install -Dm0755 "$builddir"/pandora/target/release/pandora \
+		-t "$subpkgdir"/usr/bin/
 }
 
 utils() {

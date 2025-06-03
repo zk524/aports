@@ -87,9 +87,6 @@ check() {
 package() {
 	make install DESTDIR="$pkgdir" PREFIX=/usr
 
-	# Delete utils for running integration tests.
-	rm -rf "$pkgdir"/usr/bin/syd-test*
-
 	install -D -m644 src/esyd.sh -t "$pkgdir"/usr/libexec/
 	install -D -m644 data/user.syd-3 "$pkgdir"/usr/share/doc/$pkgname/user.syd-3.sample
 }

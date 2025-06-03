@@ -58,14 +58,18 @@ prepare() {
 	# NOTE: --targetu="$CTARGET" doesn't work here.
 	cargo fetch --locked
 
+	echo "Fetch for pandora"
 	cd "$builddir"/pandora && cargo fetch --locked
 }
 
 build() {
+	echo "Building sydbox with features: $_features"
 	cargo auditable build $_cargo_opts --release
 
+	echo "Building sydbox libs"
 	cd "$builddir"/lib && cargo auditable build --frozen --release
 
+	echo "Building sydbox's pandora"
 	cd "$builddir"/pandora && cargo auditable build --frozen --release
 }
 

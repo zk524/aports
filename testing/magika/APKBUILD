@@ -1,0 +1,32 @@
+# Contributor: mekyt <hello@mek.yt>
+# Maintainer: mekyt <hello@mek.yt>
+pkgname=magika
+pkgver=0.2.0
+pkgrel=0
+pkgdesc="Detect file content types with deep learning"
+url="https://github.com/google/magika"
+license="Apache-2.0"
+arch="all !x86 !s390x !riscv64 !loongarch64" # Same as onnxruntime
+makedepends="
+	cargo
+	onnxruntime-dev
+"
+source="
+	$pkgname-rust-v$pkgver.tar.gz::https://github.com/google/magika/archive/refs/tags/rust-v$pkgver.tar.gz
+"
+builddir="$srcdir/$pkgname-rust-v$pkgver"
+options="!check net" # shell scrip test suite and download rust packages
+
+build() {
+	cd rust/cli
+	cargo build --release
+}
+
+package() {
+	cd rust/target/release
+	install -Dm755 magika -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+ee3dd751cb619df82be545d7516f845d011114105364802b253e32c27d55062bbe43622f40f0fe522cde061fe24623a1f3de491594b7b0bcc6edcc3e57258217  magika-rust-v0.2.0.tar.gz
+"

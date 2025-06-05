@@ -1,7 +1,7 @@
 # Contributor: Konstantin Kulikov <k.kulikov2@gmail.com>
 # Maintainer: Adam Jensen <adam@acj.sh>
 pkgname=bpftrace
-pkgver=0.23.2
+pkgver=0.23.4
 pkgrel=0
 pkgdesc="High-level tracing language for Linux eBPF"
 url="https://github.com/iovisor/bpftrace"
@@ -92,5 +92,5 @@ tools_doc() {
 }
 
 sha512sums="
-80d7b91c3f80efcc69bea57a254fec2727050cbd39fce12786f796289f1fed92b7d9be91d5e9f5b348709f41cf3cffdf73d2321fbba2e54ff90648ecd8aab85e  bpftrace-0.23.2.tar.gz
+a3450319d6b03338a5663c0ca676b2cb00fa126ad8d8d5e3c8ee12e92b34659a715cf1b4e631310a375aa6645ca38770adc5fb15e48f9ebca877024d3dc1eb46  bpftrace-0.23.4.tar.gz
 "

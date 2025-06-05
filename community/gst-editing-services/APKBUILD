@@ -1,7 +1,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gst-editing-services
-pkgver=1.24.12
+pkgver=1.26.2
 pkgrel=0
 pkgdesc="GStreamer Editing Services Library"
 url="https://gstreamer.freedesktop.org"
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-5a4151db0a2db45314188812a55cc9b1421f59c72dccc75c33292e6d452fa42c5bb7c237efa16045d1a2ea5eff6b03e628820b64b836f30b624b194440225125  gst-editing-services-1.24.12.tar.xz
+6a83ccad875acdf10e1ba7634de6980ed949e7fd3238ea70a92e5c17e101a1dd7c39ab50072c2cc1c0c37c37c57e92b05bddcf07388a5950dafdf2b911c7f487  gst-editing-services-1.26.2.tar.xz
 "

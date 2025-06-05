@@ -1,6 +1,6 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=helm-unittest
-pkgver=0.8.1
+pkgver=0.8.2
 pkgrel=0
 pkgdesc="Helm plugin to run unit test for Helm charts"
 url="https://github.com/helm-unittest/helm-unittest"
@@ -8,10 +8,10 @@ arch="all"
 license="MIT"
 makedepends="go"
 checkdepends="yq-go"
+install="helm-unittest.pre-install"
 source="
 	$pkgname-$pkgver.tar.gz::https://github.com/helm-unittest/helm-unittest/archive/refs/tags/v$pkgver.tar.gz
 	fix-test-case-32bit.patch
-	helm-unittest.pre-install
 	"
 options="net" # download Go modules
 
@@ -43,7 +43,6 @@ package() {
 }
 
 sha512sums="
-ddc471817d1314d248b00d13620d90cb2cc6bcb4be5a6f76fec4eb59e2e624bfd567101d1b5241f499aac834bab5a6977484ca2662162e854ffaa0888d82bf75  helm-unittest-0.8.1.tar.gz
+451f64a10ddef03b3a3cb3d6b84209978b051edb5d2c3086aab48cf37f4a5405536342c5d16b35d3b312d4e755c5e1141e4ff7a381e6d6153b90f62908e5f714  helm-unittest-0.8.2.tar.gz
 500105396c20e3040e12dd0494dbf92e1d0fb01b0a51e3e0f47110ee5241ca9aabc5f5f056d44bf8e7a81a6de2f9c4771e6486e441fb14a0a265015367dd7c83  fix-test-case-32bit.patch
-82ada6f36b79e0104c506ec5ce88c238f62e72bbee64dcc2dc178dc824e6c6a6cfc4ebfe68a68844c0513b0ac15266358a0a7e43b5f1f42e16cd231b6fde2752  helm-unittest.pre-install
 "

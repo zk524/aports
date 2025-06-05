@@ -1,6 +1,6 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=melange
-pkgver=0.23.8
+pkgver=0.26.4
 pkgrel=0
 pkgdesc="Build apk packages using declarative pipelines"
 url="https://github.com/chainguard-dev/melange"
@@ -37,5 +37,5 @@ package() {
 }
 
 sha512sums="
-b6897988a658e1a990c5d141964384c42adf0b3ccc3079eb2d803924754cc4d95e7df17ed8937f34565306293901b90dceaf4efcd82f98dfe3b44359ab4132a3  melange-0.23.8.tar.gz
+adfc83153d6c8a89521e686f45a514920f35371a5977f5c6aa1f58774eb42a75365d1e4f8959a3cf41d7eae2f85c23ec9ab57ede655256a8e077f8fdef55be50  melange-0.26.4.tar.gz
 "

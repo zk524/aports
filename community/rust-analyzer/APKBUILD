@@ -1,14 +1,12 @@
 # Contributor: S.M Mukarram Nainar <theone@sm2n.ca>
 # Maintainer: team/rust <alpine@ptrcnull.me>
 pkgname=rust-analyzer
-pkgver=2025.04.28
+pkgver=2025.06.02
 _pkgver=${pkgver//./-}
 pkgrel=0
 pkgdesc="Rust compiler front-end for IDEs"
 url="https://github.com/rust-lang/rust-analyzer"
-# armhf, armv7, x86: some tests fail, not supported by upstream
-# riscv64, s390x: blocked by cargo/rust
-arch="aarch64 ppc64le x86_64 loongarch64"
+arch="all"
 license="MIT OR Apache-2.0"
 depends="rust-src"
 makedepends="cargo mimalloc2-dev cargo-auditable"
@@ -56,5 +54,5 @@ package() {
 }
 
 sha512sums="
-82367c8764fcf144abfe743cf24b3e4d2d8416dac7c6f56444b80437f46159d9887b8051d3546cfa6ca52743d13b0782522f8007f00438cb549b7292eacb7f99  rust-analyzer-2025.04.28.tar.gz
+149c52a12e920ec2ef218f93ae247182129048b855f6da11132c4c243886dbe9ad2fe3c7c9f90ae0d8c60a535b7603894597e95b1d784db72cdcc79a3707e45f  rust-analyzer-2025.06.02.tar.gz
 "

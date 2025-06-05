@@ -1,7 +1,7 @@
 # Contributor: Sergei Lukin <sergej.lukin@gmail.com>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=libarchive
-pkgver=3.7.9
+pkgver=3.8.1
 pkgrel=0
 pkgdesc="library that can create and read several streaming archive formats"
 url="https://libarchive.org/"
@@ -70,5 +70,5 @@ tools() {
 }
 
 sha512sums="
-d8918445e2536eb29c2d6a6c8cd3671a8525be1619009a2e7c3a9c2a821b51939172dfccc25bfd62fec2a17fb01796b4f522b0ba72b31e3de9b9658c44c46345  libarchive-3.7.9.tar.xz
+c794d1c6e6a6dcf4072438dc4e8ce5b1530bbe9ad40afad18f4e6a444aa5d85e48c58cfbd8af41d4d25e93844956de3ce262cb1d68097d2e5f95bd87b5a982b7  libarchive-3.8.1.tar.xz
 "

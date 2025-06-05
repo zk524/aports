@@ -1,8 +1,8 @@
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 # Maintainer: Oliver Smith <ollieparanoid@postmarketos.org>
 pkgname=pmbootstrap
-pkgver=3.3.2
-pkgrel=1
+pkgver=3.4.2
+pkgrel=0
 pkgdesc="Sophisticated chroot/build/flash tool to develop and install postmarketOS"
 url="https://gitlab.postmarketos.org/postmarketOS/pmbootstrap"
 arch="noarch"
@@ -36,6 +36,6 @@ package() {
 }
 
 sha512sums="
-ed84f804c34800bf7edc8c9c009308a94ee94541baf26f457838b54531fd95bd555f1e423dde7664c80eb3cbb58f17b67953ea6cacf203cdf8af832db9c991c5  pmbootstrap-3.3.2.tar.bz2
+a6fa96fea927eb97bf0f7404ceb5210c4fd667347f82b3f4896c6033b7644336d9d2ba1aba577abc769a56ce5431b29bb85879b400f5fc5c41f471bc3bf8f621  pmbootstrap-3.4.2.tar.bz2
 f8026ab32234b885e69252459047f70160c54319113bc449000aa7c05bd016f00a46cee05c8f5251682f967ab44a12c06fbbb3c02d0a57ccb836cff810ce1a40  modules-load.conf
 "

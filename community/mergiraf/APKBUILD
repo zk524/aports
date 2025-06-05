@@ -1,7 +1,7 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=mergiraf
-pkgver=0.7.0
+pkgver=0.10.0
 pkgrel=0
 pkgdesc="syntax-aware git merge driver for a growing collection of programming languages and file formats"
 arch="all"
@@ -51,5 +51,5 @@ package() {
 }
 
 sha512sums="
-ec3c302ff74b2693eb97cf99b8c5aaea5bdf5b98a8169ee8cc9e16bb5dd9f84d905d715875b7494e7506cd59d44c052be4713cda1b25b441e54daba512071e84  mergiraf-0.7.0.tar.gz
+3af24c334d07b84b9311e930fe604084774828acb1bf50978af9928770a6b334781b99a7a50cd9ce9618bed87bb5acf4483f496f7bb76a1653e32194e43bb1a5  mergiraf-0.10.0.tar.gz
 "

@@ -1,7 +1,7 @@
 # Contributor: Dhruvin Gandhi <contact@dhru.vin>
 # Maintainer: Dhruvin Gandhi <contact@dhru.vin>
 pkgname=hledger
-pkgver=1.42.1
+pkgver=1.43
 pkgrel=0
 pkgdesc="Command-line interface for the hledger accounting system"
 _uipkgdesc="Curses-style terminal interface for the hledger accounting system"
@@ -120,9 +120,8 @@ webopenrc() {
 	install_if="openrc $pkgname-web=$pkgver-r$pkgrel"
 	amove /etc/init.d/hledger-web
 }
-
 sha512sums="
-ae45eea78e6779bd564a2beb1c4a55473b7159eeb6376fa33b48f3bc80ace31643188c26340467c7fe44fb50950eac270cd80d0186fb9eda2fb2c31ee61885fc  hledger-1.42.1.tar.gz
-ac02b7e71cbfa44b27f18071b03ea88dabc7c155774b66c03536cfe5d1f2e8e5be906c835b2479ba2641f0d932a5782ceac5e4a6981ea80f6a077681c23f22fc  cabal.project.freeze
+32d3e1e958eb326c5d0a5bfd76139333671d442c9a2ea9cc3a26fa7e4188a40c1a3640447c8b4757ff231277a13a829bc29e9d2e8dbdfbcf2ffcf1c5f4e0c336  hledger-1.43.tar.gz
+99243265aa94763eb0e539577d87bd629a8c938deee9f4b3d9b222248290d5a57665c3720b0acc56d75d27df596481cb8c8a2f5b55720c05581622cadb77dc83  cabal.project.freeze
 4fd0898b29736c1d7f5b41b1ccca8734f38999e5ba88656e092724a7ce4ed346b4f86d627c99be77934eaa7cd86e33ce20a33a60650f1ad8a527c57387179365  hledger-web.initd
 "

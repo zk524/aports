@@ -1,8 +1,8 @@
 # Maintainer: Celeste <cielesti@protonmail.com>
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=inko
-pkgver=0.18.1_git20250506
-_gitrev=05d63414e5aace3336d42b54b8d81a56422a4a38
+pkgver=0.18.1_git20250517
+_gitrev=4e6a3a99157e348893aea9f8a05ad7059cdf54ef
 pkgrel=0
 _llvmver=20
 pkgdesc="Language for building concurrent software"
@@ -44,6 +44,6 @@ package() {
 }
 
 sha512sums="
-ccf33470cec57650f995029795480412e572803fab3c6ea2e458f551690f201b1b64719b6b96e9a9ebdfa2a778397e0b34bdb6018cb56d86ba0b9abc8a066806  inko-05d63414e5aace3336d42b54b8d81a56422a4a38.tar.gz
+8d21cfae145ecadd5e5771346ffc648f1f8ffb85ccdda4313e4217d9f67eb5bf36a7061c50b12c9d0cabcd8246673eaed1d6716dfe0c7b8ac3e88d89b3f3a1ac  inko-4e6a3a99157e348893aea9f8a05ad7059cdf54ef.tar.gz
 15a95d2f7ba385202efd3a6a861cf91cddec3c6b9ed9ef53ac5d1e9f893e31035d26a05872528e005688864b5296daeb0752b960311928335f323d80d6559250  cargo-auditable.patch
 "

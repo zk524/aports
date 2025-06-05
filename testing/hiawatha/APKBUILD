@@ -1,17 +1,19 @@
-# Maintainer: Kurt Marasco <celilo@lavabit.com>
+# Contributor: Kurt Marasco <celilo@lavabit.com>
 # Contributor: Pascal Ernster <aur at hardfalcon dot net>
 # Contributor: Stuart Cardall <developer at it-offshore dot co.uk>
+# Maintainer: Celeste <cielesti@protonmail.com>
+maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=hiawatha
 pkgver=11.6
-pkgrel=0
+pkgrel=1
 _php=php81
-pkgdesc='Secure and advanced webserver'
-url='https://hiawatha.leisink.net/'
+pkgdesc="Secure and advanced webserver"
+url="https://hiawatha.leisink.net/"
 arch="all"
-license='GPL-2.0-only'
+license="GPL-2.0-only"
 options="suid !check"
 subpackages="$pkgname-doc $pkgname-openrc $pkgname-letsencrypt::noarch"
-makedepends="cmake libxml2-dev libxslt-dev mbedtls-dev"
+makedepends="cmake libxml2-dev libxslt-dev mbedtls-dev samurai"
 source="https://hiawatha.leisink.net/files/hiawatha-$pkgver.tar.gz
 	hiawatha.initd
 	hiawatha.conf.sample
@@ -22,7 +24,7 @@ build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
 		CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
 	fi
-	cmake -B build \
+	cmake3.5 -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=True \

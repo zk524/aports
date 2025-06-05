@@ -2,7 +2,7 @@
 # Contributor: Frank Oltmanns <alpine@oltmanns.dev>
 maintainer="Callum Andrew <contact@candrew.net>"
 pkgname=anki
-pkgver=25.02.4
+pkgver=25.02.6
 pkgrel=0
 # Remember to update the following lines when updating the pkgver
 # 1. checkout the release tag
@@ -10,7 +10,7 @@ pkgrel=0
 # 3. ftl -> git submodule
 _tags_ftl_core="0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e"
 _tags_ftl_desktop="17216b03db7249600542e388bd4ea124478400e5"
-_anki_commit="acc6aa7f"
+_anki_commit="a60e2b3b"
 
 # This APKBUILD and the patches use the PKGBUILD for Anki 23.10 as
 # a basis.
@@ -38,42 +38,41 @@ options="!check net" # no test suite provided, cargo deps
 # that libxcrypt-compat has been removed from that list.
 makedepends="
 	bash
-	rsync
-	ninja
-	git
 	cargo
+	git
+	nodejs
+	protoc
 	py3-installer
 	py3-wheel
-	nodejs
+	rsync
+	samurai
 	yarn
-	protoc
 	"
 
 depends="
 	python3
-	py3-stringcase
 	py3-beautifulsoup4
-	py3-waitress
 	py3-requests
+	py3-stringcase
+	py3-waitress
 
 	py3-decorator
+	py3-distro
 	py3-markdown
 	py3-orjson
 	py3-protobuf
 	py3-pysocks
-	py3-distro
 
-	py3-jsonschema
-	py3-send2trash
 	py3-certifi
 	py3-flask-cors
-	py3-qt6
+	py3-jsonschema
 	py3-pyqt6-webengine
+	py3-qt6
 	qt6-qtmultimedia
 	qt6-qtsvg
+	py3-send2trash
 	"
 subpackages="$pkgname-pyc"
-install="$pkgname.post-install $pkgname.post-upgrade"
 source="
 	anki-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs/tags/$pkgver.tar.gz
 	anki-core-i18n-$_tags_ftl_core.tar.gz::https://github.com/ankitects/anki-core-i18n/archive/$_tags_ftl_core.tar.gz
@@ -119,7 +118,7 @@ prepare() {
 
 	# mask pip-sync as we provide dependencies ourselves
 	local venv="out/pyenv"
-	python -m venv --system-site-packages --without-pip "$venv"
+	python3 -m venv --system-site-packages --without-pip "$venv"
 	printf '#!/bin/bash\nexit 0' > "$venv/bin/pip-sync"
 	chmod +x "$venv/bin/pip-sync"
 }
@@ -128,7 +127,7 @@ build() {
 	export YARN_CACHE_FOLDER="$srcdir/$_caches_yarn" # do not litter in ~
 
 	#use local binaries instead of downloading them
-	export PYTHON_BINARY=$(which python)
+	export PYTHON_BINARY=$(which python3)
 	export PROTOC_BINARY=$(which protoc)
 	export NODE_BINARY=$(which node)
 	export YARN_BINARY=$(which yarn)
@@ -145,7 +144,7 @@ build() {
 
 package() {
 	for file in out/wheels/*.whl; do
-		python -m installer --destdir="$pkgdir" $file
+		python3 -m installer -d "$pkgdir" $file
 	done
 
 	install -Dm644 qt/bundle/lin/anki.desktop "$pkgdir"/usr/share/applications/anki.desktop
@@ -153,7 +152,7 @@ package() {
 }
 
 sha512sums="
-d371c79e6f78af07420c7384a47eef63e6764775386c94fa52203d2bb03929b8176b51e042de70613d1985317c840fcb3ff9c9cb9f7147d19312a4e505d4b766  anki-25.02.4.tar.gz
+acb9f29842f8025752fa4dd3e5de58b6f066c85f6862d97dd44e20fe622dd49347057f8c97174c7477f5bb291210af477bd58b6e9e3f18ebde46f54c1e04380c  anki-25.02.6.tar.gz
 c72eaea9e0f350d092a44f7623a7cfdcb74ff99a97ca4b53c51b1b26af387c9c6cd64bfca3dc4577c14c3ee4040b8ce1a7a50f2e209b0fa47c5297f97c92a910  anki-core-i18n-0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e.tar.gz
 6d91607c6b0805e6dfce8a93dbf46ac945e9b1631aa054cb98e513d7a6da64d905035b8da8ea5d10c0d700a0aa96b056748d956342fe4ddf7232f7f7540ee88a  anki-desktop-ftl-17216b03db7249600542e388bd4ea124478400e5.tar.gz
 36c3bddb5de84f0f5eebe46b506b9723ecc80dd69281b3d2ffc9842fa2db181ececd8232ae0b3366bcfd5cb68a4d760abcadd3dada2a7ce2d2da26586a132e09  no-update.patch

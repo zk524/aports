@@ -1,7 +1,7 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=aws-crt-cpp
-pkgver=0.32.4
+pkgver=0.32.7
 pkgrel=0
 pkgdesc="C++ wrapper around the aws-c-* libraries. Provides Cross-Platform Transport Protocols and SSL/TLS implementations for C++"
 url="https://github.com/awslabs/aws-crt-cpp"
@@ -61,5 +61,5 @@ package() {
 }
 
 sha512sums="
-f54da1a7b64cc8c2f9961386609f228ee794441f471f60bc5a7618159edcdafb49e2e922de59a3f26beaccb8be00e8fbec2efbcae68b00fcadb69c6453505cff  aws-crt-cpp-0.32.4.tar.gz
+4931f59a3e7846ffdbf0396fe991f5ae58385aa03b5c6967cde795415e8b4b11d896437c80e6011535d9de66098a0a357f4cd24eb89e05d6000b393276b3dcac  aws-crt-cpp-0.32.7.tar.gz
 "

@@ -1,6 +1,6 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=dooit
-pkgver=3.1.0
+pkgver=3.2.2
 pkgrel=0
 pkgdesc="TUI todo manager"
 url="https://dooit-org.github.io/dooit/"
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-54b79d7a60f78962d0792c5f7c019110a5c3c18919235fa2b875e488d4299a325278f421373d6f5f33dc75d282bb722bde634b31e10161d7ac167428eb1b2207  dooit-3.1.0.tar.gz
+d7abfe74a9c5771748709fce93a9c4da401bff995dc8cbc2d74e8a1ded21f9afd81f0c043c5750cb8bb9582c90682b95bcacc3bf8f901d2974fe67a4abc98018  dooit-3.2.2.tar.gz
 "

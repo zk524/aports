@@ -1,7 +1,7 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gst-plugins-good
-pkgver=1.24.12
-pkgrel=0
+pkgver=1.26.2
+pkgrel=1
 pkgdesc="GStreamer streaming media framework good plugins"
 url="https://gstreamer.freedesktop.org"
 arch="all"
@@ -59,7 +59,7 @@ makedepends="
 	wavpack-dev
 	zlib-dev
 	"
-case "$CARCH" in 
+case "$CARCH" in
 	armhf)
 		;;
 	*)
@@ -79,10 +79,13 @@ esac
 ldpath="/usr/lib/gstreamer-1.0"
 source="https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-$pkgver.tar.xz
 	flaky-test.patch
-	0001-qtmux-Implement-rotation-tag-support.patch
+	s390x-arithmetic-exception_patch
 	"
 
 # secfixes:
+#   1.26.2-r0:
+#     - CVE-2025-47219
+#     - CVE-2025-47183
 #   1.24.10-r0:
 #     - CVE-2024-47598
 #     - CVE-2024-47539
@@ -130,6 +133,14 @@ source="https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-
 #     - CVE-2016-9808
 #     - CVE-2016-10198
 #     - CVE-2016-10199
+
+prepare() {
+	default_prepare
+	case "$CARCH" in
+	s390x)
+		patch -Np1 < "$srcdir"/s390x-arithmetic-exception_patch
+	esac
+}
 
 build() {
 	local qt5_qml="enabled"
@@ -200,7 +211,7 @@ gtk() {
 	done
 }
 sha512sums="
-27d483749a9f6e60cfbbc7afc6b52b774240df8fc62104b33bc59dc50faf271c2703a58acea625a6372f27b8fc85d9da08b6c1447a12bd3d262c48cb4c32ef3c  gst-plugins-good-1.24.12.tar.xz
+f96d3d5bff134075273bff64dafac932cb2577f61d7bdb3d4b8d4cad9166c67822c22c8b25fb836094407c7d2a62410fb93ad814827775bd9dcee146078cee4d  gst-plugins-good-1.26.2.tar.xz
 e471a892c511c501fdd336cd1729df4e955e266a395260db50665b4ee717d881a007ae84873c57e386931c042ce08ee8f3ab8e102ba251632f724e167b5af913  flaky-test.patch
-7a0b8b236650d20b5af3a520797ea25387bf84ed18628121ac79a4970f45533b48fc16025a0f56a4536b83f8bdded3a80778ef7c7435cf613e952aca6fd462ef  0001-qtmux-Implement-rotation-tag-support.patch
+9c6d0527a091e929770072e9cc8294da31ba4f0bc9b1bbd287948e70c1999efc74d1cff7ab412d159f1ba4b4a3048886503170dbe7013e7005951d1dd4a0c677  s390x-arithmetic-exception_patch
 "

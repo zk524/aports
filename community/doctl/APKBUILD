@@ -1,7 +1,7 @@
 # Contributor: Will Sinatra <wpsinatra@gmail.com>
 # Maintainer: Will Sinatra <wpsinatra@gmail.com>
 pkgname=doctl
-pkgver=1.125.1
+pkgver=1.129.0
 pkgrel=0
 pkgdesc="Official command line interface for the DigitalOcean API"
 url="https://github.com/digitalocean/doctl"
@@ -15,6 +15,7 @@ subpackages="
 	"
 source="https://github.com/digitalocean/doctl/archive/v$pkgver/doctl-$pkgver.tar.gz
 	enable-cgo-in-tests.patch"
+options="net"
 
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
@@ -63,6 +64,6 @@ package() {
 }
 
 sha512sums="
-7bff369a076e48ab000c7978180a5004d36fa80f98053b8112a407b93cfa3cfdf7aba92fb36bbfd8b40ae64e7d2c3b27a4adef3bd2cc226b3de4302ff2f8d932  doctl-1.125.1.tar.gz
+23210d1cc2806f2238132e269692361bc06ed90fb957311d379d0fed3924f18a9db2a5851b0f318af8169ee4fab1ff72f313ad45203fe301aa7a25d193fceab4  doctl-1.129.0.tar.gz
 3fa9d1668136d3c24922da611f8c27f0eb69d14516c8c4e2bceef161aeadaa0d3bfe5ca562a278a7c56791dd5dbfbbaa8bc2a87235772bd5c455cd46c7654078  enable-cgo-in-tests.patch
 "

@@ -1,6 +1,6 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gst-libav
-pkgver=1.24.12
+pkgver=1.26.2
 pkgrel=0
 pkgdesc="GStreamer streaming media framework libav plugin"
 url="https://gstreamer.freedesktop.org"
@@ -45,6 +45,6 @@ doc() {
 }
 
 sha512sums="
-ba56b5ba2560cf3b1def2776a635781112a750e0133fa86628b96b83f3075a1482d1bee3dd3022bc3d4829ce691ef1879a3f96db010267b56bc32814eb1c5f3e  gst-libav-1.24.12.tar.xz
+86aa548ad946d96fa701ddf702b319247ab6bcb5020d4ab7a6ddfec5cf999d27ea205cd6e36ac9b6cc43b20feaa40b2bcac74d21509c187487e7e26df3b4f4bb  gst-libav-1.26.2.tar.xz
 b6ea595d0875c22b69fb7c32ce3e03e187ce8c76ad5992fd709500507fc89e021f6f53fc951a61b5edf0312963bf7d313542a3970bbab27e335887e5db34d26b  flaky.patch
 "

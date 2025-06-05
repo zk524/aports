@@ -2,7 +2,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
-pkgver=20.1.4
+pkgver=20.1.6
 pkgrel=0
 _llvmver=${pkgver%%.*}
 _prevllvmver=$((_llvmver - 1))
@@ -91,6 +91,6 @@ doc() {
 }
 
 sha512sums="
-a01584c4a48f7c884cce63d6c5256ba2b9f709b87dee80282d6d1baca9daa962e99637f020a6f4c86018ab3e0cc9eacd580b3933bf9c0e60d59c597163b1d74a  lld-20.1.4.src.tar.xz
-ca585812d0f704537c329eb41303d4f71f5686f535bd8b7a9b63fb4befe768519c995454efbdbe51ec44e4989173eefd59ae8eb23652b7eda8bac623a977c235  cmake-20.1.4.src.tar.xz
+519f2fed14c35098363fed611f235759c69749e091b8b3661c61430dc2e85f65d43155dcb17352be0a63280527b7e38552b692672c6fd2202da84c992100d39c  lld-20.1.6.src.tar.xz
+6606f362bc84d986bc54925ea67a9cdd3ca50b730a6a308949ce851ee43d137b62e1bad11292af071224f80313501c18b1f291bf1084ba08bfa27adc5627ab83  cmake-20.1.6.src.tar.xz
 "

@@ -1,7 +1,7 @@
 # Maintainer: Struan Robertson <contact@struanrobertson.co.uk>
 pkgname=py3-pytest-datadir
 _pkgname=pytest-datadir
-pkgver=1.6.1
+pkgver=1.7.1
 pkgrel=0
 pkgdesc="pytest plugin for test data directories and files"
 url="https://github.com/gabrielcnr/pytest-datadir"
@@ -43,5 +43,5 @@ package() {
 
 
 sha512sums="
-fe5ff206771f4998cdfa6ea6135d500c5ea7a730d739712998bcd4f5a933ca89fd6fb0b0058134e39cbcc666d8df7fb10bd72635e5af266a814bd8834d6a1d26  pytest-datadir-v1.6.1.tar.gz
+506b7749a7e252d3c495d283acdf04330d3db6af85c4035d43d674d1da67918a601c9042d788bf242929639b9b304c5cec4a6b11aae9ad8f0cb706118344cbd8  pytest-datadir-v1.7.1.tar.gz
 "

@@ -1,6 +1,6 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gstreamer
-pkgver=1.24.12
+pkgver=1.26.2
 pkgrel=0
 pkgdesc="GStreamer streaming media framework"
 url="https://gstreamer.freedesktop.org"
@@ -101,5 +101,5 @@ ptp_helper() {
 }
 
 sha512sums="
-ffc349689d0b5435a1c690a049dc45316bf4f0b58f24997bce393884939b320009443bdd7f9b23d252fc47e79c36ca2a9da36386bc8a25d40ad66a86bba746fd  gstreamer-1.24.12.tar.xz
+f17e724273514caecf71b0cb67d2921398b9dcbeedf7d323472e86d991da61422de6650117cc750713cfc09d09614b19181f4ef7059e9b943fdafa3c7bc5cb30  gstreamer-1.26.2.tar.xz
 "

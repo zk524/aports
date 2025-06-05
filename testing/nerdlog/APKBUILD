@@ -1,13 +1,16 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=nerdlog
-pkgver=1.0.0
+pkgver=1.9.0
 pkgrel=0
+_commit=55c7c78
+_date=2025-05-19
 pkgdesc="A fast, remote-first, multi-host log TUI, timeline histogram & no central server"
 url="https://github.com/dimonomid/nerdlog"
 license="BSD-2-Clause"
 arch="all"
 makedepends="go libx11-dev"
+subpackages="$pkgname-doc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/dimonomid/nerdlog/archive/refs/tags/v$pkgver.tar.gz
 	update-modules.patch
 	"
@@ -21,7 +24,12 @@ export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
 export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
 
 build() {
-	go build -o bin/nerdlog ./cmd/nerdlog-tui
+	go build -o bin/nerdlog -ldflags "\
+			-X 'github.com/dimonomid/nerdlog/version.version=$pkgver' \
+			-X 'github.com/dimonomid/nerdlog/version.commit=$_commit' \
+			-X 'github.com/dimonomid/nerdlog/version.date=$_date' \
+			-X 'github.com/dimonomid/nerdlog/version.builtBy=AlpineLinux' "\
+		./cmd/nerdlog
 }
 
 check() {
@@ -30,9 +38,11 @@ check() {
 
 package() {
 	install -Dm0755 bin/"$pkgname" -t "$pkgdir"/usr/bin
+
+	install -Dm0644 docs/*.md -t "$pkgdir"/usr/share/doc/"$pkgname"/
 }
 
 sha512sums="
-4a3aa2f1acaddbf3ada174c6a3c3918c8c8c94c0ed1128f893c9ea4298c63c72350f08f60e5e0489a70f9b5125c3879ab5fbe94533c334e64c37421ceb5cb522  nerdlog-1.0.0.tar.gz
-fdb1c24569adcc672952997b8ba196f0fb2e69faa1d63983c587ab113b5003276e49eb50564d5b899ee67fa98476b960877f94a72e696552ce370ec56af223e2  update-modules.patch
+35af89ff74282bd610380c95f6828f6b9fd1f3a0eb116b737eb05d30f301afafafb1253c3c82a8d5f59c20c7450c05aea8ae7e862fedd3d700e63fd82342ab06  nerdlog-1.9.0.tar.gz
+36a0a494f8f8ce0651d9fc738cfc34af5b6e32cb84aaf86fc8fb67c9426468b1f8fc46b48de8797301e07d2682ec11e7fffad7e13c7c8c898b62f54aedff58b4  update-modules.patch
 "

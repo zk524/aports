@@ -1,14 +1,14 @@
 # Contributor: Sergei Lukin <sergej.lukin@gmail.com>
 # Contributor: Valery Kartel <valery.kartel@gmail.com>
 # Contributor: Łukasz Jendrysik <scadu@yandex.com>
-# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 
 # RESTRICTED: Do NOT enable the rustls or hyper backends, as they depend on Rust
 # and Rust is not yet available on all architectures.  Any commit which changes
 # this aport from arch=all WILL be reverted.
 
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=curl
-pkgver=8.13.0
+pkgver=8.14.1
 pkgrel=1
 pkgdesc="URL retrival utility and library"
 url="https://curl.se/"
@@ -32,14 +32,20 @@ subpackages="$pkgname-dbg $pkgname-static $pkgname-doc $pkgname-dev libcurl"
 if [ -z "$BOOTSTRAP" ] && [ -z "$APORTS_BOOTSTRAP" ]; then
 	subpackages="$subpackages $pkgname-zsh-completion $pkgname-fish-completion"
 fi
-source="https://curl.se/download/curl-$pkgver.tar.xz
-	0001-http-In-alt-svc-negotiation-only-allow-supported-HTT.patch"
+source="https://curl.se/download/curl-$pkgver.tar.xz"
 options="net" # Required for running tests
 if [ -n "$BOOTSTRAP" ] || [ -n "$APORTS_BOOTSTRAP" ]; then
 	options="$options !check" # remove python3 dependency
 fi
+provides="wcurl=$pkgver-r$pkgrel"
+replaces="wcurl"
 
 # secfixes:
+#   8.14.1-r0:
+#     - CVE-2025-5399
+#   8.14.0-r0:
+#     - CVE-2025-5025
+#     - CVE-2025-4947
 #   8.12.0-r0:
 #     - CVE-2025-0167
 #     - CVE-2025-0665
@@ -218,7 +224,7 @@ build() {
 		--with-libidn2 \
 		--with-nghttp2 \
 		--with-openssl \
-		--with-ca-bundle=/etc/ssl/cert.pem \
+		--with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
 		--with-ca-path=/etc/ssl/certs \
 		--with-zsh-functions-dir \
 		--with-fish-functions-dir \
@@ -265,6 +271,5 @@ dev() {
 }
 
 sha512sums="
-d266e460f162ee455b56726e5b7247b2d1aa5265ae12081513fc0c5c79e785a594097bc71d505dc9bcd2c2f6f1ff6f4bab9dbd9d120bb76d06c5be8521a8ca7d  curl-8.13.0.tar.xz
-e0d0a2038968aec8e0d1a2301cbb2f64df5a78d31a3722fb01192bc2537297ca6651ad8641d8f2dd0e8242667b1f78cba9e519172403dd74a06b7de448316d5f  0001-http-In-alt-svc-negotiation-only-allow-supported-HTT.patch
+7f6eae04cc23c50fc41d448aa28dfa59141018009e42c5b1e3f4e0d40c0633460b4e6eec05dfc290f7953671096abfa70a8b5443fccdd3f1be6be32ac10b31d9  curl-8.14.1.tar.xz
 "

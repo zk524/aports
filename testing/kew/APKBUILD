@@ -1,7 +1,7 @@
 # Contributor: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
 # Maintainer: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
 pkgname=kew
-pkgver=3.2.0
+pkgver=3.3.3
 pkgrel=0
 pkgdesc="A terminal music player with album art & visualizer"
 url="https://github.com/ravachol/kew"
@@ -9,7 +9,6 @@ arch="all"
 license="GPL-2.0-or-later"
 makedepends="
 	chafa-dev
-	curl-dev
 	faad2-dev
 	fftw-dev
 	glib-dev
@@ -33,5 +32,5 @@ package() {
 }
 
 sha512sums="
-2c6727f7b1ca66c98a2c2a301fdd7c9ed0f53fb03490bd19509cb452dba1166c6213009fa74bea1074be27d462ae60f80a4c39fa3935258aa6bfecd47c03b824  kew-3.2.0.tar.gz
+0ce71c1032b259aa3a0dc320a5f43f301c518364317294b270806936f6bd4ef9ac9247e4cdedeb01b55bccaa7f284d3eceb78c70596f90add4d9cddc2b481d6f  kew-3.3.3.tar.gz
 "

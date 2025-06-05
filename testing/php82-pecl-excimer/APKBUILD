@@ -1,7 +1,7 @@
 # Maintainer: Andy Postnikov <apostnikov@gmail.com>
 pkgname=php82-pecl-excimer
 _extname=excimer
-pkgver=1.2.3
+pkgver=1.2.5
 pkgrel=0
 pkgdesc="Interrupting timer and low-overhead sampling profiler PHP 8.2 - PECL"
 url="https://pecl.php.net/package/excimer"
@@ -33,5 +33,5 @@ package() {
 }
 
 sha512sums="
-bcb4c89470d538853bb445c3167b91e87c4e5c2ac14ea0b3a7c88ff029f4eb789cec8677289031dd2a6609da1030e31c46599cf3f84c37cef77bed308fa3804a  php-pecl-excimer-1.2.3.tar.gz
+8ccd69e933934c0d34c039b57b68270788cda523653d7da5a9ce432191f9a8260408313dd5d266bf50d523a31460a9a22e324efec43ed14c137b12a7c1229e29  php-pecl-excimer-1.2.5.tar.gz
 "

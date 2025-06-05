@@ -3,7 +3,7 @@ maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=gst-vaapi
 # NOTE: Upgrade only to even-numbered minor versions (e.g. 1.20.x, 1.22.x)!
 #  Odd versions are unstable development releases.
-pkgver=1.24.12
+pkgver=1.26.2
 pkgrel=0
 pkgdesc="GStreamer streaming media framework VA API plug-ins"
 url="https://gstreamer.freedesktop.org/"
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-98afdbce0469c996f484c5d4909abaf8bfa52906c3d104c7c57c59251991f5000325564c5f26f68de7b56abfa3afddeaf26b159cb2143c4e47605a75e59ef2c7  gstreamer-vaapi-1.24.12.tar.xz
+1c34fe9ba2a1c8914c1108a5cd90531ba2938d8ec265dd77610687b2107ddcf5766eb7e8575679bc8a945357754e45545532b76d47d6e4cffade6d0e5d0b7645  gstreamer-vaapi-1.26.2.tar.xz
 "

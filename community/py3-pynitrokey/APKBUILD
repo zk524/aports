@@ -1,7 +1,7 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=py3-pynitrokey
-pkgver=0.8.0
-pkgrel=1
+pkgver=0.8.5
+pkgrel=0
 pkgdesc="Python Library for Nitrokey devices"
 url="https://github.com/Nitrokey/pynitrokey"
 # blocked by py3-spsdk
@@ -60,5 +60,5 @@ package() {
 }
 
 sha512sums="
-cffe2992602e31ef8e61076a79c9ca878dd4040197a3affa66b3e7427e5c676130af7b3f83ce1abbd6372fde07c945bf1f8309d6a0a5e4f23f473f1b38bb8290  pynitrokey-0.8.0.tar.gz
+659eea78e3945ac282a6d4299da7102ba7e6cab82c630cf79fe3bbd6040faedfcd08c7375ddade086f8190ce0884bd039bae9d2f411b27dc41982c3a7452b6f9  pynitrokey-0.8.5.tar.gz
 "

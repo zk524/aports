@@ -1,6 +1,6 @@
 # Maintainer: Daniel Sabogal <dsabogalcc@gmail.com>
 pkgname=sfml
-pkgver=2.6.1
+pkgver=3.0.1
 pkgrel=0
 pkgdesc="Simple and Fast Multimedia Library"
 url="https://www.sfml-dev.org/"
@@ -12,10 +12,12 @@ makedepends="
 	eudev-dev
 	flac-dev
 	freetype-dev
+	graphviz
 	libogg-dev
 	libvorbis-dev
 	libx11-dev
 	libxcursor-dev
+	libxi-dev
 	libxrandr-dev
 	mesa-dev
 	openal-soft-dev
@@ -27,16 +29,17 @@ source="https://github.com/SFML/SFML/archive/$pkgver/sfml-$pkgver.tar.gz"
 builddir="$srcdir/SFML-$pkgver"
 
 build() {
+	# doc disabled due to 'file INSTALL cannot find "/tmp/src/SFML-3.0.1/build-shared/doc/SFML.tag": No such file or directory'
 	CFLAGS="$CFLAGS -DNDEBUG -O2 -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -DNDEBUG -O2 -flto=auto" \
 	cmake -B build-shared -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DSFML_PKGCONFIG_INSTALL_PREFIX=/usr/lib/pkgconfig \
 		-DBUILD_SHARED_LIBS=ON \
-		-DSFML_BUILD_DOC=ON \
-		-DSFML_INSTALL_PKGCONFIG_FILES=ON \
-		-DWARNINGS_AS_ERRORS=OFF
+		-DSFML_PKGCONFIG_INSTALL_DIR=/usr/lib/pkgconfig \
+		-DSFML_USE_SYSTEM_DEPS=ON \
+		-DSFML_BUILD_DOC=OFF \
+		-DSFML_INSTALL_PKGCONFIG_FILES=ON
 	cmake --build build-shared
 
 	cmake -B build-static -G Ninja \
@@ -44,16 +47,15 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DBUILD_SHARED_LIBS=OFF \
 		-DSFML_BUILD_DOC=OFF \
-		-DSFML_INSTALL_PKGCONFIG_FILES=OFF \
-		-DWARNINGS_AS_ERRORS=OFF
+		-DSFML_INSTALL_PKGCONFIG_FILES=OFF
 	cmake --build build-static
 }
 
 package() {
-	DESTDIR="$pkgdir" cmake --build build-static --target install
-	DESTDIR="$pkgdir" cmake --build build-shared --target install
+	DESTDIR="$pkgdir" cmake --install build-shared
+	DESTDIR="$pkgdir" cmake --install build-static
 }
 
 sha512sums="
-b376d3b00277ed60d107fe1268c210749b3aafcee618a8f924b181a9b476e92b9cb9baddecf70a8913b5910c471d53ea0260a876ad7b2db2b98b944d9f508714  sfml-2.6.1.tar.gz
+cee56eef93728aef9b361f8b1080572532ce5247c80a9d1be53b30dab4d67e8588316890555d4c4ba423e87b09f954327d70615e1ba72d458d8238fa84e589f9  sfml-3.0.1.tar.gz
 "

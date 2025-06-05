@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=dolphin-emu
-pkgver=2503a
+pkgver=2506
 pkgrel=0
 _commit_cubeb="54217bca3f3e0cd53c073690a23dd25d83557909"
 _commit_tinygltf="c5641f2c22d117da7971504591a8f6a41ece488b"
@@ -8,7 +8,7 @@ _commit_gtest="58d77fa8070e8cec2dc1ed015d66b454c8d78850"
 _commit_implot="18c72431f8265e2b0b5378a3a73d8a883b2175ff"
 _commit_mgba="8739b22fbc90fdf0b4f6612ef9c0520f0ba44a51"
 _commit_minizip_ng="55db144e03027b43263e5ebcb599bf0878ba58de"
-_commit_rcheevos="d54cf8f1059cebc90a6f5ecdf03df69259f22054"
+_commit_rcheevos="0115d9198ff7a73ff6568027dfb948ef6031818c"
 _commit_spirv="50b4d5389b6a06f86fb63a2848e1a7da6d9755ca"
 _commit_vulkan_memory="009ecd192c1289c7529bff248a16cfe896254816"
 _commit_zlib="ce01b1e41da298334f8214389cc9369540a7560f"
@@ -29,6 +29,8 @@ makedepends="
 	gtest-dev
 	hidapi-dev
 	libevdev-dev
+	libmgba
+	libmgba-dev
 	libpng-dev
 	libspng-dev
 	libusb-dev
@@ -61,13 +63,11 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/dolphin-emu/dolphin/archive/
 	https://github.com/syoyo/tinygltf/archive/$_commit_tinygltf/tinygltf-$_commit_tinygltf.tar.gz
 	https://github.com/google/googletest/archive/$_commit_gtest/googletest-$_commit_gtest.tar.gz
 	https://github.com/epezent/implot/archive/$_commit_implot/implot-$_commit_implot.tar.gz
-	https://github.com/mgba-emu/mgba/archive/$_commit_mgba/mgba-$_commit_mgba.tar.gz
 	https://github.com/zlib-ng/minizip-ng/archive/$_commit_minizip_ng/minizip-ng-$_commit_minizip_ng.tar.gz
 	https://github.com/RetroAchievements/rcheevos/archive/$_commit_rcheevos/rcheevos-$_commit_rcheevos.tar.gz
 	https://github.com/KhronosGroup/SPIRV-Cross/archive/$_commit_spirv/spirv-cross-$_commit_spirv.tar.gz
 	https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/$_commit_vulkan_memory/VulkanMemoryAllocator-$_commit_vulkan_memory.tar.gz
 	https://github.com/zlib-ng/zlib-ng/archive/$_commit_zlib/zlib-ng-$_commit_zlib.tar.gz
-	gcc13.patch
 	"
 subpackages="$pkgname-doc $pkgname-lang"
 builddir="$srcdir/dolphin-$pkgver"
@@ -76,9 +76,6 @@ prepare() {
 	default_prepare
 
 	git init -q
-
-	rmdir Externals/mGBA/mgba
-	mv "$srcdir"/mgba-$_commit_mgba Externals/mGBA/mgba
 
 	rmdir Externals/spirv_cross/SPIRV-Cross
 	mv "$srcdir"/SPIRV-Cross-$_commit_spirv Externals/spirv_cross/SPIRV-Cross
@@ -122,12 +119,10 @@ prepare() {
 		gtest
 		imgui
 		implot
-		mGBA
 		minizip-ng
 		picojson
 		rangeset
 		rcheevos
-		soundtouch
 		spirv_cross
 		tinygltf
 		zlib-ng
@@ -169,7 +164,6 @@ build() {
 		-DENABLE_AUTOUPDATE=OFF \
 		-DENABLE_ANALYTICS=ON \
 		-DUSE_SANITIZERS=OFF \
-		-DWITH_SANITIZER=OFF \
 		-DUSE_SYSTEM_FMT=ON
 	cmake --build build
 }
@@ -186,16 +180,15 @@ package() {
 }
 
 sha512sums="
-005c9c9491afd8f016c1b31e4d9c1d2f09b00ac2b493bacbf566c3abda24ae79fec7d767dcc6b8e7ff03d3016b08007207df4ae709461bb01a472fa48ea0684d  dolphin-emu-2503a.tar.gz
+7f2a053e18f53c535c9de6e67a098d92e8ffaa240f8cc44ce5b0db19e506373f31eefecfe7d215d69e054ed0254f92ce96f73f2cb737df86d2b55cdc4fdc4ac3  dolphin-emu-2506.tar.gz
 7ba1cd5b74d49512d2ebf9b07889ee3ad46559afe3293bcbebae0613661f7502f0baaa20b6723738c21b2d71f9d8f72ed1252703533507dec5d2b5ad84784017  cubeb-54217bca3f3e0cd53c073690a23dd25d83557909.tar.gz
 486bcf32be137dea5746117074dc51bc978290698de7831e1c4bbaa4acb56ed99fc34c38e69878a955b3e5f10f43eab07b0637164f822beae0fddd099aa0c56d  tinygltf-c5641f2c22d117da7971504591a8f6a41ece488b.tar.gz
 d8153c426e4f9c89a74721cc4a24dfcaf319810f4f10aa25fc972f99da2d96d66bc840cf2f51b756fef6b1ca47e8d2c8633f5862cc24e34d57309ad48802124a  googletest-58d77fa8070e8cec2dc1ed015d66b454c8d78850.tar.gz
 9cb2581a4e8d844914606f55a667afcfb31374973b0035b4d81488253e350df67439e97b46b236324c2a1e01146e6a191ad94d70823a3888c97e9380715272fa  implot-18c72431f8265e2b0b5378a3a73d8a883b2175ff.tar.gz
 782d456b7bf827591c774f146a88821b41b3b936faefddb5aee82bb0dd16ca7ad7228a1c331e1e517eac40a71cc4c94cc44bee12560946328c8433e1c6327225  mgba-8739b22fbc90fdf0b4f6612ef9c0520f0ba44a51.tar.gz
 88d1222886a3b5cd3ca1aff7b12902d1d19462c446ef39a092a56bb91b5889956afcce047b4227c79a50a95d9275bd0a23f5cd6cbef76478b6e21bbf86dd486b  minizip-ng-55db144e03027b43263e5ebcb599bf0878ba58de.tar.gz
-ba9281099d9ef335d881cdad8fb43d89461eb7b77dbd6c6c61699211e64a41681e38974c7c40e9cb42773a5fdc69f124d1e3c9093d10d3ddeb31529234609a30  rcheevos-d54cf8f1059cebc90a6f5ecdf03df69259f22054.tar.gz
+c7a73b8b0f0543974518ad7b6f5de38e5a1411a24e35692173ea52af0381d0e7ca1685f1618e8277366fdba68793eb91ce873a35f4ec5612609a2df87f49f1fa  rcheevos-0115d9198ff7a73ff6568027dfb948ef6031818c.tar.gz
 237bf9c902c23721592bff44b493198bc6b732cbaf4712b1bf56bfe1df76e7290fadec7cccd1694fccd808a1f57b681f696c323ef616f547bb54ddc97c604cea  spirv-cross-50b4d5389b6a06f86fb63a2848e1a7da6d9755ca.tar.gz
 3a47a4bc81562b96f598f357b803d2219fa167e6eb87779837efa6e85fc6eaff8e1cfbdea0935117a7b3c630cc99944b94e91823eafa8a94d80b2c459f33c317  VulkanMemoryAllocator-009ecd192c1289c7529bff248a16cfe896254816.tar.gz
 73f4e56410ae298ef211ebab52b1a0d3d5bfae91c2de3cd294b56cd0a78ab50e1203b396c7df462f360c1aaaa9392ec5625473d1e9eb084cc64bc813e28d12a1  zlib-ng-ce01b1e41da298334f8214389cc9369540a7560f.tar.gz
-8cdd88c93c49325de4cae62af14a14576f679c5b4c1350fb835e7007916d228811ecf5ba9e526760bd2388c69c46990fa33d2dd8bbb1b673dc7e6896ea958b44  gcc13.patch
 "

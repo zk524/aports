@@ -141,6 +141,8 @@ package() {
 		i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.dll
 		;;
 	esac
+
+	rm -fr "$pkgdir"/usr/share/man/*.UTF-8
 }
 
 dev() {
@@ -151,11 +153,6 @@ dev() {
 		winedbg winemaker winegcc winecpp wineg++; do
 		amove usr/bin/$file
 	done
-}
-
-doc() {
-	default_doc
-	rm -fr "$subpkgdir"/usr/share/man/*.UTF-8
 }
 
 sha512sums="

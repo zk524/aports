@@ -94,9 +94,8 @@ package() {
 # subpackages
 
 doc() {
-	pkgdesc="Free and Open Source empire-building strategy game (documentation)"
-
 	default_doc
+	pkgdesc="Free and Open Source empire-building strategy game (documentation)"
 }
 
 data() {

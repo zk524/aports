@@ -85,13 +85,10 @@ package() {
 	make DESTDIR="$pkgdir" install
 	echo -n "" > "$pkgdir"/etc/$pkgname.d/dll.conf
 	install -Dm644 backend/dll.aliases "$pkgdir"/etc/$pkgname.d/dll.aliases
-}
 
-doc() {
-	default_doc
-	mkdir -p "$subpkgdir"/usr/share/licenses/$_pkgname
-	mv "$subpkgdir"/usr/share/doc/$_pkgname/LICENSE \
-		"$subpkgdir"/usr/share/licenses/$_pkgname
+	mkdir -p "$pkgdir"/usr/share/licenses/$_pkgname
+	mv "$pkgdir"/usr/share/doc/$_pkgname/LICENSE \
+		"$pkgdir"/usr/share/licenses/$_pkgname
 }
 
 saned() {

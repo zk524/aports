@@ -46,15 +46,6 @@ check() {
 	make check
 }
 
-doc() {
-	default_doc
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname
-	cat > "$subpkgdir"/usr/share/doc/$pkgname/README.alpine <<EOF
-	==> please note that alsa-plugins-lavcrate has been renamed to lavrate.
-	==> So you need to run: apk add alsa-plugins-lavrate
-EOF
-}
-
 lavrate() {
 	pkgdesc="FFmpeg samplerate conversion plugins for alsa"
 	_mv_lib ./*lavrate*
@@ -88,6 +79,12 @@ jack() {
 package() {
 	make DESTDIR="$pkgdir" install
 	find $pkgdir -name "*.la" -type f -exec rm -f {} \;
+
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname
+	cat > "$pkgdir"/usr/share/doc/$pkgname/README.alpine <<EOF
+	==> please note that alsa-plugins-lavcrate has been renamed to lavrate.
+	==> So you need to run: apk add alsa-plugins-lavrate
+EOF
 }
 
 _mv_lib() {

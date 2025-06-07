@@ -55,6 +55,9 @@ package() {
 		ofhash=$pkgver-r$pkgrel ofhttp=$pkgver-r$pkgrel"
 
 	make DESTDIR="$pkgdir" install
+
+	mkdir -p "$pkgdir"/usr/share/doc/objfw
+	cp -r ./docs "$pkgdir"/usr/share/doc/objfw/html
 }
 
 dev() {
@@ -65,13 +68,6 @@ dev() {
 	amove usr/include
 	amove usr/lib/*.so
 	amove usr/lib/objfw-config
-}
-
-doc() {
-	default_doc
-
-	mkdir -p "$subpkgdir"/usr/share/doc/objfw
-	cp -r "$builddir/docs" "$subpkgdir"/usr/share/doc/objfw/html
 }
 
 _libobjfw() {

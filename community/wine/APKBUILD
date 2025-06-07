@@ -138,6 +138,8 @@ package() {
 		i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.dll
 		;;
 	esac
+
+	rm -fr "$pkgdir"/usr/share/man/*.UTF-8
 }
 
 dev() {
@@ -150,10 +152,6 @@ dev() {
 	done
 }
 
-doc() {
-	default_doc
-	rm -fr "$subpkgdir"/usr/share/man/*.UTF-8
-}
 sha512sums="
 a358f43cf95b9e6ad5028b081e851abfff2351b59710cc9bcd72289bc48169a5b09ee0fb3b711b3969ca92113991a2556ff89f8ee2049eaade176214d8876f39  wine-10.7.tar.xz
 72f64ed66ce24cf51f278874edc351c9297ebbad22adedd3036f1ead5113b0a09660f7fff4034c7b6a05bd7c15d42d9d7d203e8bd8a7fe1027643b6f49470ff3  rpath.patch

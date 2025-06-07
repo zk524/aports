@@ -44,6 +44,8 @@ package() {
 	install -D -m644 basic.cfg "$pkgdir/etc/$pkgname.conf"
 	install -D -m755 "$srcdir/$pkgname.initd" "$pkgdir/etc/init.d/$pkgname"
 	install -D -m644 "$srcdir/$pkgname.confd" "$pkgdir/etc/conf.d/$pkgname"
+
+	install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" basic.cfg example.cfg
 }
 
 fail2ban() {
@@ -56,14 +58,6 @@ fail2ban() {
 
 	install -D -m644 scripts/fail2ban/jail.conf \
 		"$subpkgdir"/etc/fail2ban/jail.d/sslh-ssh.conf
-}
-
-doc() {
-	default_doc
-
-	cd "$builddir"
-	install -Dm 644 basic.cfg "$subpkgdir/usr/share/doc/$pkgname/basic.cfg"
-	install -Dm 644 example.cfg "$subpkgdir/usr/share/doc/$pkgname/example.cfg"
 }
 
 sha512sums="

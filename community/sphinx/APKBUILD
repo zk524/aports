@@ -55,6 +55,9 @@ package() {
 	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
 	install -Dm644 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
 	chown -R $pkgusers:$pkggroups "$pkgdir"/var/lib/sphinx
+
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname/misc
+	cp -r ./misc/* "$pkgdir"/usr/share/doc/$pkgname/misc
 }
 
 php() {
@@ -63,13 +66,6 @@ php() {
 	mkdir -p "$subpkgdir"/usr/share/php/$pkgname/api
 	find $builddir/api/ -type f -maxdepth 1 -name "*.php" \
 		-exec mv {} "$subpkgdir"/usr/share/php/$pkgname/api/ \;
-}
-
-doc() {
-	default_doc;
-	mkdir -p "$subpkgdir"/usr/share/doc/$pkgname/misc
-	cp -r "$builddir"/misc/* "$subpkgdir"/usr/share/doc/$pkgname/misc
-
 }
 
 sha512sums="

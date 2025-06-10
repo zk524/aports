@@ -1,8 +1,9 @@
 # Contributor: Peter Bui <pnutzh4x0r@gmail.com>
 # Contributor: Bartłomiej Piotrowski <nospam@bpiotrowski.pl>
+# Contributor: hon <greek.team.blog2@gmail.com>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=libtorrent
-pkgver=0.15.2
+pkgver=0.15.3
 pkgrel=0
 pkgdesc="BitTorrent library written in C++"
 url="https://rakshasa.github.io/rtorrent"
@@ -19,9 +20,7 @@ makedepends="
 	"
 checkdepends="cppunit-dev"
 subpackages="$pkgname-dev"
-source="https://github.com/rakshasa/libtorrent/archive/v$pkgver/libtorrent-$pkgver.tar.gz
-	fix-missing-header-algorithm.patch
-	"
+source="https://github.com/rakshasa/libtorrent/archive/v$pkgver/libtorrent-$pkgver.tar.gz"
 
 prepare() {
 	default_prepare
@@ -46,6 +45,5 @@ package() {
 }
 
 sha512sums="
-e944b8e0ce575d443067372a9736a54ccb1181e5640a20ece66233996cb247ccf108f7a52141df109d88f817be1db30609c20f16a2e804e41079f5e26a4ed852  libtorrent-0.15.2.tar.gz
-47809ae1c954ab68b64f9b1ce8c8b4290ae582c13bb7547b5b4317981d4a24fb428f54fb445b7413ee409615743c8005613db794e363d640f1c3d65b7b00b70e  fix-missing-header-algorithm.patch
+5850f84c0067aa3d0f306482f5368374e380e3623571a2a8908a956ecd3f803785c5a1fdbb84b5322a7207bbddb27c8150226cf75703dc5a311f32addeda11a9  libtorrent-0.15.3.tar.gz
 "

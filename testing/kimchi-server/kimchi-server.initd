@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name="kimchi-server"
+description="Barebones HTTP server"
+
+command=/usr/sbin/kimchi-server
+command_user=kimchi-server:kimchi-server
+capabilities="^cap_net_bind_service"
+
+extra_started_commands="reload"
+description_reload="Reload configuration"
+
+: ${error_log:=/var/log/kimchi-server.log}
+
+depend() {
+	after firewall
+}
+
+start_pre() {
+	[ -n "$error_log" ] && checkpath -f -o kimchi-server:kimchi-server "$error_log"
+}
+
+reload() {
+	ebegin "Reloading configuration"
+	$supervisor $RC_SVCNAME --signal HUP
+	eend $?
+}

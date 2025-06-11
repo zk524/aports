@@ -33,7 +33,6 @@ makedepends="
 	pipewire-dev
 	purpose-dev
 	qt6-qtbase-dev
-	qt6-qtdeclarative-private-dev
 	samurai
 	xcb-util-cursor-dev
 	xcb-util-image-dev

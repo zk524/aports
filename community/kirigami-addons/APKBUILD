@@ -19,7 +19,6 @@ makedepends="
 	kguiaddons-dev
 	ki18n-dev
 	kirigami-dev
-	qt6-qtdeclarative-private-dev
 	samurai
 	"
 checkdepends="xwayland-run"

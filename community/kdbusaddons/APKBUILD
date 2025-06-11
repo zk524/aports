@@ -13,8 +13,8 @@ makedepends="
 	doxygen
 	extra-cmake-modules
 	graphviz
+	qt6-qtbase-private-dev
 	qt6-qtdeclarative-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	shared-mime-info
 	samurai

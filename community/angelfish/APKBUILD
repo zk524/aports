@@ -28,7 +28,6 @@ makedepends="
 	libplasma-dev
 	purpose-dev
 	qqc2-desktop-style-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qtwebengine-dev
 	samurai
 	"

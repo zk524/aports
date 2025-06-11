@@ -32,7 +32,6 @@ makedepends="
 	purpose-dev
 	qqc2-desktop-style-dev
 	qt6-qtbase-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qtmultimedia-dev
 	qt6-qtsvg-dev
 	qt6-qtwebsockets-dev

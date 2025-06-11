@@ -25,7 +25,6 @@ depends_dev="
 makedepends="$depends_dev
 	extra-cmake-modules
 	kirigami-addons-dev
-	qt6-qtdeclarative-private-dev
 	samurai
 	"
 checkdepends="xvfb-run"

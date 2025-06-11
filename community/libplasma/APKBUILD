@@ -41,7 +41,6 @@ makedepends="$depends_dev
 	extra-cmake-modules
 	graphviz
 	kdoctools-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	samurai
 	"

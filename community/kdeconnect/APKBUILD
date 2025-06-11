@@ -39,7 +39,6 @@ makedepends="
 	qt6-qtbase-dev
 	qt6-qtconnectivity-dev
 	qt6-qtdeclarative-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qtmultimedia-dev
 	samurai
 	"

@@ -15,7 +15,6 @@ depends_dev="$pkgname=$pkgver-r$pkgrel
 	"
 makedepends="$depends_dev
 	extra-cmake-modules
-	qt6-qtdeclarative-private-dev
 	samurai
 	"
 checkdepends="xvfb-run"

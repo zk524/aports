@@ -19,7 +19,6 @@ makedepends="$depends_dev
 	extra-cmake-modules
 	doxygen
 	graphviz
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	samurai
 	"

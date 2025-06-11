@@ -33,7 +33,6 @@ makedepends="
 	plasma5support-dev>=$pkgver
 	qt6-qtbase-dev
 	qt6-qtdeclarative-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qtsvg-dev
 	samurai
 	"

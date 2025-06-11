@@ -33,7 +33,6 @@ makedepends="$depends_dev
 	doxygen
 	extra-cmake-modules
 	graphviz
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	samurai
 	"

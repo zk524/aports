@@ -23,7 +23,6 @@ makedepends="
 	mpfr-dev
 	qt6-qtbase-dev
 	qt6-qtdeclarative-dev
-	qt6-qtdeclarative-private-dev
 	samurai
 	"
 subpackages="$pkgname-lang"

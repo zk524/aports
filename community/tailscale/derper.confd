@@ -1,0 +1,4 @@
+# Configuration for /etc/init.d/derper
+
+# Additional options to pass to derper.
+#command_args=

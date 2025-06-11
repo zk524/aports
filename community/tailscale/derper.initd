@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+
+name="derper"
+description="Tailscale DERP relay server"
+command="/usr/bin/derper"
+pidfile="/run/$RC_SVCNAME.pid"
+command_background="yes"
+
+depend() {
+	need net
+	after firewall
+	use logger
+}
+
+reload() {
+	ebegin "Reloading $name"
+	start-stop-daemon --signal HUP --pidfile "$pidfile"
+	eend $?
+}

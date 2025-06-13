@@ -1,0 +1,51 @@
+Uses tick_counter crate that is only available for aarch64 & x86_64
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -246,11 +246,6 @@ name = "syd-path"
+ path = "src/utils/syd-path.rs"
+ required-features = ["utils"]
+ 
+-[[bin]]
+-name = "syd-tck"
+-path = "src/utils/syd-tck.rs"
+-required-features = ["utils"]
+-
+ [[test]]
+ name = "tests"
+ 
+@@ -409,11 +404,6 @@ tabwriter = { version = "1.4", optional
+ tracing = { version = "0.1", features = ["attributes"], optional = true }
+ tracing-subscriber = { version = "0.3", optional = true }
+ 
+-[target.'cfg(target_arch = "aarch64")'.dependencies]
+-tick_counter = { version = "0.4", default-features = false }
+-[target.'cfg(target_arch = "x86_64")'.dependencies]
+-tick_counter = { version = "0.4", default-features = false }
+-
+ [build-dependencies]
+ pkg-config = "0.3.32"
+ 
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -1832,7 +1832,6 @@ dependencies = [
+  "tabwriter",
+  "tcmalloc",
+  "tempfile",
+- "tick_counter",
+  "tracing",
+  "tracing-subscriber",
+  "yaxpeax-arch",
+@@ -1948,12 +1947,6 @@ dependencies = [
+ ]
+ 
+ [[package]]
+-name = "tick_counter"
+-version = "0.4.5"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "37f1310986d0aa940019cbb2b480161c60a614dba076cbb20e82bfbc236bbabd"
+-
+-[[package]]
+ name = "tinyvec"
+ version = "1.9.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -1,0 +1,34 @@
+# Contributor: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
+# Maintainer: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
+pkgname=flatsweep
+pkgver=2024.12.23
+pkgrel=0
+pkgdesc="Flatpak leftover cleaner"
+url="https://github.com/giantpinkrobots/flatsweep"
+arch="noarch"
+license="MPL-2.0"
+depends=""
+makedepends="appstream-glib cmake desktop-file-utils gettext glib-dev gtk-update-icon-cache meson"
+checkdepends=""
+install=""
+subpackages="$pkgname-lang"
+source="$pkgname-$pkgver.tar.gz::https://github.com/giantpinkrobots/flatsweep/archive/refs/tags/v$pkgver.tar.gz"
+options="!check" #appstream validation fails
+
+build() {
+	abuild-meson \
+		output .
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+369b62c6c3e1fdbe192e08ccf5a50371d30bc5da341c943c219c95b7874627f4505743926487207f901ba34702f9305c12de436b323e5c602da769aef049bee4  flatsweep-2024.12.23.tar.gz
+"

@@ -92,7 +92,6 @@ makedepends="$depends_dev
 	kded
 	kdoctools-dev
 	libxtst-dev
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	samurai
 	xdotool

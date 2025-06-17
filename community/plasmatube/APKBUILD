@@ -31,7 +31,6 @@ makedepends="
 	mpvqt-dev
 	qt6-qtbase-dev
 	qt6-qtdeclarative-dev
-	qt6-qtdeclarative-private-dev
 	qtkeychain-dev
 	samurai
 	"

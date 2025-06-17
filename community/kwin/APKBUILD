@@ -73,7 +73,6 @@ makedepends="$depends_dev
 	libcap-utils
 	libdisplay-info-dev
 	plasma-wayland-protocols
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	samurai
 	"

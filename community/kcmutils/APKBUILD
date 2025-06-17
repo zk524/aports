@@ -22,7 +22,6 @@ depends_dev="
 makedepends="$depends_dev
 	doxygen
 	extra-cmake-modules
-	qt6-qtdeclarative-private-dev
 	qt6-qttools-dev
 	samurai
 	"

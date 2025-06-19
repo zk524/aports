@@ -1,0 +1,58 @@
+# Contributor: Topoetry <leo.tisane@disroot.org>
+# Maintainer: Topoetry <leo.tisane@disroot.org>
+pkgname=dragonfly-reverb
+pkgver=3.2.10
+pkgrel=0
+pkgdesc="A set of free reverb effects."
+url="https://michaelwillis.github.io/dragonfly-reverb"
+arch="x86 x86_64"
+license="GPL-3.0"
+makedepends="bash jack-dev libx11-dev libxext-dev libxrandr-dev cairo-dev mesa-dev mesa-gl mesa-egl mesa-gles"
+# check: no test suite
+options="!check"
+subpackages="$pkgname-jack $pkgname-clap $pkgname-lv2 $pkgname-vst3"
+source="$pkgname-$pkgver.tar.xz::https://github.com/michaelwillis/dragonfly-reverb/releases/download/$pkgver/dragonfly-reverb-$pkgver-src.tar.xz"
+
+build() {
+	make SKIP_STRIPPING=true
+}
+
+package() {
+	mkdir -p "$pkgdir"
+}
+
+clap() {
+	pkgdesc="A set of free reverb effects. Clap plugins."
+	mkdir -p "$subpkgdir"/usr/lib/clap
+	for i in DragonflyEarlyReflections DragonflyHallReverb DragonflyPlateReverb DragonflyRoomReverb; do
+		mv "$builddir"/bin/"$i".clap "$subpkgdir"/usr/lib/clap/
+	done
+}
+
+lv2() {
+	pkgdesc="A set of free reverb effects. Lv2 plugins."
+	mkdir -p "$subpkgdir"/usr/lib/lv2
+	for i in DragonflyEarlyReflections DragonflyHallReverb DragonflyPlateReverb DragonflyRoomReverb; do
+		mv "$builddir"/bin/"$i".lv2 "$subpkgdir"/usr/lib/lv2/
+	done
+}
+
+vst3() {
+	pkgdesc="A set of free reverb effects. Vst3 plugins."
+	mkdir -p "$subpkgdir"/usr/lib/vst3
+	for i in DragonflyEarlyReflections DragonflyHallReverb DragonflyPlateReverb DragonflyRoomReverb; do
+		mv "$builddir"/bin/"$i".vst3 "$subpkgdir"/usr/lib/vst3/
+	done
+}
+
+jack() {
+	pkgdesc="A set of free reverb effects. Standalone package."
+	mkdir -p "$subpkgdir"/usr/bin
+	for i in DragonflyEarlyReflections DragonflyHallReverb DragonflyPlateReverb DragonflyRoomReverb; do
+		mv "$builddir"/bin/"$i" "$subpkgdir"/usr/bin/
+	done
+}
+
+sha512sums="
+772b70169970e5ec68270d3cfa690ad1b258a2df79430ecb36cae78654a761cb9b495a769daef37307af9960106c302df4d61094f95eb4f8619a0b764aa8d019  dragonfly-reverb-3.2.10.tar.xz
+"

@@ -1,0 +1,49 @@
+# Contributor: Maarten van Gompel <proycon@anaproy.nl>
+# Maintainer: Maarten van Gompel <proycon@anaproy.nl>
+pkgname=py3-ctranslate2
+pkgver=4.6.0
+pkgrel=0
+pkgdesc="Fast inference engine for Transformer models. Python bindings."
+url="https://opennmt.net/CTranslate2"
+license="MIT"
+arch="x86_64 aarch64"
+options="!check" #didn't get tests to work yet
+depends="ctranslate2 py3-pybind11 python3"
+makedepends="cmake openblas-dev ctranslate2-dev python3-dev py3-setuptools py3-wheel py3-pybind11-dev ninja py3-gpep517"
+_cxxopts_ver=3.3.1
+_spdlog_ver=1.15.3
+_cpu_features_ver=0.10.1
+source="ctranslate2-$pkgver.tar.gz::https://github.com/OpenNMT/CTranslate2/archive/refs/tags/v$pkgver.tar.gz
+cxxopts-$_cxxopts_ver.tar.gz::https://github.com/jarro2783/cxxopts/archive/refs/tags/v$_cxxopts_ver.tar.gz
+spdlog-$_spdlog_ver.tar.gz::https://github.com/gabime/spdlog/archive/refs/tags/v$_spdlog_ver.tar.gz
+cpu_features-$_cpu_features_ver.tar.gz::https://github.com/google/cpu_features/archive/refs/tags/v$_cpu_features_ver.tar.gz
+"
+builddir="$srcdir/CTranslate2-$pkgver"
+
+build() {
+	mv $srcdir/cxxopts-$_cxxopts_ver/* third_party/cxxopts
+	mv $srcdir/spdlog-$_spdlog_ver/* third_party/spdlog
+	mv $srcdir/cpu_features-$_cpu_features_ver/* third_party/cpu_features
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DOPENMP_RUNTIME=COMP \
+		-DWITH_MKL=OFF \
+		-DWITH_OPENBLAS=ON
+	cd python
+	gpep517 build-wheel --wheel-dir dist --output-fd 3 3>&1 >&2
+}
+
+package() {
+	cd python
+	python3 -m installer -d "$pkgdir" dist/ctranslate2*.whl
+	cd ../
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+eac38c69226c071de75f9633ad7fe3350758d07c587412d2ae87818395fd58b647f36c7a146a726bb07961d0c09a2d7b26e6a8705ec5f83fa2c0d2ca84a2d3ac  ctranslate2-4.6.0.tar.gz
+a22da1436a263d51aad2f542c2099f5b4fd1b02674716ff26d2f575786dcec4e97400edebf5577de95f3ae48c7c99be7be17d7a3de3e01a9f3612667e1547908  cxxopts-3.3.1.tar.gz
+21c35f4091850ea3a0cd6a24867e06e943df70d76cd5a7ec0b15a33e0e9e0cc3584ed7930e1ac6f347e7e06f0e002d0e759884eaf05310014e24ea0e0419fcc4  spdlog-1.15.3.tar.gz
+40c314c584fcf109d9a641c055cb75f335fd5425dd336fe831828b956226eaf0ac2fd8ffceeaf10e02afa9cec01cb0ddc6af8ff78f20dd925783e6958d0b9304  cpu_features-0.10.1.tar.gz
+"

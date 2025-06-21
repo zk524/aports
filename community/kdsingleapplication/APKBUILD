@@ -1,7 +1,7 @@
 # Contributor: Síle Ekaterin Liszka <sheila@vulpine.house>
 # Maintainer: Síle Ekaterin Liszka <sheila@vulpine.house>
 pkgname=kdsingleapplication
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=0
 pkgdesc="Helper class for single-instance policy applications"
 url="https://www.kdab.com"
@@ -10,19 +10,16 @@ license="MIT"
 makedepends="cmake samurai qt6-qtbase-dev"
 subpackages="$pkgname-dev $pkgname-doc"
 source="https://github.com/KDAB/KDSingleApplication/releases/download/v$pkgver/kdsingleapplication-$pkgver.tar.gz"
+builddir="$srcdir/KDSingleApplication-$pkgver"
 
 build() {
-	if [ "$CBUILD" != "$CHOST" ]; then
-		local crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
-	fi
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=ON \
 		-DCMAKE_BUILD_TYPE=None \
 		-DKDSingleApplication_QT6=true \
-		-DKDSingleApplication_TESTS=true \
-		$crossopts
+		-DKDSingleApplication_TESTS=true
 	cmake --build build
 }
 
@@ -35,5 +32,5 @@ package() {
 }
 
 sha512sums="
-61b34a36b05c58ede881f38d78c767726f8e23dc230e292568013fa428f50ff674f7eb12bc4d76ceaa9ef444264b2e86d95ab14cc41c6a275bf917edb8832c1f  kdsingleapplication-1.1.0.tar.gz
+2832f53b70258af1bfe9d66d67ab1c46be720ccab632d1b76353a171414cea00a03c576ad34eeefb2648330a311867f7fde7efb96b1f16159dc206f890bc1085  kdsingleapplication-1.2.0.tar.gz
 "

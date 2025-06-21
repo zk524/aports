@@ -1,6 +1,9 @@
 #!/bin/sh
 
 addgroup -S sddm 2>/dev/null
-adduser -G video -h /var/lib/sddm -S -s /sbin/nologin sddm 2>/dev/null
+adduser -G sddm -h /var/lib/sddm -S -s /sbin/nologin sddm 2>/dev/null
+adduser sddm video 2>/dev/null
+adduser sddm input 2>/dev/null
+adduser sddm tty 2>/dev/null
 
 exit 0

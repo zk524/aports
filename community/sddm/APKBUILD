@@ -32,7 +32,7 @@ subpackages="
 	$pkgname-openrc
 	$pkgname-weston::noarch
 	"
-install="sddm.pre-install"
+install="sddm.pre-install sddm.pre-upgrade"
 langdir="/usr/share/sddm/translations"
 pkgusers="sddm"
 pkggroups="sddm"
@@ -62,7 +62,8 @@ build() {
 		-DUSE_ELOGIND=ON \
 		-DUID_MIN=1000 \
 		-DUID_MAX=65000 \
-		-DDBUS_CONFIG_DIR=/usr/share/dbus-1/system.d
+		-DDBUS_CONFIG_DIR=/usr/share/dbus-1/system.d \
+		-DSDDM_INITIAL_VT=7
 	cmake --build build
 }
 

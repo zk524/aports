@@ -1,0 +1,31 @@
+# Contributor: Maarten van Gompel <proycon@anaproy.nl>
+# Maintainer: Maarten van Gompel <proycon@anaproy.nl>
+pkgname=sentencepiece
+pkgver=0.2.0
+pkgrel=0
+pkgdesc="Unsupervised text tokenizer for Neural Network-based text generation. "
+url="https://github.com/google/sentencepiece"
+license="Apache-2.0"
+arch="all"
+options="!check" #no tests
+makedepends="cmake protobuf-dev ninja"
+subpackages="$pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/google/sentencepiece/archive/refs/tags/v$pkgver.tar.gz
+	"
+
+build() {
+	cmake -B build -G Ninja \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DSPM_USE_BUILTIN_PROTOBUF=OFF
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+b4214f5bfbe2a0757794c792e87e7c53fda7e65b2511b37fc757f280bf9287ba59b5d630801e17de6058f8292a3c6433211917324cb3446a212a51735402e614  sentencepiece-0.2.0.tar.gz
+"

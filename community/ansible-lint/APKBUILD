@@ -33,6 +33,7 @@ makedepends="
 	py3-wheel
 	"
 checkdepends="
+	libffi-dev
 	py3-flaky
 	py3-license-expression
 	py3-psutil
@@ -42,6 +43,7 @@ checkdepends="
 	py3-pytest-mock
 	py3-pytest-mypy
 	py3-pytest-xdist
+	python3-dev
 	yamllint
 	"
 subpackages="$pkgname-pyc"

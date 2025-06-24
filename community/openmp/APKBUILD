@@ -1,8 +1,8 @@
 # Contributor: Leo <thinkabit.ukim@gmail.com>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=openmp
-pkgver=18.1.8
-pkgrel=2
+pkgver=20.1.7
+pkgrel=0
 _llvmver=${pkgver%%.*}
 pkgdesc="LLVM OpenMP Runtime Library"
 url="https://openmp.llvm.org/"
@@ -112,6 +112,6 @@ bitcode() {
 }
 
 sha512sums="
-7c2ca736524fb741112be247ac6be39cfe1dc92381c5e2997d97044ab9705c224ae5eabcf43b59cdec9a715a14227c6fb02cb2d1829ebc47b82d3af6e4d197d3  openmp-18.1.8.src.tar.xz
-e02243b491f9e688db28d7b53270fcf87debf09d3c95b136a7c7b96e26890de68712c60a1e85f5a448a95ad8c81f2d8ae77047780822443bbe39f1a9e6211007  cmake-18.1.8.src.tar.xz
+362631e29d7290d137e7b42b66d2a847cf29962874d7e0a69c7819bc687ea935734882af83160833df105e5a08f9d5159213ce8959902056c941ea4461700783  openmp-20.1.7.src.tar.xz
+2b74b58a7428efe41ae3064c859712f309cd798d5e40f7f5977a5b010aeed13a84019eb81c2076dd206de29f32eaefcc02d9febbf5d00872fe9f7016e2e68ad8  cmake-20.1.7.src.tar.xz
 "

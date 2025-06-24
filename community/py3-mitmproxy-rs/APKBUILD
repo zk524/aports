@@ -1,6 +1,6 @@
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=py3-mitmproxy-rs
-pkgver=0.9.3
+pkgver=0.12.6
 pkgrel=0
 pkgdesc="mitmproxy modules written in Rust"
 url="https://github.com/mitmproxy/mitmproxy_rs"
@@ -42,5 +42,5 @@ package() {
 }
 
 sha512sums="
-7205ec974aed1a0f4ace3d941e860eb3f80ccd3b21550c9d375d709a20b48747d2ccaf05682b41eebb6ab2418b1334f631c8e67e060bb5bedb49563d45b9963b  py3-mitmproxy-rs-0.9.3.tar.gz
+650fac0edac43567c110c7bb568535381cf38e8b23a8137523b06b57d4ef1eb4e1739b4cf0fa680a909abf98d57d72b3056399b24d1e2e426db139ab25405199  py3-mitmproxy-rs-0.12.6.tar.gz
 "

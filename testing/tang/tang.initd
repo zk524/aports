@@ -4,12 +4,11 @@ name="Tang server"
 description="Server for binding data to network presence"
 
 : ${tang_port:="7500"}
-: ${tang_address:="127.0.0.1"}
 : ${socat_address:="tcp-listen:$tang_port,bind=$tang_address,fork"}
 
-command="/usr/bin/socat"
+command="/usr/libexec/tangd"
 command_user="tang:tang"
-command_args="$socat_address exec:/usr/libexec/tangd-wrapper"
+command_args="--listen --port=$tang_port /var/lib/tang"
 command_background="yes"
 
 extra_commands="rotate_keys"

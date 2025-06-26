@@ -3,8 +3,8 @@
 # Contributor: omni <omni+alpine@hack.org>
 # Maintainer: ScrumpyJack <scrumpyjack@st.ilet.to>
 pkgname=opencpn
-pkgver=5.8.4
-pkgrel=1
+pkgver=5.10.2
+pkgrel=0
 pkgdesc="OpenCPN is a cross platform electronic navigation system"
 url="https://opencpn.org/"
 arch="all"
@@ -24,6 +24,7 @@ makedepends="
 	linux-headers
 	lsb-release
 	lz4-dev
+	musl-dev
 	musl-legacy-error
 	portaudio-dev
 	rapidjson-dev
@@ -33,11 +34,7 @@ makedepends="
 	wxwidgets-dev
 	"
 subpackages="$pkgname-doc $pkgname-lang"
-source="
-	$pkgname-$pkgver.tar.gz::https://github.com/OpenCPN/OpenCPN/archive/refs/tags/Release_$pkgver.tar.gz
-	gcc12.patch
-	rapidjson.patch
-	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/OpenCPN/OpenCPN/archive/refs/tags/Release_$pkgver.tar.gz"
 builddir="$srcdir/OpenCPN-Release_$pkgver"
 options="!check" # todo
 
@@ -60,7 +57,5 @@ package() {
 }
 
 sha512sums="
-08231d95ca80a5e6b85b279be2912d3e9f390f879a780823f8ee9c64371eb0605484f697328217027c7caf18cb1151b617d42d22951672c1a9508750e97f109a  opencpn-5.8.4.tar.gz
-d2cc0b3212258f8c086607fc9e6b8ed47172c53fcf33f401addecbdd3215199ea6900c44979e66083dca39ae0610bdf4256604edae47adccaac4df39cfa775db  gcc12.patch
-401f74070e3a3f220a547e81b23eefe78b76b39391affd4af58566393890b2565cc3725736fcbf354868c85aebbff2169e049ec92f6836b04ba197ff7dbd64fb  rapidjson.patch
+5233bf6ba298c9823917ed829e0b6ceb86147f5eef5d9b853f0da1b489a25203ce55740096806e9b1506d2b66588d29952b05367aee8fb77babe9bb97d1e4efa  opencpn-5.10.2.tar.gz
 "

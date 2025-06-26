@@ -1,0 +1,30 @@
+# Contributor: Anjandev Momi <anjan@momi.ca>
+# Maintainer: Anjandev Momi <anjan@momi.ca>
+pkgname=gtk-meshtastic-client
+pkgver=1.2
+pkgrel=0
+pkgdesc="An unofficial client for Meshtastic devices in GTK4/Libadwaita."
+url="https://gitlab.com/kop316/gtk-meshtastic-client"
+arch="all"
+license="GPL-3.0-or-later"
+depends="py3-meshtastic"
+makedepends="meson gtk4.0-dev libadwaita-dev gobject-introspection-dev libshumate-dev py3-gobject3"
+source="$pkgname-$pkgver.tar.gz::https://gitlab.com/kop316/gtk-meshtastic-client/-/archive/$pkgver/gtk-meshtastic-client-$pkgver.tar.gz"
+
+build() {
+	abuild-meson \
+		_build .
+	meson compile -C _build
+}
+
+check() {
+	meson test --print-errorlogs -C _build
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C _build
+}
+
+sha512sums="
+7b29977e0c6e4f95211afe4a36c9ddd0485cf02ed5658e0e4dcfcafbe5e4cb1cd9d32cbd95789a36b2ee0a1f5d5a6acb424bf4485319bc80d9e844afc4889ac3  gtk-meshtastic-client-1.2.tar.gz
+"

@@ -1,7 +1,7 @@
 # Contributor: Zach DeCook <zachdecook@librem.one>
 maintainer="Krystian Chachuła <krystian@krystianch.com>"
 pkgname=rpicam-apps
-pkgver=1.5.3
+pkgver=1.6.0
 pkgrel=0
 pkgdesc="Suite of libcamera-based applications to drive the Raspberry Pi cameras"
 url="https://github.com/raspberrypi/rpicam-apps"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-0cf9f29ca474ec325749f518937853af8216c6b1da12d9a93f87185b8b70feb47a3c1d047faf438ea9b5b46da4bb7bb1ccf777683c85492e76e5eee9220feb18  rpicam-apps-v1.5.3.tar.gz
+68a1dc4151abf0b178fed8624c839be25ad53f29165d1fc58901aab9b83f5d36f5c8c1bf89892b861b6ebcc2e695e5fae1da85362af6788be43636c89eba478d  rpicam-apps-v1.6.0.tar.gz
 "

@@ -16,7 +16,6 @@ options="!check"
 build() {
 	python3 waf configure \
 		--prefix=/usr \
-		--optimization \
 		--enable-lfs \
 		--no-desktop-update \
 		--disable-nls \

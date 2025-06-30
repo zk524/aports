@@ -1,0 +1,13 @@
+diff --git a/lib9/getcallerpc-loongarch64.c b/lib9/getcallerpc-loongarch64.c
+new file mode 100644
+index 0000000..4f8522d
+--- /dev/null
++++ b/lib9/getcallerpc-loongarch64.c
+@@ -0,0 +1,7 @@
++#include <lib9.h>
++
++ulong
++getcallerpc(void *x)
++{
++	return ((uintptr*)x)[-1];
++}

@@ -1,0 +1,38 @@
+maintainer="maybetree <maybetree48@proton.me>"
+pkgname=vsv
+pkgver=2.0.0
+pkgrel=0
+pkgdesc="Runit service manager CLI"
+url="https://github.com/bahamas10/vsv"
+arch="all"
+license="MIT"
+makedepends="cargo"
+subpackages=""
+source="$pkgname-$pkgver.tar.gz::https://github.com/bahamas10/vsv/archive/refs/tags/v$pkgver.tar.gz"
+# net: cargo
+options="net"
+
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=2
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo build --release --frozen
+}
+
+check() {
+	cargo test --release --frozen
+}
+
+package() {
+
+	install -D -m755 target/release/vsv -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+df6d3b847d5b413ca3a58541d4c50d7f0e250ad54d80c40ccf62dc6b4de53257615ef129e5f88944b3839b2863960b72efd0c4fab88d19f1f3de249284541f76  vsv-2.0.0.tar.gz
+"

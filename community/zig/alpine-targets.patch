@@ -1,0 +1,85 @@
+Our rust targets are called alpine-linux and therefore would fail:
+
+	error[E0463]: can't find crate for `core`
+	  |
+	  = note: the `x86_64-unknown-linux-musl` target may not be installed
+	  = help: consider downloading the target with `rustup target add x86_64-unknown-linux-musl`
+---
+diff --git a/lib/compiler/aro/aro/Driver/GCCDetector.zig b/lib/compiler/aro/aro/Driver/GCCDetector.zig
+index e7d67aee..21d760d8 100644
+--- a/lib/compiler/aro/aro/Driver/GCCDetector.zig
++++ b/lib/compiler/aro/aro/Driver/GCCDetector.zig
+@@ -85,11 +85,11 @@ fn collectLibDirsAndTriples(
+ 
+     const X86_64LibDirs: [2][]const u8 = .{ "/lib64", "/lib" };
+     const X86_64Triples: [11][]const u8 = .{
+-        "x86_64-linux-gnu",       "x86_64-unknown-linux-gnu",
++        "x86_64-linux-gnu",       "x86_64-alpine-linux-gnu",
+         "x86_64-pc-linux-gnu",    "x86_64-redhat-linux6E",
+         "x86_64-redhat-linux",    "x86_64-suse-linux",
+         "x86_64-manbo-linux-gnu", "x86_64-linux-gnu",
+-        "x86_64-slackware-linux", "x86_64-unknown-linux",
++        "x86_64-slackware-linux", "x86_64-alpine-linux",
+         "x86_64-amazon-linux",
+     };
+     const X32Triples: [2][]const u8 = .{ "x86_64-linux-gnux32", "x86_64-pc-linux-gnux32" };
+@@ -102,10 +102,10 @@ fn collectLibDirsAndTriples(
+     };
+ 
+     const LoongArch64LibDirs: [2][]const u8 = .{ "/lib64", "/lib" };
+-    const LoongArch64Triples: [2][]const u8 = .{ "loongarch64-linux-gnu", "loongarch64-unknown-linux-gnu" };
++    const LoongArch64Triples: [2][]const u8 = .{ "loongarch64-linux-gnu", "loongarch64-alpine-linux-gnu" };
+ 
+     const M68kLibDirs: [1][]const u8 = .{"/lib"};
+-    const M68kTriples: [3][]const u8 = .{ "m68k-linux-gnu", "m68k-unknown-linux-gnu", "m68k-suse-linux" };
++    const M68kTriples: [3][]const u8 = .{ "m68k-linux-gnu", "m68k-alpine-linux-gnu", "m68k-suse-linux" };
+ 
+     const MIPSLibDirs: [2][]const u8 = .{ "/libo32", "/lib" };
+     const MIPSTriples: [5][]const u8 = .{
+@@ -139,31 +139,31 @@ fn collectLibDirsAndTriples(
+ 
+     const PPCLibDirs: [2][]const u8 = .{ "/lib32", "/lib" };
+     const PPCTriples: [5][]const u8 = .{
+-        "powerpc-linux-gnu",    "powerpc-unknown-linux-gnu",   "powerpc-linux-gnuspe",
++        "powerpc-linux-gnu",    "powerpc-alpine-linux-gnu",    "powerpc-linux-gnuspe",
+         // On 32-bit PowerPC systems running SUSE Linux, gcc is configured as a
+         // 64-bit compiler which defaults to "-m32", hence "powerpc64-suse-linux".
+         "powerpc64-suse-linux", "powerpc-montavista-linuxspe",
+     };
+     const PPCLELibDirs: [2][]const u8 = .{ "/lib32", "/lib" };
+-    const PPCLETriples: [3][]const u8 = .{ "powerpcle-linux-gnu", "powerpcle-unknown-linux-gnu", "powerpcle-linux-musl" };
++    const PPCLETriples: [3][]const u8 = .{ "powerpcle-linux-gnu", "powerpcle-alpine-linux-gnu", "powerpcle-linux-musl" };
+ 
+     const PPC64LibDirs: [2][]const u8 = .{ "/lib64", "/lib" };
+     const PPC64Triples: [4][]const u8 = .{
+-        "powerpc64-linux-gnu",  "powerpc64-unknown-linux-gnu",
++        "powerpc64-linux-gnu",  "powerpc64-alpine-linux-gnu",
+         "powerpc64-suse-linux", "ppc64-redhat-linux",
+     };
+     const PPC64LELibDirs: [2][]const u8 = .{ "/lib64", "/lib" };
+     const PPC64LETriples: [5][]const u8 = .{
+-        "powerpc64le-linux-gnu",      "powerpc64le-unknown-linux-gnu",
++        "powerpc64le-linux-gnu",      "powerpc64le-alpine-linux-gnu",
+         "powerpc64le-none-linux-gnu", "powerpc64le-suse-linux",
+         "ppc64le-redhat-linux",
+     };
+ 
+     const RISCV32LibDirs: [2][]const u8 = .{ "/lib32", "/lib" };
+-    const RISCV32Triples: [3][]const u8 = .{ "riscv32-unknown-linux-gnu", "riscv32-linux-gnu", "riscv32-unknown-elf" };
++    const RISCV32Triples: [3][]const u8 = .{ "riscv32-alpine-linux-gnu", "riscv32-linux-gnu", "riscv32-unknown-elf" };
+     const RISCV64LibDirs: [2][]const u8 = .{ "/lib64", "/lib" };
+     const RISCV64Triples: [3][]const u8 = .{
+-        "riscv64-unknown-linux-gnu",
++        "riscv64-alpine-linux-gnu",
+         "riscv64-linux-gnu",
+         "riscv64-unknown-elf",
+     };
+@@ -175,7 +175,7 @@ fn collectLibDirsAndTriples(
+ 
+     const SystemZLibDirs: [2][]const u8 = .{ "/lib64", "/lib" };
+     const SystemZTriples: [5][]const u8 = .{
+-        "s390x-linux-gnu",  "s390x-unknown-linux-gnu", "s390x-ibm-linux-gnu",
++        "s390x-linux-gnu",  "s390x-alpine-linux-gnu", "s390x-ibm-linux-gnu",
+         "s390x-suse-linux", "s390x-redhat-linux",
+     };
+     const target = tc.getTarget();

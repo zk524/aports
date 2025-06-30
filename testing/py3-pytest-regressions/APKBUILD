@@ -1,0 +1,56 @@
+# Maintainer: Struan Robertson <contact@struanrobertson.co.uk>
+pkgname=py3-pytest-regressions
+_pkgname=pytest-regressions
+pkgver=2.7.0
+pkgrel=0
+pkgdesc="Pytest plugin for regression testing"
+url="https://github.com/ESSS/pytest-regressions"
+# Numpy based tests fail on s390x
+arch="noarch !s390x"
+license="MIT"
+depends="
+	python3
+	py3-pytest
+	py3-pytest-datadir
+	py3-yaml
+"
+makedepends="
+	py3-setuptools_scm
+	py3-installer
+	py3-wheel
+	py3-gpep517
+"
+checkdepends="
+	py3-pytest
+	py3-numpy
+	py3-pandas
+	py3-matplotlib
+	py3-pillow
+"
+subpackages="$pkgname-pyc"
+source="$url/archive/v$pkgver/$_pkgname-v$pkgver.tar.gz"
+builddir="$srcdir/$_pkgname-$pkgver"
+
+export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+
+sha512sums="
+5f18d03e9d69dfbb99a73afd73613474b36fdd33b7ef29711e85b9870b0bb353f9275ff3a62d0dcdecd6c6eec6060d1b687c62cea20c08cb6ed362ca42a1a176  pytest-regressions-v2.7.0.tar.gz
+"

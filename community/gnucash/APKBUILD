@@ -1,7 +1,7 @@
 maintainer="Thomas Böhler <witcher@wiredspace.de>"
 pkgname=gnucash
-pkgver=5.11
-pkgrel=1
+pkgver=5.12
+pkgrel=0
 pkgdesc="GnuCash Double-Entry Accounting Program"
 url="https://gnucash.org/"
 # s390x: Tests fail because of test-gnc-{timezone,datetime} (SEGFAULT)
@@ -101,7 +101,7 @@ _py3() {
 }
 
 sha512sums="
-4140af8f04e75fea47e0dfad18a69811a5b92816ec5b132f46db0ee393f132e4d2cc64dd9971e7783a2663c117bbfa092959d8309356bbbf9179969f34ff7258  gnucash-5.11.tar.gz
+e090e1c9de7a092936055b533b637ea083febe96f47b0dbb8b6e4cece418a7a9bda666521a5b6ac73feb76c1d1898c7f42a5ce54bb2fc61591a91d2fb2c362c9  gnucash-5.12.tar.gz
 a7723a11aeb082290373d574d2971b6e768b83936995316792caa44ddd2d08b41e0aab02622796d0b297c054623d95db9b7c6136792aa28cb649d310d80d731f  disable-gnc-date.patch
 eced870915434711c3260188a48ce8446f95c4d4258a61600785734e82cd1f483e8e3fa9013234899b80e775ef0f51d17a688a30d311d7786f5ae79ab606962a  disable-gnc-timezone-and-test-lots.patch
 "

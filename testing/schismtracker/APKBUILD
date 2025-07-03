@@ -1,7 +1,7 @@
 # Maintainer: Antoni Aloy <aaloytorrens@gmail.com>
 pkgname=schismtracker
 pkgver=20231029
-pkgrel=0
+pkgrel=1
 pkgdesc="Oldschool sample-based music composition tool"
 url="https://schismtracker.org/"
 arch="all"

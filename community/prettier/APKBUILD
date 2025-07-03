@@ -8,7 +8,7 @@ url="https://prettier.io/"
 license="MIT"
 # armhf, armv7, x86, riscv64: fails to build
 # s390x: hangs at yarn "fetch step"
-arch="noarch !armhf !armv7 !x86 !riscv64 !s390x"
+arch="noarch " # !armhf !armv7 !x86 !riscv64 !s390x"
 depends="nodejs"
 makedepends="yarn"
 checkdepends="npm"

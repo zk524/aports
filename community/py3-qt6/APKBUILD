@@ -23,6 +23,7 @@ makedepends="
 	qt6-qtconnectivity-dev
 	qt6-qtdeclarative-dev
 	qt6-qtmultimedia-dev
+	qt6-qtpositioning-dev
 	qt6-qtserialport-dev
 	qt6-qtsvg-dev
 	qt6-qttools-dev

@@ -3,19 +3,23 @@
 pkgname=tree-sitter-make
 pkgver=0_git20211216
 _gitrev=a4b9187417d6be349ee5fd4b6e77b4172c6827dd
-pkgrel=2
+pkgrel=3
 pkgdesc="Tree-sitter grammar for Make"
 url="https://github.com/alemuller/tree-sitter-make"
 arch="all"
 license="MIT"
 makedepends="tree-sitter-dev"
+checkdepends="tree-sitter-cli"
 install_if="tree-sitter-grammars"
 source="https://github.com/alemuller/tree-sitter-make/archive/$_gitrev/tree-sitter-make-$_gitrev.tar.gz"
 builddir="$srcdir/$pkgname-$_gitrev"
-options="!check"  # no tests for shared lib
 
 build() {
 	abuild-tree-sitter build
+}
+
+check() {
+	tree-sitter test
 }
 
 package() {

@@ -1,0 +1,329 @@
+Patch-Source: https://github.com/SELinuxProject/selinux/pull/464
+---
+From 3838b0f2362cb15e7406f6ef0502f6421133cd0a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=D0=BD=D0=B0=D0=B1?= <nabijaczleweli@nabijaczleweli.xyz>
+Date: Sat, 22 Feb 2025 23:09:30 +0100
+Subject: [PATCH 1/2] Inject matchpathcon_filespec_add64() if
+ !defined(__INO_T_MATCHES_INO64_T) instead of using __BITS_PER_LONG < 64 as
+ proxy
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The __INO_T_MATCHES_INO64_T is defined
+if ino_t would be the same size as ino64_t
+if -D_FILE_OFFSET_BITS=64 were not defined.
+
+This is /exactly/ what
+  /* ABI backwards-compatible shim for non-LFS 32-bit systems */
+  #if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && __BITS_PER_LONG < 64
+is trying to get at, but currently fails because x32/RV32 are "LFS"
+with 32-bit longs and 64-bit time_ts natively.
+
+Thus, the
+  static_assert(sizeof(unsigned long) == sizeof(__ino_t), "inode size mismatch");
+assertion fails (__ino_t is the "kernel ino_t" type,
+which generally corresponds to the kernel's ulong, which is u64 on x32).
+
+glibc headers allow us to check the condition we care about directly.
+
+Fixes: commit 9395cc0322 ("Always build for LFS mode on 32-bit archs.")
+Closes: #463
+Closes: Debian#1098481
+Signed-off-by: наб <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Alba Mendez <me@alba.sh>
+---
+ libselinux/include/selinux/selinux.h | 2 +-
+ libselinux/src/matchpathcon.c        | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/libselinux/include/selinux/selinux.h b/libselinux/include/selinux/selinux.h
+index f3cf5a209..f64896b7a 100644
+--- a/libselinux/include/selinux/selinux.h
++++ b/libselinux/include/selinux/selinux.h
+@@ -537,7 +537,7 @@ extern int matchpathcon_index(const char *path,
+    with the same inode (e.g. due to multiple hard links).  If so, then
+    use the latter of the two specifications based on their order in the 
+    file contexts configuration.  Return the used specification index. */
+-#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && __BITS_PER_LONG < 64
++#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && !defined(__INO_T_MATCHES_INO64_T)
+ #define matchpathcon_filespec_add matchpathcon_filespec_add64
+ #endif
+ extern int matchpathcon_filespec_add(ino_t ino, int specind, const char *file);
+diff --git a/libselinux/src/matchpathcon.c b/libselinux/src/matchpathcon.c
+index 51f0e4ff9..a4f650459 100644
+--- a/libselinux/src/matchpathcon.c
++++ b/libselinux/src/matchpathcon.c
+@@ -261,7 +261,7 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
+ 	return -1;
+ }
+ 
+-#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && __BITS_PER_LONG < 64
++#if (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) && !defined(__INO_T_MATCHES_INO64_T)
+ /* alias defined in the public header but we undefine it here */
+ #undef matchpathcon_filespec_add
+ 
+@@ -280,9 +280,13 @@ int matchpathcon_filespec_add(unsigned long ino, int specind,
+ {
+ 	return matchpathcon_filespec_add64(ino, specind, file);
+ }
++#elif (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) || defined(__INO_T_MATCHES_INO64_T)
++
++static_assert(sizeof(uint64_t) == sizeof(ino_t), "inode size mismatch");
++
+ #else
+ 
+-static_assert(sizeof(unsigned long) == sizeof(ino_t), "inode size mismatch");
++static_assert(sizeof(uint32_t) == sizeof(ino_t), "inode size mismatch");
+ 
+ #endif
+ 
+
+From 7848fff1d192661b92b78c25962a65c85b98cfa7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=D0=BD=D0=B0=D0=B1?= <nabijaczleweli@nabijaczleweli.xyz>
+Date: Sat, 22 Feb 2025 23:21:07 +0100
+Subject: [PATCH 2/2] Insert -I../../libselinux/include and
+ -L../../libselinux/src into subprograms where needed
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+These subprograms (sublibraries) use plain
+  #include <selinux/selinux.h>
+  cc ... -lselinux ...
+&c. which includes/links to the system libselinux.
+
+Naturally, this doesn't work if you don't have one.
+
+All of these fell out of a plain make invocation,
+yielding errors like
+  cc  -O2 -Werror -Wall -Wextra -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-format-attribute -Wmissing-noreturn -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wshadow -Wstrict-prototypes -Wundef -Wunused -Wwrite-strings -fno-common -I../include -D_GNU_SOURCE -c -o boolean_record.o boolean_record.c
+  boolean_record.c:26:10: fatal error: selinux/selinux.h: No such file or directory
+     26 | #include <selinux/selinux.h>
+        |          ^~~~~~~~~~~~~~~~~~~
+  compilation terminated.
+
+  make[2]: Entering directory '/tmp/selinux/policycoreutils/sestatus'
+  cc -O2 -Werror -Wall -Wextra -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-format-attribute -Wmissing-noreturn -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wshadow -Wstrict-prototypes -Wundef -Wunused -Wwrite-strings -fno-common -D_FILE_OFFSET_BITS=64   -c -o sestatus.o sestatus.c
+  sestatus.c:12:10: fatal error: selinux/selinux.h: No such file or directory
+     12 | #include <selinux/selinux.h>
+        |          ^~~~~~~~~~~~~~~~~~~
+  compilation terminated.
+
+Signed-off-by: наб <nabijaczleweli@nabijaczleweli.xyz>
+---
+ libsemanage/src/Makefile             | 4 ++--
+ mcstrans/src/Makefile                | 2 ++
+ mcstrans/utils/Makefile              | 3 +++
+ policycoreutils/load_policy/Makefile | 2 +-
+ policycoreutils/newrole/Makefile     | 3 ++-
+ policycoreutils/run_init/Makefile    | 3 ++-
+ policycoreutils/secon/Makefile       | 3 ++-
+ policycoreutils/semodule/Makefile    | 2 ++
+ policycoreutils/sestatus/Makefile    | 3 ++-
+ policycoreutils/setfiles/Makefile    | 2 ++
+ policycoreutils/setsebool/Makefile   | 2 ++
+ policycoreutils/unsetfiles/Makefile  | 3 ++-
+ python/audit2allow/Makefile          | 2 ++
+ restorecond/Makefile                 | 4 ++--
+ 14 files changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/libsemanage/src/Makefile b/libsemanage/src/Makefile
+index 8dfbd7620..4db45aade 100644
+--- a/libsemanage/src/Makefile
++++ b/libsemanage/src/Makefile
+@@ -60,7 +60,7 @@ CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-noreturn -Wmissing-format-
+ SWIG_CFLAGS += -Wno-error -Wno-unused-but-set-variable -Wno-unused-variable -Wno-shadow \
+ 		-Wno-unused-parameter -Wno-missing-prototypes
+ 
+-override CFLAGS += -I../include -D_GNU_SOURCE
++override CFLAGS += -I../include -I../../libselinux/include -D_GNU_SOURCE
+ RANLIB ?= ranlib
+ 
+ SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./
+@@ -90,7 +90,7 @@ $(LIBA): $(OBJS)
+ 	$(RANLIB) $@
+ 
+ $(LIBSO): $(LOBJS)
+-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -lsepol -laudit -lselinux -lbz2 -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -L../../libselinux/src -lsepol -laudit -lselinux -lbz2 -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
+ 	ln -sf $@ $(TARGET)
+ 
+ $(LIBPC): $(LIBPC).in ../VERSION
+diff --git a/mcstrans/src/Makefile b/mcstrans/src/Makefile
+index 89dbac16c..884870680 100644
+--- a/mcstrans/src/Makefile
++++ b/mcstrans/src/Makefile
+@@ -16,6 +16,8 @@ PROG_OBJS= $(patsubst %.c,%.o,$(PROG_SRC))
+ PROG=mcstransd
+ INITSCRIPT=mcstrans
+ CFLAGS ?= -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute
++override CFLAGS += -I../../libselinux/include
++override LDFLAGS+= -L../../libselinux/src
+ 
+ all: $(PROG)
+ 
+diff --git a/mcstrans/utils/Makefile b/mcstrans/utils/Makefile
+index eec714f19..57a73932b 100644
+--- a/mcstrans/utils/Makefile
++++ b/mcstrans/utils/Makefile
+@@ -2,6 +2,9 @@
+ PREFIX ?= /usr
+ SBINDIR ?= $(PREFIX)/sbin
+ 
++override CFLAGS += -I../../libselinux/include
++override LDFLAGS+= -L../../libselinux/src
++
+ TARGETS=transcon untranscon
+ 
+ # If no specific libsepol.a is specified, fall back on LDFLAGS search path
+diff --git a/policycoreutils/load_policy/Makefile b/policycoreutils/load_policy/Makefile
+index ad80d500e..6b2fa8808 100644
+--- a/policycoreutils/load_policy/Makefile
++++ b/policycoreutils/load_policy/Makefile
+@@ -6,7 +6,7 @@ MANDIR ?= $(PREFIX)/share/man
+ LOCALEDIR ?= $(DESTDIR)$(PREFIX)/share/locale
+ 
+ CFLAGS ?= -Werror -Wall -W
+-override CFLAGS += $(LDFLAGS) -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
++override CFLAGS += $(LDFLAGS) -I../../libselinux/include -L../../libselinux/src -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
+ override LDLIBS += -lsepol -lselinux
+ 
+ TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
+diff --git a/policycoreutils/newrole/Makefile b/policycoreutils/newrole/Makefile
+index 4b8145d35..308e92dc9 100644
+--- a/policycoreutils/newrole/Makefile
++++ b/policycoreutils/newrole/Makefile
+@@ -24,7 +24,8 @@ VERSION = $(shell cat ../VERSION)
+ 
+ CFLAGS ?= -Werror -Wall -W
+ EXTRA_OBJS =
+-override CFLAGS += -DVERSION=\"$(VERSION)\" -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
++override CFLAGS += -I../../libselinux/include -DVERSION=\"$(VERSION)\" -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux
+ ifeq ($(PAMH), y)
+ 	override CFLAGS += -DUSE_PAM
+diff --git a/policycoreutils/run_init/Makefile b/policycoreutils/run_init/Makefile
+index 619ebc1d7..6c92fda14 100644
+--- a/policycoreutils/run_init/Makefile
++++ b/policycoreutils/run_init/Makefile
+@@ -10,7 +10,8 @@ PAMH ?= $(shell test -f /usr/include/security/pam_appl.h && echo y)
+ AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
+ 
+ CFLAGS ?= -Werror -Wall -W
+-override CFLAGS += -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
++override CFLAGS += -I../../libselinux/include -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux
+ ifeq ($(PAMH), y)
+ 	override CFLAGS += -DUSE_PAM
+diff --git a/policycoreutils/secon/Makefile b/policycoreutils/secon/Makefile
+index 440503a14..c21026069 100644
+--- a/policycoreutils/secon/Makefile
++++ b/policycoreutils/secon/Makefile
+@@ -7,7 +7,8 @@ MANDIR ?= $(PREFIX)/share/man
+ WARNS=-Werror -W -Wall -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wno-format-zero-length -Wformat-nonliteral -Wformat-security -Wfloat-equal
+ VERSION = $(shell cat ../VERSION)
+ CFLAGS ?= $(WARNS) -O1
+-override CFLAGS += -DVERSION=\"$(VERSION)\"
++override CFLAGS += -I../../libselinux/include -DVERSION=\"$(VERSION)\"
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux
+ 
+ all: secon
+diff --git a/policycoreutils/semodule/Makefile b/policycoreutils/semodule/Makefile
+index 9fbf99d61..31cb26708 100644
+--- a/policycoreutils/semodule/Makefile
++++ b/policycoreutils/semodule/Makefile
+@@ -5,6 +5,8 @@ SBINDIR ?= $(PREFIX)/sbin
+ MANDIR = $(PREFIX)/share/man
+ 
+ CFLAGS ?= -Werror -Wall -W
++override CFLAGS += -I../../libselinux/include -I../../libsemanage/include
++override LDFLAGS+= -L../../libselinux/src     -L../../libsemanage/src
+ override LDLIBS += -lsepol -lselinux -lsemanage
+ SEMODULE_OBJS = semodule.o
+ 
+diff --git a/policycoreutils/sestatus/Makefile b/policycoreutils/sestatus/Makefile
+index aebf050c2..70748157b 100644
+--- a/policycoreutils/sestatus/Makefile
++++ b/policycoreutils/sestatus/Makefile
+@@ -7,7 +7,8 @@ MANDIR = $(PREFIX)/share/man
+ ETCDIR ?= /etc
+ 
+ CFLAGS ?= -Werror -Wall -W
+-override CFLAGS += -D_FILE_OFFSET_BITS=64
++override CFLAGS += -I../../libselinux/include -D_FILE_OFFSET_BITS=64
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux
+ 
+ all: sestatus
+diff --git a/policycoreutils/setfiles/Makefile b/policycoreutils/setfiles/Makefile
+index 84ffb08bf..8e589a305 100644
+--- a/policycoreutils/setfiles/Makefile
++++ b/policycoreutils/setfiles/Makefile
+@@ -6,6 +6,8 @@ MANDIR = $(PREFIX)/share/man
+ AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
+ 
+ CFLAGS ?= -g -Werror -Wall -W
++override CFLAGS += -I../../libselinux/include
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux -lsepol -lpthread
+ 
+ ifeq ($(AUDITH), y)
+diff --git a/policycoreutils/setsebool/Makefile b/policycoreutils/setsebool/Makefile
+index fc5b4ff63..54489ba36 100644
+--- a/policycoreutils/setsebool/Makefile
++++ b/policycoreutils/setsebool/Makefile
+@@ -6,6 +6,8 @@ MANDIR = $(PREFIX)/share/man
+ BASHCOMPLETIONDIR ?= $(PREFIX)/share/bash-completion/completions
+ 
+ CFLAGS ?= -Werror -Wall -W
++override CFLAGS += -I../../libselinux/include -I../../libsemanage/include
++override LDFLAGS+= -L../../libselinux/src     -L../../libsemanage/src
+ override LDLIBS += -lselinux -lsemanage
+ SETSEBOOL_OBJS = setsebool.o
+ 
+diff --git a/policycoreutils/unsetfiles/Makefile b/policycoreutils/unsetfiles/Makefile
+index 9e5edc044..08fa1abb7 100644
+--- a/policycoreutils/unsetfiles/Makefile
++++ b/policycoreutils/unsetfiles/Makefile
+@@ -2,7 +2,8 @@ PREFIX ?= /usr
+ SBINDIR ?= $(PREFIX)/sbin
+ MANDIR ?= $(PREFIX)/share/man
+ 
+-override CFLAGS += -D_GNU_SOURCE
++override CFLAGS += -I../../libselinux/include -D_GNU_SOURCE
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux
+ 
+ 
+diff --git a/python/audit2allow/Makefile b/python/audit2allow/Makefile
+index fb04b8bdc..28b8f7f2b 100644
+--- a/python/audit2allow/Makefile
++++ b/python/audit2allow/Makefile
+@@ -8,6 +8,8 @@ BINDIR ?= $(PREFIX)/bin
+ MANDIR ?= $(PREFIX)/share/man
+ 
+ CFLAGS ?= -Werror -Wall -W
++override CFLAGS += -I../../libselinux/include
++override LDFLAGS+= -L../../libselinux/src
+ 
+ # If no specific libsepol.a is specified, fall back on LDFLAGS search path
+ # Otherwise, as $(LIBSEPOLA) already appears in the dependencies, there
+diff --git a/restorecond/Makefile b/restorecond/Makefile
+index 1ddfcc926..b8b86eb45 100644
+--- a/restorecond/Makefile
++++ b/restorecond/Makefile
+@@ -18,8 +18,8 @@ GIO_CFLAGS = -DHAVE_DBUS $(shell $(PKG_CONFIG) --cflags gio-2.0)
+ GIO_LIBS = $(shell $(PKG_CONFIG) --libs gio-2.0)
+ 
+ CFLAGS ?= -g -Werror -Wall -W
+-override CFLAGS += $(GIO_CFLAGS)
+-
++override CFLAGS += -I../../libselinux/include $(GIO_CFLAGS)
++override LDFLAGS+= -L../../libselinux/src
+ override LDLIBS += -lselinux $(GIO_LIBS)
+ 
+ all: restorecond

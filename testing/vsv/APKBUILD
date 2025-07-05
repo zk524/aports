@@ -4,10 +4,11 @@ pkgver=2.0.0
 pkgrel=0
 pkgdesc="Runit service manager CLI"
 url="https://github.com/bahamas10/vsv"
+# loongarch64: blocked by old libc crate
 arch="all !loongarch64"
 license="MIT"
 makedepends="cargo"
-subpackages=""
+subpackages="$pkgname-doc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/bahamas10/vsv/archive/refs/tags/v$pkgver.tar.gz"
 # net: cargo
 options="net"
@@ -29,7 +30,7 @@ check() {
 }
 
 package() {
-
+	install -D -m644 LICENSE -t "$pkgdir"/usr/share/doc/$pkgname
 	install -D -m755 target/release/vsv -t "$pkgdir"/usr/bin/
 }
 

@@ -1,0 +1,68 @@
+# Contributor: Stephen <stephen@theandar1an.com>
+# Maintainer: Stephen <stephen@theandar1an.com>
+pkgname=krill
+pkgver=0.14.6
+pkgrel=0
+pkgdesc="RPKI Certificate Authority and Publication Server written in Rust"
+url="https://nlnetlabs.nl/projects/routing/krill/"
+arch="all"
+options="net"
+license=" MPL-2.0"
+depends="
+	bash
+	libgcc
+	openssl
+	tini
+	tzdata
+	util-linux
+	"
+makedepends="
+    cargo
+	cargo-auditable
+	openssl-dev
+	rust
+	"
+checkdepends=""
+pkgusers="krill"
+pkggroups="krill"
+install="$pkgname.pre-install $pkgname.post-install"
+subpackages="$pkgname-openrc"
+
+source="$pkgname-$pkgver.tar.gz::https://github.com/NLnetLabs/krill/archive/refs/tags/v$pkgver.tar.gz
+	krill.conf
+	$pkgname.initd
+	$pkgname.confd
+	"
+
+# Disable bundled-libs, sqlite, k2v
+_cargo_opts="--frozen --release"
+
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build $_cargo_opts
+}
+
+check() {
+	cargo test $_cargo_opts --workspace
+}
+
+package() {
+	# Replace with proper package command(s)
+	:
+
+	install -m755 -D "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/init.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.confd \
+		"$pkgdir"/etc/conf.d/$pkgname
+}
+sha512sums="
+14070eabd012f8a9113b68df9e65a02892b4a4a08063961bbec952fade4790b74d2865139914a7f17fccc1bc03ae887a37371ff1695735a4cc840c5aff8676b7  krill-0.14.6.tar.gz
+cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e  krill.conf
+3f3e19fb4aa72924eac02ba27a57a86a96fa05431f85315172d17cbe2901484461098ad692e6a6b3d4c8ab0b95dd8d061c7733292930b0c95ba42c1916014d69  krill.initd
+74fd6d07fb26ff43b257e8b914facdc220d3d84956adfb7bb302e5b65d718967dacb76133b59fde77855c5c94eada88292dd3cc9b80be3e14a570c96490e7080  krill.confd
+"

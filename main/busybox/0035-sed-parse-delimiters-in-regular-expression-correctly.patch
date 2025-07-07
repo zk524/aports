@@ -1,0 +1,287 @@
+From ca4451a8bbf298a6e50d9f334e087769e93aef48 Mon Sep 17 00:00:00 2001
+From: Yao Zi <ziyao@disroot.org>
+Date: Thu, 14 Nov 2024 11:10:30 +0000
+Subject: [PATCH] sed: parse delimiters in regular expression correctly
+
+As specified in POSIX standard[1], delimiters in bracket expression
+should not terminate the regex and always have their original meaning,
+hus 's/[\/]//' matches either '\' or '/' and 's/[[:alpha:]/]//' matches
+any alphabet or '/'. But with busybox sed,
+
+	$ echo a | sed 's/[[:alpha:]/]/b/'
+	sed: bad option in substitution expression
+	$ echo '\/' | sed 's/[\/]//'
+	\
+
+This commit implements a state machine to determine whether a character
+is in a bracket expression, in order to parse escape sequence and
+command delimiters correctly, following the specification and other
+implementation's behavior (GNU and NetBSD). Corresponding test is added
+as well.
+
+[1]: "Regular Expressions in sed" https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sed.html
+Closes: http://lists.busybox.net/pipermail/busybox/2024-July/090844.html
+Fixes: e998c7c03 ("sed: fix handling of escaped delimiters in s/// search pattern, closes 14541")
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ editors/sed.c       | 145 ++++++++++++++++++++++++++++++++++----------
+ testsuite/sed.tests |   5 ++
+ 2 files changed, 119 insertions(+), 31 deletions(-)
+
+diff --git a/editors/sed.c b/editors/sed.c
+index 6179c5e80..72397bf37 100644
+--- a/editors/sed.c
++++ b/editors/sed.c
+@@ -254,17 +254,102 @@ static void cleanup_outname(void)
+ 	if (G.outname) unlink(G.outname);
+ }
+ 
+-/* strcpy, replacing "\from" with 'to'. If to is NUL, replacing "\any" with 'any' */
+-static unsigned parse_escapes(char *dest, const char *string, int len, char from, char to)
++/*
++ * detect whether c is in a bracket expression, status should be the value
++ * returned on last call to this function, or 0 on the first call.
++ * returns 0 if c is not in bracket expression, or -1 if c is start of an
++ * escape sequence.
++ */
++static int is_in_bracket_expr(int status, char c)
++{
++	enum {
++		ESCAPE_SEQ_BACKSLASH = -1,
++		OUT_OF_BRACKET_EXPR = 0,
++		COMPLEMENT,
++		FIRST_LITERAL_CHAR,
++		IN_BRACKET_EXPR,
++		BRACKET_IN_BRACKET_EXPR,
++		COLLATING_SEQ = '.',
++		COLLATING_SEQ_END,
++		EQU_CLASS = '=',
++		EQU_CLASS_END,
++		WORD_CLASS = ':',
++		WORD_CLASS_END
++	};
++
++	switch (status) {
++	case OUT_OF_BRACKET_EXPR:
++		status = c == '\\' ? ESCAPE_SEQ_BACKSLASH :
++			 c == '[' ? COMPLEMENT :
++			 status;
++		break;
++	case COMPLEMENT:
++		if (c == '^') {
++			status = FIRST_LITERAL_CHAR;
++			break;
++		}
++		// fallthrough
++	case FIRST_LITERAL_CHAR:
++		// ']' and '-' as the first character (maybe after '^') are
++		// literal. we don't care about the later.
++		if (c == ']') {
++			status = IN_BRACKET_EXPR;
++			break;
++		}
++
++		// avoid the beginning '[' of a collating element being ignored
++		// fallthrough
++	case IN_BRACKET_EXPR:
++		status = c == '[' ? BRACKET_IN_BRACKET_EXPR :
++			 c == ']' ? OUT_OF_BRACKET_EXPR :
++			 IN_BRACKET_EXPR;
++		break;
++	case BRACKET_IN_BRACKET_EXPR:
++		status = c == '.' ? COLLATING_SEQ :
++			 c == '=' ? EQU_CLASS :
++			 c == ':' ? WORD_CLASS :
++			 IN_BRACKET_EXPR;
++		break;
++	case COLLATING_SEQ:
++	case EQU_CLASS:
++	case WORD_CLASS:
++		if (c == status)
++			status++;
++		break;
++	case COLLATING_SEQ_END:
++	case EQU_CLASS_END:
++	case WORD_CLASS_END:
++		status = c == ']' ? IN_BRACKET_EXPR : status - 1;
++		break;
++	default:
++		bb_error_msg_and_die("Unreachable code path");
++		break;
++	}
++
++	return status;
++}
++
++/* strcpy, replacing "\from" with 'to'.
++ * If to is NUL, replacing "\any" with 'any'.
++ * If re is 1, '\from' in bracket expression is not treated as escape sequence.
++ *  to must be non-NUL in this case.
++ */
++static unsigned parse_escapes(char *dest, const char *string, int len,
++			      char from, char to, int re)
+ {
+ 	char *d = dest;
+ 	int i = 0;
++	int status = re - 1;
+ 
+ 	if (len == -1)
+ 		len = strlen(string);
+ 
+ 	while (i < len) {
+-		if (string[i] == '\\') {
++		if (re)
++			status = is_in_bracket_expr(status, string[i]);
++
++		if (status < 0 && string[i] == '\\') {
++			status = re - 1;
+ 			if (!to || string[i+1] == from) {
+ 				if ((*d = to ? to : string[i+1]) == '\0')
+ 					return d - dest;
+@@ -276,6 +361,7 @@ static unsigned parse_escapes(char *dest, const char *string, int len, char from
+ 			*d++ = '\\';
+ 			/* fall through: copy next char verbatim */
+ 		}
++
+ 		if ((*d = string[i++]) == '\0')
+ 			return d - dest;
+ 		d++;
+@@ -284,7 +370,8 @@ static unsigned parse_escapes(char *dest, const char *string, int len, char from
+ 	return d - dest;
+ }
+ 
+-static char *copy_parsing_escapes(const char *string, int len, char delim)
++static char *copy_parsing_escapes(const char *string, int len, char delim,
++				  int re)
+ {
+ 	const char *s;
+ 	char *dest = xmalloc(len + 1);
+@@ -292,14 +379,15 @@ static char *copy_parsing_escapes(const char *string, int len, char delim)
+ 	/* sed recognizes \n */
+ 	/* GNU sed also recognizes \t and \r */
+ 	for (s = "\nn\tt\rr"; *s; s += 2) {
+-		len = parse_escapes(dest, string, len, s[1], s[0]);
++		len = parse_escapes(dest, string, len, s[1], s[0],
++				    re && delim == s[1]);
+ 		string = dest;
+ 	}
+ 	if (delim) {
+ 		/* we additionally unescape any instances of escaped delimiter.
+ 		 * For example, in 's+9\++X+' the pattern is "9+", not "9\+".
+ 		 */
+-		len = parse_escapes(dest, string, len, delim, delim);
++		len = parse_escapes(dest, string, len, delim, delim, re);
+ 	}
+ 	return dest;
+ }
+@@ -312,31 +400,25 @@ static char *copy_parsing_escapes(const char *string, int len, char delim)
+  */
+ static int index_of_next_unescaped_regexp_delim(int delimiter, const char *str)
+ {
+-	int bracket = -1;
+-	int escaped = 0;
++	int status = 0, bracket = 1;
+ 	int idx = 0;
+-	char ch;
+ 
+ 	if (delimiter < 0) {
+-		bracket--;
++		bracket = 0;
+ 		delimiter = -delimiter;
+ 	}
+ 
+-	for (; (ch = str[idx]) != '\0'; idx++) {
+-		if (bracket >= 0) {
+-			if (ch == ']'
+-			 && !(bracket == idx - 1 || (bracket == idx - 2 && str[idx - 1] == '^'))
+-			) {
+-				bracket = -1;
+-			}
+-		} else if (escaped)
+-			escaped = 0;
+-		else if (ch == '\\')
+-			escaped = 1;
+-		else if (bracket == -1 && ch == '[')
+-			bracket = idx;
+-		else if (ch == delimiter)
++	for (; str[idx]; idx++) {
++		if (bracket)
++			status = is_in_bracket_expr(status, str[idx]);
++
++		if (status < 0 || (!bracket && str[idx] == '\\')) {
++			status = 0;
++			if (str[idx + 1])
++				idx++;
++		} else if (status == 0 && str[idx] == delimiter) {
+ 			return idx;
++		}
+ 	}
+ 
+ 	/* if we make it to here, we've hit the end of the string */
+@@ -360,14 +442,14 @@ static int parse_regex_delim(const char *cmdstr, char **match, char **replace)
+ 
+ 	/* save the match string */
+ 	idx = index_of_next_unescaped_regexp_delim(delimiter, cmdstr_ptr);
+-	*match = copy_parsing_escapes(cmdstr_ptr, idx, delimiter);
++	*match = copy_parsing_escapes(cmdstr_ptr, idx, delimiter, 1);
+ 	/* save the replacement string */
+ 	cmdstr_ptr += idx + 1;
+ 	idx = index_of_next_unescaped_regexp_delim(- (int)delimiter, cmdstr_ptr);
+ //GNU sed 4.8:
+ // echo 789 | sed 's&8&\&&'       - 7&9  ("\&" remained "\&")
+ // echo 789 | sed 's1\(8\)1\1\11' - 7119 ("\1\1" become "11")
+-	*replace = copy_parsing_escapes(cmdstr_ptr, idx, delimiter != '&' ? delimiter : 0);
++	*replace = copy_parsing_escapes(cmdstr_ptr, idx, delimiter != '&' ? delimiter : 0, 0);
+ 
+ 	return ((cmdstr_ptr - cmdstr) + idx);
+ }
+@@ -395,7 +477,7 @@ static int get_address(const char *my_str, int *linenum, regex_t ** regex)
+ 			delimiter = *++pos;
+ 		next = index_of_next_unescaped_regexp_delim(delimiter, ++pos);
+ 		if (next != 0) {
+-			temp = copy_parsing_escapes(pos, next, 0);
++			temp = copy_parsing_escapes(pos, next, 0, 0);
+ 			G.previous_regex_ptr = *regex = xzalloc(sizeof(regex_t));
+ 			xregcomp(*regex, temp, G.regex_type);
+ 			free(temp);
+@@ -590,10 +672,11 @@ static const char *parse_cmd_args(sed_cmd_t *sed_cmd, const char *cmdstr)
+ 			cmdstr++;
+ 		}
+ 		len = strlen(cmdstr);
+-		sed_cmd->string = copy_parsing_escapes(cmdstr, len, 0);
++		sed_cmd->string = copy_parsing_escapes(cmdstr, len, 0, 0);
+ 		cmdstr += len;
+ 		/* "\anychar" -> "anychar" */
+-		parse_escapes(sed_cmd->string, sed_cmd->string, -1, '\0', '\0');
++		parse_escapes(sed_cmd->string, sed_cmd->string, -1, '\0', '\0',
++			      0);
+ 	}
+ 	/* handle file cmds: (r)ead */
+ 	else if (idx <= IDX_w) { /* r,w */
+@@ -625,8 +708,8 @@ static const char *parse_cmd_args(sed_cmd_t *sed_cmd, const char *cmdstr)
+ 
+ 		cmdstr += parse_regex_delim(cmdstr, &match, &replace)+1;
+ 		/* \n already parsed, but \delimiter needs unescaping. */
+-		parse_escapes(match,   match,   -1, i, i);
+-		parse_escapes(replace, replace, -1, i, i);
++		parse_escapes(match,   match,   -1, i, i, 1);
++		parse_escapes(replace, replace, -1, i, i, 0);
+ 
+ 		sed_cmd->string = xzalloc((strlen(match) + 1) * 2);
+ 		for (i = 0; match[i] && replace[i]; i++) {
+diff --git a/testsuite/sed.tests b/testsuite/sed.tests
+index 626542e33..0656e3bda 100755
+--- a/testsuite/sed.tests
++++ b/testsuite/sed.tests
+@@ -428,6 +428,11 @@ testing "sed understands duplicate file name" \
+ 	"" \
+ 	"a\nb\nc\n"
+ 
++testing "sed doesn't escape delimiter in bracket expressions" \
++	"sed 's/[\/]//'" '/' "" '\/'
++
++testing "sed delimiter in bracket expression doesn't abort the regex" \
++	"sed 's/[[:alpha:]/]/b/'" 'b' "" 'z'
+ 
+ # testing "description" "commands" "result" "infile" "stdin"
+ 

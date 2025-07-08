@@ -1,0 +1,26 @@
+diff --git a/matchbox/core/mb-window-manager.c b/matchbox/core/mb-window-manager.c
+index 0a78bf6..9bc9ec1 100644
+--- a/matchbox/core/mb-window-manager.c
++++ b/matchbox/core/mb-window-manager.c
+@@ -35,7 +35,8 @@
+ #endif
+ 
+ #if USE_GTK
+-#  include <gdk/gdk.h>
++#include <gdk/gdk.h>
++#include<gtk/gtk.h>
+ #endif
+ 
+ #include <stdarg.h>
+diff --git a/matchbox/managers/simple/matchbox-window-manager-2-simple.c b/matchbox/managers/simple/matchbox-window-manager-2-simple.c
+index a27313f..9645164 100644
+--- a/matchbox/managers/simple/matchbox-window-manager-2-simple.c
++++ b/matchbox/managers/simple/matchbox-window-manager-2-simple.c
+@@ -10,6 +10,7 @@
+ 
+ #if USE_GTK
+ #include <gdk/gdkx.h>
++#include <gtk/gtk.h>
+ #endif
+ 
+ enum {

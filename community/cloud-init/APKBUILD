@@ -170,7 +170,6 @@ package() {
 		grub_dpkg \
 		landscape \
 		lxd \
-		reset_rmc \
 		rh_subscription \
 		snap \
 		spacewalk \

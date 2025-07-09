@@ -22,7 +22,7 @@ checkdepends="
 	lua$_luaversion-luautf8
 	lua$_luaversion-socket
 	"
-source="https://github.com/lunarmodules/luacheck/archive/v$pkgver/$pkgname-$pkgver.tar.gz
+source="https://github.com/lunarmodules/luacheck/archive/v$pkgver/luacheck-$pkgver.tar.gz
 	fixed-luaver.patch
 	"
 

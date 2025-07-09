@@ -1,0 +1,54 @@
+# Contributor: Ioana Ciobanu <ioana@ioanaciobanu.net>
+# Maintainer: Ioana Ciobanu <ioana@ioanaciobanu.net>
+pkgname=sdrpp
+pkgver=1.2.1_git20250624
+_commit=a94e2d6712a6e5c80d6f6f27052e38be8a2ae0a9
+pkgrel=0
+pkgdesc="SDR++ is a cross-platform and open source SDR software with the aim of being bloat free and simple to use."
+url="https://www.sdrpp.org/"
+arch="all"
+license="GPL-3.0"
+depends="
+	fftw
+	glfw
+	zstd
+	libvolk
+	airspyhf
+	airspyone-host
+	rtaudio
+	hackrf
+	librtlsdr
+"
+makedepends="
+	cmake
+	ninja
+	fftw-dev
+	glfw-dev
+	zstd-dev
+	libvolk-dev
+	airspyhf-dev
+	airspyone-host-dev
+	rtaudio-dev
+	hackrf-dev
+	librtlsdr-dev
+"
+source="https://github.com/AlexandreRouma/SDRPlusPlus/archive/$_commit.tar.gz"
+builddir="$srcdir/SDRPlusPlus-$_commit"
+options="!check" # there are no tests
+
+build() {
+	# disable plutosdr because alpine doesn't package libad9361
+	cmake -B build -G Ninja\
+		-DCMAKE_INSTALL_PREFIX="/usr"\
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5\
+		-DOPT_BUILD_PLUTOSDR_SOURCE=0
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+e279c28da372bab824bdcdb71217887f216efec7e42d15d3e5f3b803310a44b6957c132d3ffad0c4fe130eb7f0dc14cd7efabb551a38a54a144af7c438c74d94  a94e2d6712a6e5c80d6f6f27052e38be8a2ae0a9.tar.gz
+"

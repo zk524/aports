@@ -34,10 +34,6 @@ source="font-teluguvijayam-$pkgver-Gidugu.ttf::https://siliconandhra.org/fonts/G
 	"
 options="!check" # is a font
 
-build() {
-	return 0
-}
-
 package() {
 	cd "$srcdir"
 	for font in *.ttf; do

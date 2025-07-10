@@ -2,7 +2,7 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=zzz
 pkgver=0.2.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Suspend or hibernate your computer"
 url="https://github.com/jirutka/zzz"
 arch="all"
@@ -13,7 +13,7 @@ source="https://github.com/jirutka/zzz/archive/v$pkgver/zzz-$pkgver.tar.gz"
 options="!check"  # no tests provided
 
 build() {
-	make CFLAGS="$CFLAGS -DZZZ_LOCK_FILE='\"/run/zzz.lock\"'"
+	make CFLAGS="$CFLAGS"
 }
 
 package() {

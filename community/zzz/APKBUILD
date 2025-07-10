@@ -13,7 +13,7 @@ source="https://github.com/jirutka/zzz/archive/v$pkgver/zzz-$pkgver.tar.gz"
 options="!check"  # no tests provided
 
 build() {
-	make CFLAGS="$CFLAGS"
+	make
 }
 
 package() {

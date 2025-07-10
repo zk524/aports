@@ -7,7 +7,7 @@ pkgdesc="Virtual guitar amplifier for Linux."
 url="https://guitarix.org/"
 arch="aarch64 x86 x86_64"
 license="GPL-2.0"
-makedepends="boost-dev curl-dev eigen-dev glibmm-dev gtkmm3-dev glib-dev jack-dev libsndfile-dev fftw-dev gtk+3.0-dev lv2-dev lilv-dev lrdf-dev raptor2-dev sassc waf zita-convolver-dev"
+makedepends="boost-dev curl-dev eigen-dev glibmm-dev gtkmm3-dev glib-dev jack-dev liblo-dev libsndfile-dev fftw-dev gtk+3.0-dev lv2-dev lilv-dev lrdf-dev raptor2-dev sassc waf zita-convolver-dev"
 subpackages="$pkgname-jack $pkgname-lv2 $pkgname-dev"
 source="$pkgname-$pkgver.tar.xz::https://github.com/brummer10/guitarix/releases/download/V$pkgver/guitarix2-$pkgver.tar.xz"
 # check: no test suite
@@ -23,8 +23,7 @@ build() {
 		--lib-dev \
 		--no-faust \
 		--no-avahi \
-		--no-bluez \
-		--no-nsm
+		--no-bluez
 	python3 waf build
 }
 

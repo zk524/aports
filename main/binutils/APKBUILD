@@ -18,7 +18,7 @@ source="https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz
 	"
 options="!check"
 
-if [ "$CBUILD" = "$CTARGET" ]; then
+if [ "$CHOST" = "$CTARGET" ]; then
 	_alpine_archs="
 		aarch64
 		armhf

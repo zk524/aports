@@ -1,7 +1,7 @@
 # Contributor: Sören Tempel <soeren+alpine@soeren-tempel.net>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=graphviz
-pkgver=12.2.1
+pkgver=13.1.2
 pkgrel=0
 pkgdesc="Graph Visualization Tools"
 url="https://www.graphviz.org/"
@@ -51,11 +51,6 @@ source="$pkgname-$pkgver.tar.xz::https://gitlab.com/api/v4/projects/4207231/pack
 # secfixes:
 #   2.46.0-r0:
 #     - CVE-2020-18032
-
-prepare() {
- 	default_prepare
-	update_config_sub
-}
 
 build() {
 	LIBPOSTFIX=/ \
@@ -131,5 +126,5 @@ graphs() {
 }
 
 sha512sums="
-e0f93f69108c5b5bbde8a27a4359c2c834b03142f1e7dfda7c5c19a2fb780c23c287bacfa8724708b8ced604020554ea194bf0c3b1d9f584b3b5862445554c4e  graphviz-12.2.1.tar.xz
+4c9d03cd014c078812bf2a1b043fe841b5a1b4aa026d762bf1253effb8a0c81b5a7f2820041d7bc9ec2db4de95f831d7ebdd93c0c1c00ff5d5cf3724cc13a319  graphviz-13.1.2.tar.xz
 "

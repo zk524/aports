@@ -1,6 +1,6 @@
 # Maintainer: Thomas Liske <thomas@fiasko-nw.net>
 pkgname=efibootguard
-pkgver=0.16
+pkgver=0.20
 pkgrel=0
 pkgdesc="Simple UEFI boot loader with support for safely switching between current and updated partition sets"
 url="https://github.com/siemens/efibootguard/"
@@ -25,7 +25,6 @@ checkdepends="bats"
 options="!check" # fff is missing on alpine
 source="$pkgname-$pkgver.tar.gz::https://github.com/siemens/efibootguard/archive/v$pkgver/efibootguard-$pkgver.tar.gz
 	0001-fallback-outb_p.patch
-	0002-gcc14.patch
 	"
 subpackages="$pkgname-dev $pkgname-bash-completion $pkgname-zsh-completion"
 
@@ -50,7 +49,6 @@ package() {
 }
 
 sha512sums="
-a3b4c2ec70ad9a50b728145edf180e8c171a7876653c6984e53c2bdf6b85316098ab734590d778f11b986d070a0d061ce095c0a1b9164a73519004557dc4a785  efibootguard-0.16.tar.gz
-14c72455a9fea4b796a19a6c2713765ff1eb82f6ab5d4ab72ab61e8f4824aa6436a4d7bb003c50235a44c089559dc27e717e90aeb624b19de2522436911c4343  0001-fallback-outb_p.patch
-4d71622db9940bfab60e5f25b8f8e53622adf94abf20b713c623120bb998099246856983399bd4096be63567ef10a67567e87b8721670261c0718e54018eedc8  0002-gcc14.patch
+75e8b65f5614c9d7674528b5b572971db0d89d69669e491d1b88ef441edc763743227ac66cad3c97f2b6248e99ffb6a9989a1d7f60001fc0eb4e3e29c27ed323  efibootguard-0.20.tar.gz
+e1a3f4c3749dba615fe0619a178a7977f747acdbc0d73d97fcc453d27361cf64baee7e67f9e206e543796fd8924009892b213e06d0e409bbf6745ada8cc2c415  0001-fallback-outb_p.patch
 "

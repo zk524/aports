@@ -2,49 +2,64 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=qscintilla
 pkgver=2.14.1
-pkgrel=2
+pkgrel=3
 pkgdesc="QScintilla is a port to Qt of Neil Hodgson's Scintilla C++ editor control"
 url="https://www.riverbankcomputing.com/software/qscintilla"
 arch="all"
 license="GPL-3.0-only"
 subpackages="
-	$pkgname-designer:designer
 	$pkgname-dev
-	$pkgname-lang::noarch
+	qt5-$pkgname-designer:qt5_designer
+	qt6-$pkgname-designer:qt6_designer
+	qt5-$pkgname-lang:qt5_lang:noarch
+	qt6-$pkgname-lang:qt6_lang:noarch
+	qt5-$pkgname:qt5
+	qt6-$pkgname:qt6
 	"
 makedepends="
 	py3-ply
 	py3-pyqt-builder
 	py3-sip
 	python3-dev
-	qt5-qtbase-dev
 	qt5-qttools-dev
+	qt6-qttools-dev
 	"
 source="https://www.riverbankcomputing.com/static/Downloads/QScintilla/$pkgver/QScintilla_src-$pkgver.tar.gz"
 builddir="$srcdir/QScintilla_src-$pkgver"
 
-# py3-qscintilla is blocked by py3-qt5 on armhf
+# py3-qscintilla is blocked by py3-qt6 on armhf
 _with_python3_bindings="no"
 case "$CARCH" in
 	armhf) ;;
 	*)
-		makedepends="$makedepends py3-qt5"
-		subpackages="$subpackages py3-$pkgname:py3"
+		makedepends="$makedepends py3-qt5 py3-qt6"
+		subpackages="$subpackages py3-qt5-$pkgname:qt5_py3 py3-qt6-$pkgname:qt6_py3"
 		_with_python3_bindings="yes"
 		;;
 esac
 
+prepare() {
+	default_prepare
+	cp -ar "$builddir" "$srcdir/QScintilla_src-$pkgver-qt5"
+	mv "$builddir" "$srcdir/QScintilla_src-$pkgver-qt6"
+}
+
 build() {
-	cd "$builddir"/src
+	qt5_build
+	qt6_build
+}
+
+qt5_build() {
+	cd "$builddir-qt5/src"
 	qmake-qt5
 	make
 
-	cd "$builddir"/designer
+	cd "$builddir-qt5/designer"
 	qmake-qt5 INCLUDEPATH+=../src QMAKE_LIBDIR+=../src
 	make
 
 	if [ "$_with_python3_bindings" = "yes" ]; then
-		cd "$builddir"/Python
+		cd "$builddir-qt5/Python"
 		mv pyproject-qt5.toml pyproject.toml
 		sip-build \
 			--no-make \
@@ -58,39 +73,117 @@ build() {
 	fi
 }
 
+qt6_build() {
+	cd "$builddir-qt6/src"
+	export QMAKEFEATURES="$builddir-qt6/src/features/"
+	qmake6
+	make
+
+	cd "$builddir-qt6/designer"
+	qmake6 INCLUDEPATH+=../src QMAKE_LIBDIR+=../src
+	make
+
+	if [ "$_with_python3_bindings" = "yes" ]; then
+		cd "$builddir-qt6/Python"
+		mv pyproject-qt6.toml pyproject.toml
+		LD_LIBRARY_PATH="$builddir-qt6/src" sip-build \
+			--no-make \
+			--qmake /usr/bin/qmake6 \
+			--qsci-features-dir ../src/features \
+			--qsci-include-dir ../src \
+			--qsci-library-dir ../src \
+			--api-dir /usr/share/qt6/qsci/api/python
+		cd build
+		make
+	fi
+}
+
 check() {
-	cd src
+	# check build for Qt5
+	cd "$builddir-qt5/src"
+	make check
+
+	# check build for Qt6
+	cd "$builddir-qt6/src"
 	make check
 }
 
 package() {
-	make -C src DESTDIR="$pkgdir" INSTALL_ROOT="$pkgdir" install
-	make -C designer DESTDIR="$pkgdir" INSTALL_ROOT="$pkgdir" install
+	# package for Qt5
+	make -C "$builddir-qt5/src" INSTALL_ROOT="$pkgdir" install
+	make -C "$builddir-qt5/designer" INSTALL_ROOT="$pkgdir" install
 
 	if [ "$_with_python3_bindings" = "yes" ]; then
-		make -C Python/build DESTDIR="$pkgdir" INSTALL_ROOT="$pkgdir" install
+		make -C "$builddir-qt5/Python/build" INSTALL_ROOT="$pkgdir/py3-qt5-qscintilla" install
+	fi
+
+	# package for Qt6
+	make -C "$builddir-qt6/src" INSTALL_ROOT="$pkgdir" install
+	make -C "$builddir-qt6/designer" INSTALL_ROOT="$pkgdir" install
+
+	if [ "$_with_python3_bindings" = "yes" ]; then
+		make -C "$builddir-qt6/Python/build" INSTALL_ROOT="$pkgdir/py3-qt6-qscintilla" install
 	fi
 }
 
-designer() {
-	pkgdesc="$pkgname (Qt5 designer plugin)"
-	depends="$pkgname=$pkgver-r$pkgrel"
+qt5() {
+	pkgdesc="$pkgdesc (Qt5)"
+
+	amove usr/lib/*qt5.so*
+	amove usr/share/qt5
+}
+
+qt6() {
+	pkgdesc="$pkgdesc (Qt6)"
+
+	amove usr/lib/*qt6.so*
+	amove usr/share/qt6
+}
+
+qt5_designer() {
+	pkgdesc="$pkgdesc (Qt5 designer plugin)"
+	depends="qt5-$pkgname=$pkgver-r$pkgrel"
 
 	amove usr/lib/qt5/plugins/designer
 }
 
-py3() {
-	pkgdesc="$pkgname (Python3 bindings)"
-	depends="py3-qt5"
+qt6_designer() {
+	pkgdesc="$pkgdesc (Qt6 designer plugin)"
+	depends="qt6-$pkgname=$pkgver-r$pkgrel"
 
-	amove usr/lib/python3*
-	amove usr/share/qt5/qsci/api/python/QScintilla.api
+	amove usr/lib/qt6/plugins/designer
 }
 
-lang() {
-	install_if="lang $pkgname=$pkgver-r$pkgrel"
+qt5_py3() {
+	pkgdesc="$pkgdesc (Python3 Qt5 bindings)"
+	depends="py3-qt5"
+
+	mkdir -p "$subpkgdir/usr"
+	mv -v "$pkgdir/py3-qt5-qscintilla/usr" "$subpkgdir/usr"
+	rmdir "$pkgdir/py3-qt5-qscintilla"
+}
+
+qt6_py3() {
+	pkgdesc="$pkgdesc (Python3 Qt6 bindings)"
+	depends="py3-qt6"
+
+	mkdir -p "$subpkgdir/usr"
+	mv -v "$pkgdir/py3-qt6-qscintilla/usr" "$subpkgdir/usr"
+	rmdir "$pkgdir/py3-qt6-qscintilla"
+}
+
+qt5_lang() {
+	pkgdesc="$pkgdesc (Qt5 translations)"
+	install_if="lang qt5-$pkgname=$pkgver-r$pkgrel"
 
 	amove usr/share/qt5/translations
+}
+
+qt6_lang() {
+	pkgdesc="$pkgdesc (Qt6 translations)"
+	install_if="lang qt6-$pkgname=$pkgver-r$pkgrel"
+
+	amove usr/share/qt6/translations
 }
 
 sha512sums="

@@ -1,7 +1,7 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=openscad
 pkgver=2021.01
-pkgrel=16
+pkgrel=17
 pkgdesc="The programmers solid 3D CAD modeller"
 url="http://openscad.org/"
 # Glew and GLES on ARM don't play well with each other
@@ -146,7 +146,7 @@ check() {
 	# trim whitespace before and after list and separate expressions by | (regex or)
 	failing_tests="$(echo "$failing_tests" | tr -d '\n' | sed -e 's/^\s*//' -e 's/\s*$//' -e 's/\s\+/|/g')"
 
-	cmake -G Ninja \
+	cmake3.5 -G Ninja \
 		-DEXPERIMENTAL=OFF \
 		.
 	cmake

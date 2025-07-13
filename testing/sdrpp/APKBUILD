@@ -9,15 +9,7 @@ url="https://www.sdrpp.org/"
 arch="all"
 license="GPL-3.0"
 depends="
-	fftw
-	glfw
-	zstd
-	libvolk
-	airspyhf
 	airspyone-host
-	rtaudio
-	hackrf
-	librtlsdr
 "
 makedepends="
 	cmake

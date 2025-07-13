@@ -4,7 +4,7 @@
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=octave
 pkgver=10.2.0
-pkgrel=0
+pkgrel=1
 pkgdesc="A high-level language, primarily intended for numerical computations"
 url="https://www.gnu.org/software/octave/"
 # ppc64le: tests fail, segfault in sparse/eigs.m

@@ -1,0 +1,32 @@
+# Contributor:
+# Maintainer:
+pkgname=calc
+pkgver=2.15.1.1
+pkgrel=0
+pkgdesc="C-style arbitrary precision calculator"
+url="http://www.isthe.com/chongo/tech/comp/calc/"
+arch="all"
+license="LGPL1.2"
+makedepends="readline-dev"
+options="!check" # testing is severily broken
+#subpackages="$pkgname-doc"
+source="https://github.com/lcn2/calc/releases/download/v$pkgver/calc-$pkgver.tar.bz2"
+builddir="$srcdir/"
+
+build() {
+	cd "calc-$pkgver"
+	make clobber calc-static-only BLD_TYPE=calc-static-only
+}
+
+package() {
+	cd "calc-$pkgver"
+	make -f Makefile calc-static-only install BLD_TYPE=calc-static-only
+	make BINDIR="$pkgdir/bin" \
+		 INCDIR="$pkgdir/include" \
+		 LIBDIR="$pkgdir/lib" \
+		 MANDIR="$pkgdir/man" \
+		 -f Makefile calc-static-only install BLD_TYPE=calc-static-only
+}
+sha512sums="
+29ea0e3a71067be20acd377ef91d4507a205b7a15e921dc0c6b0f64b4cf33db25b1172b27484b7ea124ea1b0d6aa20d92e2183de22cc7d0833f64ce79816391a  calc-2.15.1.1.tar.bz2
+"

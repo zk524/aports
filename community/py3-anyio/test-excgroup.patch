@@ -6,13 +6,13 @@ index 2280b65..3ae6f4b 100644
 --- a/tests/test_taskgroups.py
 +++ b/tests/test_taskgroups.py
 @@ -8,7 +8,6 @@ from collections.abc import AsyncGenerator, Coroutine, Generator
- from typing import Any, NoReturn, cast
+ from unittest import mock
  
  import pytest
 -from exceptiongroup import catch
+ from pytest import FixtureRequest, MonkeyPatch
  
  import anyio
- from anyio import (
 @@ -1304,13 +1303,12 @@ async def test_cancel_before_entering_task_group() -> None:
  
  

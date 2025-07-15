@@ -76,17 +76,19 @@ source="https://kernel.org/pub/linux/kernel/v6.x/linux-$_kernver.tar.xz
 	usbip.initd
 	usbip.confd
 	"
-# append patch for non .0
-case $pkgver in
-*.*.0)
-	;;
-*.*.*)
-	source="
-		patch-$pkgver.patch.xz::https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/patch-$pkgver.xz
-		$source
-		"
-	;;
-esac
+if [ "${pkgver%.0}" = "$pkgver" ]; then
+	# Prepend to apply first
+	if [ "${pkgver%_rc*}" = "$pkgver" ]; then
+		source="patch-$pkgver.patch.xz::https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/patch-$pkgver.xz $source"
+	else
+		_patchver=${pkgver##*.} && _patchver=${_patchver%_rc*}
+		_prevver=$_kernver.$((_patchver-1))
+		source="patch-$_prevver.patch.xz::https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/patch-$_prevver.xz
+			patch-$pkgver.patch.xz::https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/stable-review/patch-${pkgver/_/-}.xz
+			$source
+			"
+	fi
+fi
 
 builddir="$srcdir"/linux-$_kernver
 

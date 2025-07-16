@@ -20,7 +20,6 @@ prepare() {
 }
 
 build() {
-    cd "$builddir"
     python3 -m build
 }
 

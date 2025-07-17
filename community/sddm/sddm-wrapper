@@ -1,0 +1,39 @@
+#!/bin/sh
+
+set -e
+
+# Wrapper script that stops an /etc/inittab managed getty while SDDM is starting
+# This is needed for the non-root sddm-helper to claim the tty
+
+create_inittab() {
+	local TMPFILE=$(mktemp)
+	sed 's/^tty1::/#tty1::/g' /etc/inittab > $TMPFILE
+
+        [ $(stat -c '%s' /etc/inittab) != $(stat -c '%s' $TMPFILE) ] && nsenter -t 1 -m mount --bind $TMPFILE /etc/inittab
+	local result=$?
+
+	rm $TMPFILE
+
+	[ $result -eq 0 ]
+}
+
+prepare_vt() {
+	create_inittab || return 0;
+
+	# apply updated inittab
+
+	trap '' SIGHUP
+	kill -HUP 1
+
+	# restore inittab
+
+	nsenter -t 1 -m umount /etc/inittab
+
+	# apply original inittab after waiting for SDDM to claim tty1
+
+	setsid sh -c 'sleep 1; kill -HUP 1'
+}
+
+prepare_vt
+
+exec "$@"

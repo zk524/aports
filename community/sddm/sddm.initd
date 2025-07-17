@@ -13,6 +13,9 @@ depend() {
 
 start_pre() {
 	checkpath -d -o sddm:video -m755 /var/lib/sddm
+
+	command_args="$command $command_args"
+	command=/usr/libexec/sddm-wrapper
 }
 
 start_post() {

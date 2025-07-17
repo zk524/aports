@@ -5,7 +5,8 @@ pkgver=0.14.6
 pkgrel=0
 pkgdesc="RPKI Certificate Authority and Publication Server written in Rust"
 url="https://nlnetlabs.nl/projects/routing/krill/"
-arch="all"
+# have not determined why builds fail for listed non-arch's yet
+arch="all !aarch64 !loongarch64 !armv7 !x86 !riscv64 !s390x "
 options="net"
 license=" MPL-2.0"
 depends="
@@ -34,7 +35,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/NLnetLabs/krill/archive/refs
 	$pkgname.confd
 	"
 
-# Disable bundled-libs, sqlite, k2v
 _cargo_opts="--frozen --release"
 
 

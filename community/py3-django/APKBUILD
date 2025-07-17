@@ -2,7 +2,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=py3-django
 _pkgname=django
-pkgver=4.2.23
+pkgver=5.2.4
 pkgrel=0
 pkgdesc="High-level Python3 Web framework"
 url="https://djangoproject.com/"
@@ -143,5 +143,5 @@ package() {
 }
 
 sha512sums="
-3461a83b5c6cad1db8b1a54fa44735c6ec6d1aadb476973f3a76f8c1c3ffc49549ad8aded28baf05be439bdf8f9890f79b4908f16655804eb805a74dbb0e6ab3  django-4.2.23.tar.gz
+af2ec6cfa6e17c6b348c165947ac76287f51e5ab6edc90682b57f8412ec22aaa0cd326516f65b63438d2ef48a70d306a59bfb7a235adeae0e753b654a3b0059c  django-5.2.4.tar.gz
 "

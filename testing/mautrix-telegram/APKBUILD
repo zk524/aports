@@ -1,7 +1,7 @@
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 maintainer="Dominic <git@msrd0.de>"
 pkgname=mautrix-telegram
-pkgver=0.15.2
+pkgver=0.15.3
 pkgrel=0
 pkgdesc="A Matrix-Telegram hybrid puppeting/relaybot bridge"
 url="https://github.com/tulir/mautrix-telegram"
@@ -79,7 +79,7 @@ package() {
 }
 
 sha512sums="
-6506969c9deb72257219b852251ea0848fb390454b576add9f8c3110af938c2cd53928a00f6127ae04212d7fce2205ca0e71066d8f6e3b9668eefc8057243753  mautrix-telegram-v0.15.2.tar.gz
+d816e5103e5ed1ff8b0b1517a531128243559229e5b6934e1655758f0ec6901a7300c8822c64655fbf08796f868d0cdf000a90323edb4e0ecc727b4f93b68d13  mautrix-telegram-v0.15.3.tar.gz
 ee0c29822abf213acf2a63205bdb3fca845c916682f1f7dadf17f443fba8191844a0ee9e0ca323e6de7d539e141f2df1b4457a7fbfbe8af607e3189809d23205  mautrix-telegram.initd
 7b3c15dd2d0671c4c777bcf4f2e905d9a0b639a54828313ac9db1a9793fde3d092e92f18aa896bff94b9a81db3df74b3de65661c6879cb648d36f5cec2437df0  mautrix-telegram.confd
 09e9afa45341927fc6085573aaa8a2b3816ad75b664d57ebd2e44cab2612f97972f022e66a4b98e5cd1c7421d257859ffa5333201f11a5666cdaa470b8618c03  default-log-dir.patch

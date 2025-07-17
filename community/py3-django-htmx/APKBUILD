@@ -2,7 +2,7 @@
 maintainer="Celeste <cielesti@protonmail.com>"
 pkgname=py3-django-htmx
 pkgver=1.23.2
-pkgrel=0
+pkgrel=1
 pkgdesc="Extensions for using Django with htmx"
 url="https://django-htmx.readthedocs.io/"
 arch="noarch"

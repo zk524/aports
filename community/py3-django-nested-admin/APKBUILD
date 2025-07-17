@@ -4,7 +4,7 @@ pkgname=py3-django-nested-admin
 #_pkgreal is used by apkbuild-pypi to find modules at PyPI
 _pkgreal=django-nested-admin
 pkgver=4.1.1
-pkgrel=1
+pkgrel=2
 # upstream sometimes does not tag releases
 _gittag=f9508c4c5079e17017aaef8240230601ccabe211
 pkgdesc="Django admin classes that allow for nested inlines"

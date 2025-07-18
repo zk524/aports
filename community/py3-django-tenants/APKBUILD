@@ -6,7 +6,7 @@ _pkgreal=django-tenants
 # mistagged release
 _gittag=v3.7.8
 pkgver=3.8.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Tenant support for Django using PostgreSQL schemas."
 url="https://pypi.python.org/project/django-tenants"
 arch="noarch"

@@ -26,6 +26,7 @@ makedepends="
 	py3-wheel
 	"
 checkdepends="
+	py3-anyio
 	py3-pytest
 	py3-pytest-django
 	py3-django-rest-framework

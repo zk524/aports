@@ -1,13 +1,13 @@
 # Contributor: Maxim Karasev <begs@disroot.org>
 # Maintainer: Dhruvin Gandhi <contact@dhru.vin>
 pkgname=nvim-lspconfig
-pkgver=2.2.0
+pkgver=2.3.0
 pkgrel=0
 pkgdesc="quickstart configurations for the neovim LSP client"
 url="https://github.com/neovim/nvim-lspconfig"
 arch="noarch"
 license="Apache-2.0"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc $pkgname-autoenable"
 source="https://github.com/neovim/nvim-lspconfig/archive/refs/tags/v$pkgver/nvim-lspconfig-$pkgver.tar.gz"
 depends="neovim"
 options="!check" # requires vusted
@@ -17,11 +17,19 @@ build() {
 }
 
 package() {
-	local plgdir="$pkgdir"/usr/share/nvim/site/pack/dist/opt/$pkgname
-	install -d "$plgdir"
-	cp -a lua plugin "$plgdir"
-	install -Dm644 doc/*.txt doc/tags -t "$plgdir"/doc
+	find lua plugin doc -type f -exec install -Dvm644 '{}' \
+		"$pkgdir/usr/share/nvim/site/pack/dist/opt/$pkgname/{}" \;
 	install -Dm644 doc/*.md README.md -t "$pkgdir"/usr/share/doc/$pkgname
+
+	install -d "$pkgdir"/usr/share/nvim/site/after/plugin
+	cat > "$pkgdir"/usr/share/nvim/site/after/plugin/$pkgname.lua <<-EOF
+	vim.cmd 'packadd $pkgname'
+	EOF
+}
+
+autoenable() {
+	install_if="$pkgname=$pkgver-r$pkgrel nvim-autoenable"
+	amove usr/share/nvim/site/after
 }
 
 doc() {
@@ -30,5 +38,5 @@ doc() {
 }
 
 sha512sums="
-9f88678d4cd49b65af88ac1e788b8905f7f90520dc95b80b0d9979fa1fa9028dae226814fd54bdfd0fb3e84eaa0482a086511fad820b5595d2f660efa288f41c  nvim-lspconfig-2.2.0.tar.gz
+f12b3b3dc9da2c87ca40c8ae7a29485a5fd0afca96346cd057190aa787fcfa518f14ef2cb07be7ab46824955f95b74bdae91413b4ee4ec286c60a5e80071c245  nvim-lspconfig-2.3.0.tar.gz
 "

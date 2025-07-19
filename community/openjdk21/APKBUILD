@@ -7,8 +7,8 @@ pkgrel=0
 pkgdesc="Oracle OpenJDK 21"
 provider_priority=21
 url="https://github.com/openjdk/jdk21u"
-# oracle dropped support for 32 bit
-arch="all !x86 !armhf !armv7"
+# armhf: server incompatible and client segfaults
+arch="all !armhf"
 license="GPL-2.0-with-classpath-exception"
 makedepends="
 	$pkgname-bootstrap
@@ -53,6 +53,7 @@ source="jdk-$_pkgver.tar.gz::https://github.com/openjdk/jdk21u/archive/jdk-$_pkg
 	riscv64.patch
 	JDK-8299245_disable-tests.patch
 	JDK-8218814_Wformat-security.patch
+	32bit.patch
 "
 builddir="$srcdir/jdk21u-jdk-${_pkgver/+/-}"
 
@@ -76,6 +77,11 @@ loongarch64)	_jvm_variants=zero	;;
 *)		_jvm_variants=server	;;
 esac
 ldpath="/$_java_home/lib:/$_java_home/lib/$_jvm_variants"
+
+case "$CARCH" in
+	# TODO enable once bootstrap was done
+	x86|arm*) options="!check" ;;
+esac
 
 # secfixes:
 #   21.0.8_p9-r0:
@@ -344,4 +350,5 @@ be96bfa216efedd0cb094c8b4a2307f84ff6fa8a3a2c30f2f6610023e24979eee7be6b96305d893e
 73c8aeb77e2b1f105c62d1739a19f973cb34a16380fbff142605ee7e93cbc388613fa693d96b779ce73e82cd5fc4e46ffb09c3e3a522a8d459088dd47388ac23  riscv64.patch
 403862d6e6919f40d705c59463e9d6ecc5ac5b3f95e107a7e91f84d64068176e4abe7b63f15ba8fc9b4ab2f1ab58f3a489e07716e4c370356e40c2699e870b4f  JDK-8299245_disable-tests.patch
 66f9d80d189ee2cd3658a5d4f744247731ee2659c3bae2f3e8e4ca29d834170aa265b7db9376d80c3050d10defc8247c2d8ed690d06707fe86691a6c2066c320  JDK-8218814_Wformat-security.patch
+7e4e02fff396afcf9bd3e37b382f9a9356aee2c4b64fedc6a5f55ca7a80eefe85e80069628abcb252a27f6588b10279b0775505fb1aab013614481d92d5f57f0  32bit.patch
 "

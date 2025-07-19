@@ -1,0 +1,31 @@
+# Maintainer: qaqland <qaq@qaq.land>
+pkgname=perl-filesys-df
+pkgver=0.92
+pkgrel=0
+pkgdesc="Filesys::Df - Perl extension for filesystem disk space information"
+url="https://metacpan.org/pod/Filesys::Df"
+arch="all"
+license="Artistic-1.0-Perl OR GPL-1.0-or-later"
+depends="perl"
+makedepends="perl-dev"
+subpackages="$pkgname-doc"
+source="https://cpan.metacpan.org/authors/id/I/IG/IGUTHRIE/Filesys-Df-$pkgver.tar.gz"
+builddir="$srcdir/Filesys-Df-$pkgver"
+
+build() {
+	perl Makefile.PL INSTALLDIRS=vendor
+	make
+}
+
+check() {
+	make test
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	find "$pkgdir" \( -name perllocal.pod -o -name .packlist \) -delete
+}
+
+sha512sums="
+3fa49740d1853b2f7011459053521474ca7194a825033246fd1ff01a124b5eaaf941a4c4666335d4586fe0e68d8c85700ccb2f3471e3c3ca1c01a1962696fece  Filesys-Df-0.92.tar.gz
+"

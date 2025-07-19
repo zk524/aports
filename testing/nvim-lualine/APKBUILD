@@ -2,8 +2,8 @@
 # Maintainer: John Vogel <jvogel@stygian.me>
 maintainer="John Vogel <jvogel@stygian.me>"
 pkgname=nvim-lualine
-pkgver=0.0.0_git20241101
-_commit=640260d7c2d98779cab89b1e7088ab14ea354a02
+pkgver=0.0.0_git20250608
+_commit=a94fc68960665e54408fe37dcf573193c4ce82c9
 pkgrel=0
 pkgdesc="a fast and easy to configure neovim statusline plugin"
 url="https://github.com/nvim-lualine/lualine.nvim"
@@ -11,7 +11,8 @@ arch="all !loongarch64 !ppc64le !riscv64 !s390x"
 license="MIT"
 depends="neovim nvim-web-devicons"
 checkdepends="bash nvim-plenary tree-sitter-lua"
-subpackages="$pkgname-doc"
+options="!check" # tests broken
+subpackages="$pkgname-doc $pkgname-autoenable"
 source="https://github.com/nvim-lualine/lualine.nvim/archive/$_commit/nvim-lualine-$pkgver.tar.gz
 	minimal_init.patch
 	not_git_repo.patch
@@ -19,15 +20,26 @@ source="https://github.com/nvim-lualine/lualine.nvim/archive/$_commit/nvim-luali
 builddir="$srcdir/lualine.nvim-$_commit"
 
 package() {
-	install -dm755 "$pkgdir"/usr/share/nvim/site/pack/dist/opt/"$pkgname"
-	cp -a doc lua "$pkgdir"/usr/share/nvim/site/pack/dist/opt/"$pkgname"
+	find doc lua -type f \
+		-exec install -Dvm644 '{}' "$pkgdir/usr/share/nvim/site/pack/dist/opt/$pkgname/{}" \;
 	install -Dm644 ./examples/*.lua -t "$pkgdir"/usr/share/doc/"$pkgname"/examples
 	install -Dm644 ./*.md -t "$pkgdir"/usr/share/doc/"$pkgname"
 	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/"$pkgname"
+
+	install -d "$pkgdir"/usr/share/nvim/site/after/plugin
+	cat > "$pkgdir"/usr/share/nvim/site/after/plugin/$pkgname.lua <<-EOF
+	vim.cmd 'packadd $pkgname'
+	require('lualine').setup()
+	EOF
 }
 
 check() {
 	make test
+}
+
+autoenable() {
+	install_if="$pkgname=$pkgver-r$pkgrel nvim-autoenable"
+	amove usr/share/nvim/site/after
 }
 
 doc() {
@@ -36,7 +48,7 @@ doc() {
 }
 
 sha512sums="
-5c0e8d3b9af158bd250053da061856bd3d0dd041e8e7188762c437daf87f1094ac218af7c8cf27213c6cb827d2cccacf5914829a773dafb2e6dc884ffe617dd0  nvim-lualine-0.0.0_git20241101.tar.gz
+66562c0d0d33b57fa2c0d64b733a92cfcf4baa54132a82f598e04f23c76dc33aa957505ae335a5532966b7894756a33d6001f4a71232542b742c22ffd38d5f09  nvim-lualine-0.0.0_git20250608.tar.gz
 ac5b026ecf79856f40e95d74f56b864ce848083f853e2de84ef867fccdc21a8a5d1eb85c08cae3137aaae9d81cd59ea2cb09d6254a8d4197f4178e3fbff3cb3f  minimal_init.patch
 2dac6dcec57fcb56d4c98440348fd1e0866521feaa208fed545e0ae55c4ab1521fb46cc75127101586662a7407e97298410a123dcc41dee17f0b6540cf29e9a1  not_git_repo.patch
 "

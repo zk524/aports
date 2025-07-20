@@ -1,19 +1,15 @@
 # Contributor: Patrycja Rosa <alpine@ptrcnull.me>
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=unicorn
-pkgver=2.0.1
-pkgrel=4
+pkgver=2.1.3
+pkgrel=0
 pkgdesc="Unicorn CPU emulator engine"
 url="https://www.unicorn-engine.org/"
-# ppc: fails check
-# rest: ftbfs
-arch="all !armv7 !armhf !ppc64le !s390x !loongarch64"
+arch="all !loongarch64"
 license="GPL-2.0-or-later"
 makedepends="cmake linux-headers python3 py3-setuptools py3-gpep517 py3-wheel samurai"
 subpackages="$pkgname-dev py3-$pkgname-pyc:pyc py3-unicorn:py3"
 source="https://github.com/unicorn-engine/unicorn/archive/refs/tags/$pkgver/unicorn-$pkgver.tar.gz
-	endian.patch
-	python-libdir.patch
 	"
 
 # secfixes:
@@ -59,7 +55,5 @@ py3() {
 }
 
 sha512sums="
-4249d33d38614ea1ca51e38c7838cb276306100aa44c65ad1b3e39304e4b856ac643a9c6f9d13678fc07bea58989a08b64653d17afe9e62bcef2936ba63e1b1f  unicorn-2.0.1.tar.gz
-c1373171c1d9ee106f9dab94e7d283b3b8c1eb19013ffc96d1b6156c1571057f9984f08db4f07ea98d6bd7855a6aa39386ca33cade4bb9e367cb8b2705c865c1  endian.patch
-994150b8625ff7198ef344f85b88f62a3cb9fe429a8985d03ec049fd99f223ccc8b59a1a909d025a0ef387fab4b2c22b96b5ee4de93efdda57a7747fae080704  python-libdir.patch
+49aa53cd981e88857cf579010e3e86a6808fbfc9723fbf73c3d5bcebf945c5d78ffcdf426a4bbcd06b13337a3a0ce76bce8815497e3521023ae432a053d3e4bb  unicorn-2.1.3.tar.gz
 "

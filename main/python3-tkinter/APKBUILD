@@ -5,12 +5,12 @@ maintainer="Jingyun Hua <huajingyun@loongson.cn>"
 pkgname=python3-tkinter
 pkgver=3.12.11
 _basever="${pkgver%.*}"
-pkgrel=0
+pkgrel=1
 pkgdesc="A graphical user interface for the Python programming language"
 url="https://wiki.python.org/moin/TkInter"
 arch="all"
 license="PSF-2.0"
-replaces="python3"
+replaces="python$_basever"
 subpackages="$pkgname-tests::noarch python3-idle:_idle:noarch $pkgname-pyc"
 makedepends="
 	bzip2-dev
@@ -44,8 +44,13 @@ builddir="$srcdir/Python-$pkgver"
 #     - CVE-2019-5010
 
 prepare() {
-	local _pyapkbuild="$startdir"/../../main/python3/APKBUILD
+	local _pyapkbuild="$startdir"/../../main/python$_basever/APKBUILD
 	if [ -e "$_pyapkbuild" ]; then
+		_pdefault=$(. "$_pyapkbuild" ; echo $_default)
+		if [ "$_default" = "no" ]; then
+			error "pkgver is not default python"
+			return 1
+		fi
 		_pver=$(. "$_pyapkbuild" ; echo $pkgver)
 		if [ "$_pver" != "$pkgver" ]; then
 			error "python version mismatch ($_pver). Set pkgver=$_pver"

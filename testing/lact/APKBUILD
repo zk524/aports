@@ -1,0 +1,82 @@
+# Contributor: andar1an <stephen@theandar1an.com>
+# Maintainer: andar1an <stephen@theandar1an.com>
+pkgname=lact
+pkgver=0.8.0
+pkgrel=0
+pkgdesc="Linux GPU Configuration And Monitoring Tool"
+url="https://github.com/ilya-zlobintsev/LACT"
+# armhf, armv7, riscv64, s390x: fails to build libc crate (SIGSEGV)
+arch="x86 x86_64 aarch64 ppc64le loongarch64"
+# for spurious network errors
+options=net
+license="MIT"
+makedepends="
+	cargo
+	cargo-auditable
+	clang20-dev
+	clang20-libclang
+	glib-dev
+	gtk4.0-dev
+	fuse3-dev
+	libdrm
+	hwdata
+	make
+	pkgconf
+	vulkan-tools
+	opencl-icd-loader-dev
+"
+subpackages="$pkgname-openrc $pkgname-headless $pkgname-doc"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/ilya-zlobintsev/LACT/archive/refs/tags/v$pkgver.tar.gz
+	config.yaml
+	lact.initd
+	lact.confd
+"
+builddir="$srcdir"/LACT-"$pkgver"
+
+	# Requires dynamic linking due to incompatability with driver libraries being loaded dynamically
+	# (libdrm for amd/intel and nvml for nvidia). GTK doesn't support static linking either.
+export RUSTFLAGS="$RUSTFLAGS -C target-feature=-crt-static"
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	# Headless
+	cargo auditable build -p lact --release --no-default-features --features=nvidia --frozen
+	mv "$builddir"/target/release/$pkgname "$builddir"/target/release/"$pkgname"-headless
+
+	# Default Build
+	cargo auditable build -p lact --release --frozen
+
+}
+
+headless() {
+	pkgdesc="$pkgdesc (without GUI)"
+
+	install -Dm755 "$builddir"/target/release/lact-headless "$subpkgdir"/usr/bin/lact
+}
+
+check() {
+	cargo test --frozen --verbose
+}
+
+package() {
+	install -Dm755 target/release/lact -t "$pkgdir"/usr/bin/
+	install -Dm644 res/io.github.ilya_zlobintsev.LACT.desktop -t "$pkgdir"/usr/share/applications/
+	install -Dm644 res/io.github.ilya_zlobintsev.LACT.svg -t "$pkgdir"/usr/share/icons/hicolor/scalable/apps/
+	install -Dm644 res/io.github.ilya_zlobintsev.LACT.metainfo.xml -t "$pkgdir"/usr/share/metainfo/
+	install -m755 -D "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/init.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.confd \
+		"$pkgdir"/etc/conf.d/$pkgname
+}
+
+sha512sums="
+7f78ede8eeb1d7eb3b90e5dbc64cabeacf41270647476b8680160ade9088f289c4ede9700e4b34dc21c3114bc849632397bc77fe2ea5297c6c4f29e52287e1a5  lact-0.8.0.tar.gz
+bcaba8ae76d5fd74e734c11a391331dcc6002a9a6ee806c9ed62c833baf127c1884a47a1e2e8153f5caf9e76f0dc384c7a244bf948d89c892bb4fc4e3df96525  config.yaml
+90417a1175312ec2180de26aa816a1b6773b877e8e229efbc80685b6a395f667c31e5f77fa0e00a1e9eff914c5879afb7f967fe93f50859aa521dd38086348ae  lact.initd
+40b225176fbbe9329af1db6afb24f461396efc81423778e8b0232a70b01c8f4c7c3015e5ba25154dcedcd9ba8eaa62607bb2054a538d98081a7944c9db03bb75  lact.confd
+"

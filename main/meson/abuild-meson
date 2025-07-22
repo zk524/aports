@@ -7,19 +7,16 @@
 if [ "$CHOST" != "$CBUILD" ]; then
 	_meson_crossfile="abuild-meson.cross"
 	_meson_target_endian=little
-	# just the first part of the hostspec
 	_meson_target_cpu="$CARCH"
 	_meson_cpu_family="$CARCH"
 	case "$CARCH" in
-	arm*)
-		_meson_cpu_family=arm
-		;;
-	ppc64le)
-		_meson_cpu_family=ppc64
-		;;
-	s390x)
-		_meson_target_endian=big
-		;;
+	aarch64*) _meson_cpu_family=aarch64 ;;
+	arm*) _meson_cpu_family=arm ;;
+	*le|*el) _meson_cpu_family="${CARCH%??}" ;;
+	esac
+	case "$CARCH" in
+	*le|*el) ;;
+	s390x|mips*|ppc*|*be|*eb) _meson_target_endian=big ;;
 	esac
 	cat > $_meson_crossfile <<-EOF
 	[binaries]

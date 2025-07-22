@@ -1,0 +1,9 @@
+Use a fixed lua version to resolve issues when `lua` resolves to a
+different version.
+
+--- a/bin/luacheck.lua
++++ b/bin/luacheck.lua
+@@ -1,2 +1,2 @@
+-#!/usr/bin/env lua
++#!/usr/bin/env lua@luaver@
+ require "luacheck.main"

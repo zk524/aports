@@ -6,10 +6,10 @@ Subject: [PATCH] Patch niminst's (de)install paths to be FHS/Alpine compliant
 
 --- a/tools/niminst/install.nimf
 +++ b/tools/niminst/install.nimf
-@@ -32,9 +32,9 @@
+@@ -32,17 +32,17 @@
        bindir=$1
        configdir="/etc/?proj"
-       libdir="/usr/lib/?proj"
+       libdir="/usr/lib/?proj/lib"
 -      docdir="/usr/share/?proj/doc"
 +      docdir="/usr/share/doc/?proj"
        datadir="/usr/share/?proj/data"
@@ -18,9 +18,10 @@ Subject: [PATCH] Patch niminst's (de)install paths to be FHS/Alpine compliant
        ;;
      "/usr/local/bin")
        bindir=$1
-@@ -42,7 +42,7 @@
-       libdir="/usr/local/lib/?proj"
-       docdir="/usr/local/share/?proj/doc"
+       configdir="/etc/?proj"
+       libdir="/usr/local/lib/?proj/lib"
+-      docdir="/usr/local/share/?proj/doc"
++      docdir="/usr/local/share/doc/?proj"
        datadir="/usr/local/share/?proj/data"
 -      nimbleDir="/opt/nimble/pkgs/?c.nimblePkgName-?c.version"
 +      nimbleDir="/usr/local/share/nimble/pkgs/?c.nimblePkgName-?c.version"
@@ -29,11 +30,13 @@ Subject: [PATCH] Patch niminst's (de)install paths to be FHS/Alpine compliant
        bindir="/opt/?proj/bin"
 --- a/tools/niminst/deinstall.nimf
 +++ b/tools/niminst/deinstall.nimf
-@@ -19,17 +19,17 @@ if [ $# -eq 1 ] ; then
+@@ -18,18 +18,18 @@
+     "/usr/bin")
        bindir=/usr/bin
        configdir=/etc/?proj
-       libdir=/usr/lib/?proj
+-      libdir=/usr/lib/?proj
 -      docdir=/usr/share/?proj/doc
++      libdir=/usr/lib/?proj/lib
 +      docdir=/usr/share/doc/?proj
        datadir=/usr/share/?proj/data
 -      nimbleDir="/opt/nimble/pkgs/?c.nimblePkgName-?c.version"
@@ -42,8 +45,9 @@ Subject: [PATCH] Patch niminst's (de)install paths to be FHS/Alpine compliant
      "/usr/local/bin")
        bindir=/usr/local/bin
        configdir=/etc/?proj
-       libdir=/usr/local/lib/?proj
+-      libdir=/usr/local/lib/?proj
 -      docdir=/usr/local/share/?proj/doc
++      libdir=/usr/local/lib/?proj/lib
 +      docdir=/usr/local/share/doc/?proj
        datadir=/usr/local/share/?proj/data
 -      nimbleDir="/opt/nimble/pkgs/?c.nimblePkgName-?c.version"

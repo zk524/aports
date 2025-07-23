@@ -1,11 +1,13 @@
---- ./lib/Makefile.am.orig
-+++ ./lib/Makefile.am
-@@ -152,7 +154,7 @@
- 	Version_script-enc theoraenc.exp
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index c9f4ba9..c0f23a4 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -259,7 +259,7 @@ nodist_libtheoraenc_la_SOURCES = \
+ 	$(nodist_encoder_arch_sources)
  libtheoraenc_la_LDFLAGS = \
    -version-info @THENC_LIB_CURRENT@:@THENC_LIB_REVISION@:@THENC_LIB_AGE@ \
--  @THEORAENC_LDFLAGS@ $(OGG_LIBS)
-+  -ltheoradec @THEORAENC_LDFLAGS@ $(OGG_LIBS)
+-  @THEORAENC_LDFLAGS@ $(OGG_LIBS) \
++  -ltheoradec @THEORAENC_LDFLAGS@ $(OGG_LIBS) \
+   -no-undefined
  
  libtheora_la_SOURCES = \
- 	$(decoder_sources) \

@@ -3,7 +3,7 @@
 # Maintainer: Kozak Ivan <kozak-iv@yandex.ru>
 pkgname=nut
 pkgver=2.8.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Network UPS tools"
 url="https://networkupstools.org/"
 arch="all"
@@ -16,6 +16,7 @@ pkggroups=$pkgname
 install="$pkgname.pre-install"
 subpackages="$pkgname-doc $pkgname-dev $pkgname-bash-completion $pkgname-openrc"
 source="https://networkupstools.org/source/${pkgver%.*}/nut-$pkgver.tar.gz
+	libname-alias.patch
 	powerfail.initd
 	upsd.initd
 	upsmon.initd
@@ -93,6 +94,7 @@ package() {
 
 sha512sums="
 b6f8f22318e4a4fcb8073a63132b1cb083952c665191b82a7d6765a61b859575a4b0c2ba84ed17cfb8c88d34179876d64520dd2f75f02fe8707b406da2c0821c  nut-2.8.2.tar.gz
+8a582f020c09e0fff03ce30305143b74656697bdc4e031906b0a17c831ce4590b6ad2e44592c25679e7e0dc730c6fbf58b8d1c344e834422bda9fc9101d784e7  libname-alias.patch
 c32f693e9882602f847b714d2837172b18c0b2fb78cbbf95c0af43a59b3213e3241327890ae038573a9de114ab33bb43d69796c4683b5120ca49cd3174dd5f2d  powerfail.initd
 5fce1247815e36a0e787f28dfec215077a42b046f6ce35a5ad3cf94479dfc26303d3cf4d5f760d5851ed5273ee398572c36cd354af0645cbebc1f1560414e222  upsd.initd
 32470ae473fc363131787cd57f13d40763898947d56d032790ba7f3a5eaa8038b602f7e395ca44f6c5adce8ee5ec496e30ca0eaadb3c78a38015677aea751e12  upsmon.initd

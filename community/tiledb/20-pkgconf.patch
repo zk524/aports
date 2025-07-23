@@ -1,0 +1,100 @@
+Author: Holger Jaekel <holger.jaekel@gmx.de>
+Summary: use pkgconf to find SZIP, LZ4 and WebP package
+----
+
+--- a/tiledb/CMakeLists.txt
++++ b/tiledb/CMakeLists.txt
+@@ -567,19 +567,20 @@
+ # Required dependencies. These come last as any prior dependencies relying on
+ # these must be listed first for Linux. E.g. AWSSDK and Curl depend on Zlib,
+ # which is installed here.
++find_package(PkgConfig REQUIRED)
+ find_package(BZip2 REQUIRED)
+-find_package(LZ4 MODULE REQUIRED)
++pkg_check_modules(LZ4 REQUIRED liblz4)
+ find_package(spdlog REQUIRED)
+ find_package(ZLIB REQUIRED)
+-find_package(zstd CONFIG REQUIRED)
++pkg_check_modules(ZSTD REQUIRED libzstd)
+ find_package(LibMagic MODULE REQUIRED)
+ target_link_libraries(TILEDB_CORE_OBJECTS_ILIB
+   INTERFACE
+     BZip2::BZip2
+-    lz4::lz4
++    ${LZ4_LIBRARIES}
+     spdlog::spdlog
+     ZLIB::ZLIB
+-    zstd::libzstd
++    ${ZSTD_LIBRARIES}
+     libmagic
+ )
+
+
+--- a/tiledb/sm/compressors/CMakeLists.txt
++++ b/tiledb/sm/compressors/CMakeLists.txt
+@@ -36,11 +36,12 @@
+         dict_compressor.cc gzip_compressor.cc lz4_compressor.cc
+         rle_compressor.cc zstd_compressor.cc)
+     this_target_object_libraries(baseline buffer)
++    find_package(PkgConfig REQUIRED)
+     find_package(BZip2 REQUIRED)
+-    find_package(LZ4 MODULE REQUIRED)
++    pkg_check_modules(LZ4 REQUIRED liblz4)
+     find_package(ZLIB REQUIRED)
+-    find_package(zstd CONFIG REQUIRED)
+-    this_target_link_libraries(BZip2::BZip2 lz4::lz4 ZLIB::ZLIB zstd::libzstd)
++    pkg_check_modules(ZSTD REQUIRED libzstd)
++    this_target_link_libraries(BZip2::BZip2 ${LZ4_LIBRARIES} ZLIB::ZLIB ${ZSTD_LIBRARIES})
+ conclude(object_library)
+
+ add_test_subdirectory()
+
+
+--- a/tiledb/CMakeLists.txt
++++ b0/tiledb/CMakeLists.txt
+@@ -585,10 +585,11 @@
+ )
+
+ if(TILEDB_WEBP)
+-  find_package(WebP REQUIRED)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(WebP REQUIRED libwebp)
+   target_link_libraries(TILEDB_CORE_OBJECTS_ILIB
+     INTERFACE
+-    WebP::webp
++    ${WebP_LIBRARIES}
+   )
+   add_definitions(-DTILEDB_WEBP)
+ endif()
+
+
+--- a/tiledb/sm/filter/CMakeLists.txt
++++ b/tiledb/sm/filter/CMakeLists.txt
+@@ -138,8 +138,9 @@
+     this_target_object_libraries(filter misc_types tile)
+     if(TILEDB_WEBP)
+         this_target_compile_definitions(-DTILEDB_WEBP)
+-        find_package(WebP REQUIRED)
+-        this_target_link_libraries(WebP::webp)
++        find_package(PkgConfig REQUIRED)
++        pkg_check_modules(WebP REQUIRED libwebp)
++        this_target_link_libraries(${WebP_LIBRARIES})
+     endif()
+ conclude(object_library)
+
+
+
+--- a/examples/cpp_api/CMakeLists.txt
++++ b/examples/cpp_api/CMakeLists.txt
+@@ -67,8 +67,9 @@
+       target_link_libraries(png_ingestion_webp_cpp PRIVATE "${PNG_LIBRARIES}")
+       target_include_directories(png_ingestion_webp_cpp PRIVATE "${PNG_INCLUDE_DIRS}")
+       target_compile_definitions(png_ingestion_webp_cpp PRIVATE "${PNG_DEFINITIONS}")
+-      find_package(WebP REQUIRED)
+-      target_link_libraries(png_ingestion_webp_cpp PRIVATE WebP::webp)
++      find_package(PkgConfig REQUIRED)
++      pkg_check_modules(WebP REQUIRED libwebp)
++      target_link_libraries(png_ingestion_webp_cpp PRIVATE ${WebP_LIBRARIES})
+       target_compile_definitions(png_ingestion_webp_cpp PRIVATE -DTILEDB_WEBP)
+     endif()
+     continue()

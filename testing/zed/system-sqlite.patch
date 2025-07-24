@@ -1,5 +1,9 @@
---- a/crates/sqlez/Cargo.toml
-+++ b/crates/sqlez/Cargo.toml
-@@ -17 +17 @@
--libsqlite3-sys = { version = "0.26", features = ["bundled"] }
-+libsqlite3-sys = { version = "0.26", features = ["buildtime_bindgen"] }
+From: Jakub Jirutka <jakub@jirutka.cz>
+Date: Wed, 15 May 2024 01:57:50 +0200
+Subject: [PATCH] Use system sqlite
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -494 +494 @@ libc = "0.2"
+-libsqlite3-sys = { version = "0.30.1", features = ["bundled"] }
++libsqlite3-sys = { version = "0.30.1", features = ["buildtime_bindgen"] }

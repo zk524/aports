@@ -1,9 +1,9 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=zed
-pkgver=0.138.4
+pkgver=0.196.5
 _pkgver=${pkgver/_/-}
-pkgrel=5
+pkgrel=0
 pkgdesc="High-performance multiplayer code editor (experimental package!)"
 url="https://zed.dev"
 # TODO: Enable on more arches later.
@@ -21,6 +21,7 @@ makedepends="
 	curl-dev
 	fontconfig-dev
 	libgit2-dev
+	libx11-dev
 	libxcb-dev
 	libxkbcommon-dev
 	mimalloc2-dev
@@ -32,10 +33,6 @@ makedepends="
 	zstd-dev
 	"
 source="https://github.com/zed-industries/zed/archive/v$_pkgver/zed-$_pkgver.tar.gz
-	zed-libexec.patch
-	auto-updater-disabler.patch
-	system-curl.patch
-	system-openssl.patch
 	system-sqlite.patch
 	dont-download-node.patch
 	dont-download-supermaven.patch
@@ -97,15 +94,11 @@ package() {
 }
 
 sha512sums="
-d7f7d7c7868674b9e9cfb779a62bd237d3d62bec55b3fc9bd39f5f424140d519cbbf16f30091af0bc0524d013d8ccb0c9d0b825bb989eeb694df515edb285d61  zed-0.138.4.tar.gz
-f0d53426a514b3c84e2394cd8b49cccbeba38d9b2f5c95565f7b74c32dea15ac6f77ee163cfac0df319944b777abae8f81935029cff04aee3b98b7c5e34abe89  zed-libexec.patch
-b56fee2f4ab305588919b96f49de8a4a762000208b220d3126bc188a739388d163f1ca7eb04360610a7e30ccfb399ebc4b64f856fc67e208417724b8862c8908  auto-updater-disabler.patch
-31f53310d35c2e9112460007c899fedda66d24561d7348f39ca8809423f4c5d6c22721c0d3e155d859c406733fb137d7be7015770e242b64b963cb2fe1b8f430  system-curl.patch
-e05bd7921f5b611d7ed7857b4a613b2b01b152794d5a7e6bcc4c5767e9bd10937be29ace0a4af154104e631a8665f10433828c7744b29a7bffc825adaac30da4  system-openssl.patch
-54a17784e428efc1564298f9e2a79e6c78386a4af47ea8c5d6c1df3543305258937b654d40841e281e9abadeb0f11ab6d5b1cc463d0d5770eceeace0819f833a  system-sqlite.patch
-4a023dcdceb5d4511adda570d25690e76cc16e90dcffd57095fdd9f6acccfbd9d3efcf3032441fb632257f2435c64bb93cc6cb3b8b3771be9cd25abe1e67ecf6  dont-download-node.patch
-c6aab3cb834a3e345324632499599f15dd2856f3d5fbffcc280fd31cbcb76c5f5fb0efe74cb55e53568058100b287101a558e53f88b7b81beb1f8136e61731c5  dont-download-supermaven.patch
-be0d02d3b994965402bd5e84efc8c06f8a0f98c88fb091d0f514d26bff268d0a02dd79982a9dfb60cc8b656d59c474a53be5d26eadb8dfd306676b1aa67e3441  zed-desktop.patch
-50d6b709441b7943799e208fef992d2b2db38ee15a2ef1608894f6b8b1fec7c83c437f6f9441b6bc79d0a1b2b094911d892964398b4597a98b11226922ad0285  defaults.patch
-69586a09cbb9ba560414ea020260e535ef25ff8d194266892d4f27c3744f00e8704a4947c898631503d0133886b31d30e06dfc12b78c4147340baf7b88d7ba04  cargo.lock.patch
+3b4be78b0d02e60498c85204ba067e3ceefb837d72965dc11c41bcc5c1731962287fa2465226e888eac95f8d0bfbafdb145f8372145c3b6c48e42a2e2efed260  zed-0.196.5.tar.gz
+c1f5a10e9bbbb24ef72f9437f8f170cf4391ca7d3c4315fe926f0e5b0a6e9ac294be35894a318381f9160f59778fb9f8c1700ad8471414540e628179ab4e42e6  system-sqlite.patch
+a09e3f1772f96b6d469d49dc1e47cafec3bc2979202fb308331eb9a415c93879a8866f57dedf9c5da736b72e187069a01574ae9023ee07920e98557dd78b22d0  dont-download-node.patch
+acc4ccb3ce23153ed743afed7346c98dcac4d17d9903ea2069cdc8b8ad88d8fe5e53234216395693f29ba8f08d9fed9f5c8af8da545eedcb8ca1fc1c281e5d4b  dont-download-supermaven.patch
+e16cb91deb54f8407e153148dcb2dd488bb828b9bb98a2ebb5fbf1581d7c7c195cb38788a0a1e90dfb72f562f25ad911959f2d2aeb644790dfd8a933ed71c806  zed-desktop.patch
+a31ef7addcd20ef7c85e0ce6be398f3b76399e7d96ea46f06436c77cdb0efed0458cc436feeb5312d19e3b190cbfffb6871408d1daa3cf3529a60ea2dd075abb  defaults.patch
+05a976232abeeb9b35326c1554474ee895b12cd22cbb5eb2e1647236ec0c47ee3e89f8d7928b03876299efb7f23a20879dca0ca2e696e1943176a884f52991ea  cargo.lock.patch
 "

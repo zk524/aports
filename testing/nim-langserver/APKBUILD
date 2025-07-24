@@ -1,0 +1,28 @@
+# Contributor:
+maintainer="Ryan Walklin <ryan@testtoast.com>"
+pkgname=nim-langserver
+_pkgreal=langserver
+pkgver=1.10.2
+pkgrel=0
+pkgdesc="The Nim language server implementation (based on nimsuggest)"
+url="https://github.com/nim-lang/langserver"
+arch="all !s390x !loongarch64" # blocked by nim
+license="MIT"
+depends="nim nimble"
+source="$_pkgreal-$pkgver.tar.gz::https://github.com/nim-lang/$_pkgreal/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir"/$_pkgreal-$pkgver
+options="!check"
+
+build() {
+	#nimble tests for a git repository which cauaes build to abort if not present
+	git init . && git add -A && git commit -m "init repo"
+	nimble --useSystemNim --noLockfile build
+}
+
+package() {
+	install -D -m 755 nimlangserver "$pkgdir"/usr/bin/nimlangserver
+}
+
+sha512sums="
+f7409f9ce081605719d0ba5e71b536e529db322b4744f96b6e6f65a4c81348869725b8f91aa639bf8a3ea2f8f01877e1073e943bc3a4bee62fb85826373f7b85  langserver-1.10.2.tar.gz
+"

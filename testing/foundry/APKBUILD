@@ -1,10 +1,10 @@
 maintainer="fossdd <fossdd@pwned.life>"
 pkgname=foundry
-pkgver=0_git20250627
-_commit="a113efdd1683b1a88031a2c7bb165acc4f1c4448"
+pkgver=1.0_alpha
+_commit="777eab17c75a86268aac0dffd60db7e55148400d"
 pkgrel=0
 pkgdesc="Companion command-line tool for IDE features of GNOME Builder"
-url="https://gitlab.gnome.org/chergert/foundry"
+url="https://gitlab.gnome.org/GNOME/foundry"
 arch="all !armhf" # libpeas2
 license="LGPL-2.1-or-later"
 depends_libs="flatpak-xdg-utils"
@@ -23,13 +23,18 @@ makedepends="
 	sysprof-dev
 	sysprof-static
 	yaml-dev
+	gtksourceview5-dev
+	libspelling-dev
+	template-glib-dev
+	cmark-dev
+	webkit2gtk-6.0-dev
 	"
 subpackages="
 	$pkgname-bash-completion
 	$pkgname-dev
 	$pkgname-libs
 	"
-source="https://gitlab.gnome.org/chergert/foundry/-/archive/$_commit/foundry-$_commit.tar.gz
+source="https://gitlab.gnome.org/GNOME/foundry/-/archive/$_commit/foundry-$_commit.tar.gz
 	fix-pc-ver.patch
 	cli-link-against-lib.patch
 	"
@@ -56,7 +61,7 @@ libs() {
 }
 
 sha512sums="
-44c8e8c46f191a7d4a7a3318d6a32c5ee78e021ab4eeb53c6b95d5bff584c5966187f868f1bdbd6207bce3faead559a8431832d1bcc04778071af9db4b9a4e50  foundry-a113efdd1683b1a88031a2c7bb165acc4f1c4448.tar.gz
+b88926b23f622e2820ea97dff19aa49c25872038f7710816800014348508c49b935fea1117397cd085280c1e1b65b2943560d4cd69db3deb4078181b4da6ebc9  foundry-777eab17c75a86268aac0dffd60db7e55148400d.tar.gz
 e3d2cb768391296e09ae3dce4e3a0e53189d642c6b4a3e79eabe3c7cdd1c0532024c8814259f931a667314773825bc9f0ee1a431d84d0cfa0fbbbc7b691d4871  fix-pc-ver.patch
 a9e2d56293c451889289193c7c39b1eaba983b590cd68dffdcb7cb7d3e681f5fe60f332ff70bda18b11d314a1db5857865c617dfb37a1b77fb1d9865075aef1e  cli-link-against-lib.patch
 "

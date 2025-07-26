@@ -1,8 +1,8 @@
-# Contributor: NerdNextDoor <47074-AFellowSpeedrunner@users.gitlab.alpinelinux.org>
-# Maintainer: NerdNextDoor <47074-AFellowSpeedrunner@users.gitlab.alpinelinux.org>
+# Contributor: NerdNextDoor <thenerdbehind@nerdnextdoor.net>
+# Maintainer: NerdNextDoor <thenerdbehind@nerdnextdoor.net>
 pkgname=kuroko
 pkgver=1.4.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Lightweight Python dialect with explicit variables and block scoping."
 url="https://github.com/kuroko-lang/kuroko"
 arch="all"

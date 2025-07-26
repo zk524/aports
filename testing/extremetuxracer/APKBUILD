@@ -1,18 +1,27 @@
 # Contributor: Danct12 <danct12@disroot.org>
 # Maintainer: Danct12 <danct12@disroot.org>
 pkgname=extremetuxracer
-pkgver=0.8.3
+pkgver=0.8.4
 pkgrel=0
 pkgdesc="Downhill racing game starring Tux"
 url="https://sourceforge.net/projects/extremetuxracer/"
 arch="all"
 license="GPL-2.0-only"
-makedepends="sfml-dev glu-dev freetype-dev"
-source="https://downloads.sourceforge.net/extremetuxracer/etr-$pkgver.tar.xz"
+makedepends="
+	autoconf
+	automake
+	freetype-dev
+	glu-dev
+	sfml-dev
+	"
+source="https://downloads.sourceforge.net/extremetuxracer/etr-$pkgver.tar.xz
+	$pkgname-0001-Port-to-SFML-3.0.patch::https://github.com/jcowgill/extremetuxracer/commit/5823ba6c18432e083ec103ce74921270d7e071d6.patch
+	"
 subpackages="$pkgname-doc"
 builddir="$srcdir/etr-$pkgver"
 
 build() {
+	./autogen.sh
 	./configure --prefix=/usr
 	make
 }
@@ -26,5 +35,6 @@ package() {
 }
 
 sha512sums="
-75b6f2b4d7260216fb8b5bee1412ed929712e6de04a3b32ecf65ad747c6bff30e5eb5bedde24dca0afaec816c847860d9c589c66cdff08aa4bdcec224e727f1f  etr-0.8.3.tar.xz
+65d54bfef59cf83eec9ee761ac24c728d3118cf47105920f22057b59425eba65e03967196d4a93039f30b9420e67b10f296ec7deed7e506ad78c7bb5ce5ed0d2  etr-0.8.4.tar.xz
+03611b50e68da054bba3439071bb52b2b6e2aae1728a5231da53301cfa66ab49177cc4aee85caf59f0d9dd9e6ff87ee7c7b2212c57b935ff40b8cac9056e1d83  extremetuxracer-0001-Port-to-SFML-3.0.patch
 "

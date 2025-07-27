@@ -5,14 +5,16 @@ _modver=5.6.4.2
 # no tags, just release branches
 _gitrev=c3fb89a2f7066f4bf4e4d9d85d84f9791f14c83e
 pkgver=${_modver}_git20250530
-pkgrel=0
+pkgrel=1
 pkgdesc="RTL8812AU/21AU and RTL8814AU wireless drivers"
 url="https://github.com/aircrack-ng/rtl8812au"
 # Currently only x86 and x86_64 is tested, arm(64) is TODO
 arch="x86 x86_64 aarch64 armv7"
 license="GPL-2.0-or-later"
 depends="akms"
-source="$pkgname-$_gitrev.tar.gz::https://github.com/aircrack-ng/rtl8812au/archive/$_gitrev.tar.gz"
+source="$pkgname-$_gitrev.tar.gz::https://github.com/aircrack-ng/rtl8812au/archive/$_gitrev.tar.gz
+	linux6.15.patch
+	"
 builddir="$srcdir/rtl8812au-$_gitrev"
 options="!check"  # No test suite, only sources
 
@@ -38,4 +40,5 @@ package() {
 
 sha512sums="
 f76a04dc3e1c090120992536b98d02d11fd1c4eb57fb3bb40754a3fae2fbccfb34d72c240e04f8903f0bd30283a9fac1d93705110f8e87606d91c724a92f3416  rtl8812au-src-c3fb89a2f7066f4bf4e4d9d85d84f9791f14c83e.tar.gz
+3a12e66566f2bf15862261c4218eda393dac90d489175d334647c33e84813481799422f72a6f45d305c15df2442ea05010d1ddd18e71dc2b23b4812a810a0ca0  linux6.15.patch
 "

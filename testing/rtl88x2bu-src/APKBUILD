@@ -6,11 +6,12 @@ _projname=RTL88x2BU-Linux-Driver
 pkgver=5.13.1_git20230711
 # No git tags in the repo, but they use version numbers.
 _gitrev=12cfcd8cd8ec7115158df3d223510435541ddc32
-pkgrel=0
+pkgrel=1
 pkgdesc="Kernel module for Realtek rtl88x2bu WiFi chipset (sources, AKMS)"
 url="https://github.com/RinCat/RTL88x2BU-Linux-Driver"
 arch="noarch"
 license="GPL-2.0"
+depends="akms"
 source="https://github.com/RinCat/RTL88x2BU-Linux-Driver/archive/$_gitrev/$_projname-$_gitrev.tar.gz"
 builddir="$srcdir/$_projname-$_gitrev"
 options="!check"  # sources only

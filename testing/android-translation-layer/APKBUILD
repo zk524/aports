@@ -1,7 +1,7 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=android-translation-layer
 pkgver=0_git20250402
-pkgrel=0
+pkgrel=1
 _commit="882cd1b471bb5ad411a148ba972dc70c31e8ca84"
 pkgdesc="A translation layer for running Android apps on a Linux system"
 url="https://gitlab.com/android_translation_layer/android_translation_layer"

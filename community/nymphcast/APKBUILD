@@ -2,7 +2,7 @@
 # Maintainer: Bart Ribbers <bribbers@disroot.org>
 pkgname=nymphcast
 pkgver=0.1
-pkgrel=10
+pkgrel=11
 arch="all"
 url="http://nyanko.ws/product_nymphcast.php"
 pkgdesc="Audio and video casting system with support for custom applications"

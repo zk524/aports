@@ -3,7 +3,7 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtwebengine
 pkgver=6.9.1
-pkgrel=1
+pkgrel=2
 # latest commit of 130-based branch of qtwebengine-chromium
 _chromium_commit="0e01f03726a82bd9f924ab711a7cb29dacaeb5d2"
 pkgdesc="Provides support for web applications using the Chromium browser project"

@@ -1,0 +1,38 @@
+# Contributor: Guy Godfroy <guy.godfroy@gugod.fr>
+# Maintainer: Guy Godfroy <guy.godfroy@gugod.fr>
+pkgname=shai
+pkgver=0.1.2
+pkgrel=0
+pkgdesc="coding agent written in rust"
+url="https://github.com/ovh/shai"
+arch="x86 x86_64" # See https://github.com/ovh/shai/issues/23
+license="Apache-2.0"
+makedepends="cargo cargo-auditable perl"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ovh/shai/archive/refs/tags/v$pkgver.tar.gz
+	01-Cargo-lock.patch
+	"
+options="net !check" # needs an ai endpoint
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/shai "$pkgdir"/usr/bin/shai
+	install -Dm755 target/release/libshai_macros.so "$pkgdir"/usr/lib/libshai_macros.so
+}
+
+sha512sums="
+bcc88296f3bcca15f9a3075759de849c5894c9e7e0aad355e25a4bf5fe0b3c4d4a768c84dfe782b2f1ef0b5bb64652132fe83435a49c755f3113c7aef092d14f  shai-0.1.2.tar.gz
+9b28a21d87b04199e729516e1a312701aea277cb834c485a0f26848a5f8061c6a26ea05449d0e1fd24bb7337e3ab3c8798d158b94f7dec8e17c25881329c0f03  01-Cargo-lock.patch
+"

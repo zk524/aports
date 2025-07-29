@@ -1,5 +1,6 @@
 #!/bin/sh
 
-su tuptime -s /bin/sh -c "tuptime -q"
+chown _tuptime:_tuptime /var/lib/tuptime
+su _tuptime -s /bin/sh -c '/usr/bin/tuptime -q'
 
 exit 0

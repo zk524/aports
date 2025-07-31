@@ -1,0 +1,32 @@
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+pkgname=nvim-tokyonight
+pkgver=4.11.0
+pkgrel=0
+pkgdesc="Clean, dark Neovim theme"
+url="https://github.com/folke/tokyonight.nvim"
+arch="noarch"
+license="Apache-2.0"
+subpackages="$pkgname-doc $pkgname-autoenable"
+source="nvim-tokyonight-$pkgver.tar.gz::https://github.com/folke/tokyonight.nvim/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/tokyonight.nvim-$pkgver"
+options="!check" # no tests
+
+package() {
+	find lua colors autoload \
+		-type f -exec install -Dvm644 '{}' "$pkgdir/usr/share/nvim/site/{}" \;
+	install -Dm644 README.md "$pkgdir"/usr/share/doc/$pkgname/README.md
+
+	install -d "$pkgdir"/usr/share/nvim/site/after/plugin
+	cat > "$pkgdir"/usr/share/nvim/site/after/plugin/tokyonight.lua <<-EOF
+	vim.cmd.colorscheme 'tokyonight'
+	EOF
+}
+
+autoenable() {
+	install_if="$pkgname=$pkgver-r$pkgrel nvim-autoenable"
+	amove usr/share/nvim/site/after
+}
+
+sha512sums="
+702fa382be05961ca0e3247acaa64c7d894aa232f1c06c7b470257ac540f4f69b195c223d5ac7cf7731b6c3570842fb7d043246aea92194a030abe1c0bbce0ba  nvim-tokyonight-4.11.0.tar.gz
+"

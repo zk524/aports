@@ -1,24 +1,32 @@
 # Contributor: Maxim Karasev <mxkrsv@disroot.org>
-# Maintainer:
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=nvim-gruvbox
-pkgver=0.0.0_git20221212
-_commit=c64ec557672c9c8ecc71a438533525482021377f
-pkgrel=1
+pkgver=2.0.0
+_commit="$pkgver"
+pkgrel=0
 pkgdesc="lua port of gruvbox vim colorscheme"
 url="https://github.com/ellisonleao/gruvbox.nvim"
 arch="noarch"
 license="MIT"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc $pkgname-autoenable"
 source="https://github.com/ellisonleao/gruvbox.nvim/archive/$_commit/nvim-gruvbox-$pkgver.tar.gz"
 builddir="$srcdir/gruvbox.nvim-$_commit"
 options="!check" # no tests
 
 package() {
-	install -d "$pkgdir"/usr/share/nvim/site
-	cp -ra lua colors autoload "$pkgdir"/usr/share/nvim/site
+	find lua colors doc \
+		-type f -exec install -Dvm644 '{}' "$pkgdir/usr/share/nvim/site/{}" \;
 	install -Dm644 README.md "$pkgdir"/usr/share/doc/$pkgname/README.md
 }
 
+autoenable() {
+	install_if="nvim-autoenable $pkgname=$pkgver-r$pkgrel"
+	install -d "$subpkgdir"/usr/share/nvim/site/after/plugin
+	cat > "$subpkgdir"/usr/share/nvim/site/after/plugin/gruvbox.lua <<-EOF
+	vim.cmd.colorscheme 'gruvbox'
+	EOF
+}
+
 sha512sums="
-1a723d5f99296f0354e33cd78f08f31ff77d8e01b161362fbe97ea7b430a2119bd6ca3cedb9d591a3ca528478303387c00e934b9372575a8f8ea85a89329ae70  nvim-gruvbox-0.0.0_git20221212.tar.gz
+cbd278a5a7e2bad80870105b027e7a3905bd9ef9afee5951606119d05d8d1e9df263a4d98cd5d9855ac8df96d24bcff7fe2c14fcf0ab61db0cb71072c163c676  nvim-gruvbox-2.0.0.tar.gz
 "

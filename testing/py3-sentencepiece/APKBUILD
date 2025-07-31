@@ -1,0 +1,33 @@
+# Contributor: Maarten van Gompel <proycon@anaproy.nl>
+# Maintainer: Maarten van Gompel <proycon@anaproy.nl>
+pkgname=py3-sentencepiece
+pkgver=0.2.0
+pkgrel=0
+pkgdesc="Unsupervised text tokenizer for Neural Network-based text generation. Python bindings."
+url="https://github.com/google/sentencepiece"
+license="Apache-2.0"
+arch="all"
+options="!check" #no tests
+depends="python3"
+makedepends="cmake ninja protobuf-dev sentencepiece-dev python3-dev py3-setuptools py3-wheel py3-gpep517"
+source="sentencepiece-$pkgver.tar.gz::https://github.com/google/sentencepiece/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/sentencepiece-$pkgver"
+
+build() {
+	cmake -B build -G Ninja \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+		-DCMAKE_INSTALL_PREFIX=./root \
+		-DSPM_USE_BUILTIN_PROTOBUF=OFF \
+		-DSPM_ENABLE_SHARED=OFF
+	cd python
+	gpep517 build-wheel --wheel-dir dist --output-fd 3 3>&1 >&2
+}
+
+package() {
+	cd python
+	python3 -m installer -d "$pkgdir" dist/sentencepiece*.whl
+}
+
+sha512sums="
+b4214f5bfbe2a0757794c792e87e7c53fda7e65b2511b37fc757f280bf9287ba59b5d630801e17de6058f8292a3c6433211917324cb3446a212a51735402e614  sentencepiece-0.2.0.tar.gz
+"

@@ -1,9 +1,9 @@
 # Contributor: Maxim Karasev <mxkrsv@disroot.org>
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=r2ghidra
-pkgver=5.9.4
-_ghidra_native=0.4.5
-pkgrel=2
+pkgver=5.9.8
+_ghidra_native=0.5.0
+pkgrel=0
 pkgdesc="native ghidra decompiler for radare2"
 url="https://github.com/radareorg/r2ghidra"
 # this is massive, and nobody is going to use a decompiler on other
@@ -20,7 +20,10 @@ makedepends="
 	"
 source="https://github.com/radareorg/r2ghidra/archive/refs/tags/$pkgver/r2ghidra-$pkgver.tar.gz
 	https://github.com/radareorg/ghidra-native/archive/refs/tags/$_ghidra_native/ghidra-native-$_ghidra_native.tar.gz
-	use-system-pugixml.patch"
+	use-system-pugixml.patch
+	Fix-build-with-latest-r2.patch
+	Fix-invalid-nullable-expression.patch
+	"
 options="!check" # no tests
 
 prepare() {
@@ -49,7 +52,9 @@ package() {
 }
 
 sha512sums="
-df259ffe5422117a19e1e79756b98bed2afd3ff0fe96b313ffefa6406e3eae739ea8f3750c324995123891e78d58d0ad0eba176ff27ef81b14282727ee4fb8ed  r2ghidra-5.9.4.tar.gz
-0e62b8dfdbb6f4f8e3935ad89c34b4940dbeb89cabdc692e4fd4a8b3db1ee3c743f95bc38618a976f134ddb5463981851101c83288ab8c19325d69f023ce909a  ghidra-native-0.4.5.tar.gz
-f31eea3a3a072a51ec858f732e734afabbd7c38410e69ba78cfd6f67ad252a751dbce1a7be794b23199022537efa618c7cbf842f99e8f2e40189261736b0763c  use-system-pugixml.patch
+e221f86a27a78b5bccc9cc689f1c4f3291d950165fcc0970dd49383fd0150049ce86321de4d10537fa059a3cbb5cad3319f669f997f5fe9e3aae24e4b0f7074f  r2ghidra-5.9.8.tar.gz
+6b6f0597f28fc42e3d9dbeaa8b14dd3232e326e00d86486d205331f1588bab68c5e228bd043079eca208282310dd5e6ba412bdcb8508036a5a0e1748030f389c  ghidra-native-0.5.0.tar.gz
+c9d35ccd0ad69d2d90b733e3040fcf0d1077b68f89b86d099c50ad32ddb46d056eb429c106d6c21b608ec124093daf22aec71020816a73b06e2eae716aa1770a  use-system-pugixml.patch
+1462121b919c70fd72f912ccd81efd5b6749177a10bc21c026efeba8fe2402459ef3b4a5da35c96f6049c220496d3fbb1b704901a882fe2799339a263458b498  Fix-build-with-latest-r2.patch
+eefe671ae424a8cacfcbbcc7b8d04dcf4d5bbb554ca0acd6915d656cffe8a0f9360fbb77e7442bdf592cb18e3a10e69b5665fcbd38d9dcd2cc72bdcfc45ea1be  Fix-invalid-nullable-expression.patch
 "

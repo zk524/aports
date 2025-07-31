@@ -1,0 +1,22 @@
+From 504c82eed2376fba0ea6c0b7d80c207fbdb88807 Mon Sep 17 00:00:00 2001
+From: pancake <pancake@nopcode.org>
+Date: Thu, 15 May 2025 11:57:33 +0200
+Subject: [PATCH] Fix invalid nullable expression
+
+---
+ src/SleighAsm.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/SleighAsm.cpp b/src/SleighAsm.cpp
+index d9dde62c..2e2d34fa 100644
+--- a/src/SleighAsm.cpp
++++ b/src/SleighAsm.cpp
+@@ -405,7 +405,7 @@ RConfig *SleighAsm::getConfig(RAnal *a) {
+ 	return core->config;
+ }
+ 
+-std::string SleighAsm::getSleighHome(R_NULLABLE RConfig *cfg) {
++std::string SleighAsm::getSleighHome(RConfig * R_NULLABLE cfg) {
+ 	const char varname[] = "r2ghidra.sleighhome";
+ 	char *path = nullptr;
+ 

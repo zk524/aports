@@ -1,0 +1,42 @@
+# Contributor: X&r <xrbnvd@gmail.cm>
+maintainer="X&r <xrbnvd@gmail.cm>"
+pkgname=redpanda-cpp
+pkgver=3.2
+pkgrel=0
+pkgdesc="A light-weight C/C++ IDE based on Qt"
+url="https://github.com/royqh1979/RedPanda-CPP"
+arch="all"
+license="GPL-3.0-or-later"
+
+makedepends="
+	qt5-qtbase-dev
+	qt5-qtsvg-dev
+	qt5-qttools-dev
+	"
+
+# via system calls
+depends="
+	astyle
+	g++
+	gdb
+	"
+
+source="$pkgname-$pkgver.tar.gz::https://github.com/royqh1979/RedPanda-CPP/archive/refs/tags/v.32.tar.gz"
+
+options="!check" # no tests
+
+build() {
+	mkdir -p "$builddir/redpanda"
+	cd "$builddir/redpanda"
+	qmake-qt5 PREFIX='/usr' "$srcdir/RedPanda-CPP-v.32/Red_Panda_CPP.pro"
+	make
+}
+
+package() {
+	cd "$builddir/redpanda"
+	make INSTALL_ROOT="$pkgdir" install
+}
+
+sha512sums="
+2488f4df4c5030bfac9556f0fede6734a7dab985045191736d8f8248b0285e3e24504a7b04221ad88668b8a320c3b4daeb5582fb3d418fe3e7e10cc8e4e0d5a1  redpanda-cpp-3.2.tar.gz
+"

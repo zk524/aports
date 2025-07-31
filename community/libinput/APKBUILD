@@ -3,7 +3,7 @@
 # Contributor: Daniel Sabogal <dsabogalcc@gmail.com>
 # Maintainer: Simon Zeni <simon@bl4ckb0ne.ca>
 pkgname=libinput
-pkgver=1.28.1
+pkgver=1.29.1
 pkgrel=0
 pkgdesc="Library for handling input devices"
 url="https://www.freedesktop.org/wiki/Software/libinput"
@@ -99,5 +99,5 @@ _debug_gui() {
 }
 
 sha512sums="
-b8c75f64ff9f14bbaa27997e6abd47142d5e8843609dba08813c4dc75ee513b6f1fc13cdff53df953a7417f13b10c172ef99735153cb2e0729423233ed6340ef  libinput-1.28.1.tar.gz
+e3772c6b2176ba743cfec814f07b2f616e67f8dc161645db6d797a10eb3201e7e4a6a515da9fb08b4f471f4d5ab59a963b511c87f214b7c2b472947fe4aa4ab1  libinput-1.29.1.tar.gz
 "

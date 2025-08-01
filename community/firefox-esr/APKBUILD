@@ -5,7 +5,7 @@ pkgver=128.13.0
 # Date of release, YY-MM-DD for metainfo file (see package())
 # https://www.mozilla.org/firefox/organizations/notes/
 _releasedate=2025-07-22
-pkgrel=0
+pkgrel=1
 pkgdesc="Firefox web browser - Extended Support Release"
 url="https://www.mozilla.org/en-US/firefox/organizations/"
 # s390x: blocked by lld
@@ -690,6 +690,12 @@ prepare() {
 	# these are for alpine linux use only
 	ac_add_options --with-mozilla-api-keyfile="$builddir/mozilla-api-key"
 	EOF
+
+	case "$CARCH" in
+		# Flag not available for these architectures
+		aarch64|armv7|loongarch64|ppc64le|riscv64) ;;
+		*) echo "ac_add_options --disable-eme" >> base-mozconfig
+	esac
 
 	case "$CARCH" in
 	x86|armv7|loongarch64)

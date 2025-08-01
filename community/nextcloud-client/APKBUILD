@@ -1,7 +1,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: Leonardo Arena <rnalrd@alpinelinux.org>
 pkgname=nextcloud-client
-pkgver=3.16.6
+pkgver=3.16.7
 pkgrel=0
 pkgdesc="Nextcloud Desktop Client"
 url="https://github.com/nextcloud/desktop"
@@ -84,7 +84,7 @@ dolphin() {
 }
 
 sha512sums="
-f4ce295e2773731327faaef644a3d5e5371ff4bcc53f05ffcd00b476ddfc06a40c6684d1464d75885fac070f055030a9b69d76f5a002fcb8424d6bbb96afb291  nextcloud-client-3.16.6.tar.gz
+7270748f369f28bbd57f615f69738533615946dbe6e9c49d0689b3df41f7051b2117fe83ee12688696202749187b3df9a0a6393481a8f8a60b9d06d2dea2971b  nextcloud-client-3.16.7.tar.gz
 48ceddb9dfff72e3b4a4e76b2c5289712c15f3d4651afe3cd59e8518e3d3d16f241374b671bde5f0bee31fc6474ca5c8aace570b00bf71049b18cd9e28757230  lfs64.patch
 28faf643e3ba22f3e1f45a96acfba1b3c53c49d4e923974e58e5ad2fdda612f52300608f0e0219e61d3478403fe3c59a9a2c70c3db1c93fbccda1e0638ecbc22  Nextcloud.conf
 "

@@ -1,0 +1,14 @@
+Summary: mismatch with the corresponding expect in the unit test
+causes test to fail on 32-bit architectures.
+----
+--- pacemaker-Pacemaker-3.0.0/lib/common/mock.c
++++ pacemaker-Pacemaker-3.0.0/lib/common/mock.c.new
+@@ -420,7 +420,7 @@
+         const char *contents = NULL;
+
+         check_expected_ptr(path);
+-        check_expected_ptr(buf);
++        check_expected(buf);
+         check_expected(bufsize);
+         errno = mock_type(int);
+         contents = mock_ptr_type(const char *);

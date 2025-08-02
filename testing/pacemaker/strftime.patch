@@ -1,0 +1,40 @@
+Summary: Modifies strftime unit tests, since musl errors on some literals
+----
+--- pacemaker-Pacemaker-3.0.0/lib/common/tests/iso8601/pcmk__time_format_hr_test.c
++++ pacemaker-Pacemaker-3.0.0/lib/common/tests/iso8601/pcmk__time_format_hr_test.c.new
+@@ -66,22 +71,22 @@
+ {
+     assert_hr_format("no specifiers", "no specifiers", NULL);
+     assert_hr_format("this has a literal % in it",
+-                     "this has a literal % in it",
++                     NULL,
+                      // *BSD strftime() strips single %
+                      "this has a literal  in it");
+     assert_hr_format("this has a literal %01 in it",
+-                     "this has a literal %01 in it",
++                     NULL,
+                      // *BSD strftime() strips %0
+                      "this has a literal 1 in it");
+     assert_hr_format("%2 this starts and ends with %",
+-                     "%2 this starts and ends with %",
++                     NULL,
+                      // *BSD strftime() strips % in front of nonzero number
+                      "2 this starts and ends with %");
+
+     /* strftime() treats % with a number (and no specifier) as a literal string
+      * to be formatted with a field width (undocumented and probably a bug ...)
+      */
+-    assert_hr_format("this ends with %10", "this ends with        %10",
++    assert_hr_format("this ends with %10", NULL,
+                      // *BSD strftime() strips % in front of nonzero number
+                      "this ends with 10");
+ }
+@@ -93,7 +98,7 @@
+     assert_hr_format("%H:%M:%S", "03:04:05", NULL);
+     assert_hr_format("The time is %H:%M right now",
+                      "The time is 03:04 right now", NULL);
+-    assert_hr_format("%3S seconds", "005 seconds",
++    assert_hr_format("%3S seconds", "05 seconds",
+                      // *BSD strftime() doesn't support field widths
+                      "3S seconds");
+

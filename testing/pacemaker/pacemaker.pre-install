@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S haclient 2>/dev/null
+adduser -S -D -H -h /usr/share/pacemaker -s /sbin/nologin -G haclient -g hacluster hacluster 2>/dev/null
+
+exit 0

@@ -1,0 +1,66 @@
+# Contributor: Jae Arr <alpine.unbent366@passinbox.com>
+# Maintainer: Jae Arr <alpine.unbent366@passinbox.com>
+pkgname=pacemaker
+pkgver=3.0.0
+pkgrel=0
+pkgdesc="Pacemaker cluster resource manager"
+url="https://clusterlabs.org/projects/pacemaker/"
+arch="all"
+license="GPL-2.0-or-later"
+makedepends="
+	autoconf
+	automake
+	template-glib-dev
+	libxslt-dev
+	dbus-dev
+	gnutls-dev
+	intltool
+	bash
+	libqb-dev
+	corosync-dev
+	patchutils"
+checkdepends="cmocka-dev"
+install="$pkgname.pre-install"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-openrc $pkgname-pyc"
+source="https://github.com/ClusterLabs/pacemaker/archive/refs/tags/Pacemaker-$pkgver.tar.gz
+	$pkgname.pre-install
+	pacemaker.initd
+	pacemaker_remote.initd
+	test-headers.patch
+	mock.patch
+	strftime.patch"
+builddir="$srcdir/$pkgname-Pacemaker-$pkgver/"
+
+build() {
+	./autogen.sh
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--localstatedir=/var \
+		--datarootdir=/usr/share \
+		--with-configdir=/etc/conf.d
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make install DESTDIR="$pkgdir"
+	install -Dm755 "$srcdir"/pacemaker.initd "$pkgdir"/etc/init.d/pacemaker
+	install -Dm755 "$srcdir"/pacemaker_remote.initd "$pkgdir"/etc/init.d/pacemaker_remote
+}
+
+sha512sums="
+625c8b41557f94c7891a5bb591c3c80c891c339302d9fee75ecbc4aa2b8402bad527f770e7ca631339291b382c83fad7bc4508c597e9f7ff185e015f3c80bf42  Pacemaker-3.0.0.tar.gz
+f5ba743c2c3d30f043bc723d74496564ba91d0e86ad46a81f888749c5b2fb0b4d7ce176b8422b63b91d63bb3f953053ea705613a6ea0082ed90eeb532e4f3318  pacemaker.pre-install
+389f1b1ac025a48dc3a88e06b32a5cdff66c0b270f5e13238a648c90ce40a9efcf8724429fa068db06a3572365743887ba2858c002a7953ffbbc39a593811688  pacemaker.initd
+205cae7009ea3d4bc2ef80302fa490d2b21003105decde1f1896eaafda523ff36f80a994e678dfe997b068ddc861a5bd0ca666279461d0ff80ee73421197d98a  pacemaker_remote.initd
+a7eb1bfafbaaf200b81cf1fae66423e02cef48f18fa78ea480ace0c9610325d30c9996184108d82820f4dedf8b6a6f0c91682cf05f3b454e421928ddd24a8c3a  test-headers.patch
+c2508e8ed62677f3c4889622fc084303e9239389eb333a6d493f83c700c5774b146c8589e5baaf64ae8f1566e24ff74275ea41c712602f2fc78b1a577a32739f  mock.patch
+b9c38584bcc0352db03b225fb59f26cc83a1c28759e0d62ff183c65129cbd6b9241b6063e1f82298a61489e0a768cb1332cb0ea422d3d57bb8f7264f9537026d  strftime.patch
+"

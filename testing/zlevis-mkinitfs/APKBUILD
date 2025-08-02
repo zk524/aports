@@ -1,0 +1,29 @@
+maintainer="Luc Bijl <6msemf7ov@mozmail.com>"
+pkgname=zlevis-mkinitfs
+pkgver=1.1
+pkgrel=0
+pkgdesc="A mkinitfs module that implements automatic decryption of a ZFS rpool in the initramfs with zlevis"
+url="https://git.ampel.dev/ampel/zlevis-mkinitfs"
+arch="noarch"
+license="GPL-3.0-only"
+depends="zlevis mkinitfs"
+makedepends="meson"
+replaces="mkinitfs"
+triggers="zlevis-mkinitfs.trigger=/usr/share/mkinitfs/initramfs-init"
+source="https://git.ampel.dev/ampel/zlevis-mkinitfs/releases/download/$pkgver/zlevis-mkinitfs-$pkgver.tar.xz"
+
+build() {
+	abuild-meson . output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+9c8686d9dfb111f3b906b8544bd096cb4e0b86cc1a40fb469b85902324c3a13c539cd4ff6481f943fe7e9a15a731aeebd96dbd384cc7edb82d1a9a5d4f0ff00c  zlevis-mkinitfs-1.1.tar.xz
+"

@@ -9,7 +9,6 @@ maintainer="Jakub Jirutka <jakub@jirutka.cz>"
 pkgrel=0
 pkgdesc="A systems and applications programming language"
 url="https://nim-lang.org/"
-# Build fails on ppc64le and loongarch64 due to missing libpcre
 arch="all !s390x"
 license="MIT"
 depends="libucontext-dev"  # used by nims compiler

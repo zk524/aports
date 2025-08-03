@@ -1,35 +1,41 @@
 # Maintainer: Ariadne Conill <ariadne@dereferenced.org>
 pkgname=uclient
 pkgver=20241022
+_owrtgit=88ae8f20
 pkgrel=0
 pkgdesc="ustream-based HTTP client library"
 url="https://git.openwrt.org/project/uclient.git"
 arch="all"
 license="ISC"
-depends_dev="libubox-dev ustream-ssl-dev"
-makedepends="cmake samurai ucode-dev zstd $depends_dev"
+depends_dev="
+	libubox-dev
+	ustream-ssl-dev
+	"
+makedepends="
+	$depends_dev
+	cmake
+	samurai
+	ucode-dev
+	zstd
+	"
 subpackages="$pkgname-dev $pkgname-fetch:_fetch"
-_owrtgit=88ae8f20
 _owrtver="${pkgver:0:4}.${pkgver:4:2}.${pkgver:6:2}~$_owrtgit"
 source="https://sources.openwrt.org/uclient-$_owrtver.tar.zst"
 builddir="$srcdir/uclient-$_owrtver"
+options="!check"  # no tests provided
 
 build() {
-	if [ "$CBUILD" != "$CHOST" ]; then
-		CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
-	fi
+	local crossopts=
+	[ "$CBUILD" != "$CHOST" ] \
+		&& crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=True \
 		-DCMAKE_BUILD_TYPE=None \
-		$CMAKE_CROSSOPTS .
+		$crossopts .
 	cmake --build build
-}
-
-check() {
-	cd build
-	ctest
 }
 
 package() {

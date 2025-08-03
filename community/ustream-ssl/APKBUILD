@@ -1,35 +1,40 @@
 # Maintainer: Ariadne Conill <ariadne@dereferenced.org>
 pkgname=ustream-ssl
 pkgver=20240728
+_owrtgit=99bd3d2b
 pkgrel=0
 pkgdesc="ustream SSL library"
 url="https://git.openwrt.org/project/ustream-ssl.git"
 arch="all"
 license="ISC"
-depends_dev="libubox-dev openssl-dev"
-makedepends="cmake samurai zstd $depends_dev"
+depends_dev="
+	libubox-dev
+	openssl-dev
+	"
+makedepends="
+	$depends_dev
+	cmake
+	samurai
+	zstd
+	"
 subpackages="$pkgname-dev"
-_owrtgit=99bd3d2b
 _owrtver="${pkgver:0:4}.${pkgver:4:2}.${pkgver:6:2}~$_owrtgit"
 source="https://sources.openwrt.org/ustream-ssl-$_owrtver.tar.zst"
 builddir="$srcdir/ustream-ssl-$_owrtver"
+options="!check"  # no tests provided
 
 build() {
-	if [ "$CBUILD" != "$CHOST" ]; then
-		CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
-	fi
+	local crossopts=
+	[ "$CBUILD" != "$CHOST" ] \
+		&& crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_SHARED_LIBS=True \
 		-DCMAKE_BUILD_TYPE=None \
-		$CMAKE_CROSSOPTS .
+		$crossopts .
 	cmake --build build
-}
-
-check() {
-	cd build
-	ctest
 }
 
 package() {

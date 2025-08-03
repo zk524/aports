@@ -1,0 +1,61 @@
+maintainer="fossdd <fossdd@pwned.life>"
+pkgname=owntone-server
+pkgver=28.12
+pkgrel=0
+pkgdesc="DAAP (iTunes) and MPD audio server"
+url="https://owntone.github.io/owntone-server/"
+arch="all"
+license="GPL-2.0-or-later"
+makedepends="
+	avahi-dev
+	confuse-dev
+	curl-dev
+	json-c-dev
+	libevent-dev
+	libgcrypt-dev
+	libplist-dev
+	libsodium-dev
+	libunistring-dev
+	libwebsockets-dev
+	protobuf-c-dev
+	libxml2-dev
+	ffmpeg-dev
+	"
+subpackages="$pkgname-doc"
+source="https://github.com/owntone/owntone-server/releases/download/$pkgver/owntone-$pkgver.tar.xz"
+builddir="$srcdir/owntone-$pkgver"
+
+prepare() {
+       default_prepare
+       # config.sub is too old to recognize loongarch64-alpine-linux-musl
+       update_config_sub
+}
+
+build() {
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--localstatedir=/var
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+
+	# We don't have systemd, *yet* (also it should be in /usr)
+	rm -r "$pkgdir"/etc/systemd/system/
+
+	# TODO: Empty runtime dirs should be created at runtime (e.g. initd)
+	rm -r "$pkgdir"/var/
+}
+
+sha512sums="
+87801bb843dab3215158c63f3aeed67ec725a678628cbf2bce417a60b2b7466a413c3d776e306ff3973240aa9e96fb744df801efa2dd3287530ffb3508e606f4  owntone-28.12.tar.xz
+"

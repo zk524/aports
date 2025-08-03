@@ -90,7 +90,7 @@ package() {
 	cp -r dist/checksums "$pkgdir"/usr/share/nimble/pkgs/nim-$pkgver/dist/
 
 	# make compiler sources available (eg. nimble requires this)
-	ln -s /usr/share/nimble/pkgs/nim-$pkgver/compiler "$pkgdir"/usr/lib/nim/compiler
+	ln -s ../../share/nimble/pkgs/nim-$pkgver/compiler "$pkgdir"/usr/lib/nim/compiler
 }
 
 dbg() {

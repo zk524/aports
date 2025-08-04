@@ -1,0 +1,137 @@
+# Contributor: The one with the braid <info@braid.business>
+# Maintainer: The one with the braid <info@braid.business>
+pkgname=yubico-authenticator
+pkgver=7.1.1
+pkgrel=0
+pkgdesc="Yubico Authenticator for Desktop."
+url="https://github.com/Yubico/yubioath-flutter"
+arch="aarch64 x86_64"	# flutter
+license="Apache-2.0"
+depends="
+	ccid
+	pcsc-tools
+	py3-mss
+	py3-pillow
+	py3-zxing-cpp
+	py3-ykman
+	"
+makedepends="
+	ca-certificates
+	flutter-desktop
+	clang
+	cmake
+	git
+	ninja
+	chrpath
+	desktop-file-utils
+	patchelf
+	libnotify-dev
+	libayatana-appindicator-dev
+	py3-build
+	py3-installer
+	py3-poetry-core
+	py3-wheel
+	"
+source="
+	yubioath-flutter-$pkgver.tar.gz::https://github.com/Yubico/yubioath-flutter/archive/refs/tags/${_rev:-$pkgver}.tar.gz
+	system-flutter.patch
+	"
+builddir="$srcdir/yubioath-flutter-${_rev:-$pkgver}"
+# net: pub dependencies
+# !check: no tests
+options="net !check"
+
+export _pkgorg="com.yubico.yubioath"
+export _pkgexec="yubico-authenticator"
+
+case "$CARCH" in
+	aarch64) _flutter_arch="arm64" ;;
+	x86_64) _flutter_arch="x64" ;;
+esac
+
+export PUB_CACHE="$srcdir/pub_cache"
+
+export CFLAGS="$CFLAGS -O2 -Wno-error -Wno-unknown-warning-option -Wno-unused-command-line-argument"
+export CXXFLAGS="$CXXFLAGS -O2 -Wno-error -Wno-unknown-warning-option -Wno-unused-command-line-argument"
+
+export CC=clang
+export CXX=clang++
+export AR=llvm-ar
+export NM=llvm-nm
+export LD=clang++
+
+prepare() {
+	default_prepare
+
+	flutter pub get --enforce-lockfile
+
+	# if there is a binary in the pub_cache, we sure did not build it.
+	for elf in $(scanelf -RA -F "%F" "${PUB_CACHE}"); do
+		rm -f "${elf}"
+	done
+
+	desktop-file-edit --set-key=Exec --set-value="${_pkgexec}" --set-icon="${_pkgorg}" resources/linux/linux_support/com.yubico.authenticator.desktop
+
+	# Don't copy the Helper since we're not using Pyinstaller
+	sed -i '/build\/linux\/helper/d' linux/CMakeLists.txt
+}
+
+build() {
+	(
+		cd helper
+		GIT_DIR='.' python -m build --wheel --no-isolation
+	)
+
+	flutter build linux -v --release
+
+	local rpath="/usr/lib/${pkgname}"
+
+	patchelf --set-rpath "${rpath}/lib" "build/linux/${_flutter_arch}/release/bundle/authenticator"
+	for _elf in "build/linux/${_flutter_arch}"/release/bundle/lib/lib*.so; do
+		# running patchelf on libapp (the AOT snapshot of the whole Dart codebase)
+		# breaks it with "[FATAL:flutter/runtime/dart_vm_initializer.cc(89)]
+		# Error while initializing the Dart VM: Invalid vm isolate snapshot seen".
+		#
+		# it has no rpath and only links to libc soname anyway. 🤷‍♀️
+		[ "$(basename "${_elf}")" != "libapp.so" ] || continue
+
+		patchelf --set-rpath "${rpath}" "${_elf}"
+	done
+}
+
+package() {
+	local release="$builddir/build/linux/$_flutter_arch/release"
+
+	(
+		cd helper
+		python -m installer --destdir="${pkgdir}" dist/*.whl
+		install -Dm755 authenticator-helper.py "${pkgdir}/usr/lib/${pkgname}/helper/authenticator-helper"
+		install -Dm755 shell.py -t "${pkgdir}/usr/lib/${pkgname}/helper/"
+	)
+
+	(
+		cd "${release}"
+		# configure the installation directory using cmake
+		cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr/lib/${pkgname} .
+		# install the Flutter project using cmake
+		cmake -P cmake_install.cmake
+	)
+
+	install -d "${pkgdir}/usr/bin"
+	ln -s "/usr/lib/${pkgname}/authenticator" "${pkgdir}/usr/bin/${_pkgexec}"
+
+	install -Dm644 "${builddir}/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/COPYING"
+	ln -s "/usr/lib/${pkgname}/data/flutter_assets/NOTICES.Z" "${pkgdir}/usr/share/licenses/${pkgname}/NOTICES.Z"
+
+	install -Dm644 "${builddir}/resources/linux/linux_support/com.yubico.authenticator.desktop" "${pkgdir}/usr/share/applications/$_pkgorg.desktop"
+	install -Dm644 "${builddir}/resources/icons/${_pkgorg}.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${_pkgorg}.png"
+	install -Dm644 "${builddir}/resources/icons/${_pkgorg}-32x32.png" "${pkgdir}/usr/share/icons/hicolor/32x32/apps/${_pkgorg}.png"
+	install -Dm644 "${builddir}/resources/icons/${_pkgorg}-1000x1000.png" "${pkgdir}/usr/share/icons/hicolor/1000x1000/apps/${_pkgorg}.png"
+	
+	chrpath --delete "${pkgdir}/usr/lib/${pkgname}"/lib/*.so
+}
+
+sha512sums="
+02b3bae1548f55a261114a9e8850a108b54bed5f1cd8e5eef0eddb66ffeed6b5ab6f43e8ce2e26d59f3888659428f36069a4c3cbdc8eec04cee068ec468d9aee  yubioath-flutter-7.1.1.tar.gz
+05bb42c0ac8d044726252dbf46c9e53817a84cd3cd94d4a954595b52c8f8d58a0b51038afe5de76d51de8556b79194e8d21702d39c2e90e50e3b2bdd920a97af  system-flutter.patch
+"

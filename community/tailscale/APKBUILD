@@ -4,8 +4,8 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Robert Günzler <r@gnzler.io>
 pkgname=tailscale
-pkgver=1.84.2
-pkgrel=1
+pkgver=1.86.0
+pkgrel=0
 pkgdesc="The easiest, most secure way to use WireGuard and 2FA"
 url="https://tailscale.com/"
 license="BSD-3-Clause"
@@ -117,7 +117,7 @@ package() {
 }
 
 sha512sums="
-f4baaa9070a2ad4f4ddef9bac89fc5333dc1a74db68a976c30a20a7359ebc51d14905ef0098b1046493fb99a829b9b10502e03b12799e94ef543ebffc6018553  tailscale-1.84.2.tar.gz
+03c76f4d8d92c1c3d37211b0ff18cc87e2118f0733ac06981021a0b0e5eb349ba30159430354eeacd7d0d396a94e8073a5045e133262b92e82fe091828d6aa2b  tailscale-1.86.0.tar.gz
 73387de31f04d2cd1b5c64fdc4306b42dccfdb84a050df7c0f625ce8a29d0f5d278c4235b92844cc673fce4930318efdd17cc2bdb577e30b4c87fd8e63914ebc  tailscale.confd
 5a231233a3cbb510fb2c36c059764d97e1eb49f41b826e4e3a955fd81748a0b84a0220dd27b5f3f9cfd60bdc6c867134df1313d52e5609d98922be1a96decee1  tailscale.initd
 4f44f59553142bff5ca0914543114e4a6e3e413a96353543551445be6fa3ddc1037492baf0e091c95fe22a63e639b58bc5040285b8b5d246dbb57b70337d5178  tailscale.logrotate

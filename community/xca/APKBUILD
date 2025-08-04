@@ -7,16 +7,25 @@ pkgdesc="X certificate and key management"
 url="https://hohnstaedt.de/xca/"
 arch="all"
 license="BSD-3-Clause"
-options="!check" # no tests
 depends="qt6-qtbase-sqlite"
 makedepends="qt6-qttools-dev openssl-dev libtool cmake samurai"
+checkdepends="xwayland-run"
 subpackages="$pkgname-doc $pkgname-bash-completion"
 source="https://github.com/chris2511/xca/releases/download/RELEASE.$pkgver/xca-$pkgver.tar.gz
+	tests.patch
 	"
 
 build() {
-	cmake -B build -G Ninja xca
+	cmake -B build -G Ninja
 	cmake --build build
+}
+
+check() {
+	case "$CARCH" in
+	# FIXME test segfaults
+	riscv64) xwfb-run -- ctest --test-dir build -E 'testxca' ;;
+	*) xwfb-run -- ctest --test-dir build ;;
+	esac
 }
 
 package() {
@@ -25,4 +34,5 @@ package() {
 
 sha512sums="
 e635b83668d0053acb1ad5a8a20a2a1854de90a1e2a8806ecd38e83528d17bc87042d44fcea0f75f2e17df1ed135cc473449547fe273e7e3ea1fe175a4ddf054  xca-2.9.0.tar.gz
+be4ce04e960505f1510567433050dfaa96711e7e3ae1bd011ccde1b5214456a2e60dabb6c718a7fd6c915a867ffa860a8cfb3a5141ba8352f6774e6a5e08c468  tests.patch
 "

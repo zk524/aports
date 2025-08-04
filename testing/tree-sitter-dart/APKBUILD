@@ -3,19 +3,23 @@
 pkgname=tree-sitter-dart
 pkgver=0_git20250228
 _gitrev=80e23c07b64494f7e21090bb3450223ef0b192f4
-pkgrel=0
+pkgrel=1
 pkgdesc="A tree-sitter grammar written for the dart programming language"
 url="https://github.com/UserNobody14/tree-sitter-dart"
 arch="all"
 license="MIT"
 makedepends="tree-sitter-dev"
+checkdepends="tree-sitter-cli"
 install_if="tree-sitter-grammars"
 source="$pkgname-$_gitrev.tar.gz::https://github.com/UserNobody14/tree-sitter-dart/archive/$_gitrev.tar.gz"
 builddir="$srcdir/$pkgname-$_gitrev"
-options="!check"  # no tests for shared lib
 
 build() {
 	abuild-tree-sitter build
+}
+
+check() {
+	tree-sitter test
 }
 
 package() {

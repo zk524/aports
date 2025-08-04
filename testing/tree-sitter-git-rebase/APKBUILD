@@ -3,19 +3,23 @@
 pkgname=tree-sitter-git-rebase
 pkgver=0_git20240722
 _gitrev=bff4b66b44b020d918d67e2828eada1974a966aa
-pkgrel=0
+pkgrel=1
 pkgdesc="Tree-sitter grammar for git's interactive rebase file"
 url="https://github.com/the-mikedavis/tree-sitter-git-rebase"
 arch="all"
 license="MIT"
 makedepends="tree-sitter-dev"
+checkdepends="tree-sitter-cli"
 install_if="tree-sitter-grammars"
 source="https://github.com/the-mikedavis/tree-sitter-git-rebase/archive/$_gitrev/tree-sitter-git-rebase-$_gitrev.tar.gz"
 builddir="$srcdir/$pkgname-$_gitrev"
-options="!check"  # no tests for shared lib
 
 build() {
 	abuild-tree-sitter build
+}
+
+check() {
+	tree-sitter test
 }
 
 package() {

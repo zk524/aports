@@ -6,7 +6,7 @@ Y2038 is still an issue on 32b musl rust.
 
 --- a/crates/tor-hsservice/src/time_store.rs
 +++ b/crates/tor-hsservice/src/time_store.rs
-@@ -516,21 +516,6 @@ mod test {
+@@ -519,21 +519,6 @@ mod test {
      }
  
      #[test]

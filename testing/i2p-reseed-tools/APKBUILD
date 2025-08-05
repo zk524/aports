@@ -1,0 +1,53 @@
+# Maintainer: memdmp <aports@estrogen.zone>
+_pkgname="reseed-tools"
+pkgname="i2p-$_pkgname"
+pkgver=0.3.4
+pkgrel=0
+pkgdesc="A secure and efficient reseed server for the I2P network"
+url="https://i2pgit.org/idk/$_pkgname"
+arch="x86_64" # TODO: Test on more architectures
+license="MIT"
+# Depends on either i2pd or java-i2p; due to only i2pd being packaged, we just use that here
+depends="i2pd"
+makedepends="go"
+install="$pkgname.pre-install $pkgname.post-install"
+subpackages="$pkgname-openrc"
+pkgusers="i2psvc"
+pkggroups="i2psvc"
+options="net !check" # No tests the author can find
+source="$pkgname-$pkgver.tgz::https://github.com/eyedeekay/$_pkgname/archive/refs/tags/v$pkgver.tar.gz
+	$pkgname.initd
+	$pkgname.confd"
+builddir="$srcdir/$_pkgname-$pkgver"
+
+prepare() {
+	# These packages no longer exist on github and as of v0.3.4 upstream still lists them to be sourced from there in go.mod
+	# (Also, upstream references ancient (>1yr) old versions of them - maybe one should request new non-commit releases?)
+
+	# go mod edit -replace="github.com/eyedeekay/go-i2cp@v0.0.0-20190716135428-6d41bed718b0=i2pgit.org/idk/go-i2cp@294b34da9f76311600a689d7448a1e965416bde3"
+	# ^ ofc mid testing i2pgit.org starts bad gatewaying so time to go to the github mirror
+
+	go mod edit -replace="github.com/eyedeekay/go-i2cp@v0.0.0-20190716135428-6d41bed718b0=github.com/go-i2p/go-i2cp@294b34da9f76311600a689d7448a1e965416bde3"
+
+	# get new sums
+	go mod download github.com/eyedeekay/go-i2cp
+
+	default_prepare
+}
+
+build() {
+	go build -v -tags netgo,osusergo -ldflags '-w -extldflags "-static"' -o reseed-tools
+}
+
+package() {
+	install -D -m755 "reseed-tools" "$pkgdir/usr/bin/reseed-tools"
+	install -g i2psvc -o i2psvc -D -d "$pkgdir/var/lib/i2p/i2p-config/reseed/"
+	install -D -m644 "$srcdir/$pkgname.confd" "$pkgdir/etc/conf.d/reseed"
+	install -D -m755 "$srcdir/$pkgname.initd" "$pkgdir/etc/init.d/reseed"
+}
+
+sha512sums="
+828e5206ad54b84512a9f7d4b2b7ad2ce45742298c7e9a4dc28f25ace458f8cb124aa5758dd78385d903a6c51cb39eaeab155a798b8f21e3b8bb52b5c86463a1  i2p-reseed-tools-0.3.4.tgz
+e9da100457b2aa07cd99af068bdd4935eef92ce85c280e5c51e4a41f52a6f0236176d2d55686a0c101df49d69fe73a4959dba2b34b78ce2a8aec85bab6f80e58  i2p-reseed-tools.initd
+b4ebf01faa9b2f10c8d932d86d0c44c9d81b9d24aa10507069a620c4361f00ccc3f5da673dc220b60a2862185718a5434af60bd8c0e23af05dcfc602d1bdb7f0  i2p-reseed-tools.confd
+"

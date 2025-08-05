@@ -1,0 +1,10 @@
+#!/bin/sh
+
+addgroup -S i2psvc 2>/dev/null
+adduser -S -D -h "/var/lib/i2p" -s /sbin/nologin -G i2psvc -g i2psvc i2psvc 2>/dev/null
+
+# For if i2pd is installed or gets installed in future (we wanna be able to read netDb)
+addgroup -S i2pd 2>/dev/null
+addgroup i2psvc i2pd 2>/dev/null
+
+exit 0

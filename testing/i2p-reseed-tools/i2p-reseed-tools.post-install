@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cat << __EOF__
+* Make sure to add your email address in /etc/conf.d/reseed
+__EOF__

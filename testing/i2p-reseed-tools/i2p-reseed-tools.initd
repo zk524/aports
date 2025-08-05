@@ -1,0 +1,46 @@
+#!/sbin/openrc-run
+
+export RESEED_EMAIL="${reseed_email:-"${RESEED_EMAIL}"}"
+
+if [ -z "$reseed_netdbdir" ] || [ "$reseed_netdbdir" == "auto" ]; then
+	if [[ -d "/var/lib/i2pd/netDb" ]]; then
+		reseed_netdbdir="/var/lib/i2pd/netDb"
+	elif [[ -d "/var/lib/i2p/i2p-config/netDb" ]]; then
+		reseed_netdbdir="/var/lib/i2p/i2p-config/netDb"
+	else
+		reseed_netdbdir=""
+	fi
+fi
+
+description="I2P Reseed Tools"
+
+supervisor=supervise-daemon
+command=/usr/bin/reseed-tools
+command_args="reseed ${additional_args} --netdb=${reseed_netdbdir}" # TODO: escape reseed_netdbdir
+user="i2psvc"
+group="i2psvc"
+directory="$reseed_rundir"
+
+depend() {
+	# We want either java i2p or i2pd - we technically need one of them but don't care which
+	want i2p i2pd
+}
+
+start_pre() {
+	if [ -z "$RESEED_EMAIL" ]; then
+		echo "Please specify reseed_email in /etc/conf.d/reseed" 1>&2
+		return 1
+	fi
+	if [ -z "$additional_args" ]; then
+		echo "Please specify additional_args in /etc/conf.d/reseed" 1>&2
+		return 1
+	fi
+	if [ -z "$reseed_rundir" ]; then
+		echo "Please specify reseed_rundir in /etc/conf.d/reseed" 1>&2
+		return 1
+	fi
+	if [ -z "$reseed_netdbdir" ]; then
+		echo "Autodetection of netDb failed - please manually specify reseed_netdbdir in /etc/conf.d/reseed" 1>&2
+		return 1
+	fi
+}

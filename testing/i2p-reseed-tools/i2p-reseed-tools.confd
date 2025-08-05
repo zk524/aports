@@ -1,0 +1,25 @@
+# Edit the contact/signing email used by your reseed server here
+# Required: Set a valid email address
+reseed_email=""
+
+# Where should we find peers?
+# Note: "auto" is a special value that checks for "/var/lib/i2pd/netDb" and falls back to "/var/lib/i2p/i2p-config/netDb"
+reseed_netdbdir="auto"
+
+# Where should we run the reseed process?
+# Note: must be owned and be writable by i2psvc
+#       if certificate paths aren't manually specified below, the path will be used to store certificates
+reseed_rundir=/var/lib/i2p/i2p-config/reseed
+
+# Additional arugments to pass to i2pd
+# 
+# Notes:
+# - If you expose publicly (ie not just loopback), **remove --trustProxy**
+# - If proxying, make sure it provides a known good X-Forwarded-For with only truested IPs inside
+# - Other useful options:
+#     --acme, for having it handle it's own ACME (requires it listening on port 80 aswell)
+#     --onion, for having it present an onionv3 address
+#     --friends [value], for pinging other reseed servers and displaying the result on the homepage to provide information about reseed uptime
+#  
+# (use /usr/bin/reseed-tools reseed --help to get a full list of options)
+additional_args="--ip 127.0.0.1 --port 28491 --tlsHost example.com --trustProxy --yes=true"

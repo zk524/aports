@@ -11,7 +11,7 @@
  		if (strcmp(resolve_method_ops_list[i].name, method_name))
 --- a/src/iwd.config.rst
 +++ b/src/iwd.config.rst
-@@ -226,7 +226,7 @@ The group ``[Network]`` contains network
+@@ -250,7 +250,7 @@ The group ``[Network]`` contains network
         by default.  This setting can also be overridden on a per-network basis.
  
     * - NameResolvingService
@@ -20,7 +20,7 @@
  
         Configures a DNS resolution method used by the system.
  
-@@ -234,10 +234,11 @@ The group ``[Network]`` contains network
+@@ -258,10 +258,11 @@ The group ``[Network]`` contains network
         ``EnableNetworkConfiguration`` and provides the choice of system
         resolver integration.
  
@@ -31,7 +31,48 @@
 -       If ``none`` is specified, then DNS and domain name information is
 -       ignored.
 +       In Alpine Linux, ``resolvconf`` requires the openresolv aport to be
-+       installed.
++       installed and its signature to be present in /etc/resolv.conf.
  
     * - RoutePriorityOffset
       - Values: uint32 value (default: **300**)
+@@ -494,4 +495,4 @@ are buggy or just don't behave similar e
+ SEE ALSO
+ ========
+ 
+-iwd(8), iwd.network(5)
++iwd(8), iwd.network(5), resolvconf(8)
+--- a/src/iwd.config.5
++++ b/src/iwd.config.5
+@@ -298,7 +298,7 @@ _
+ T{
+ NameResolvingService
+ T}	T{
+-Values: resolvconf, \fBsystemd\fP, none
++Values: resolvconf, systemd, \fBnone\fP
+ .sp
+ Configures a DNS resolution method used by the system.
+ .sp
+@@ -306,10 +306,11 @@ This configuration option must be used i
+ \fBEnableNetworkConfiguration\fP and provides the choice of system
+ resolver integration.
+ .sp
+-If not specified, \fBsystemd\fP is used as default.
++If not specified, \fBnone\fP is used as default and DNS and domain name
++information is ignored.
+ .sp
+-If \fBnone\fP is specified, then DNS and domain name information is
+-ignored.
++In Alpine Linux, \fBresolvconf\fP requires the openresolv aport to be
++installed and its signature to be present in /etc/resolv.conf.
+ T}
+ _
+ T{
+@@ -583,7 +584,7 @@ T}
+ .TE
+ .SH SEE ALSO
+ .sp
+-iwd(8), iwd.network(5)
++iwd(8), iwd.network(5), resolvconf(8)
+ .SH AUTHOR
+ Marcel Holtmann <marcel@holtmann.org>, Denis Kenzior <denkenz@gmail.com>, Andrew Zaborowski <andrew.zaborowski@intel.com>, Tim Kourt <tim.a.kourt@linux.intel.com>, James Prestwood <prestwoj@gmail.com>
+ .SH COPYRIGHT

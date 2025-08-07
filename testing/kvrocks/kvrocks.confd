@@ -1,0 +1,10 @@
+# Configuration for /etc/init.d/kvrocks
+
+# Kvrocks configuration file.
+#cfgfile="/etc/kvrocks.conf"
+
+# User (and group) to run kvrocks as.
+#command_user="kvrocks:kvrocks"
+
+# Uncomment to run with process supervisor.
+#supervisor="supervise-daemon"

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S kvrocks 2>/dev/null
+adduser -S -D -H -h /var/lib/kvrocks -s /sbin/nologin -G kvrocks -g kvrocks kvrocks 2>/dev/null
+
+exit 0

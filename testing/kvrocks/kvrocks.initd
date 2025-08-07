@@ -1,0 +1,41 @@
+#!/sbin/openrc-run
+
+name="Apache Kvrocks"
+description="NoSQL which is based on RocksDB and compatible with the Redis protocol"
+
+: ${cfgfile:="/etc/kvrocks.conf"}
+: ${command_user:="kvrocks:kvrocks"}
+
+command="/usr/bin/kvrocks"
+command_args="-c $cfgfile --daemonize no --pidfile /dev/null $command_args"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+
+required_files="$cfgfile"
+
+depend() {
+	use net localmount logger
+	after keepalived firewall
+	provide redis
+}
+
+start_pre() {
+	# Sets start-stop-daemon's --chdir.
+	directory="$(config_get 'dir' '/var/lib/kvrocks')"
+	checkpath -d -o "$command_user" "$directory" || return 1
+
+	local unixsocket="$(config_get 'unixsocket')"
+	if [ "$unixsocket" ] && ! [ -e "${unixsocket%/*}" ]; then
+		checkpath -d -o "$command_user" "${unixsocket%/*}" || return 1
+	fi
+
+	return 0
+}
+
+config_get() {
+	local key="$1"
+	local default="${2:-}"
+
+	local value="$(awk "\$1 == \"$key\" { print \$2 }" "$cfgfile")"
+	printf '%s\n' "${value:-$default}"
+}

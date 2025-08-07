@@ -1,13 +1,12 @@
-# Maintainer: Hoang Nguyen <folliekazetani@protonmail.com>
+maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=tetragon-client
-pkgver=1.1.2
-pkgrel=6
+pkgver=1.5.0
+pkgrel=0
 pkgdesc="CLI client for eBPF-based Security Observability and Runtime Enforcement"
 url="https://github.com/cilium/tetragon"
 arch="x86_64 aarch64" # fails to build on other platforms
 license="Apache-2.0"
-makedepends="go"
-checkdepends="linux-headers"
+makedepends="go bash clang linux-headers"
 subpackages="
 	$pkgname-bash-completion
 	$pkgname-fish-completion
@@ -15,6 +14,9 @@ subpackages="
 	"
 source="$pkgname-$pkgver.tar.gz::https://github.com/cilium/tetragon/archive/refs/tags/v$pkgver.tar.gz"
 builddir="$srcdir/tetragon-$pkgver"
+
+# TODO: build and add OpenRC service for tetragon
+# Ref: https://tetragon.io/docs/installation/package/
 
 export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
 export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
@@ -28,33 +30,47 @@ build() {
 	for shell in bash fish zsh; do
 		./tetra completion $shell > tetra.$shell
 	done
+
+	# Compile bpf programs (needed for tetragon binary)
+	make -C bpf all
+
+	# Compile helper programs used in check phase
+	make -C contrib/tester-progs test-helper raisesigkill
 }
 
 check() {
-	# Some tests access example files inside the repo, so no -trimpath.
-	# /tests/e2e: only run unittest
+	# Tests access files inside the repo relative to runtime.Caller(), so no -trimpath.
 	# /bpf/tests: requires root privilege to run
-	# /pkg/reader/proc: read process name at PID 1
-	# /pkg/selectors: read values in kernel Pid namespace
-	# /pkg/alignchecker: fails to build bpf/objs/bpf_alignchecker.o
-	# /pkg/sensors/{tracing,exec}, /pkg/{tracepoint,btf,bugtool}: try to access /sys/kernel
+	# /cmd/tetragon: tests timeout while starting tetragon process
+	# /tests/e2e: we only run unittest
+	# /pkg/bugtool: requires bpftool program, needs access to /sys/fs/bpf
+	# /pkg/cgtracker/test: tries to create subdir /sys/fs/bpf/testcgtracker-test
+	# /pkg/pidfile: tries to create /var/run/tetragon directory
+	# /pkg/sensors/{exec,test,tracing}: tries to create subdir inside /sys/fs/bpf/
 	# /pkg/sensors/exec/procevents, /pkg/cgroups: fail on CI (lacking cgroup controller "pids")
-	# /pkg/pidfile: try to create /var/run/tetragon directory
+	# /pkg/tracepoint: tries to access /sys/kernel/debug/tracing/events/task/task_newtask/format
+	# /contrib/verify: verify the existence of /var/lib/tetragon
+	# TestProcessCgroup: fails to create cgroup map
+	# TestGetPid1Status: reads /proc/1/status expecting uid=0
+	# TestNamespaceValueStr: reads host_ns PID namespace value, expecting to be root
+	# TestSpecs: insufficient permissions while reading kernel symbols
 	# shellcheck disable=2046
-	GOFLAGS="${GOFLAGS/-trimpath/}" go test $(go list ./... | grep -v \
+	GOFLAGS="${GOFLAGS/-trimpath/}" go test \
+		-skip 'Test(ProcessCgroup|GetPid1Status|NamespaceValueStr|Specs)' \
+		$(go list ./... | grep -v \
 		-e '/bpf/tests$' \
-		-e '/pkg/alignchecker$' \
-		-e '/pkg/btf$' \
+		-e '/cmd/tetragon$' \
 		-e '/pkg/bugtool$' \
 		-e '/pkg/cgroups$' \
+		-e '/pkg/cgtracker/test$' \
 		-e '/pkg/pidfile$' \
-		-e '/pkg/reader/proc$' \
-		-e '/pkg/selectors$' \
 		-e '/pkg/sensors/exec$' \
 		-e '/pkg/sensors/exec/procevents$' \
+		-e '/pkg/sensors/test$' \
 		-e '/pkg/sensors/tracing$' \
 		-e '/pkg/tracepoint$' \
-		-e '/tests/e2e' \
+		-e '/tests/e2e/tests' \
+		-e '/contrib/verify$' \
 		)
 }
 
@@ -70,5 +86,5 @@ package() {
 }
 
 sha512sums="
-129dce49845936a5be5f7f610aaa3acec5e8329bf8cc26e7f6f4157a7e1047a047b231e799f9e8f695a45030258ef418828c54064e4f26fd1fd79c36bf6afc62  tetragon-client-1.1.2.tar.gz
+659e04a270df002f504443bef8542069f21e33a304bc9a46500215a1b192c8df7aea6d70dc917fd3ef73b0a0bf58d20d5a5e02a4e37cb3a1c2a123addae8c8ae  tetragon-client-1.5.0.tar.gz
 "

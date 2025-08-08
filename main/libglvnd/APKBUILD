@@ -1,0 +1,76 @@
+# Contributor: Simon Pflaumer (spflaumer) <s.pflaumer@murena.io>
+# Maintainer: Achill Gilgenast <achill@achill.org>
+pkgname=libglvnd
+pkgver=1.7.0
+pkgrel=0
+arch="all"
+url="https://gitlab.freedesktop.org/glvnd/libglvnd"
+pkgdesc="GL Vendor-Neutral Dispatch library"
+license="custom:BSD-like"
+source="
+	https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz
+	remove-glx-tests.patch
+	LICENSE
+	"
+builddir="$srcdir/libglvnd-v$pkgver"
+subpackages="
+	$pkgname-dev
+	$pkgname-egl
+	$pkgname-gl
+	$pkgname-gles
+	$pkgname-doc
+	"
+
+depends_dev="
+	libxext-dev
+	libx11-dev
+	xorgproto
+	"
+makedepends="
+	$depends_dev
+	meson
+	"
+
+build() {
+	abuild-meson \
+		-Dx11=enabled \
+		-Dglx=enabled \
+		-Dgles1=true \
+		-Dgles2=true \
+		./ build/
+
+	meson compile -C build/
+}
+
+check() {
+	meson test -C build/
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C build/
+	install -Dm644 "$srcdir"/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+egl() {
+	pkgdesc="Gl Vendor-Neutral Dispatch library (libEGL runtime libraries)"
+
+	amove usr/lib/libEGL.so*
+}
+gl() {
+	pkgdesc="Gl Vendor-Neutral Dispatch library (libGL runtime libraries)"
+
+	amove usr/lib/libGL.so*
+}
+gles() {
+	pkgdesc="Gl Vendor-Neutral Dispatch library (libGLES runtime libraries)"
+	provides="mesa-gles=25.1.7-r2"
+
+	amove usr/lib/libGLES*.so*
+}
+
+
+sha512sums="
+7b6eb8e075b48f1d915b892044adc3260547d74ed61d1e2fa6c5f0f8c3527754abea314181e088626d4fd58bb221085e5288c4758d828e171c7dcb0e4991745c  libglvnd-v1.7.0.tar.gz
+a742f5ff7e5761f0ae9d96c74da1c0e152440b523f1646a74002918ef94fdf41981e20f6d1f4724605a19f05dde4790e1905a05fdad027740153b31005fc8ce5  remove-glx-tests.patch
+a38066f21cc01bef868523e9b12a22d7cdaaef81c39ce7007769ebff8fcfe2e3eb755c8497b7a9d58eaf65a0c157c2186277334f1565707353ee6f0ac2fdd509  LICENSE
+"

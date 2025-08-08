@@ -1,0 +1,25 @@
+From b0fa2a29fe95fab5211835cf73ce517d91f833c1 Mon Sep 17 00:00:00 2001
+From: spflaumer <spflaumer@murena.io>
+Date: Wed, 13 Aug 2025 10:52:40 +0200
+Subject: [PATCH] remove glx tests
+
+---
+ tests/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/meson.build b/tests/meson.build
+index 521834c..7ad9a28 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -66,7 +66,7 @@ else
+     _env_ld = 'LD_LIBRARY_PATH=@0@'.format(dummy_build_dir)
+ endif
+ 
+-if with_glx
++if false
+   env_glx = [
+     '__GLX_FORCE_VENDOR_LIBRARY_0=dummy',
+     _env_ld,
+-- 
+2.50.1
+

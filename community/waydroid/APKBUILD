@@ -31,6 +31,7 @@ source="https://github.com/waydroid/waydroid/archive/$pkgver/waydroid-$pkgver.ta
 	waydroid-container.confd
 	51_waydroid.nft
 	waydroid-session.desktop
+	waydroid-wayland-session.desktop
 	"
 options="!check" # No tests
 
@@ -62,10 +63,18 @@ pyc() {
 	amove $(find usr/lib/waydroid -type d -name __pycache__)
 }
 
+session() {
+	pkgdesc="$pkgdesc (waydroid session)"
+	depends="waydroid=$pkgver-r$pkgrel cage"
+
+	install -Dm644 "$srcdir"/waydroid-wayland-session.desktop "$pkgdir"/usr/share/wayland-sessions/waydroid.desktop
+}
+
 sha512sums="
 c6fc3860ed059676bf770b672be3df14b8e47b2a2b4a44e4d5672fedd3651959d7cb2b75fc34a7a037f3a770b3b82b78e12d0f3c9f3979ae821474eef4fad90c  waydroid-1.5.4.tar.gz
 f319dde4f4bb365069dff2c1ddaa0a85d711c9e9d49011b15aec0d10da2ba0da39c464505d28cd7e8b4f803e932fdde04ca69602805d084529bac0ee6b22ba59  waydroid-container.initd
 b841282b96110ec59a7aa539db0737327b09549d55c78dc4b2c3b28b4a6ad1facf015b3175cb6d3a38f13e47aa6314ef3dc1514a4e60dd653a97409ec54ba706  waydroid-container.confd
 27cec579cfda197ff70d6328043755fc3d1719347bf4987edb86a07341bc4f02b99b65a6ef1fcde58b48a925176e6d770ed7cef304edff6a860bf4d408a62e06  51_waydroid.nft
 1848bf6b63ed51c635190c134ec3b0b1345915c13a3b721ea7dde44cb5808e632237bdba2ae12e6a9ba2f8978c07715998c357eb5bd7b7caff9d41142bae27e8  waydroid-session.desktop
+366c1ac3e84ea9b1104db12b7c22614dc9ca951eab7e487ca543767d9c4f90c4081a03da99f67523d94dc857ff6252026ad01d0b580da103f264878c06f3392e  waydroid-wayland-session.desktop
 "

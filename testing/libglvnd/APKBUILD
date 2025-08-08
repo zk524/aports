@@ -1,0 +1,45 @@
+# Maintainer: Simon Pflaumer (spflaumer) <s.pflaumer(a)murena.io>
+pkgname=libglvnd
+pkgver=1.7.0
+pkgrel=1
+arch="all"
+url="https://gitlab.freedesktop.org/glvnd/libglvnd"
+pkgdesc="The GL Vendor-Neutral Dispatch library"
+license="custom:BSD-like"
+source="https://gitlab.freedesktop.org/-/project/4399/uploads/c24806c283070dc70700234ca8ffacf8/libglvnd-1.7.0.tar.gz"
+subpackages="$pkgname-dev"
+
+depends_dev="
+	libxext-dev
+	libx11-dev
+	xorgproto
+	"
+makedepends="
+	$depends_dev
+	meson
+	"
+
+build() {
+	abuild-meson \
+		-Db_pie=true \
+		-Dpython.bytecompile=1 \
+		-Dx11=enabled \
+		-Dglx=enabled \
+		-Dgles1=true \
+		-Dgles2=true \
+		build/
+
+	meson configure --no-pager build/
+
+	meson compile -C build/
+}
+
+package() {
+	provider_priority=100
+	DESTDIR="$pkgdir" meson install --no-rebuild -C build/
+}
+
+
+sha512sums="
+185a3a65eb31fe93920b10d9d61de3c0a156c8813acca9a6596096342f527172ac6d8eed581ce2a1a4ac548d59ff25120a6d95f73ad90f26a02e3c30eb84f6c1  libglvnd-1.7.0.tar.gz
+"

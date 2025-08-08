@@ -1,8 +1,7 @@
 # Contributor: Fabian Affolter <fabian@affolter-engineering.ch>
-# Contributor: fossdd <fossdd@pwned.life>
-# Maintainer: fossdd <fossdd@pwned.life>
+maintainer="fossdd <fossdd@pwned.life>"
 pkgname=ansible-lint
-pkgver=24.12.2
+pkgver=25.7.0
 pkgrel=0
 pkgdesc="check ansible playbooks"
 url="https://github.com/ansible/ansible-lint"
@@ -34,6 +33,7 @@ makedepends="
 	py3-wheel
 	"
 checkdepends="
+	libffi-dev
 	py3-flaky
 	py3-license-expression
 	py3-psutil
@@ -43,6 +43,7 @@ checkdepends="
 	py3-pytest-mock
 	py3-pytest-mypy
 	py3-pytest-xdist
+	python3-dev
 	yamllint
 	"
 subpackages="$pkgname-pyc"
@@ -95,6 +96,6 @@ package() {
 }
 
 sha512sums="
-0050f5c14165dc4114846096518d500fe2c400f05a6a943d36331042b02f8ae038ede8924a6a036e846eafa03c6bde8e24699b41cef85bcf6d770289f71fc162  ansible_lint-24.12.2.tar.gz
+5126ae8fdbfe9eb3d7789e38a542dba5953891ba7493ee5efe05a9ef10df58de9bae7bec7c29907b6796148b2bc30073e52323348896be2b692f12929cf63903  ansible_lint-25.7.0.tar.gz
 314fa02e0b30db8a8886824b0cce825ae4ffe227e2c5be434bc96e1c3ab8a6239548574d9ed0869def67b94c684a67abbf594f78aadbc64286fe8187502ba275  no-version-check.patch
 "

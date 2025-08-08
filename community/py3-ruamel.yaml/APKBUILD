@@ -5,8 +5,8 @@ _pyname=ruamel.yaml
 # XXX: 0.17.29 rewrites tag handling, which breaks use widely
 # if upgrading to a larger version, run the testsuite of aws-cli and borgmatic
 # to verify it is functional.
-pkgver=0.17.28
-pkgrel=1
+pkgver=0.18.14
+pkgrel=0
 pkgdesc="Python YAML parser/emitter"
 url="https://sourceforge.net/projects/ruamel-yaml/"
 arch="noarch"
@@ -47,5 +47,5 @@ package() {
 }
 
 sha512sums="
-5195485270b7a66b228ccfa2956b172cd97712e950f148620d8fb17ba9bf4548a3328229308ffffe970e30fcc73b28ea0ebd2ac571691bc26f1620bcb3183dbe  ruamel.yaml-0.17.28.tar.gz
+89a8314ab4abc465465e88be93244cbe846b7a2b35717d5ce48f3ed3e6849e7e104120b0d2221273f999718948af52b54cc27005f1a50778eabacfb0d00c9786  ruamel.yaml-0.18.14.tar.gz
 "

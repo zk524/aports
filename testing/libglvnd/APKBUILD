@@ -21,8 +21,6 @@ makedepends="
 
 build() {
 	abuild-meson \
-		-Db_pie=true \
-		-Dpython.bytecompile=1 \
 		-Dx11=enabled \
 		-Dglx=enabled \
 		-Dgles1=true \

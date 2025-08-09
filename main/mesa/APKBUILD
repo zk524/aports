@@ -2,7 +2,7 @@
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=mesa
 pkgver=25.1.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Mesa DRI OpenGL library"
 url="https://www.mesa3d.org"
 arch="all"
@@ -28,6 +28,7 @@ depends_dev="
 	libxdamage-dev
 	libxcb-dev
 	libxshmfence-dev
+	libglvnd-dev
 	"
 makedepends="
 	$depends_dev
@@ -63,6 +64,7 @@ makedepends="
 	xorgproto
 	zlib-dev
 	zstd-dev
+	libglvnd
 	"
 _paste_version="1.0.14"
 _proc_macro2_version="1.0.86"
@@ -245,6 +247,7 @@ build() {
 		-Dgles1=enabled \
 		-Dgles2=enabled \
 		-Degl=enabled \
+		-Dglvnd=enabled \
 		-Dgallium-extra-hud=true \
 		-Dgallium-rusticl=$_rusticl \
 		-Dgallium-va=enabled \
@@ -283,26 +286,35 @@ package() {
 
 egl() {
 	pkgdesc="Mesa libEGL runtime libraries"
-	depends="mesa=$pkgver-r$pkgrel"
+	depends="
+		mesa=$pkgver-r$pkgrel
+		libglvnd
+		"
 	provider_priority=100
 
-	amove usr/lib/libEGL.so*
+	amove usr/lib/libEGL_mesa.so*
 }
 
 gl() {
 	pkgdesc="Mesa libGL runtime libraries"
-	depends="mesa=$pkgver-r$pkgrel"
+	depends="
+		mesa=$pkgver-r$pkgrel
+		libglvnd
+		"
 	provider_priority=100
 
-	amove usr/lib/libGL.so*
+	amove usr/lib/libGLX_mesa.so*
 }
 
 gles() {
 	pkgdesc="Mesa libGLESv2 runtime libraries"
-	depends="mesa=$pkgver-r$pkgrel"
+	depends="
+		mesa=$pkgver-r$pkgrel
+		libglvnd
+		"
 	provider_priority=100
 
-	amove usr/lib/libGLES*.so*
+	mkdir -p "$pkgdir-gles"
 }
 
 gbm() {

@@ -1,4 +1,5 @@
-# Maintainer: Simon Pflaumer (spflaumer) <s.pflaumer(a)murena.io>
+# Contributor: Simon Pflaumer (spflaumer) <s.pflaumer@murena.io>
+# Maintainer:
 pkgname=libglvnd
 pkgver=1.7.0
 pkgrel=1

@@ -1,0 +1,33 @@
+# Contributor: Giovanni Napoli <gnapoli.dev@gmail.com>
+# Maintainer: Giovanni Napoli <gnapoli.dev@gmail.com>
+pkgname=foundry
+pkgver=1.0.0
+pkgrel=0
+pkgdesc="Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust"
+url="https://book.getfoundry.sh/"
+options="!check" # test suite requires connecting to external providers, disabled for now
+arch="all" # aarch64 not working with `cargo-auditable`
+license="Apache-2.0 OR MIT"
+makedepends="cargo cargo-auditable cargo-nextest perl linux-headers"
+source="$pkgname-$pkgver.tar.gz::https://github.com/foundry-rs/foundry/archive/v$pkgver.tar.gz"
+
+build() {
+	local _features="jemalloc aws-kms cli asm-keccak"
+	cargo auditable build --features "$_features" --release --locked
+}
+
+check() {
+	cargo nextest run -E 'kind(test) & !test(/\b(issue|ext_integration)/)'
+	cargo test --doc --workspace
+}
+
+package() {
+	local _targetdir="$builddir/target/release"
+	for bin in forge cast anvil chisel; do
+		install -Dm755 "$_targetdir/$bin" "$pkgdir/usr/bin/$bin"
+ 	done
+}
+
+sha512sums="
+673f22b171fa0693724b71f3234ee29f5d02c915dfef33e57e09a3ae86198775d17ddf5b0ce4168ff5c022e05ad53a06ad67141bcbda029e1114cb4bb3ab7178  foundry-1.0.0.tar.gz
+"

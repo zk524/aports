@@ -2,7 +2,7 @@
 # Contributor: Michał Polański <michal@polanski.me>
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=mitmproxy
-pkgver=11.0.0
+pkgver=12.1.1
 pkgrel=0
 pkgdesc="Interactive TLS-capable intercepting HTTP proxy"
 url="https://mitmproxy.org/"
@@ -10,6 +10,7 @@ license="MIT"
 arch="noarch"
 depends="
 	py3-aioquic
+	py3-argon2-cffi
 	py3-asgiref
 	py3-brotli
 	py3-certifi
@@ -22,17 +23,17 @@ depends="
 	py3-ldap3
 	py3-mitmproxy-rs
 	py3-msgpack
-	py3-passlib
-	py3-protobuf
 	py3-openssl
 	py3-parsing
+	py3-passlib
+	py3-protobuf
+	py3-publicsuffix2
 	py3-pyperclip
 	py3-ruamel.yaml
 	py3-sortedcontainers
 	py3-tornado
 	py3-urwid
 	py3-wsproto
-	py3-publicsuffix2
 	py3-zstandard
 	"
 makedepends="
@@ -76,6 +77,6 @@ package() {
 }
 
 sha512sums="
-d3c85736499d12f2d9a9f7821048af14fbc300aef29bc3b1b3b020a087dd9190a04143d175c78302d389207968b903e5694643c348dcf6a9f8d170d211f6bde7  mitmproxy-11.0.0.tar.gz
+260d424a003b046686e12f11bb19c1b63610f83759e379590f22e6d08040d9335d6dfb62c8bcb2908d09699ba9f9a7ab29f972739210c5345a5146ccf00fe56d  mitmproxy-12.1.1.tar.gz
 1baa88dae9f664af4bed62f89a7f5d13685b42774ea19563eba7298ef09fa07fafb4d5f1650e044561a5d304451d916e6c9833ad9755204d424bea6ed3bdb4fd  skip-test-optmanager-x86.patch
 "

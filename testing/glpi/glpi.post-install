@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Please run glpi-setup with root user to prepare your glpi instance."
+echo
+echo "You may also want to read the manual of glpi-setup in the glpi-doc package."
+
+exit 0

@@ -1,0 +1,58 @@
+.TH GLPI-CONSOLE 1 "August 2025" "GLPI 10.0.19" "User Commands"
+.SH NAME
+glpi-console \- Command-line interface for GLPI administration
+.SH SYNOPSIS
+.B glpi-console
+.RI [ options ] " <command> [arguments]"
+.SH DESCRIPTION
+The \fBglpi-console\fR command provides a command-line interface (CLI) to administer and manage a GLPI installation. It allows administrators to perform various maintenance, configuration, and automation tasks directly from the terminal, without using the web interface.
+
+.SH COMMANDS
+Commonly used commands include:
+.TP
+\fBglpi-console database:update\fR
+Update the GLPI database schema.
+.TP
+\fBglpi-console user:create\fR
+Create a new GLPI user.
+.TP
+\fBglpi-console user:list\fR
+List all GLPI users.
+.TP
+\fBglpi-console maintenance:enable\fR
+Enable maintenance mode.
+.TP
+\fBglpi-console maintenance:disable\fR
+Disable maintenance mode.
+.TP
+\fBglpi-console task:run\fR
+Run scheduled tasks (cron).
+
+.SH OPTIONS
+.TP
+\fB--help\fR
+Display help for the command.
+.TP
+\fB--env=ENV\fR
+Specify the environment (e.g., production, development).
+
+.SH EXAMPLES
+.TP
+Update the database schema:
+.B
+glpi-console database:update
+.TP
+Create a new user:
+.B
+glpi-console user:create --username=admin --password=secret
+
+.SH FILES
+.TP
+\fI/usr/bin/glpi-console\fR
+The GLPI CLI executable.
+
+.SH SEE ALSO
+.BR glpi (8)
+
+.SH AUTHOR
+Damien ABOS <damien.abos@gmail.com>

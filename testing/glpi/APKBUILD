@@ -1,0 +1,133 @@
+# Maintainer: Damien ABOS <damien.abos@gmail.com>
+pkgname=glpi
+pkgver=10.0.19
+pkgrel=0
+pkgdesc="GLPI (Free IT Asset Management in french) is a web application for IT asset management and helpdesk."
+url="https://glpi-project.org/"
+arch="noarch"
+#
+options="!check net" # no test suite provided
+license="AGPL-3.0-or-later"
+_php="php84"
+depends="
+	$_php
+	$_php-bz2
+	$_php-common
+	$_php-ctype
+	$_php-curl
+	$_php-dom
+	$_php-exif
+	$_php-fileinfo
+	$_php-gd
+	$_php-iconv
+	$_php-intl
+	$_php-ldap
+	$_php-mbstring
+	$_php-mysqli
+	$_php-mysqlnd
+	$_php-opcache
+	$_php-openssl
+	$_php-phar
+	$_php-session
+	$_php-simplexml
+	$_php-sodium
+	$_php-xml
+	$_php-xmlreader
+	$_php-xmlwriter
+	$_php-zip"
+install="$pkgname.pre-install $pkgname.post-install"
+subpackages="$pkgname-doc
+	$pkgname-apache2:_apache2:noarch
+	$pkgname-nginx:_nginx:noarch
+	$pkgname-fpm:_fpm:noarch"
+pkgusers=$pkgname
+pkggroups=$pkgname
+source="$pkgname.tar.gz::https://github.com/glpi-project/glpi/releases/download/$pkgver/glpi-$pkgver.tgz
+	$pkgname-console
+	setup-$pkgname
+	$pkgname.8
+	$pkgname-console.1
+	setup-$pkgname.1
+	$pkgname-fpm.ini
+	$pkgname-fpm.conf
+	$pkgname-nginx.conf
+	$pkgname-apache2.conf"
+
+builddir="$srcdir"/$pkgname
+
+package() {
+	mkdir -p \
+		"$pkgdir"/usr/bin \
+		"$pkgdir"/var/lib/glpi/config \
+		"$pkgdir"/var/lib/glpi/files/_cache \
+		"$pkgdir"/var/lib/glpi/files/_cron \
+		"$pkgdir"/var/lib/glpi/files/_dumps \
+		"$pkgdir"/var/lib/glpi/files/_graphs \
+		"$pkgdir"/var/lib/glpi/files/_inventories \
+		"$pkgdir"/var/lib/glpi/files/_locales \
+		"$pkgdir"/var/lib/glpi/files/_lock \
+		"$pkgdir"/var/lib/glpi/files/_log \
+		"$pkgdir"/var/lib/glpi/files/_pictures \
+		"$pkgdir"/var/lib/glpi/files/_plugins \
+		"$pkgdir"/var/lib/glpi/files/_rss \
+		"$pkgdir"/var/lib/glpi/files/_sessions \
+		"$pkgdir"/var/lib/glpi/files/_themes \
+		"$pkgdir"/var/lib/glpi/files/_tmp \
+		"$pkgdir"/var/lib/glpi/files/_uploads \
+		"$pkgdir"/var/lib/glpi/logs \
+		"$pkgdir"/var/lib/glpi/marketplace \
+		"$pkgdir"/var/lib/glpi/plugins \
+		"$pkgdir"/var/run/glpi \
+		"$pkgdir"/var/www/glpi/logs
+	
+	install -Dm755 "$srcdir"/$pkgname-console -t "$pkgdir"/usr/bin/
+	install -Dm755 "$srcdir"/setup-$pkgname -t "$pkgdir"/usr/sbin/
+	install -Dm644 "$srcdir"/$pkgname.8 -t "$pkgdir"/usr/share/man/man8/
+	install -Dm644 "$srcdir"/$pkgname-console.1 -t "$pkgdir"/usr/share/man/man1/
+	install -Dm644 "$srcdir"/setup-$pkgname.1 -t "$pkgdir"/usr/share/man/man1/
+	cp -r "$builddir/"* "$pkgdir"/var/www/glpi/
+	chown -R $pkgusers:$pkggroups "$pkgdir"/var/lib/glpi "$pkgdir"/var/www/glpi "$pkgdir"/var/run/glpi
+	chmod -R 775 "$pkgdir"/var/lib/glpi "$pkgdir"/var/www/glpi/logs "$pkgdir"/var/www/glpi/marketplace "$pkgdir"/var/www/glpi/plugins
+	
+}
+
+_apache2() {
+	description="$description (Apache2 configuration)"
+	depends="apache2 apache-mod-fcgid $pkgname-fpm"
+
+	mkdir -p "$subpkgdir"/etc/apache2/conf.d
+	cp "$srcdir"/$pkgname-apache2.conf "$subpkgdir"/etc/apache2/conf.d/
+}
+
+_nginx() {
+	description="$description (Nginx configuration)"
+	depends="nginx $pkgname-fpm"
+	install_if="nginx $pkgname=$pkgver-r$pkgrel"
+	install="$pkgname-nginx.post-install"
+
+	mkdir -p "$subpkgdir"/etc/nginx/http.d
+	cp "$srcdir"/$pkgname-nginx.conf "$subpkgdir"/etc/nginx/http.d/
+}
+
+_fpm() {
+	description="$description (PHP-FPM configuration)"
+	depends="$pkgname $_php-fpm"
+
+	mkdir -p "$subpkgdir"/etc/$_php/conf.d
+	mkdir -p "$subpkgdir"/etc/$_php/php-fpm.d
+	cp "$srcdir"/$pkgname-fpm.ini "$subpkgdir"/etc/$_php/conf.d/02-$pkgname.ini
+	cp "$srcdir"/$pkgname-fpm.conf "$subpkgdir"/etc/$_php/php-fpm.d/$pkgname.conf
+}
+
+sha512sums="
+fe4fce617e4ef08cb925984861b12fe9ec30d4696c034b10fccde45561feaaf32afa375723b6a2070e223de5752f0d47dce5e2fb8221906c091d479084e736b9  glpi.tar.gz
+24ad786422d70b54f7d1b5137feea6745a40a4ea9404eabff1fe12b13f274d1c67ece530b9da606234a04d20342e7dab90f48ea937e439c1570522ad13a5df05  glpi-console
+83ddf09bbc1c7d5489cfe5f8277892ec38bc787fbf98a35230a372aa052077a699b355b6cb4bd1e4e72e4280a5a08c7d60cb57bff02beed907580a1dacf97b63  setup-glpi
+b2e02820df141f6e965ab3c608377dbabb5acd327c6700bc8ef1735e049096b00331021185835dacf05c929f551e3ae357a5013fb95c04ad3cc84248245b17ae  glpi.8
+26265c87e46004fd761f01b26cef16675119128e66c319934b95ad0ff531b120835626b533e453ba97f91fc5e75e2112eed60d1ea7234d3d35a919a2e28f963d  glpi-console.1
+c1f11f63af8b3da230a9982ab2166319e03261896e1e260008ee96989fb3d372fb2ab3604031063471221cf2d218edaad549cb7e8376bd71daab969363569e35  setup-glpi.1
+7a1d5a33f9c2f0b56fa519408121e49743022be2dfcbc4398d5d5fe4154599fd2a3626568ddefe283fa5bc144b998afad53cf96b137c29b0b09337933bacf311  glpi-fpm.ini
+52b75bc816a01a7de932f315727c9eb41f045394e7b5375acacce7c92810c49b4a1a99b17deed6faba17f66822be0b3861094494f0f04d2c252b7fea2008f297  glpi-fpm.conf
+0974dfb469cd30d20f537b2490985c7a8078c47d151ed529ddf7994573af15aefc8cd2b743fcfa915d30c883e67bed1c97b9c2c6cddb80e4f61d8988b402dd18  glpi-nginx.conf
+b8568397ea2956e15de8f835b689061eb2f1872c1026c1d82779aa40ca994459e7892b6a4e25f0650ae65b091e32caac57e67f92ac9e9e0126b37d262220ca58  glpi-apache2.conf
+"

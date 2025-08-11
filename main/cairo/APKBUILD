@@ -5,7 +5,6 @@ pkgrel=0
 pkgdesc="A vector graphics library"
 url="https://cairographics.org/"
 arch="all"
-options="!check"  # Recursive dependency on gtk+2.0 for check.
 license="LGPL-2.1-or-later OR MPL-1.1"
 depends_dev="
 	$pkgname-tools=$pkgver-r$pkgrel
@@ -25,6 +24,8 @@ makedepends="
 	meson
 	zlib-dev
 	"
+# poppler causes recursive dependency and librsvg is in community
+#checkdepends="poppler-dev librsvg-dev"
 subpackages="
 	$pkgname-dbg
 	$pkgname-static
@@ -50,7 +51,7 @@ build() {
 		-Db_lto=true \
 		-Ddefault_library=both \
 		-Dgtk_doc=true \
-		-Dtests="$(want_check && echo enabled || echo disabled)" \
+		-Dtests="$(want_check && echo auto || echo disabled)" \
 		-Dfontconfig=enabled \
 		-Dfreetype=enabled \
 		-Dglib=enabled \
@@ -64,7 +65,9 @@ build() {
 }
 
 check() {
-	meson test --print-errorlogs -C output
+	# Only runs a single test as sanity-check, see "Getting the elusive zero failures"
+	# at https://gitlab.freedesktop.org/cairo/cairo/-/blob/master/test/README
+	CAIRO_TEST_MODE="similar,offset" CAIRO_TESTS="create-from-png-16bit" meson test --print-errorlogs -C output
 }
 
 package() {

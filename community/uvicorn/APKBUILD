@@ -1,13 +1,11 @@
 maintainer="Michał Polański <michal@polanski.me>"
 pkgname=uvicorn
-pkgver=0.32.0
+pkgver=0.35.0
 pkgrel=0
 pkgdesc="Lightning-fast ASGI server"
 url="https://www.uvicorn.org/"
 license="BSD-3-Clause"
-# disable due to lack of support for websockets 14
-# https://gitlab.alpinelinux.org/alpine/aports/-/issues/16646
-arch=""
+arch="noarch"
 depends="py3-click py3-h11"
 makedepends="py3-gpep517 py3-hatchling"
 checkdepends="
@@ -17,6 +15,7 @@ checkdepends="
 	py3-httpx
 	py3-pytest
 	py3-pytest-mock
+	py3-pytest-xdist
 	py3-trustme
 	py3-typing-extensions
 	py3-watchfiles
@@ -27,6 +26,7 @@ checkdepends="
 subpackages="$pkgname-pyc"
 source="https://github.com/encode/uvicorn/archive/$pkgver/uvicorn-$pkgver.tar.gz
 	test_multiprocess.patch
+	test_ignore-client-connect-deprecation.patch
 	"
 
 build() {
@@ -38,8 +38,7 @@ build() {
 check() {
 	python3 -m venv --clear --without-pip --system-site-packages .testenv
 	.testenv/bin/python3 -m installer .dist/*.whl
-	.testenv/bin/python3 -m pytest \
-		-k "not test_close_connection_with_multiple_requests" # a known issue
+	.testenv/bin/python3 -m pytest -v
 }
 
 package() {
@@ -48,6 +47,7 @@ package() {
 }
 
 sha512sums="
-66bfaf0ff37507b90fa63d4a9d3cdb8ae7aa70629ad9bcf52a391abd2c85e67cfce066ba8fb39d9e8f7781bdbad52a03ac9beb9cdbc91af59c29bcf2654ba8b0  uvicorn-0.32.0.tar.gz
+f7340bae22774d40c573f5d0657cbec64b5f4b6d97a693dbb3e1d42d539e30e4bca679faf6f6359b07828a3ffb4ac22a94195b99c09078af531cf13a5afe479c  uvicorn-0.35.0.tar.gz
 cfad91dd84f8974362f52d754d7a29f09d07927a46acaa0eb490b6115a5729d84d6df94fead10ccd4cce7f5ea376f1348b0f59daede661dd8373a3851c313c46  test_multiprocess.patch
+95d6eb44e792f60c56ac993d8a392cc5487740865c298c449ee7c00a9c978063e150e51290c5c39acbb4f7cb23d4865b114e16a33558186db6873850e46d2108  test_ignore-client-connect-deprecation.patch
 "

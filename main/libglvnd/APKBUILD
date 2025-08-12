@@ -5,7 +5,7 @@ pkgver=1.7.0
 pkgrel=0
 arch="all"
 url="https://gitlab.freedesktop.org/glvnd/libglvnd"
-pkgdesc="The GL Vendor-Neutral Dispatch library"
+pkgdesc="GL Vendor-Neutral Dispatch library"
 license="custom:BSD-like"
 source="https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz"
 subpackages="$pkgname-dev"
@@ -27,8 +27,6 @@ build() {
 		-Dgles1=true \
 		-Dgles2=true \
 		build/
-
-	meson configure --no-pager build/
 
 	meson compile -C build/
 }

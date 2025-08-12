@@ -15,7 +15,6 @@ subpackages="
 	$pkgname-vdpau-gallium:_vdpau
 	$pkgname-egl
 	$pkgname-gl
-	$pkgname-gles
 	$pkgname-gbm
 	$pkgname-vulkan-ati:_vulkan
 	$pkgname-vulkan-swrast:_vulkan
@@ -64,7 +63,6 @@ makedepends="
 	xorgproto
 	zlib-dev
 	zstd-dev
-	libglvnd
 	"
 _paste_version="1.0.14"
 _proc_macro2_version="1.0.86"
@@ -288,7 +286,6 @@ egl() {
 	pkgdesc="Mesa libEGL runtime libraries"
 	depends="
 		mesa=$pkgver-r$pkgrel
-		libglvnd
 		"
 	provider_priority=100
 
@@ -299,22 +296,10 @@ gl() {
 	pkgdesc="Mesa libGL runtime libraries"
 	depends="
 		mesa=$pkgver-r$pkgrel
-		libglvnd
 		"
 	provider_priority=100
 
 	amove usr/lib/libGLX_mesa.so*
-}
-
-gles() {
-	pkgdesc="Mesa libGLESv2 runtime libraries"
-	depends="
-		mesa=$pkgver-r$pkgrel
-		libglvnd
-		"
-	provider_priority=100
-
-	mkdir -p "$subpkgdir"
 }
 
 gbm() {

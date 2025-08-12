@@ -2,12 +2,12 @@
 # Maintainer:
 pkgname=libglvnd
 pkgver=1.7.0
-pkgrel=1
+pkgrel=0
 arch="all"
 url="https://gitlab.freedesktop.org/glvnd/libglvnd"
 pkgdesc="The GL Vendor-Neutral Dispatch library"
 license="custom:BSD-like"
-source="https://gitlab.freedesktop.org/-/project/4399/uploads/c24806c283070dc70700234ca8ffacf8/libglvnd-1.7.0.tar.gz"
+source="https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz"
 subpackages="$pkgname-dev"
 
 depends_dev="

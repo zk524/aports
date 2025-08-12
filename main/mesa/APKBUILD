@@ -116,9 +116,10 @@ x86*)
 		"
 	;;
 aarch64)
-	_vulkan_drivers="$_vulkan_drivers,asahi,broadcom,freedreno,panfrost"
+	_vulkan_drivers="$_vulkan_drivers,intel,intel_hasvk,asahi,broadcom,freedreno,panfrost"
 	subpackages="
 		$subpackages
+		$pkgname-vulkan-intel:_vulkan
 		$pkgname-vulkan-asahi:_vulkan
 		$pkgname-vulkan-broadcom:_vulkan
 		$pkgname-vulkan-freedreno:_vulkan

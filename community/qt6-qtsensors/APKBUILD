@@ -3,8 +3,8 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtsensors
 pkgver=6.9.1
-pkgrel=0
-pkgdesc="Provides access to sensor hardware and motion gesture recognition"
+pkgrel=1
+pkgdesc="Sensor hardware and motion gesture recognition"
 url="https://qt.io/"
 arch="all"
 license="LGPL-2.1-only AND LGPL-3.0-only AND GPL-3.0-only AND Qt-GPL-exception-1.0"

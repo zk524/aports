@@ -5,8 +5,8 @@
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=kdeclarative5
 pkgver=5.116.0
-pkgrel=0
-pkgdesc="Provides integration of QML and KDE Frameworks"
+pkgrel=1
+pkgdesc="Integration of QML and KDE Frameworks"
 # armhf blocked by qt5-qtdeclarative
 arch="all !armhf"
 url="https://community.kde.org/Frameworks"

@@ -3,8 +3,8 @@
 pkgname=ruby-rspec-expectations
 _gemname=${pkgname#ruby-}
 pkgver=3.13.4
-pkgrel=0
-pkgdesc="Provides a readable API to express expected outcomes of a code example in RSpec"
+pkgrel=1
+pkgdesc="Readable API to express expected outcomes of a code example in RSpec"
 url="https://relishapp.com/rspec/rspec-expectations/"
 arch="noarch"
 license="MIT"

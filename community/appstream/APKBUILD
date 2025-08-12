@@ -3,8 +3,8 @@
 # Maintainer: Pablo Correa Gomez <pabloyoyoista@postmarketos.org>
 pkgname=appstream
 pkgver=1.0.5
-pkgrel=0
-pkgdesc="Provides a standard for creating app stores across distributions"
+pkgrel=1
+pkgdesc="Standard for creating app stores across distributions"
 url="https://distributions.freedesktop.org/wiki/AppStream"
 arch="all"
 license="LGPL-2.1-or-later"

@@ -2,14 +2,14 @@
 # Maintainer: Bart Ribbers <bribbers@disroot.org>
 pkgname=qt5-qtwayland
 pkgver=5.15.10_git20230714
-pkgrel=1
+pkgrel=2
 _module="${pkgname#qt5-}"
 _pkgver=3a8613b91d2239aebc73b43562f929aa71af0de5
 _fullname=$_module-$_pkgver
 arch="all !armhf" # armhf blocked by qt5-qtdeclarative
 url="https://www.qt.io/developers/"
 license="LGPL-2.1-only AND LGPL-3.0-only AND GPL-3.0-only AND Qt-GPL-exception-1.0"
-pkgdesc="Provides APIs for Wayland"
+pkgdesc="Qt5 APIs for Wayland"
 depends_dev="
 	libxcomposite-dev
 	libxkbcommon-dev

@@ -3,8 +3,8 @@
 pkgname=pam-rundir
 _projname=pam_rundir
 pkgver=1.0.0
-pkgrel=4
-pkgdesc="Provides user runtime directory (XDG_RUNTIME_DIR) on Linux systems"
+pkgrel=5
+pkgdesc="Creates a user runtime directory (XDG_RUNTIME_DIR)"
 url="https://jjacky.com/pam_rundir/"
 arch="all"
 license="GPL-2.0-or-later"

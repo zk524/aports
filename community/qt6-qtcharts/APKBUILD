@@ -3,8 +3,8 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtcharts
 pkgver=6.9.1
-pkgrel=0
-pkgdesc="Provides a set of easy to use chart components"
+pkgrel=1
+pkgdesc="Easy to use chart components"
 url="https://qt.io/"
 # armhf blocked by qt6-qtdeclarative
 arch="all !armhf"

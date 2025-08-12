@@ -17,7 +17,6 @@ depends_dev="
 	"
 makedepends="
 	$depends_dev
-	meson
 	"
 
 build() {

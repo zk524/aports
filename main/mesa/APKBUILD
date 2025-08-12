@@ -314,7 +314,7 @@ gles() {
 		"
 	provider_priority=100
 
-	mkdir -p "$pkgdir-gles"
+	mkdir -p "$subpkgdir"
 }
 
 gbm() {

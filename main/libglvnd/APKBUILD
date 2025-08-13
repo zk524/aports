@@ -10,6 +10,7 @@ license="custom:BSD-like"
 source="
     https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz
     remove-glx-tests.patch
+    LICENSE
     "
 builddir="$srcdir/libglvnd-v$pkgver"
 subpackages="
@@ -17,6 +18,7 @@ subpackages="
     $pkgname-egl
     $pkgname-gl
     $pkgname-gles
+    $pkgname-doc
     "
 
 depends_dev="
@@ -47,6 +49,7 @@ check() {
 package() {
 	provider_priority=100
 	DESTDIR="$pkgdir" meson install --no-rebuild -C build/
+    install -Dm644 "$builddir"/../../LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
 egl() {
@@ -73,4 +76,5 @@ gles() {
 sha512sums="
 7b6eb8e075b48f1d915b892044adc3260547d74ed61d1e2fa6c5f0f8c3527754abea314181e088626d4fd58bb221085e5288c4758d828e171c7dcb0e4991745c  libglvnd-v1.7.0.tar.gz
 a742f5ff7e5761f0ae9d96c74da1c0e152440b523f1646a74002918ef94fdf41981e20f6d1f4724605a19f05dde4790e1905a05fdad027740153b31005fc8ce5  remove-glx-tests.patch
+a38066f21cc01bef868523e9b12a22d7cdaaef81c39ce7007769ebff8fcfe2e3eb755c8497b7a9d58eaf65a0c157c2186277334f1565707353ee6f0ac2fdd509  LICENSE
 "

@@ -2,7 +2,7 @@
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=mesa
 pkgver=25.1.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Mesa DRI OpenGL library"
 url="https://www.mesa3d.org"
 arch="all"
@@ -15,7 +15,6 @@ subpackages="
 	$pkgname-vdpau-gallium:_vdpau
 	$pkgname-egl
 	$pkgname-gl
-	$pkgname-gles
 	$pkgname-gbm
 	$pkgname-vulkan-ati:_vulkan
 	$pkgname-vulkan-swrast:_vulkan
@@ -28,6 +27,7 @@ depends_dev="
 	libxdamage-dev
 	libxcb-dev
 	libxshmfence-dev
+	libglvnd-dev
 	"
 makedepends="
 	$depends_dev
@@ -245,6 +245,7 @@ build() {
 		-Dgles1=enabled \
 		-Dgles2=enabled \
 		-Degl=enabled \
+		-Dglvnd=enabled \
 		-Dgallium-extra-hud=true \
 		-Dgallium-rusticl=$_rusticl \
 		-Dgallium-va=enabled \
@@ -283,26 +284,22 @@ package() {
 
 egl() {
 	pkgdesc="Mesa libEGL runtime libraries"
-	depends="mesa=$pkgver-r$pkgrel"
+	depends="
+		mesa=$pkgver-r$pkgrel
+		"
 	provider_priority=100
 
-	amove usr/lib/libEGL.so*
+	amove usr/lib/libEGL_mesa.so*
 }
 
 gl() {
 	pkgdesc="Mesa libGL runtime libraries"
-	depends="mesa=$pkgver-r$pkgrel"
+	depends="
+		mesa=$pkgver-r$pkgrel
+		"
 	provider_priority=100
 
-	amove usr/lib/libGL.so*
-}
-
-gles() {
-	pkgdesc="Mesa libGLESv2 runtime libraries"
-	depends="mesa=$pkgver-r$pkgrel"
-	provider_priority=100
-
-	amove usr/lib/libGLES*.so*
+	amove usr/lib/libGLX_mesa.so*
 }
 
 gbm() {

@@ -1,7 +1,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=czkawka
-pkgver=8.0.0
+pkgver=9.0.0
 pkgrel=0
 pkgdesc="Multi functional app to find duplicates, empty folders, similar images etc. (CLI)"
 url="https://github.com/qarmin/czkawka"
@@ -16,7 +16,9 @@ makedepends="
 	"
 checkdepends="cmd:xvfb-run"
 subpackages="$pkgname-gui $pkgname-doc"
-source="https://github.com/qarmin/czkawka/archive/$pkgver/czkawka-$pkgver.tar.gz"
+source="
+	https://github.com/qarmin/czkawka/archive/$pkgver/czkawka-$pkgver.tar.gz
+	32-bit-builds.patch"
 options="net" # fetch dependencies
 
 
@@ -61,5 +63,6 @@ gui() {
 }
 
 sha512sums="
-e53d09bba7b843f8048b2e1cc1bdd986248aa6acbc803f9789f480922937568ad17df7df4d21aac295f7d9bbd33acb820797198421f9e57531b8f1859dda9f38  czkawka-8.0.0.tar.gz
+d07caed81f4a110c3f6bc558ba6bc5f64a979279ccb5739262eb79904b67e6d9fe6e050e0265fc43d1b1e602a334c1adbea88c3099ce9370e3c5d7fa854edd43  czkawka-9.0.0.tar.gz
+2a0dbf0afcc484f2b8a853f86f5aa929b6287764cb60d6d27c063c6db27edf3e3175e9b9a23d5a2f212ceb1be710f9a4a2b8e2289e52f7c1d5a72b24ea1432d6  32-bit-builds.patch
 "

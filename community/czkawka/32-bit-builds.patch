@@ -1,0 +1,136 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index b5c830a..80f9418 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -2085,17 +2085,6 @@ dependencies = [
+  "hashbrown 0.13.2",
+ ]
+ 
+-[[package]]
+-name = "fast_image_resize"
+-version = "3.0.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "c9d450fac8a334ad72825596173f0f7767ff04dd6e3d59c49c894c4bc2957e8b"
+-dependencies = [
+- "cfg-if",
+- "num-traits",
+- "thiserror 1.0.69",
+-]
+-
+ [[package]]
+ name = "fast_image_resize"
+ version = "5.1.2"
+@@ -2170,9 +2159,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "ffmpeg_cmdline_utils"
+-version = "0.3.0"
++version = "0.4.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "83aed84f904c85558919c813c200be820764a7c383ae01d6c337eb3ea364e278"
++checksum = "30cbcb92e5f36bda100292a8bf8989631f3b6c4e4b71454ca803a9b837f63441"
+ dependencies = [
+  "image 0.25.5",
+  "serde",
+@@ -2183,10 +2172,11 @@ dependencies = [
+ 
+ [[package]]
+ name = "ffmpeg_gst_wrapper"
+-version = "0.2.0"
++version = "0.4.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "639b359a1e37776ab0c6d87e163003aa783da4e4efdab80d5efeb37f5d32efd8"
++checksum = "cc2e75be881230e5808200de02c435cfee05b5e0b978ce50cdbcf6527e8d13de"
+ dependencies = [
++ "cfg-if",
+  "ffmpeg_cmdline_utils",
+  "image 0.25.5",
+  "serde",
+@@ -3846,7 +3836,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "7c191dc6138f559a0177b8413eaf2a37784d8e63c697e247aa3740930f1c9364"
+ dependencies = [
+  "base64",
+- "fast_image_resize 5.1.2",
++ "fast_image_resize",
+  "image 0.25.5",
+  "rustdct",
+  "serde",
+@@ -8031,31 +8021,32 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+ 
+ [[package]]
+ name = "vid_dup_finder_common"
+-version = "0.2.0"
++version = "0.3.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a1225aaa16e724cc48b867d7d495bb6307e71c93299dee5ae897dffef2754513"
++checksum = "b601345173cab95df37a54b3351a77f85a9d11429487310b6a2e49ac37bc1942"
+ dependencies = [
+- "fast_image_resize 3.0.4",
++ "fast_image_resize",
+  "image 0.25.5",
+  "imageproc",
+- "itertools 0.13.0",
+- "rand 0.8.5",
++ "itertools 0.14.0",
++ "rand 0.9.0",
+  "winapi",
+ ]
+ 
+ [[package]]
+ name = "vid_dup_finder_lib"
+-version = "0.2.0"
++version = "0.4.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f751eb8e63bedac702b3ce1ef992dbf44dac9ccdd7a720ed7e45a456c7b91ff4"
++checksum = "b2bcf6135b99bca822ea095fc485066bf8c0f8788f575d6808a12619ba721b38"
+ dependencies = [
+  "bitvec",
++ "cfg-if",
+  "enum-utils",
+  "ffmpeg_gst_wrapper",
+  "image 0.25.5",
+- "itertools 0.13.0",
++ "itertools 0.14.0",
+  "ndarray",
+- "rand 0.8.5",
++ "rand 0.9.0",
+  "rustdct",
+  "serde",
+  "thiserror 2.0.12",
+diff --git a/czkawka_core/Cargo.toml b/czkawka_core/Cargo.toml
+index 08eb015..757f2b1 100644
+--- a/czkawka_core/Cargo.toml
++++ b/czkawka_core/Cargo.toml
+@@ -45,8 +45,8 @@ xxhash-rust = { version = "0.8", features = ["xxh3"] }
+ tempfile = "3.13"
+ 
+ # Video Duplicates
+-vid_dup_finder_lib = "0.2"
+-ffmpeg_cmdline_utils = "0.3"
++vid_dup_finder_lib = "0.4"
++ffmpeg_cmdline_utils = "0.4"
+ 
+ # Saving/Loading Cache
+ serde = "1.0"
+diff --git a/czkawka_core/src/tools/similar_videos.rs b/czkawka_core/src/tools/similar_videos.rs
+index b6b8b3d..1a138ad 100644
+--- a/czkawka_core/src/tools/similar_videos.rs
++++ b/czkawka_core/src/tools/similar_videos.rs
+@@ -11,7 +11,7 @@ use humansize::{BINARY, format_size};
+ use log::debug;
+ use rayon::prelude::*;
+ use serde::{Deserialize, Serialize};
+-use vid_dup_finder_lib::{VideoHash, ffmpeg_builder};
++use vid_dup_finder_lib::{VideoHash, VideoHashBuilder};
+ 
+ use crate::common::{
+     VIDEO_FILES_EXTENSIONS, WorkContinueStatus, check_if_stop_received, delete_files_custom, prepare_thread_handler_common, send_info_and_wait_for_ending_all_threads,
+@@ -198,7 +198,7 @@ impl SimilarVideos {
+     }
+ 
+     fn check_video_file_entry(&self, mut file_entry: VideosEntry) -> VideosEntry {
+-        let vhash = match ffmpeg_builder::VideoHashBuilder::default().hash(file_entry.path.clone()) {
++        let vhash = match VideoHashBuilder::default().hash(file_entry.path.clone()) {
+             Ok(t) => t,
+             Err(e) => {
+                 file_entry.error = format!("Failed to hash file, reason {e}");

@@ -1,5 +1,5 @@
 # Contributor: Simon Pflaumer (spflaumer) <s.pflaumer@murena.io>
-maintainer="Achill Gilgenast <achill@achill.org>"
+# Maintainer: Achill Gilgenast <achill@achill.org>
 pkgname=libglvnd
 pkgver=1.7.0
 pkgrel=0

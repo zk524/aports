@@ -2,7 +2,7 @@
 # Contributor: Antoine Martin (ayakael) <dev@ayakael.net>
 # Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
 pkgname=signal-desktop
-pkgver=7.63.0
+pkgver=7.65.0
 pkgrel=0
 pkgdesc="A messaging app for simple private communication with friends"
 url="https://github.com/signalapp/Signal-Desktop/"
@@ -66,9 +66,9 @@ makedepends="
 options="net !check"
 
 # use _check_depends to validate this
-_libsignalver=0.76.4
-_ringrtcver=2.54.1
-_webrtcver=7103e
+_libsignalver=0.76.7
+_ringrtcver=2.56.0
+_webrtcver=7204a
 _sqlcipherver=2.1.0
 
 source="
@@ -477,11 +477,11 @@ package() {
 }
 
 sha512sums="
-12959e02b43bed63266eafaa65f1856946dfcfcb71aaab463aabb5c5d6c44ae2f864e6b4fe124605fa1ff808f37d5462803c4407115205308d807a065080a0c2  Signal-Desktop-7.63.0.tar.gz
-989e06aa0ad909c5a2878ec05caac1ee5ab6c40fa180c9416fe2b117978794d1f3b954dabd1e880f7dfb33e53711a54aea85d81f32884f47ca2abc50da773888  libsignal-0.76.4.tar.gz
-ba8c53c55f62cadeb1ac85dfd0d184c779ea86585cc1fe7cc4ea522f7436ef1e0369af4a40485522f9646f1ebdeb0fd6339e5592e83cfeb9d64833b50595fb0c  ringrtc-2.54.1.tar.gz
+e7596cfd76c230d6f785863f9294e609680e52e57a7b5ba6acc4dab97b7965bfe861b3e7be705371235018b163f72b64ef2cdcc538555aafb24692e00afb13d8  Signal-Desktop-7.65.0.tar.gz
+d60545ae4e5844ebcbe1bb819e9b2787183466784e6d98579f8a49e8b8dcbf9ad85beb3834b806d5485f9047bf5b25d142f3bd5bf74f37a33cd7bc6a1630899a  libsignal-0.76.7.tar.gz
+3a75995981107d0f9c021cee52a468e36e46cc3c399d99da558c0094f7234a6adb5493ce184c54fa7ce118adb7297924dff3681fcc2202fe183c19c3328cd709  ringrtc-2.56.0.tar.gz
 4ee620e6bee097071793853b1327cf10ce1b993d862f8836d422031a57d85a8096f0179bb354a9083358142139e381a176646aaad4e9319b911f3853ac4b63fc  node-sqlcipher-2.1.0.tar.gz
-2b9050478ba061dafd714dd920fedff1b20356940cbce7287a96de7dbd6001f216b79c795263e07e31d33c5b95aed555a5d79c0c4824bf73d8b8c1d616001963  webrtc-7103e.tar.zst
+1415e7d816738f57590e9062ace6c993dce3e2628290f640cadfd9f0cd46119b1ea8740cf8cb48380aef22530d2258302cf30acbfebf98650246f8b0a36efde3  webrtc-7204a.tar.zst
 8d2d2d82c8546c2dd1fef161b61df79918f8c22235a56a46adb375a0beb4acef12c5fe53e67242a4be97f77adc522ff79b47949c352956c742a70d50f4179f7f  libsignal-auditable.patch
 7ee747c8aaa9d6e9149fe0a031e3d4cc9e9c08f22c42076bd05e2acb86952f8170032613d13a53716010edfa3f26ad97b530e82460318eb46a42e28cf5faeb9d  signal-use-system-sqlcipher.patch
 ef3622da416a5bd2d4bea4f2a4fbb21a985f660d4acc17bbe66ce51ac1180ab92c0c843a5414ff56ea1deda87c2b0f611a299ca8ebe4d6a24df53626b36ceea8  signal-disable-updates.patch

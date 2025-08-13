@@ -1,0 +1,70 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=archivebox
+pkgver=0.7.3
+pkgrel=0
+pkgdesc="Open source self-hosted web archiving"
+url="https://github.com/ArchiveBox/ArchiveBox"
+license="MIT"
+# armhf, loongaarch64, ppc64le, riscv64, s390x, x86: chromium
+arch="noarch !armhf !loongarch64 !ppc64le !riscv64 !s390x !x86"
+depends="
+	chromium
+	curl
+	git
+	nodejs
+	postlight-parser
+	py3-asgiref
+	py3-atomicwrites
+	py3-base32-crockford
+	py3-chardet
+	py3-crontab
+	py3-dateparser
+	py3-django
+	py3-django-extensions
+	py3-django-taggit
+	py3-mypy-extensions
+	py3-pocket
+	py3-requests
+	py3-sqlparse
+	py3-tz
+	py3-urllib3
+	py3-w3lib
+	readability-extractor
+	ripgrep
+	single-file-cli
+	wget
+	yt-dlp
+"
+makedepends="
+	py3-build
+	py3-installer
+	py3-pdm-backend
+	py3-setuptools
+	py3-wheel
+"
+subpackages="$pkgname-pyc"
+source="archivebox-$pkgver.tar.gz::https://github.com/ArchiveBox/ArchiveBox/archive/refs/tags/v$pkgver.tar.gz"
+options="!check" # TODO
+builddir="$srcdir/ArchiveBox-$pkgver/"
+
+build() {
+	python3 -m build --no-isolation
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" dist/archivebox-$pkgver-py3-none-any.whl
+
+	# Use system packages instead of vendored dependencies.
+	install -dm755 "$pkgdir/usr/lib/python3.12/site-packages/archivebox/vendor/"
+	ln -s /usr/lib/python3.12/site-packages/atomicwrites \
+		"$pkgdir/usr/lib/python3.12/site-packages/archivebox/vendor/"
+	ln -s /usr/lib/python3.12/site-packages/base32_crockford.py \
+		"$pkgdir/usr/lib/python3.12/site-packages/archivebox/vendor/"
+	ln -s /usr/lib/python3.12/site-packages/pocket.py \
+		"$pkgdir/usr/lib/python3.12/site-packages/archivebox/vendor/"
+
+}
+
+sha512sums="
+05c4b1253ce642b296cfc4ee8124eccf2567805ae59ac04ea1c17246180ace31f35dd51af32d72cf3cef2cd6318113f6beafaf1cefed8d55525510df4833a4c9  archivebox-0.7.3.tar.gz
+"

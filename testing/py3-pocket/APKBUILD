@@ -1,0 +1,44 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=py3-pocket
+_pyname=pocket
+pkgver=0.3.7_git20221122
+_pkgver=0.3.7
+_gitrev=e7970b63feafc8941c325111c5ce3706698a18b5
+pkgrel=0
+pkgdesc="Python wrapper for the pocket API"
+url="https://github.com/tapanpandita/pocket"
+arch="noarch"
+license="BSD-3-Clause"
+makedepends="
+	py3-build
+	py3-installer
+	py3-setuptools
+	py3-wheel
+	"
+checkdepends="
+	py3-coverage
+	py3-mock
+	py3-nose
+	py3-requests
+	"
+subpackages="$pkgname-pyc"
+source="https://github.com/tapanpandita/pocket/archive/${_gitrev}.tar.gz"
+builddir="$srcdir/pocket-$_gitrev/"
+
+build() {
+	python -m build --no-isolation
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer dist/pocket-$_pkgver-py3-none-any.whl
+	nosetests
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" dist/pocket-$_pkgver-py3-none-any.whl
+}
+
+sha512sums="
+0b6ef0767603f72c10874f0ae5d1081b18d1a9a52bb45e36af264c6d6382e83d15f3fe247025accda2ceee7bcccc367e0f4bdc89939ad646f1504cb0c1db0f64  e7970b63feafc8941c325111c5ce3706698a18b5.tar.gz
+"

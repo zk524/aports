@@ -1,0 +1,30 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=postlight-parser
+pkgver=2.2.3
+pkgrel=0
+pkgdesc="Extract meaningful content from the chaos of a web page"
+url="https://github.com/postlight/parser"
+license="Apache-2.0"
+arch="noarch"
+depends="nodejs"
+checkdepends="yarn jest"
+makedepends="npm"
+source="postlight-parser-$pkgver.tar.gz::https://github.com/postlight/parser/archive/v$pkgver.tar.gz"
+options="!check" # tests: missing several deps
+builddir="$srcdir/parser-$pkgver/"
+
+check() {
+	npm test
+}
+
+package() {
+	npm install --omit=dev --global --prefix "$pkgdir/usr" "$srcdir/postlight-parser-$pkgver.tar.gz"
+	chown -R root: "$pkgdir"
+
+	# Executable does not work; this only works when used as a library.
+	rm "$pkgdir/usr/bin/postlight-parser"
+}
+
+sha512sums="
+25905adfd3892cb036dc34e05171909c12bc00b670703c548ee3b1fa8b12ed805a02044f4b95e7e71ab78477f10af5ad988e20e0b738210ca60608125aba3145  postlight-parser-2.2.3.tar.gz
+"

@@ -2,7 +2,7 @@
 # group=kde-applications
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=neochat
-pkgver=25.04.2
+pkgver=25.04.3
 pkgrel=0
 pkgdesc="A client for Matrix, the decentralized communication protocol"
 url="https://invent.kde.org/network/neochat/"
@@ -77,6 +77,6 @@ package() {
 }
 
 sha512sums="
-a0d04d42c8642810e70b27b8191c4a5418f9a32535ddb2cbfaac4f46b66fbbee15fb1bf4c9096df2d449d4ba27be61202bba52153dbe184cff31424fe5355bd9  neochat-25.04.2.tar.xz
+e526fa8e5fa63bf432f1d2c0bee266455ee40ad6b50968f19ffe7b90dc985b6492edd4a8f3f97afdddba0d683a4d211bf1308ebff051b1ee72d13aa3d9e0679f  neochat-25.04.3.tar.xz
 d57214940e739639895b2cb140c7cedbfbc515662e8aa58adab339466ea8e87e95e087347aab7a4006287290515af2aa71dda4b0b9b9a40f9b297b17f92b285a  neochatrc
 "

@@ -7,7 +7,10 @@ arch="all"
 url="https://gitlab.freedesktop.org/glvnd/libglvnd"
 pkgdesc="GL Vendor-Neutral Dispatch library"
 license="custom:BSD-like"
-source="https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz"
+source="
+    https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz
+    remove-glx-tests.patch
+    "
 builddir="$srcdir/libglvnd-v$pkgver"
 subpackages="
     $pkgname-dev
@@ -34,6 +37,10 @@ build() {
 		./ build/
 
 	meson compile -C build/
+}
+
+check() {
+    meson test -C build/
 }
 
 package() {
@@ -64,4 +71,5 @@ gles() {
 
 sha512sums="
 7b6eb8e075b48f1d915b892044adc3260547d74ed61d1e2fa6c5f0f8c3527754abea314181e088626d4fd58bb221085e5288c4758d828e171c7dcb0e4991745c  libglvnd-v1.7.0.tar.gz
+a742f5ff7e5761f0ae9d96c74da1c0e152440b523f1646a74002918ef94fdf41981e20f6d1f4724605a19f05dde4790e1905a05fdad027740153b31005fc8ce5  remove-glx-tests.patch
 "

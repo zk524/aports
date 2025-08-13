@@ -66,7 +66,7 @@ gl() {
 }
 gles() {
 	pkgdesc="Gl Vendor-Neutral Dispatch library (libGLES runtime libraries)"
-	provides="mesa-gles"
+	provides="mesa-gles>=25.1.7-r2"
 	provider_priority=100
 
 	amove usr/lib/libGLES*.so*

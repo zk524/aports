@@ -8,18 +8,18 @@ url="https://gitlab.freedesktop.org/glvnd/libglvnd"
 pkgdesc="GL Vendor-Neutral Dispatch library"
 license="custom:BSD-like"
 source="
-    https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz
-    remove-glx-tests.patch
-    LICENSE
-    "
+	https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$pkgver/libglvnd-v$pkgver.tar.gz
+	remove-glx-tests.patch
+	LICENSE
+	"
 builddir="$srcdir/libglvnd-v$pkgver"
 subpackages="
-    $pkgname-dev
-    $pkgname-egl
-    $pkgname-gl
-    $pkgname-gles
-    $pkgname-doc
-    "
+	$pkgname-dev
+	$pkgname-egl
+	$pkgname-gl
+	$pkgname-gles
+	$pkgname-doc
+	"
 
 depends_dev="
 	libxext-dev
@@ -43,33 +43,33 @@ build() {
 }
 
 check() {
-    meson test -C build/
+	meson test -C build/
 }
 
 package() {
 	provider_priority=100
 	DESTDIR="$pkgdir" meson install --no-rebuild -C build/
-    install -Dm644 "$builddir"/../../LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+	install -Dm644 "$builddir"/../../LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
 egl() {
-    pkgdesc="Gl Vendor-Neutral Dispatch library (libEGL runtime libraries)"
+	pkgdesc="Gl Vendor-Neutral Dispatch library (libEGL runtime libraries)"
 	provider_priority=100
 
-    amove usr/lib/libEGL.so*
+	amove usr/lib/libEGL.so*
 }
 gl() {
-    pkgdesc="Gl Vendor-Neutral Dispatch library (libGL runtime libraries)"
+	pkgdesc="Gl Vendor-Neutral Dispatch library (libGL runtime libraries)"
 	provider_priority=100
 
-    amove usr/lib/libGL.so*
+	amove usr/lib/libGL.so*
 }
 gles() {
-    pkgdesc="Gl Vendor-Neutral Dispatch library (libGLES runtime libraries)"
-    provides="mesa-gles"
+	pkgdesc="Gl Vendor-Neutral Dispatch library (libGLES runtime libraries)"
+	provides="mesa-gles"
 	provider_priority=100
 
-    amove usr/lib/libGLES*.so*
+	amove usr/lib/libGLES*.so*
 }
 
 

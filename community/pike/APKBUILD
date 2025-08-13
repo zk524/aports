@@ -22,7 +22,7 @@ makedepends="
 	gtk+2.0-dev
 	librsvg-dev
 	libsm-dev
-	mesa-gl
+	libglvnd-gl
 	nettle
 	nettle-dev
 	nettle-utils

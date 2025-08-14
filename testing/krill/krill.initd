@@ -3,12 +3,17 @@
 name="krill"
 description="RPKI Certificate Authority and Publication Server written in Rust"
 
-: "${command_user:="<USER>"}"
+: ${command_user:=krill}
+: ${data_dir:=/var/lib/krill}
+: ${cfgfile:=/etc/krill/krill.conf}
 
-command="/usr/sbin/<SERVICE>"
-: "${command_args:="--default-args"}"
+command="/usr/bin/krill"
+command_args="-c $cfgfile server"
 command_background="yes"
+
 pidfile="/run/$RC_SVCNAME.pid"
+
+required_files="$cfgfile"
 
 depend() {
 	need net

@@ -1,4 +1,4 @@
-# Configuration for /etc/init.d/<SERVICE>
+# Configuration for /etc/init.d/krill
 
 # User (and group) to run <SERVICE> as.
 #command_user="<USER>[:<GROUP>]"
@@ -7,4 +7,4 @@
 #command_args=
 
 # Comment out to disable process supervisor.
-supervisor=supervise-daemon
+#supervisor=supervise-daemon

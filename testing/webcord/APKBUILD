@@ -1,0 +1,81 @@
+# Contributor: NeYurii <neyuriizkh@proton.me>
+# Maintainer: NeYurii <neyuriizkh@proton.me>
+pkgname=webcord
+_pkgname=WebCord
+pkgver=4.11.0
+pkgrel=0
+pkgdesc="A Discord and SpaceBar electron-based client implemented without Discord API"
+url="https://github.com/SpacingBat3/WebCord"
+arch="all"
+license="MIT"
+depends="electron"
+makedepends="npm"
+source="$_pkgname-$pkgver.tar.gz::https://github.com/SpacingBat3/WebCord/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/$_pkgname-$pkgver"
+
+prepare() {
+	default_prepare
+	cat > buildInfo.json << EOF
+{
+  "type": "release",
+  "features": {
+    "updateNotifications": false
+  }
+}
+EOF
+	npm ci
+}
+
+build() {
+	npm run build
+}
+
+check() {
+	cd "$builddir"
+	npm run lint
+}
+
+package() {
+	cd "$builddir"
+
+	install -dm0755 "$pkgdir"/usr/lib/"$pkgname" \
+		"$pkgdir"/usr/share/applications \
+		"$pkgdir"/usr/share/icons/hicolor/512x512/apps \
+		"$pkgdir"/usr/bin
+
+	# Cleanup
+	npm install --omit=dev --ignore-scripts
+	rm sources/assets/icons/app.ic*
+	rm -r sources/code
+	rm -r app/code/build
+
+	# Install app
+	cp -a -t "$pkgdir"/usr/lib/"$pkgname" app sources node_modules
+	install -m644 package.json "$pkgdir"/usr/lib/"$pkgname"
+
+	# Install desktop file
+	install -m644 /dev/stdin "$pkgdir"/usr/share/applications/"$pkgname".desktop << EOF
+[Desktop Entry]
+Name=$_pkgname
+Exec=/usr/bin/$pkgname %U
+Terminal=false
+Type=Application
+Icon=$pkgname
+Comment=A Discord and SpaceBar electron-based client implemented without Discord API
+GenericName=Internet Messenger
+Categories=Network;InstantMessaging;
+EOF
+
+	# Install app icon
+	install -m644 sources/assets/icons/app.png "$pkgdir"/usr/share/icons/hicolor/512x512/apps/"$pkgname".png
+
+	# Install run script
+	install -m755 /dev/stdin "$pkgdir"/usr/bin/"$pkgname" << EOF
+#!/bin/sh
+exec /usr/bin/electron /usr/lib/"$pkgname"
+EOF
+}
+
+sha512sums="
+ca3b5cb287cbfc4d526153621131842d38479614e4ad9b939e666825cfa7ad322e24d7a4e8bd05a77e09d02e9fd74051a188460b74503c059fae37ac820c1294  WebCord-4.10.5.tar.gz
+"

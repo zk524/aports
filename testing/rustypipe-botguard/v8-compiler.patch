@@ -1,0 +1,160 @@
+diff --git a/vendor/v8/build/config/clang/BUILD.gn b/vendor/v8/build/config/clang/BUILD.gn
+index 9b8719a64..bc89b5387 100644
+--- a/vendor/v8/build/config/clang/BUILD.gn
++++ b/vendor/v8/build/config/clang/BUILD.gn
+@@ -189,14 +189,15 @@ template("clang_lib") {
+       } else if (is_apple) {
+         _dir = "darwin"
+       } else if (is_linux || is_chromeos) {
++        _dir = "linux"
+         if (current_cpu == "x64") {
+-          _dir = "x86_64-unknown-linux-gnu"
++          _suffix = "-x86_64"
+         } else if (current_cpu == "x86") {
+-          _dir = "i386-unknown-linux-gnu"
++          _suffix = "-i386"
+         } else if (current_cpu == "arm") {
+-          _dir = "armv7-unknown-linux-gnueabihf"
++          _suffix = "-armv7"
+         } else if (current_cpu == "arm64") {
+-          _dir = "aarch64-unknown-linux-gnu"
++          _suffix = "-aarch64"
+         } else {
+           assert(false)  # Unhandled cpu type
+         }
+diff --git a/vendor/v8/build/config/compiler/BUILD.gn b/vendor/v8/build/config/compiler/BUILD.gn
+index 3179a09da..6812d76ba 100644
+--- a/vendor/v8/build/config/compiler/BUILD.gn
++++ b/vendor/v8/build/config/compiler/BUILD.gn
+@@ -597,24 +597,6 @@ config("compiler") {
+       }
+     }
+ 
+-    # TODO(crbug.com/40283598): This causes binary size growth and potentially
+-    # other problems.
+-    # TODO(crbug.com/40284925): This isn't supported by Cronet's mainline llvm version.
+-    if (default_toolchain != "//build/toolchain/cros:target" &&
+-        !llvm_android_mainline) {
+-      cflags += [
+-        "-mllvm",
+-        "-split-threshold-for-reg-with-hint=0",
+-      ]
+-      if (use_thin_lto && is_a_target_toolchain) {
+-        if (is_win) {
+-          ldflags += [ "-mllvm:-split-threshold-for-reg-with-hint=0" ]
+-        } else {
+-          ldflags += [ "-Wl,-mllvm,-split-threshold-for-reg-with-hint=0" ]
+-        }
+-      }
+-    }
+-
+     # TODO(crbug.com/40192287): Investigate why/if this should be needed.
+     if (is_win) {
+       cflags += [ "/clang:-ffp-contract=off" ]
+@@ -1043,17 +1025,6 @@ config("compiler") {
+     # `-nodefaultlibs` from the linker invocation from Rust, which would be used
+     # to compile dylibs on Android, such as for constructing unit test APKs.
+     "-Cdefault-linker-libraries",
+-
+-    # To make Rust .d files compatible with ninja
+-    "-Zdep-info-omit-d-target",
+-
+-    # If a macro panics during compilation, show which macro and where it is
+-    # defined.
+-    "-Zmacro-backtrace",
+-
+-    # For deterministic builds, keep the local machine's current working
+-    # directory from appearing in build outputs.
+-    "-Zremap-cwd-prefix=.",
+   ]
+ 
+   if (!is_win || force_rustc_color_output) {
+@@ -1232,8 +1203,8 @@ config("compiler_cpu_abi") {
+     } else if (current_cpu == "arm") {
+       if (is_clang && !is_android && !is_nacl &&
+           !(is_chromeos_lacros && is_chromeos_device)) {
+-        cflags += [ "--target=arm-linux-gnueabihf" ]
+-        ldflags += [ "--target=arm-linux-gnueabihf" ]
++        cflags += [ "--target=armv7-alpine-linux-musleabihf" ]
++        ldflags += [ "--target=armv7-alpine-linux-musleabihf" ]
+       }
+       if (!is_nacl) {
+         cflags += [
+@@ -1247,8 +1218,8 @@ config("compiler_cpu_abi") {
+     } else if (current_cpu == "arm64") {
+       if (is_clang && !is_android && !is_nacl && !is_fuchsia &&
+           !(is_chromeos_lacros && is_chromeos_device)) {
+-        cflags += [ "--target=aarch64-linux-gnu" ]
+-        ldflags += [ "--target=aarch64-linux-gnu" ]
++        cflags += [ "--target=aarch64-alpine-linux-musl" ]
++        ldflags += [ "--target=aarch64-alpine-linux-musl" ]
+       }
+     } else if (current_cpu == "mipsel" && !is_nacl) {
+       ldflags += [ "-Wl,--hash-style=sysv" ]
+@@ -1492,14 +1463,14 @@ config("compiler_cpu_abi") {
+       }
+     } else if (current_cpu == "riscv64") {
+       if (is_clang && !is_android) {
+-        cflags += [ "--target=riscv64-linux-gnu" ]
+-        ldflags += [ "--target=riscv64-linux-gnu" ]
++        cflags += [ "--target=riscv64-alpine-linux-musl" ]
++        ldflags += [ "--target=riscv64-alpine-linux-musl" ]
+       }
+       cflags += [ "-mabi=lp64d" ]
+     } else if (current_cpu == "loong64") {
+       if (is_clang) {
+-        cflags += [ "--target=loongarch64-linux-gnu" ]
+-        ldflags += [ "--target=loongarch64-linux-gnu" ]
++        cflags += [ "--target=loongarch64-alpine-linux-musl" ]
++        ldflags += [ "--target=loongarch64-alpine-linux-musl" ]
+       }
+       cflags += [
+         "-mabi=lp64d",
+@@ -2077,7 +2048,7 @@ config("chromium_code") {
+       defines = [ "_HAS_NODISCARD" ]
+     }
+   } else {
+-    cflags = [ "-Wall" ]
++    cflags = []
+     if (is_clang) {
+       # Enable extra warnings for chromium_code when we control the compiler.
+       cflags += [ "-Wextra" ]
+diff --git a/vendor/v8/build/config/rust.gni b/vendor/v8/build/config/rust.gni
+index b7e3c8881..6c4a272a4 100644
+--- a/vendor/v8/build/config/rust.gni
++++ b/vendor/v8/build/config/rust.gni
+@@ -192,11 +192,11 @@ if (enable_rust) {
+ rust_abi_target = ""
+ if (is_linux || is_chromeos) {
+   if (current_cpu == "arm64") {
+-    rust_abi_target = "aarch64-unknown-linux-gnu"
++    rust_abi_target = "aarch64-alpine-linux-musl"
+   } else if (current_cpu == "x86") {
+-    rust_abi_target = "i686-unknown-linux-gnu"
++    rust_abi_target = "i586-alpine-linux-musl"
+   } else if (current_cpu == "x64") {
+-    rust_abi_target = "x86_64-unknown-linux-gnu"
++    rust_abi_target = "x86_64-alpine-linux-musl"
+   } else if (current_cpu == "arm") {
+     if (arm_float_abi == "hard") {
+       float_suffix = "hf"
+@@ -205,15 +205,15 @@ if (is_linux || is_chromeos) {
+     }
+     if (arm_arch == "armv7-a" || arm_arch == "armv7") {
+       # No way to inform Rust about the -a suffix.
+-      rust_abi_target = "armv7-unknown-linux-gnueabi" + float_suffix
++      rust_abi_target = "armv7-alpine-linux-musleabi" + float_suffix
+     } else {
+-      rust_abi_target = "arm-unknown-linux-gnueabi" + float_suffix
++      rust_abi_target = "armhf-alpine-linux-musleabi" + float_suffix
+     }
+   } else if (current_cpu == "riscv64") {
+-    rust_abi_target = "riscv64gc-unknown-linux-gnu"
++    rust_abi_target = "riscv64-alpine-linux-musl"
+   } else {
+     # Best guess for other future platforms.
+-    rust_abi_target = current_cpu + "-unknown-linux-gnu"
++    rust_abi_target = current_cpu + "-alpine-linux-musl"
+   }
+ } else if (is_android) {
+   import("//build/config/android/abi.gni")

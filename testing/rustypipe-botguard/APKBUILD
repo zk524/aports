@@ -1,0 +1,207 @@
+# Contributor: Matthias Ahouansou <matthias@ahouansou.cz>
+maintainer="Matthias Ahouansou <matthias@ahouansou.cz>"
+pkgname=rustypipe-botguard
+pkgver=0.1.1
+pkgrel=0
+pkgdesc="Tool to run YouTube Botguard challenges and generate PO tokens"
+url="https://codeberg.org/ThetaDev/rustypipe-botguard"
+arch="all"
+license="MIT"
+_llvmver="20"
+makedepends="
+	cargo
+	cargo-auditable
+	clang-dev
+	cmake
+	compiler-rt
+	curl
+	glib-dev
+	gn
+	icu-dev
+	jq
+	lcms2-dev
+	libffi-dev
+	lld
+	llvm-dev
+	openssl-dev
+	protoc
+	py3-gpep517
+	py3-hatchling
+	python3
+	samurai
+	sqlite-dev
+	zlib-dev
+	zlib-ng-dev
+	zstd-dev
+	samurai
+"
+# much of the following is taken from community/deno
+
+# This must match "v8" version in Cargo.lock.
+_rusty_v8_ver=130.0.7
+subpackages="
+	$pkgname-doc
+	yt-dlp-get-pot-rustypipe-pyc
+	yt-dlp-get-pot-rustypipe:ytdlp:noarch
+"
+source="
+	$pkgname-$pkgver.tar.gz::https://codeberg.org/ThetaDev/rustypipe-botguard/archive/v$pkgver.tar.gz
+	rusty_v8-$_rusty_v8_ver.tar.gz::https://static.crates.io/crates/v8/v8-$_rusty_v8_ver.crate
+	v8-build.patch
+	v8-compiler.patch
+	v8-no-execinfo.patch
+	v8-use-system-icu.patch
+	cargo.lock.patch
+"
+builddir="$srcdir/$pkgname"
+options="net" # cargo packages
+_py_plugin_dir="$builddir/yt_dlp_get_pot_rustypipe"
+
+# Don't use prebuilt libv8.a, build it from source (for rusty_v8).
+export V8_FROM_SOURCE=1
+
+# Use system gn and ninja (for v8).
+export GN=/usr/bin/gn
+export NINJA=/usr/bin/ninja
+
+# Build with clang (for v8).
+export AR=llvm-ar
+export CC=clang
+export CXX=clang++
+export LD=clang++
+export NM=llvm-nm
+
+# Flags copied from community/chromium (for building v8)
+export CFLAGS="${CFLAGS/-Os/} -O2 -Wno-unknown-warning-option -Wno-builtin-macro-redefined -Wno-deprecated-declarations"
+export CXXFLAGS="${CXXFLAGS/-Os/} -O2 -Wno-unknown-warning-option -Wno-builtin-macro-redefined -Wno-deprecated-declarations"
+export CPPFLAGS="$CPPFLAGS -D__DATE__=  -D__TIME__=  -D__TIMESTAMP__="
+
+
+# Enable verbose logging for v8 compilation, so we can see actual flags used.
+export SAMUFLAGS="$SAMUFLAGS -v"
+
+# Flags for building v8; inspired by community/chromium and
+# https://github.com/12101111/overlay.
+export GN_ARGS="
+	chrome_pgo_phase=0
+	custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
+	host_toolchain=\"//build/toolchain/linux/unbundle:default\"
+	v8_snapshot_toolchain=\"//build/toolchain/linux/unbundle:default\"
+	clang_base_path=\"/usr/lib/llvm$_llvmver\"
+	clang_version=\"$_llvmver\"
+	fatal_linker_warnings=false
+	is_debug=false
+	symbol_level=0
+	system_zlib=true
+	use_custom_libcxx=false
+	use_sysroot=false
+	use_system_libffi=true
+	"
+
+export EXTRA_GN_ARGS="use_custom_libcxx=false"
+
+prepare() {
+	mkdir -p vendor
+	mv ../v8-$_rusty_v8_ver vendor/v8
+
+	default_prepare
+
+	cd vendor/v8
+
+	local use_system="icu"
+	# python3 build/linux/unbundle/replace_gn_files.py --system-libraries $use_system
+	local lib; for lib in $use_system; do
+		sed -i '/"\/\/base"/d' third_party/$lib/BUILD.gn
+		find . -type f -path "*third_party/$lib/*" \
+			\! -regex '.*\.\(gn\|gni\|isolate\|py\)' \
+			\! -name 'compression_utils_portable.*' \
+			-delete
+	done
+
+	cd "$builddir"
+
+	# Build with patched v8 (see *.patch files).
+	cat >> Cargo.toml <<-EOF
+
+		[patch.crates-io]
+		v8 = { path = "vendor/v8" }
+	EOF
+
+	# Rust target triple.
+	local target=$(rustc -vV | sed -n 's/host: //p')
+
+	# NOTE: zstd "pkg-config" feature doesn't work, so we have to do this.
+	mkdir -p .cargo
+	cat >> .cargo/config.toml <<-EOF
+		[target.$target]
+		z-ng = { rustc-link-lib = ["z-ng"], rustc-cfg = ["zng"] }
+		zstd = { rustc-link-lib = ["zstd"] }
+	EOF
+
+	cargo fetch --target="$CTARGET" --locked
+
+	local rusty_v8_ver="$(_crate_ver 'v8')"
+	[ "$rusty_v8_ver" = "$_rusty_v8_ver" ] || die "Update _rusty_v8_ver to $rusty_v8_ver"
+
+	# We disable the upgrade feature.
+	rm -rf tests/specs/upgrade
+}
+
+check() {
+	export CLANG_BASE_PATH="$(llvm-config --prefix)"
+
+	cargo test --frozen
+}
+
+build() {
+	export CLANG_BASE_PATH="$(llvm-config --prefix)"
+	# Build with -g1 instead of -g (which is -g2); -g is added by abuild
+	# after sourcing APKBUILD, so is must be modified in a function.
+	export CFLAGS="${CFLAGS/-g/-g1}"
+	export CXXFLAGS="${CXXFLAGS/-g/-g1}"
+	# Increase stack size for 'cargo build' to avoid stack overflow.
+	export RUST_MIN_STACK="4194304"
+
+	cargo auditable build --frozen --release -vv
+
+	cd "$_py_plugin_dir"
+
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+package() {
+	install -Dm755 target/release/rustypipe-botguard -t "$pkgdir"/usr/bin
+
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+
+	cd "$_py_plugin_dir"
+
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+ytdlp() {
+	pkgdesc="yt-dlp GetPOT token provider that uses rustypipe-botguard to generate PO tokens"
+	depends="$pkgname=$pkgver-r$pkgrel yt-dlp"
+
+	amove usr/lib/python3*
+}
+
+# Resolves version(s) of crate $1 in the depenendecy graph that satisfies
+# regular expression $2 (default is ".*").
+_crate_ver() {
+	cargo metadata --locked --format-version 1 \
+		| jq -r ".packages[] | select(.name == \"$1\" and (.version | test(\"$2\"))) | .version"
+}
+
+sha512sums="
+320b7c46c983ea7fcb1e19bef0305444a0423e05e145aa9b89e41dfdec57b0c6bdd01f56c545d3c4d816deadec495036e353fa57d1b1c2511cda8d76f55111e5  rustypipe-botguard-0.1.1.tar.gz
+9a7b039db658f41bd7accbac7854cecc1dba6c63457b52c70b9f7dd096408d995389211afb65e49f59e034b5adb0d1baf65da3b61973ada4c0c1edbfeff326e4  rusty_v8-130.0.7.tar.gz
+23e35219cc809ceed9ecab419debaa48e2a7bf3999399de1621829fccdc64af4863140ca84d7b51fee7d2dc022249aedaa1131100e6f093cf35fdc35a8e443a6  v8-build.patch
+0744eb2985c7960780c73e7749225d8ceba6c90d32eb0307a944bf52356c5187ed552d375c619634bb71e5a3adf74c1a08583d4e5f593164c8919471d425e230  v8-compiler.patch
+c7a406d80a8f63ce2a65de043380f00d7370ceec1bae45d819f741eeb550b8e340224334916f10dd85cc46f6204c7bab0f7d5e0045234e7d790ee63472328454  v8-no-execinfo.patch
+d6009afa35701d9daa877c620806a3c6145691add778df8afd64a3a2ba8c2865efc65d36dfcf80a15b77f46b435be501252123c2a150efb3b4e8dbe769935f91  v8-use-system-icu.patch
+ffba96a1c8adbb871e133516be9b5ec724bb7fad57e550d5f3327297d755f3e9dee11f0b6d718733340e0ce85f80e04b6869d8b645212af7a993ff80627967db  cargo.lock.patch
+"

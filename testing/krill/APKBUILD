@@ -60,7 +60,7 @@ check() {
 
 package() {
 	install -Dm755 "$builddir"/target/release/krill -t "$pkgdir"/usr/bin/
-	install -Dm755 "$builddir"/lib64target/release/krillc -t "$pkgdir"/usr/bin/
+	install -Dm755 "$builddir"/target/release/krillc -t "$pkgdir"/usr/bin/
 
 	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
 	install -Dm644 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname

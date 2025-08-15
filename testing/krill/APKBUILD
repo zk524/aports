@@ -43,35 +43,35 @@ krillup() {
 	pkgdesc="$pkgdesc upgrade command line utility"
 
 	install -Dm755 "$builddir"/target/release/krillup "$subpkgdir"/usr/bin/
-	install -d m644 "$srcdir"/doc/krillup.1 -t "$subpkgdir"/usr/share/man/man1/krillup.1
+	install -Dm644 "$srcdir"/doc/krillup.1 -t "$subpkgdir"/usr/share/man/man1/krillup.1
 }
 
 krillta() {
 	pkgdesc="$pkgdesc trust anchor command line utility"
 
 	install -Dm755 "$builddir"/target/release/krillta "$subpkgdir"/usr/bin/
-	install -d m644 "$srcdir"/doc/krillta.1 -t "$subpkgdir"/usr/share/man/man1/krillta.1
+	install -Dm644 "$srcdir"/doc/krillta.1 -t "$subpkgdir"/usr/share/man/man1/krillta.1
 }
 
 check() {
 	# event sourcing framework not passing due to missing value "alice" - may be upstream test issue.
-	cargo test $_cargo_opts --workspace --verbose --skip event_sourcing_framework
+	cargo test $_cargo_opts --workspace --verbose -- --skip event_sourcing_framework
 }
 
 package() {
-	install -Dm755 target/release/krill -t "$pkgdir"/usr/bin/
-	install -Dm755 target/release/krillc -t "$pkgdir"/usr/bin/
+	install -Dm755 "$builddir"/target/release/krill -t "$pkgdir"/usr/bin/
+	install -Dm755 "$builddir"/lib64target/release/krillc -t "$pkgdir"/usr/bin/
 
-	install -m755 -D "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
-	install -m644 -D "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+	install -Dm644 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
 
-	install -d -m755 "$pkgdir"/etc/krill
-	install -D -m640 -o krill -g krill "$srcdir"/krill.conf -t "$pkgdir"/etc/krill/
+	install -Dm755 "$pkgdir"/etc/krill
+	install -Dm640 -o krill -g krill "$srcdir"/krill.conf -t "$pkgdir"/etc/krill/
 
-	install -d -m700 -o krill -g krill "$pkgdir"/var/log/"$pkgname".log
+	install -Dm700 -o krill -g krill "$pkgdir"/var/log/"$pkgname".log
 
-	install -d m644 "$srcdir"/doc/krill.1 -t "$pkgdir"/usr/share/man/man1/krill.1
-	install -d m644 "$srcdir"/doc/krillc.1 -t "$pkgdir"/usr/share/man/man1/krillc.1
+	install -Dm644 "$srcdir"/doc/krill.1 -t "$pkgdir"/usr/share/man/man1/krill.1
+	install -Dm644 "$srcdir"/doc/krillc.1 -t "$pkgdir"/usr/share/man/man1/krillc.1
 }
 sha512sums="
 b8518ed1151c377cf24ff2d9ca819179a38527a8e5901535753e156d330d3b0adcd27ffefc28760666716956f5f1ad7e33d5439faa2555ecd64b4258b82a7b9d  krill-0.15.0.tar.gz

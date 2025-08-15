@@ -20,7 +20,7 @@ pkggroups="krill"
 install="
 	$pkgname.pre-install
 "
-subpackages="$pkgname-openrc $pkgname-doc krillup krillup-doc krillta krillta-doc"
+subpackages="$pkgname-openrc $pkgname-doc krillup krillup-doc:krillup_doc krillta krillta-doc:krillta_doc"
 
 # adding empty log file to move into place for default config
 source="$pkgname-$pkgver.tar.gz::https://github.com/NLnetLabs/krill/archive/refs/tags/v$pkgver.tar.gz
@@ -48,9 +48,10 @@ krillup() {
 	install -Dm755 "$builddir"/target/release/krillup "$subpkgdir"/usr/bin/
 }
 
-krillup-doc() {
+krillup_doc() {
 	install -dm755 "$subpkgdir"/usr/share/man/man1
 	install -Dm644 "$builddir"/doc/krillup.1 -t "$subpkgdir"/usr/share/man/man1/krillup.1
+	default_doc
 }
 
 krillta() {
@@ -60,9 +61,10 @@ krillta() {
 	install -Dm755 "$builddir"/target/release/krillta "$subpkgdir"/usr/bin/
 }
 
-krillta-doc() {
+krillta_doc() {
 	install -dm755 "$subpkgdir"/usr/share/man/man1
 	install -Dm644 "$builddir"/doc/krillta.1 -t "$subpkgdir"/usr/share/man/man1/krillta.1
+	default_doc
 }
 
 check() {

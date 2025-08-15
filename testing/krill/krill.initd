@@ -3,12 +3,13 @@
 name="krill"
 description="RPKI Certificate Authority and Publication Server written in Rust"
 
-: ${command_user:=krill}
-: ${data_dir:=/var/lib/krill}
-: ${cfgfile:=/etc/krill/krill.conf}
+: "${command_user:=krill}"
+: "${data_dir:=/var/lib/krill}"
+: "${log_dir:=/var/log/krill}"
+: "${cfgfile:=/etc/krill/krill.conf}"
 
 command="/usr/bin/krill"
-command_args="-c $cfgfile server"
+command_args="-c $cfgfile >$log_dir/krill.log 2>&1"
 command_background="yes"
 
 pidfile="/run/$RC_SVCNAME.pid"
@@ -16,13 +17,13 @@ pidfile="/run/$RC_SVCNAME.pid"
 required_files="$cfgfile"
 
 depend() {
+	use logger dns
 	need net
 	after firewall
 }
 
-# https://krill.docs.nlnetlabs.nl/en/stable/building-from-source.html#start-and-stop-the-daemon
-start() {
-}
-
-stop() {
+start_pre() {
+	checkpath -d -o $command_user "$data_dir"
+	checkpath -d -o $command_user "$log_dir"
+	checkpath -f -o $command_user "$cfgfile"
 }

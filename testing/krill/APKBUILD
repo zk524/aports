@@ -30,7 +30,6 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/NLnetLabs/krill/archive/refs
 
 _cargo_opts="--frozen --release"
 
-
 prepare() {
 	default_prepare
 	cargo fetch --target="$CHOST" --locked
@@ -40,22 +39,20 @@ build() {
 	cargo auditable build -p krill $_cargo_opts
 }
 
-
 krillup() {
 	pkgdesc="$pkgdesc upgrade command line utility"
 
 	install -Dm755 "$builddir"/target/release/krillup "$subpkgdir"/usr/bin/
 }
 
-
 krillta() {
-	pkgdesc="$pkgdesc trust anchor utility"
+	pkgdesc="$pkgdesc trust anchor command line utility"
 
 	install -Dm755 "$builddir"/target/release/krillta "$subpkgdir"/usr/bin/
 }
 
 check() {
-	cargo test $_cargo_opts --workspace --verbose
+	cargo test $_cargo_opts --forzen --workspace --verbose
 }
 
 package() {
@@ -68,7 +65,7 @@ package() {
 	install -d -m755 "$pkgdir"/etc/krill
 	install -D -m640 -o krill -g krill "$srcdir"/krill.conf -t "$pkgdir"/etc/krill/
 
-	install -d -m700 -o krill -g krill "$pkgdir"/var/lib/$pkgname
+	install -d -m700 -o krill -g krill "$pkgdir"/var/log/"$pkgname".log
 }
 sha512sums="
 b8518ed1151c377cf24ff2d9ca819179a38527a8e5901535753e156d330d3b0adcd27ffefc28760666716956f5f1ad7e33d5439faa2555ecd64b4258b82a7b9d  krill-0.15.0.tar.gz

@@ -1,0 +1,51 @@
+# Contributor: jun7 <jun7@hush.com>
+maintainer="Callum Andrew <contact@candrew.net>"
+pkgname=wyebadblock
+pkgver=1.0_git20230212
+pkgrel=0
+_commit=529a5eedafacca9cd4ba78bf15d3a2bb565b821a
+pkgdesc="An adblock extension for webkit2gtk (GTK+3) browsers"
+url="https://github.com/jun7/wyebadblock"
+arch="all"
+license="GPL-3.0-only"
+makedepends="webkit2gtk-4.1-dev"
+subpackages="$pkgname-luakit::noarch $pkgname-surf::noarch $pkgname-vimb::noarch"
+source="https://github.com/jun7/wyebadblock/archive/$_commit/wyebadblock-$_commit.tar.gz"
+options="!check" # no test suite
+builddir="$srcdir/wyebadblock-$_commit"
+
+build() {
+	make WEBKITVER=4.1
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+luakit() {
+	pkgdesc="Luakit support for wyebadblock"
+	install_if="$pkgname=$pkgver-r$pkgrel luakit"
+
+	mkdir -p "$subpkgdir"/usr/lib/luakit
+	ln -s /usr/lib/wyebrowser/adblock.so "$subpkgdir"/usr/lib/luakit/
+}
+
+surf() {
+	pkgdesc="Surf support for wyebadblock"
+	install_if="$pkgname=$pkgver-r$pkgrel surf"
+
+	mkdir -p "$subpkgdir"/usr/lib/surf
+	ln -s /usr/lib/wyebrowser/adblock.so "$subpkgdir"/usr/lib/surf/
+}
+
+vimb() {
+	pkgdesc="Vimb support for wyebadblock"
+	install_if="$pkgname=$pkgver-r$pkgrel vimb"
+
+	mkdir -p "$subpkgdir"/usr/lib/vimb
+	ln -s /usr/lib/wyebrowser/adblock.so "$subpkgdir"/usr/lib/vimb/
+}
+
+sha512sums="
+abe6c53f53867af6738a0bad76acb288d5d45b956697b3dfc1c3a8f21c1a2be4597390d5a78eef3880453586ae9fb5b819eb11a8010ab44786e8f53b8db86b1c  wyebadblock-529a5eedafacca9cd4ba78bf15d3a2bb565b821a.tar.gz
+"

@@ -29,6 +29,7 @@ makedepends="bison
 	cmake
 	confuse-dev
 	curl-dev
+	db-dev
 	expat-dev
 	flex
 	freeradius-client-dev
@@ -184,6 +185,7 @@ _mod_list_db="acc \
 	auth_db \
 	avpops \
 	cfg_db \
+	db_berkeley \
 	db_cluster \
 	db_flatstore \
 	dialog \

@@ -92,13 +92,58 @@ install="$pkgname.pre-install $pkgname.pre-upgrade"
 # Remove db_text from _mod_list_db because we create a separate dbtext package
 #
 # - basic used modules, with no extra dependency (widespread usage)
-_mod_list_basic="avp async auth benchmark blst cfg_rpc cfgt cfgutils corex counters \
-		ctl debugger diversion enum exec gzcompress ipops kex mangler \
-		maxfwd mediaproxy mqueue \
-		nat_traversal nathelper path pike pv ratelimit rr rtimer \
-		rtpproxy sanity sdpops siputils sl smsops statsc statistics \
-		textops textopsx tm tmx topoh topos xlog rtpengine stun sipt \
-		pv_headers kemix dlgs"
+_mod_list_basic="async \
+	auth \
+	avp \
+	benchmark \
+	blst \
+	cfg_rpc \
+	cfgt \
+	cfgutils \
+	corex \
+	counters \
+	ctl \
+	debugger \
+	diversion \
+	dlgs \
+	enum \
+	exec \
+	gzcompress \
+	ipops \
+	kemix \
+	kex \
+	mangler \
+	maxfwd \
+	mediaproxy \
+	mqueue \
+	nathelper \
+	nat_traversal \
+	path \
+	pike \
+	pv \
+	pv_headers \
+	ratelimit \
+	rr \
+	rtimer \
+	rtpengine \
+	rtpproxy \
+	sanity \
+	sdpops \
+	sipt \
+	siputils \
+	sl \
+	smsops \
+	statistics \
+	statsc \
+	stun \
+	textops \
+	textopsx \
+	tm \
+	tmx \
+	topoh \
+	topos \
+	xlog \
+	"
 
 # - extra used modules, with no extra dependency
 _mod_list_extras="auth_diameter auth_xkeys call_control call_obj cnxcc dmq dmq_usrloc \

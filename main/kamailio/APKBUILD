@@ -38,12 +38,11 @@ makedepends="bison
 	json-c-dev
 	libev-dev
 	libevent-dev
+	libgcrypt-dev
 	libmaxminddb-dev
 	libmemcached-dev
 	libmnl-dev
-	pcre2-dev
 	libpq-dev
-	libgcrypt-dev
 	libunistring-dev
 	libuuid
 	libwebsockets-dev
@@ -58,7 +57,7 @@ makedepends="bison
 	openldap-dev
 	openssl-dev>3
 	openssl-libs-static
-	pcre-dev
+	pcre2-dev
 	perl-dev
 	python3-dev
 	rabbitmq-c-dev

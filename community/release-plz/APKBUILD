@@ -1,6 +1,6 @@
 # Maintainer: Orhun Parmaksız <orhunparmaksiz@gmail.com>
 pkgname=release-plz
-pkgver=0.3.139
+pkgver=0.3.141
 pkgrel=0
 pkgdesc="Release Rust packages without using the command line"
 url="https://github.com/MarcoIeni/release-plz"
@@ -54,5 +54,5 @@ package() {
 }
 
 sha512sums="
-16a0d966f95db0740f06422505fef5b9c4c595243c3899ba443ffdb36330ba958aec6d483565cb3e6d957ea2a2a629c53f4fc05470bd9d4dc0c03bea38b28424  release-plz-v0.3.139.tar.gz
+5932a745e5cf93636716301a81ed01474c62d27a89aaa65d34955f88e8b6da46046cb0510d35df973cfdbaccf7b2b750efd5ebe58bf5a3229abbad2a4a9e975c  release-plz-v0.3.141.tar.gz
 "

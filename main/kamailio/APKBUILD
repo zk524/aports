@@ -111,9 +111,11 @@ _mod_list_basic="async \
 	exec \
 	gzcompress \
 	ipops \
+	keepalive \
 	kemix \
 	kex \
 	mangler \
+	math \
 	maxfwd \
 	mediaproxy \
 	mqueue \
@@ -121,8 +123,10 @@ _mod_list_basic="async \
 	nat_traversal \
 	path \
 	pike \
+	posops \
 	pv \
 	pv_headers \
+	pvtpl \
 	ratelimit \
 	rr \
 	rtimer \
@@ -130,6 +134,7 @@ _mod_list_basic="async \
 	rtpproxy \
 	sanity \
 	sdpops \
+	siprepo \
 	sipt \
 	siputils \
 	sl \
@@ -137,6 +142,7 @@ _mod_list_basic="async \
 	statistics \
 	statsc \
 	stun \
+	sworker \
 	textops \
 	textopsx \
 	tm \
@@ -167,6 +173,7 @@ _mod_list_extras="auth_diameter \
 	sca \
 	seas \
 	sms \
+	ss7ops \
 	sst \
 	statsd \
 	tcpops \

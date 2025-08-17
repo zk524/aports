@@ -1,0 +1,93 @@
+From 5c74e5c4b6a6ff99ac2e2cbf09902312e90ffae5 Mon Sep 17 00:00:00 2001
+From: Camelia Lavender <cam@camelia.dev>
+Date: Wed, 13 Aug 2025 14:57:28 +0200
+Subject: [PATCH] do not load testing suite from git submodules
+
+---
+ test/bemoji_cmds.bats        | 4 ++--
+ test/bemoji_directories.bats | 4 ++--
+ test/bemoji_download.bats    | 6 +++---
+ test/bemoji_errors.bats      | 4 ++--
+ test/bemoji_history.bats     | 4 ++--
+ 5 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/test/bemoji_cmds.bats b/test/bemoji_cmds.bats
+index 90ace3b..2c87c37 100644
+--- a/test/bemoji_cmds.bats
++++ b/test/bemoji_cmds.bats
+@@ -7,8 +7,8 @@ setup_file() {
+ }
+ 
+ setup() {
+-    load 'test_helper/bats-support/load'
+-    load 'test_helper/bats-assert/load'
++    load '/usr/lib/bats/bats-support/load'
++    load '/usr/lib/bats/bats-assert/load'
+ 
+     # mock out interactive picker for static emoji return
+     export BEMOJI_PICKER_CMD="echo ❤️"
+diff --git a/test/bemoji_directories.bats b/test/bemoji_directories.bats
+index ede78a0..bf0c2e9 100644
+--- a/test/bemoji_directories.bats
++++ b/test/bemoji_directories.bats
+@@ -7,8 +7,8 @@ setup_file() {
+ }
+ 
+ setup() {
+-    load 'test_helper/bats-support/load'
+-    load 'test_helper/bats-assert/load'
++    load '/usr/lib/bats/bats-support/load'
++    load '/usr/lib/bats/bats-assert/load'
+ 
+     # mock out interactive picker for static emoji return
+     export BEMOJI_PICKER_CMD="echo ❤️"
+diff --git a/test/bemoji_download.bats b/test/bemoji_download.bats
+index 707aaf7..77cea0b 100644
+--- a/test/bemoji_download.bats
++++ b/test/bemoji_download.bats
+@@ -7,9 +7,9 @@ setup_file() {
+ }
+ 
+ setup() {
+-    load 'test_helper/bats-support/load'
+-    load 'test_helper/bats-assert/load'
+-    load 'test_helper/mocks/stub'
++    load '/usr/lib/bats/bats-support/load'
++    load '/usr/lib/bats/bats-assert/load'
++    load '/usr/lib/bats/bats-mock/stub'
+ 
+     # mock out interactive picker for static emoji return
+     export BEMOJI_PICKER_CMD="echo heart"
+diff --git a/test/bemoji_errors.bats b/test/bemoji_errors.bats
+index 6345e72..ac42ac3 100644
+--- a/test/bemoji_errors.bats
++++ b/test/bemoji_errors.bats
+@@ -7,8 +7,8 @@ setup_file() {
+ }
+ 
+ setup() {
+-    load 'test_helper/bats-support/load'
+-    load 'test_helper/bats-assert/load'
++    load '/usr/lib/bats/bats-support/load'
++    load '/usr/lib/bats/bats-assert/load'
+ 
+     # set up small default set of test emoji for each test
+     export BEMOJI_DB_LOCATION="$BATS_TEST_TMPDIR/database"
+diff --git a/test/bemoji_history.bats b/test/bemoji_history.bats
+index 82d7394..b39047d 100644
+--- a/test/bemoji_history.bats
++++ b/test/bemoji_history.bats
+@@ -7,8 +7,8 @@ setup_file() {
+ }
+ 
+ setup() {
+-    load 'test_helper/bats-support/load'
+-    load 'test_helper/bats-assert/load'
++    load '/usr/lib/bats/bats-support/load'
++    load '/usr/lib/bats/bats-assert/load'
+ 
+     # mock out interactive picker for static emoji return
+     export BEMOJI_PICKER_CMD="echo ❤️"
+-- 
+2.47.3
+

@@ -35,6 +35,11 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/AcademySoftwareFoundation/op
 	"
 
 # secfixes:
+#   3.3.3-r0:
+#     - CVE-2025-48071
+#     - CVE-2025-48072
+#     - CVE-2025-48073
+#     - CVE-2025-48074
 #   3.1.12-r0:
 #     - CVE-2023-5841
 #   3.1.4-r0:

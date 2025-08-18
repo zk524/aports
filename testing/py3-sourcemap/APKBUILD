@@ -1,0 +1,43 @@
+# Contributor: Will Sinatra <wpsinatra@gmail.com>
+# Maintainer: Will Sinatra <wpsinatra@gmail.com>
+pkgname=py3-sourcemap
+_pkgname=sourcemap
+pkgver=0.2.1
+pkgrel=0
+pkgdesc="Python library for parsing JavaScript source maps"
+url="https://github.com/mattrobenolt/python-sourcemap"
+arch="noarch"
+license="BSD-2-Clause"
+depends="python3"
+makedepends="
+	py3-gpep517
+	py3-setuptools
+	py3-build
+	py3-installer
+	py3-wheel
+	"
+checkdepends="py3-pytest"
+subpackages="$pkgname-pyc"
+source="$_pkgname-$pkgver.tar.gz::https://github.com/mattrobenolt/python-sourcemap/archive/$pkgver.tar.gz"
+builddir="$srcdir/python-$_pkgname-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest tests/ -v
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+752314f2770160ba742da7a35bb4ea45365584aad6e74932355319baa6a8e35c4d0557222730786d4d9e7595f142ac3aaeeedb3138feeafae02930279058c62a  sourcemap-0.2.1.tar.gz
+"

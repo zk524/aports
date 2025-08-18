@@ -1,0 +1,40 @@
+From 23d647008991b41b6666a88f9f0d1d22a2a7af72 Mon Sep 17 00:00:00 2001
+From: Celeste <20312-Celeste@users.gitlab.alpinelinux.org>
+Date: Mon, 18 Aug 2025 11:05:28 +0200
+Subject: [PATCH] Add LLD_BUILD_SHARED_LIBS option
+
+---
+ lld/CMakeLists.txt             | 3 +++
+ lld/cmake/modules/AddLLD.cmake | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lld/CMakeLists.txt b/lld/CMakeLists.txt
+index 64c9f2380550..5ce1052b38ab 100644
+--- a/lld/CMakeLists.txt
++++ b/lld/CMakeLists.txt
+@@ -161,6 +161,9 @@ if (LLD_USE_VTUNE)
+   endif()
+ endif()
+ 
++option(LLD_BUILD_SHARED_LIBS
++  "Build lld libraries as shared libraries instead of static" OFF)
++
+ option(LLD_BUILD_TOOLS
+   "Build the lld tools. If OFF, just generate build targets." ON)
+ 
+diff --git a/lld/cmake/modules/AddLLD.cmake b/lld/cmake/modules/AddLLD.cmake
+index 9f2684b6f933..d5d81b65498d 100644
+--- a/lld/cmake/modules/AddLLD.cmake
++++ b/lld/cmake/modules/AddLLD.cmake
+@@ -7,7 +7,7 @@ macro(add_lld_library name)
+     ""
+     ""
+     ${ARGN})
+-  if(ARG_SHARED)
++  if( LLD_BUILD_SHARED_LIBS OR ARG_SHARED )
+     set(ARG_ENABLE_SHARED SHARED)
+   endif()
+   llvm_add_library(${name} ${ARG_ENABLE_SHARED} ${ARG_UNPARSED_ARGUMENTS})
+-- 
+2.50.1
+

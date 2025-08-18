@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt	2025-08-18 17:54:05.412079944 +0200
++++ b/CMakeLists.txt	2025-08-18 17:54:10.288809425 +0200
+@@ -113,6 +113,4 @@
+     add_subdirectory(samples)
+ endif()
+ 
+-include(rocprofiler_register_config_packaging)
+-
+ rocprofiler_register_print_features()
+

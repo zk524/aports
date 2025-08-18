@@ -1,0 +1,13 @@
+--- a/CMakeLists.txt	2025-08-18 17:54:05.412079944 +0200
++++ b/CMakeLists.txt	2025-08-18 17:55:09.262268118 +0200
+@@ -100,7 +100,8 @@
+ enable_testing()
+ include(CTest)
+ 
+-add_subdirectory(external)
++find_package(fmt REQUIRED)
++find_package(glog REQUIRED)
+ add_subdirectory(source)
+ 
+ include(rocprofiler_register_config_install)
+

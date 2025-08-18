@@ -1,0 +1,31 @@
+From 7946ddb6474f6bb4cf13225a4b47e78d9669e4c2 Mon Sep 17 00:00:00 2001
+From: zichguan-amd <zichuan.guan@amd.com>
+Date: Thu, 10 Jul 2025 15:47:43 -0400
+Subject: [PATCH] rocr: check _SC_LEVEL1_DCACHE_LINESIZE before use
+
+Support musl
+Fixes ROCm/ROCR-Runtime#318
+
+Patch-Source: https://github.com/ROCm/ROCR-Runtime/issues/318
+Signed-off-by: zichguan-amd <zichuan.guan@amd.com>
+---
+ runtime/hsa-runtime/core/util/utils.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/runtime/hsa-runtime/core/util/utils.h b/runtime/hsa-runtime/core/util/utils.h
+index aab828ee5..69c7c4a26 100644
+--- a/runtime/hsa-runtime/core/util/utils.h
++++ b/runtime/hsa-runtime/core/util/utils.h
+@@ -359,7 +359,11 @@ inline void FlushCpuCache(const void* base, size_t offset, size_t len) {
+   static long cacheline_size = 0;
+ 
+   if (!cacheline_size) {
+-    long sz = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
++#ifdef _SC_LEVEL1_DCACHE_LINESIZE
++		long sz = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
++#else
++		long sz = 0;
++#endif
+     if (sz <= 0) return;
+     cacheline_size = sz;
+   }

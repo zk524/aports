@@ -1,0 +1,32 @@
+# Contributor: Hakan Erduman <hakan@erduman.de>
+# Maintainer: Hakan Erduman <hakan@erduman.de>
+pkgname=py3-pyproj
+pkgver=3.7.1
+pkgrel=1
+pkgdesc="Python interface to PROJ (cartographic projections and coordinate transformations library)"
+url="https://github.com/pyproj4/pyproj"
+arch="all"
+license="BSD-3-Clause"
+depends="proj"
+makedepends="cython py3-setuptools py3-wheel proj-dev proj-util python3-dev"
+# NOTE: Always use releases of protobuf, not pypi or auto-generated GitHub
+# tarballs as they do not contain the necessary components to run tests.
+subpackages="$pkgname-pyc"
+source="https://files.pythonhosted.org/packages/67/10/a8480ea27ea4bbe896c168808854d00f2a9b49f95c0319ddcbba693c8a90/pyproj-$pkgver.tar.gz"
+builddir="$srcdir/pyproj-$pkgver"
+options="!check" # seem to not generate some test protos
+
+build() {
+	python3 setup.py build
+}
+
+package() {
+	python3 setup.py install --skip-build --root="$pkgdir"
+
+	# correct permissions
+	chmod +r "$pkgdir"/usr/lib/*/site-packages/*/*
+}
+
+sha512sums="
+9229686e63e65c774dde93cf59154bf142619034160e4b51622b37aad22d3a456082c25a6e1ff569cf11926a89b05c4675fb7a639e85636559b9cd84bbd38875  pyproj-3.7.1.tar.gz
+"

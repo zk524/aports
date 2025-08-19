@@ -1,0 +1,35 @@
+# Contributor: Pedro Lucas Porcellis <porcellis@eletrotupi.com>
+# Maintainer: Pedro Lucas Porcellis  <porcellis@eletrotupi.com>
+pkgname=clapboard
+pkgver=1.0.3
+pkgrel=0
+pkgdesc="Wayland clipboard manager that will make you clap"
+url="https://github.com/bjesus/clapboard"
+arch="x86_64 ppc64le aarch64"
+license="MIT"
+depends="wl-clipboard"
+makedepends="
+	cargo
+	rust
+	wayland-dev
+	wayland-protocols
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/bjesus/clapboard/archive/refs/tags/v$pkgver.tar.gz"
+
+build() {
+	cargo build \
+		--release
+}
+
+check() {
+	cargo test \
+		--release
+}
+
+package() {
+	install -Dm755 target/release/clapboard -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+5c48cc9e85129b8930b99a2188b36071446b0b1ac56e3a676fcff387f9994ecfa858d506c5f1c2d7165d70a5517dec05043e3bab6bb266737974b8c5e07db265  clapboard-1.0.3.tar.gz
+"

@@ -433,54 +433,54 @@ _module_group_kstandard="$_mod_list_basic $_mod_list_dbuid $_mod_list_pcre"
 
 # END Makefile.groups #############################################################
 
-subpackages="authephemeral \
-	carrierroute \
-	cpl \
-	db \
-	dbtext \
-	debugger \
-	ev \
-	extras \
-	gcrypt \
-	geoip2 \
-	http_async \
-	ims \
-	jansson \
-	jsdt \
-	json \
-	kazoo \
-	kemix \
-	ldap \
-	lost \
-	lrkproxy \
-	lua \
-	memcached \
-	mqtt \
-	mysql \
-	nghttp2 \
-	outbound \
-	perl \
-	postgres \
-	presence \
-	python3 \
-	rabbitmq \
-	radius \
-	redis \
-	ruby \
-	sctp \
-	sipdump \
-	slack \
-	snmpstats \
-	sqlite \
-	tls \
-	tlsa \
-	unixodbc \
-	utils \
-	uuid \
-	websocket \
-	xhttp_prom \
-	xml \
-	xmpp \
+subpackages="authephemeral
+	carrierroute
+	cpl
+	db
+	dbtext
+	debugger
+	ev
+	extras
+	gcrypt
+	geoip2
+	http_async
+	ims
+	jansson
+	jsdt
+	json
+	kazoo
+	kemix
+	ldap
+	lost
+	lrkproxy
+	lua
+	memcached
+	mqtt
+	mysql
+	nghttp2
+	outbound
+	perl
+	postgres
+	presence
+	python3
+	rabbitmq
+	radius
+	redis
+	ruby
+	sctp
+	sipdump
+	slack
+	snmpstats
+	sqlite
+	tls
+	tlsa
+	unixodbc
+	utils
+	uuid
+	websocket
+	xhttp_prom
+	xml
+	xmpp
 	"
 
 _modules="$_module_group_kstandard"

@@ -1,19 +1,5 @@
 --- a/xbmc/cores/DllLoader/exports/emu_msvcrt.cpp
 +++ b/xbmc/cores/DllLoader/exports/emu_msvcrt.cpp
-@@ -71,6 +71,13 @@
- #include "platform/win32/CharsetConverter.h"
- #endif
- 
-+#ifndef _PATH_MOUNTED
-+#define _PATH_MOUNTED "/proc/mounts"
-+#endif
-+#ifndef _PATH_MNTTAB
-+#define _PATH_MNTTAB "/etc/fstab"
-+#endif
-+
- using namespace XFILE;
- 
- struct SDirData
 @@ -123,7 +130,7 @@ extern "C" void __stdcall init_emu_envir
    dll_putenv("OS=win10");
  #elif defined(TARGET_DARWIN)

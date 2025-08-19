@@ -1,0 +1,55 @@
+# Contributor: James Knight <git@jdknight.me>
+maintainer="James Knight <git@jdknight.me>"
+pkgname=releng-tool
+pkgver=2.6.0
+pkgrel=0
+pkgdesc="A tool to create packages for select runtime environments (e.g. embedded targets)"
+url="https://releng.io/"
+arch="noarch"
+license="BSD-2-Clause"
+depends="
+	python3
+	"
+makedepends="
+	py3-build
+	py3-installer
+	py3-setuptools
+	py3-wheel
+	"
+subpackages="
+	$pkgname-bash-completion
+	$pkgname-doc
+	$pkgname-fish-completion
+	$pkgname-pyc
+	$pkgname-zsh-completion
+	"
+source="https://github.com/releng-tool/releng-tool/releases/download/v${pkgver%.0}/${pkgname//-/_}-$pkgver.tar.gz"
+builddir=$srcdir/${pkgname//-/_}-$pkgver
+
+build() {
+	python3 -m build --wheel --no-isolation
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer dist/*.whl
+	.testenv/bin/python3 -m tests
+}
+
+package() {
+	python3 -m installer --destdir="$pkgdir" dist/*.whl
+
+	install -vDm644 Documentation/releng-tool.1 \
+		"$pkgdir/usr/share/man/man1/releng-tool.1"
+	install -vDm644 scripts/completion/bash \
+		"$pkgdir/usr/share/bash-completion/completions/$pkgname"
+	install -vDm644 scripts/completion/fish \
+		"$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
+	install -vDm644 scripts/completion/zsh \
+		"$pkgdir/usr/share/zsh/site-functions/_$pkgname"
+	install -vDm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+sha512sums="
+25a970d5292bca6d44c735ce6cdcb1592fe6158adee82b5916772e05f5fe8ef590ca45167d4b0f696f809c3bc0ceeb7c5533e0182d7822d6107f434b4d3baba5  releng_tool-2.6.0.tar.gz
+"

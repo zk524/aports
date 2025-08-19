@@ -5,12 +5,12 @@
 # Maintainer: Nathan Angelacos <nangel@alpinelinux.org>
 
 pkgname=kamailio
-pkgver=6.0.1
+pkgver=6.0.2
 pkgrel=6
 
 # If building from a git snapshot, specify the gitcommit
 # If building a proper release, leave gitcommit blank or commented
-#_gitcommit=991fe9b28e0e201309048f3b38a135037e40357a
+_gitcommit=015efa305c2c7822e64383c6a98de9addd41add7
 
 [ -n "$_gitcommit" ] && pkgver="$pkgver.$(date +%Y%m%d)"
 [ -n "$_gitcommit" ] && _suffix="-${_gitcommit:0:7}"
@@ -825,6 +825,6 @@ gcrypt() {
 
 
 sha512sums="
-f0a318ea2c361a14c2b023e940510e612f6dafa9ee3b6352ca66f5d1dda3670c2f3b1d27c3d610256b1e4996533b3d2dbd62a7f2f78462841c9beb863c82580e  kamailio-6.0.1.tar.gz
+5aa9dec9055b0ba994d467c0e99c1160d83bcd0ebc325f77253feac4b208b987046f8857e6765b834bbb0713d1632b42e1ffe08f541f662b88905afb5a7ef239  kamailio-6.0.2.20250901-015efa3.tar.gz
 38a786b48d433b2e99a29249458c1ffcc3f449a1898df6ef1f4b8ebf7770e99d80ce6e3340ea680b44e725b951e65fd06d395ecb903600d7c8fdc0a736c4d9b1  kamailio.initd
 "

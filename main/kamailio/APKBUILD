@@ -97,63 +97,63 @@ install="$pkgname.pre-install $pkgname.pre-upgrade"
 # Remove db_text from _mod_list_db because we create a separate dbtext package
 #
 # - basic used modules, with no extra dependency (widespread usage)
-_mod_list_basic="async \
-	auth \
-	avp \
-	benchmark \
-	blst \
-	cfg_rpc \
-	cfgt \
-	cfgutils \
-	corex \
-	counters \
-	ctl \
-	debugger \
-	diversion \
-	dlgs \
-	enum \
-	exec \
-	gzcompress \
-	ipops \
-	keepalive \
-	kemix \
-	kex \
-	mangler \
-	math \
-	maxfwd \
-	mediaproxy \
-	mqueue \
-	nathelper \
-	nat_traversal \
-	path \
-	pike \
-	posops \
-	pv \
-	pv_headers \
-	pvtpl \
-	ratelimit \
-	rr \
-	rtimer \
-	rtpengine \
-	rtpproxy \
-	sanity \
-	sdpops \
-	siprepo \
-	sipt \
-	siputils \
-	sl \
-	smsops \
-	statistics \
-	statsc \
-	stun \
-	sworker \
-	textops \
-	textopsx \
-	tm \
-	tmx \
-	topoh \
-	topos \
-	xlog \
+_mod_list_basic="async
+	auth
+	avp
+	benchmark
+	blst
+	cfg_rpc
+	cfgt
+	cfgutils
+	corex
+	counters
+	ctl
+	debugger
+	diversion
+	dlgs
+	enum
+	exec
+	gzcompress
+	ipops
+	keepalive
+	kemix
+	kex
+	mangler
+	math
+	maxfwd
+	mediaproxy
+	mqueue
+	nathelper
+	nat_traversal
+	path
+	pike
+	posops
+	pv
+	pv_headers
+	pvtpl
+	ratelimit
+	rr
+	rtimer
+	rtpengine
+	rtpproxy
+	sanity
+	sdpops
+	siprepo
+	sipt
+	siputils
+	sl
+	smsops
+	statistics
+	statsc
+	stun
+	sworker
+	textops
+	textopsx
+	tm
+	tmx
+	topoh
+	topos
+	xlog
 	"
 
 # - extra used modules, with no extra dependency

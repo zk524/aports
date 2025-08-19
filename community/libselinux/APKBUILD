@@ -1,7 +1,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=libselinux
-pkgver=3.6
-pkgrel=1
+pkgver=3.9
+pkgrel=0
 pkgdesc="SELinux library and simple utilities"
 url="https://github.com/SELinuxProject/selinux/wiki"
 arch="all"
@@ -11,6 +11,7 @@ makedepends="pcre2-dev linux-headers libsepol-dev musl-fts-dev coreutils"
 subpackages="$pkgname-static $pkgname-dev $pkgname-doc $pkgname-utils"
 source="https://github.com/SELinuxProject/selinux/releases/download/$pkgver/libselinux-$pkgver.tar.gz
 	lfs64.patch
+	32bit.patch
 	"
 
 build() {
@@ -28,6 +29,7 @@ utils() {
 }
 
 sha512sums="
-182dcdf3510083ff4b9376a4a6d6a7b33905ac3c5e974c188bf3965686c54b663162c543ecf15eab75102f3c91a2502d33d0f1104dec01dd9b14737ef3f2b544  libselinux-3.6.tar.gz
+a91942e7d16673396610d969f2471173989995a048edacf6076f6df3200a0d541a1c9932a7632d70aa7c728de7e7d3c62712e5aab6c0b763826e7ffef808cadb  libselinux-3.9.tar.gz
 a6098386275c67b5070cc62cd4f4d6ad5917182829e151b2d740ab71eec9e8c9835b633898537b62bf3811ac7e8a229de33bc650e8711e499256372ddec5e7fc  lfs64.patch
+4f97b25c683fdfbf62fa75e3e64d10cef813d1ebe196e7b7c2b9171e132b813f0487e7bd9f0b64315b1e35888da476b16b7ef032c72bf16448374b61206a4024  32bit.patch
 "

@@ -27,12 +27,9 @@ _cargo_opts="--frozen --no-default-features --features default-no-update"
 prepare() {
 	default_prepare
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided libzstd.
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		zstd = { rustc-link-lib = ["zstd"] }
 	EOF
 

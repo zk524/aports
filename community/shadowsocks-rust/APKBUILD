@@ -26,13 +26,10 @@ options="net !check" # fail for some reason
 prepare() {
 	default_prepare
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided libs
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		mimalloc = { rustc-link-lib = ["mimalloc"] }
 	EOF
 

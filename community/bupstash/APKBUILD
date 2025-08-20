@@ -34,13 +34,10 @@ _cargo_opts="--no-default-features --frozen"
 prepare() {
 	default_prepare
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided lz4 and zstd.
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		lz4 = { rustc-link-lib = ["lz4"] }
 		zstd = { rustc-link-lib = ["zstd"] }
 	EOF

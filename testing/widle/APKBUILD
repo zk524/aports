@@ -1,0 +1,34 @@
+# Contributor: Kurt H Maier <khm@sciops.net>
+# Maintainer:
+pkgname=widle
+pkgver=20250820
+pkgrel=1
+pkgdesc=" Run a command upon becoming idle "
+url="https://codeberg.org/sewn/widle"
+arch="all"
+license="GPL-3.0-or-later"
+depends="wayland-libs-client"
+makedepends="pkgconf wayland-protocols wayland-dev"
+checkdepends=""
+install=""
+subpackages="$pkgname-doc"
+source="${pkgname}-${pkgver}.tar.gz::https://codeberg.org/sewn/${pkgname}/archive/master.tar.gz"
+builddir="$srcdir/$pkgname"
+
+build() {
+	export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
+	make
+}
+
+check() {
+	:
+}
+
+package() {
+	make PREFIX=/usr DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+567db72004ec9d80e5b1ab23ebf3e5bd8f9724ef48bc7f7aebd4530c6825d9c32096964e6a37ce67e75aa3a2bd730b87deda59598f2607ae2a2904e14e4a5578  widle-20250820.tar.gz
+"

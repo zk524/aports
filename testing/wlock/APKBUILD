@@ -1,0 +1,35 @@
+# Contributor: Kurt H Maier <khm@sciops.net>
+# Maintainer:
+pkgname=wlock
+pkgver=20250820
+pkgrel=1
+pkgdesc="Itsy-bitsy session locker"
+url="https://codeberg.org/sewn/wlock"
+arch="all"
+license="GPL-3.0-or-later"
+depends="wayland-libs-client libxkbcommon"
+makedepends="pkgconf wayland-protocols wayland-dev libxkbcommon-dev"
+checkdepends=""
+install=""
+subpackages="$pkgname-doc"
+source="${pkgname}-${pkgver}.tar.gz::https://codeberg.org/sewn/${pkgname}/archive/master.tar.gz"
+builddir="$srcdir/$pkgname"
+options="suid"
+
+build() {
+        export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
+	make
+}
+
+check() {
+	:
+}
+
+package() {
+	make PREFIX=/usr DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+8c087414f8bc42e88e31404de11f68273726fedd686fe154b0529a32869076c877a727c9e699c3981a9f15001eae6af3adc513c15b6d649cc084ddfe13125d1a  wlock-20250820.tar.gz
+"

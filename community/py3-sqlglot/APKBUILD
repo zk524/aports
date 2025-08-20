@@ -1,7 +1,7 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=py3-sqlglot
-pkgver=27.6.0
+pkgver=27.8.0
 pkgrel=0
 pkgdesc="Python SQL Parser and Transpiler"
 url="https://github.com/tobymao/sqlglot"
@@ -28,5 +28,5 @@ package() {
 }
 
 sha512sums="
-8033fbce129ff7f32865bbb6f3121a4c0a74d097e424458ddce494492bd8fa4a905f022275bdca49bd4d62c5f1f8774cdb5be6d57c273fc1fdfe40793f22e66a  sqlglot-27.6.0.tar.gz
+9dd51ffc3843b5f1323e8035777d76b979b3fb876f2f95c8f5a80d079c7d38daf3f951729283fd330156cd02ba0a67a74f4704108bda384e703253884fb21a15  sqlglot-27.8.0.tar.gz
 "

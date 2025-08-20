@@ -1,0 +1,30 @@
+# Maintainer: ovf <ovf@mm.st>
+pkgname=dterm
+_commit=dea09ce4d1e1c651100254979519ce2d5c2cd62b
+pkgver=0.5_git20200813
+pkgrel=0
+pkgdesc="A simple terminal program"
+url="https://github.com/hefloryd/dterm"
+arch="all"
+license="GPL-2.0-only"
+source="https://github.com/hefloryd/dterm/archive/$_commit/dterm-$_commit.tar.gz"
+options="!check" #no tests
+builddir="$srcdir/$pkgname-$_commit"
+
+prepare() {
+	default_prepare
+
+	sed 's|sys/signal.h|signal.h|' -i dterm.c
+}
+
+build() {
+	make READLINE= VERSION=$pkgver
+}
+
+package() {
+	install -Dt "$pkgdir/usr/bin" dterm
+}
+
+sha512sums="
+6cec4bc2ae850a3296f66e50e50b7d2c008624e4fe10b8714305a84ea3849270e0d1961a5f4cfa73c10dad88fbe4ac69c0b553fc4f2b965462a3d9c8691c3d79  dterm-dea09ce4d1e1c651100254979519ce2d5c2cd62b.tar.gz
+"

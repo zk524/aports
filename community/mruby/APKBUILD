@@ -1,7 +1,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=mruby
-pkgver=3.3.0
+pkgver=3.4.0
 pkgrel=0
 pkgdesc="Lightweight Ruby"
 url="https://mruby.org"
@@ -79,6 +79,6 @@ tools() {
 }
 
 sha512sums="
-2defb1d1ad1130180db901e8f5444c1f4c3e7b5ef045d9d5fc6fafa8f1aac01167bb5705b67eb75ac1d32929241a0cc92cda457ac1e4d39a0f028ccf48bf0361  mruby-3.3.0.tar.gz
+020bb91374abedadfd2162efd3deab8bd3b92643ed475ae12e6be3f2a22666e1dd9439fc7f63ea4640a61fbbc5913b3887bce66121051434d08777a0dc938446  mruby-3.4.0.tar.gz
 66586bd03db9911a5f730efad2e603a8677c09213d7d8a0d7adbc7ed1d43802aa7f2af88ca003191da54687b614aa2ce57b07e48b4f4a66ec124119eedc0fa1e  build_config.rb
 "

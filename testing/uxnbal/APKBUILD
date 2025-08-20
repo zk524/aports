@@ -1,0 +1,35 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxnbal
+pkgver=0_git20240317
+_commit=17b04291f34e1b2da2f4ea2a081612f4261ae004
+pkgrel=0
+pkgdesc="Stack effect checker for the Uxntal programming language"
+url="https://git.sr.ht/~rabbits/uxnbal"
+arch="noarch"
+license="MIT"
+depends="uxncli"
+makedepends="uxnasm"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxnbal/archive/$_commit.tar.gz
+	uxnbal"
+builddir="$srcdir/uxnbal-$_commit"
+
+build() {
+	uxnasm src/uxnbal.tal uxnbal.rom
+}
+
+check() {
+	# check basic functionality
+	echo "@test ( -> ) 42 JMP2r" > test.tal
+	uxncli uxnbal.rom test.tal 2>&1 | grep Imbalance
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/uxn/roms uxnbal.rom*
+	install -Dm755 -t "$pkgdir"/usr/bin "$srcdir"/uxnbal
+}
+
+sha512sums="
+df0c55dc4bc513bdc1c897b2e20bfe606efae99441b915bdf9535c1c679434874276f928f6924ba4d70b13920139cee1bbc03f10ae47b28ead5d3a5b418d7eff  uxnbal-0_git20240317.tar.gz
+a40fe0465c31fe80cc6d25aadf3ef394c95d0da3e67e0de368c14e9f708c1422027ea3f7377dde1fc3ed66d591f3c78702e295221b29743e4ffa4c5e28e65d24  uxnbal
+"

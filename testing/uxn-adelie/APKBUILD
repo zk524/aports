@@ -1,0 +1,34 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxn-adelie
+pkgver=0_git20240820
+_commit=7af4a28763058ebc518d65ed983e0fca5007ef4c
+pkgrel=0
+pkgdesc="Slideshow program written in uxntal"
+url="https://git.sr.ht/~rabbits/adelie"
+arch="noarch"
+license="ISC"
+depends="uxnemu"
+makedepends="uxnasm"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/adelie/archive/$_commit.tar.gz
+	adelie"
+builddir="$srcdir/adelie-$_commit"
+options="!check" # no tests available
+
+build() {
+	uxnasm src/adelie.tal adelie.rom
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/uxn/roms adelie.rom*
+	install -Dm755 -t "$pkgdir"/usr/bin "$srcdir"/adelie
+	install -Dm644 -t "$pkgdir"/usr/share/doc/uxn-adelie slides
+	install -Dm644 -t "$pkgdir"/usr/share/doc/uxn-adelie/etc etc/*.tga
+	install -Dm644 -t "$pkgdir"/usr/share/doc/uxn-adelie README.md
+}
+
+sha512sums="
+320abd1aa02dab1a234712c88224f59c539cc6bce3248a30d70926dba4fad83fb0091f2ad07d0cd6a1bbca8e13d0f84afa2cb46e80b95a4aad20a2379970e9fe  uxn-adelie-0_git20240820.tar.gz
+969a3332e05de4f28f5e96323b0950872a7de5fbb93bdd9ec76a594498be0de2ab281fa2d7e71cb2524c8455f2c8992ec18067c1c869a459c13b86084068df52  adelie
+"

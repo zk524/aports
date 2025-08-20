@@ -1,0 +1,32 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxn11
+pkgver=1.0_git20250124
+_commit=72a6b8af37c608cd8bae8fafbda9730e538b0ac0
+pkgrel=0
+pkgdesc="X11 emulator for the Uxn stack-machine"
+url="https://git.sr.ht/~rabbits/uxn11"
+arch="all"
+license="MIT"
+makedepends="libx11-dev"
+subpackages="$pkgname-doc"
+provides="uxnemu"
+replaces="uxnemu"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxn11/archive/$_commit.tar.gz"
+builddir="$srcdir/uxn11-$_commit"
+options="!check" # no tests available
+
+build() {
+	make
+	ln -s uxn11 bin/uxnemu
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/doc/$pkgname/ doc/man/uxntal.7
+	install -Dm755 -t "$pkgdir"/usr/bin/ bin/uxnemu
+	install -Dm755 -t "$pkgdir"/usr/bin/ bin/uxn11
+}
+
+sha512sums="
+6fb8525c9262ab7b555f1f3a4d4c4ed8183433d2135b560bebdb9bac945a44c519897db87ace623d2945467407c54ba2c308050b009c26e202dcb5659ca7ff3a  uxn11-1.0_git20250124.tar.gz
+"

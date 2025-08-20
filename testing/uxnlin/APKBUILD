@@ -1,0 +1,35 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxnlin
+pkgver=0_git20250119
+_commit=90c456d17aba6f6414044c99ef1e80106239d74b
+pkgrel=0
+pkgdesc="Linter for the Uxntal programming language"
+url="https://git.sr.ht/~rabbits/uxnlin"
+arch="noarch"
+license="MIT"
+depends="uxncli"
+makedepends="uxnasm"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxnlin/archive/$_commit.tar.gz
+	uxnlin"
+builddir="$srcdir/uxnlin-$_commit"
+
+build() {
+	uxnasm src/uxnlin.tal uxnlin.rom
+}
+
+check() {
+	# check basic functionality
+	echo "@test #02 ADD" > test.tal
+	uxncli uxnlin.rom test.tal 2>&1 | grep "INC INC"
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/uxn/roms uxnlin.rom*
+	install -Dm755 -t "$pkgdir"/usr/bin "$srcdir"/uxnlin
+}
+
+sha512sums="
+2be902056db068db2b633c8811147aa666eee67add295d14fee53b0e445e98472aa83ac4935077e7b96e42e5d21a3df42bcf7a36234ece67df13b23eee819913  uxnlin-0_git20250119.tar.gz
+58a28d0252db63c860f26f9abbd33072e713f25592f3f53d5e6d178dfcc47eabe2a348900efae8a0a92ecfff567d29e5da450581f6cfa9cbaff16899d6fed6f5  uxnlin
+"

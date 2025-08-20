@@ -1,0 +1,43 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=uxnfor
+pkgver=0_git20241223
+_commit=e3c95927b19e25c95f379995b4b2481d3c26d35a
+pkgrel=0
+pkgdesc="Formatter for the Uxntal programming language"
+url="https://git.sr.ht/~rabbits/uxnfor"
+arch="noarch"
+license="ISC"
+depends="uxncli"
+makedepends="uxnasm"
+source="$pkgname-$pkgver.tar.gz::https://git.sr.ht/~rabbits/uxnfor/archive/$_commit.tar.gz
+	uxnfor"
+builddir="$srcdir/uxnfor-$_commit"
+
+build() {
+	uxnasm src/uxnfor.tal uxnfor.rom
+}
+
+check() {
+	# check basic functionality
+	echo "@test ( x -> x' ) ADD JMP2r" > test.tal
+	cat > expect.tal <<EOF
+
+
+@test ( x -> x' )
+	ADD JMP2r
+
+EOF
+	uxncli uxnfor.rom test.tal
+	diff -u expect.tal test.tal
+}
+
+package() {
+	install -Dm644 -t "$pkgdir"/usr/share/uxn/roms uxnfor.rom*
+	install -Dm755 -t "$pkgdir"/usr/bin "$srcdir"/uxnfor
+}
+
+sha512sums="
+68905c5dcd7452a95ad42449e740b0d569f7906c6a03259ca18969b401530a579bba2ae46ba8725475520aa51eab4d8fbaea474bc77b9d49f35ed872f8ec1782  uxnfor-0_git20241223.tar.gz
+c2ab60be742b9a8057d1bb42f2c5c37f0f4a7d549a93524038876920866b1eb5d055ec22c550f27c96e5a2e5e64c7f6e696fafc3daee64edc4d909034f131027  uxnfor
+"

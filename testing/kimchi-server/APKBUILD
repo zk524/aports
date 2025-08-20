@@ -1,0 +1,43 @@
+# Contributor: Keenan Gugeler <me@kgugeler.ca>
+# Maintainer: Keenan Gugeler <me@kgugeler.ca>
+pkgname=kimchi-server
+pkgver=0.1.1
+pkgrel=0
+pkgdesc="Barebones HTTP server"
+url="https://codeberg.org/emersion/kimchi"
+license="MIT"
+arch="all"
+makedepends="go scdoc"
+subpackages="$pkgname-doc $pkgname-openrc"
+pkgusers="kimchi"
+pkggroups="kimchi"
+install="$pkgname.pre-install"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/emersion/kimchi/archive/v$pkgver.tar.gz
+	$pkgname.initd
+	config
+	"
+options="net !check"
+builddir="$srcdir/kimchi"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	go build -ldflags="-X 'main.configPath=/etc/kimchi-server/config'" $GOFLAGS
+	scdoc < kimchi.1.scd > kimchi.1
+}
+
+package() {
+	install -Dm755 "$builddir"/kimchi "$pkgdir"/usr/sbin/kimchi-server
+	install -Dm644 "$srcdir"/config "$pkgdir"/etc/kimchi-server/config
+
+	install -Dm644 "$builddir"/kimchi.1 "$pkgdir"/usr/share/man/man1/kimchi-server.1
+
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+}
+sha512sums="
+33dd5d3a3c338d444624814f240bd764bb8b6589a0e92942fdf0b9d637930f99dd45613ce64a3af300a80ba9c30366cb537e2ed123365a644bcd7d262cc837d4  kimchi-server-0.1.1.tar.gz
+eb056f54bda188efab00b794d37d7382369ddf51329143858be17324de55ebf11cbd7a8db9fc558a412520091e9fea2be4d11773cdc1dc56fdb9a5da8527f451  kimchi-server.initd
+10d468a26df3fd3d1bc8d8cafd3bc3c787dbecd9edd9253a95cd54e38c6d345fe528d27776a6aa68775af348e8659d09491ce108499890adc43a86bdf83be64f  config
+"

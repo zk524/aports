@@ -1,0 +1,72 @@
+# Contributor: Zach DeCook <zachdecook@librem.one>
+# Maintainer: Zach DeCook <zachdecook@librem.one>
+pkgname=py3-picamera2
+_pyname=picamera2
+pkgver=0.3.24
+pkgrel=0
+pkgdesc="New libcamera based python library"
+url="https://github.com/raspberrypi/picamera2"
+arch="noarch !ppc64le !armhf !armv7 !s390x" # py3-av
+license="BSD-2-Clause"
+source="https://github.com/raspberrypi/picamera2/archive/v$pkgver/picamera2-v$pkgver.tar.gz"
+depends="
+	python3
+	py3-av
+	py3-libcamera
+	py3-numpy
+	py3-pidng
+	py3-piexif
+	py3-pillow
+	py3-python-prctl
+	py3-simplejpeg
+	py3-v4l2-python3
+	"
+makedepends="py3-gpep517 py3-setuptools py3-wheel python3-dev"
+checkdepends="py3-opengl pytest"
+options="!check" # Tests don't work without a camera attached
+subpackages="$pkgname-doc $pkgname-qt $pkgname-opengl $pkgname-opencv"
+builddir="$srcdir/$_pyname-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --system-site-packages testenv
+	testenv/bin/python3 -m installer dist/*.whl
+	testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		dist/*.whl
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+qt() {
+	depends="$pkgname=$pkgver-r$pkgrel py3-qt5"
+	pkgdesc="$pkgname qt backend support"
+	mkdir -p $subpkgdir/usr/share/doc/picamera2
+	touch $subpkgdir/usr/share/doc/picamera2/qt-support
+}
+
+opengl() {
+	depends="$pkgname=$pkgver-r$pkgrel py3-opengl"
+	pkgdesc="$pkgname opengl backend support"
+	mkdir -p $subpkgdir/usr/share/doc/picamera2
+	touch $subpkgdir/usr/share/doc/picamera2/opengl-support
+}
+
+opencv() {
+	depends="$pkgname=$pkgver-r$pkgrel py3-opencv"
+	pkgdesc="$pkgname additional features supported by OpenCV"
+	mkdir -p $subpkgdir/usr/share/doc/picamera2
+	touch $subpkgdir/usr/share/doc/picamera2/opencv-support
+}
+
+
+sha512sums="
+742999559c17cfbdfcec93ee85b6ca96ae1856debe9f22b1e648a6e88c1159d9b4a6f6bb6b763814e9964612c6aa4d6a757c88426ff60705f4c8457e6765b608  picamera2-v0.3.24.tar.gz
+"

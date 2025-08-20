@@ -1,0 +1,41 @@
+# Contributor: Zach DeCook <zachdecook@librem.one>
+maintainer=
+pkgname=py3-pidng
+_pyname=PiDNG
+pkgver=4.0.9
+pkgrel=0
+_commit=6e977ecba58ef2f87d2ce2952903413a17c9c0c4
+pkgdesc="Python utility for creating Adobe DNG files from RAW image data"
+url="https://github.com/schoolpost/PiDNG"
+arch="all"
+license="GPLv2"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/schoolpost/PiDNG/archive/$_commit.tar.gz
+	PY_SSIZE_T_CLEAN.patch
+"
+depends="py3-numpy"
+makedepends="py3-gpep517 py3-setuptools py3-wheel python3-dev"
+builddir="$srcdir/$_pyname-$_commit"
+subpackages="$pkgname-pyc"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --system-site-packages testenv
+	testenv/bin/python3 -m installer dist/*.whl
+	testenv/bin/python3 examples/raw2dng.py
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		dist/*.whl
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+sha512sums="
+bcc80a495e0e0fd230997d78c8b86d90969569d4164a1a50acc1f916c81effc1b428419603a64f0640cd7b66b22e3a9997efa090f874d8fea23503904adf05dd  py3-pidng-4.0.9.tar.gz
+351ac1528430f38a9bd2e636b843e4213ae2ebd87952c9de69f124f89de883d19641c01548497fdcbad4afeca4ca13983991f0b7d060759e2d0d6eddc3303189  PY_SSIZE_T_CLEAN.patch
+"

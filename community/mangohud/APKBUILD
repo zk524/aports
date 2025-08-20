@@ -1,8 +1,7 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=mangohud
-pkgver=0.7.1
-_pkgver=$pkgver-1
-pkgrel=1
+pkgver=0.8.1
+pkgrel=0
 pkgdesc="Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load and more"
 url="https://github.com/flightlessmango/MangoHud"
 # s390x: See https://github.com/flightlessmango/MangoHud/issues/1330
@@ -16,6 +15,7 @@ makedepends="
 	glfw-dev
 	glslang-dev
 	libx11-dev
+	libxkbcommon-dev
 	libxrandr-dev
 	mesa-dev
 	meson
@@ -32,7 +32,7 @@ checkdepends="
 	cmocka-dev
 	"
 source="
-	$pkgname-$pkgver.tar.xz::https://github.com/flightlessmango/MangoHud/releases/download/v$pkgver/MangoHud-v$_pkgver-Source.tar.xz
+	https://github.com/flightlessmango/MangoHud/releases/download/v$pkgver/MangoHud-v$pkgver-Source.tar.xz
 	"
 builddir="$srcdir/MangoHud-v$pkgver"
 
@@ -44,7 +44,6 @@ build() {
 		-Dimgui:sdl2=enabled \
 		-Dimgui:vulkan=enabled \
 		-Dmangoapp=true \
-		-Dmangoapp_layer=true \
 		-Dmangohudctl=true \
 		-Dtests=enabled \
 		-Dwith_dbus=enabled \
@@ -63,5 +62,5 @@ package() {
 }
 
 sha512sums="
-79ac17a199035c410b98b5c4315641efde39636659c2b78b4cd6dc71024a7230044522a6c20bf82f2ca2f6c771e879274655561e8f8071914c30e2a61d99af80  mangohud-0.7.1.tar.xz
+88c18e82dbfb1355168813cc299108a27c0472d6837fceacb08bb16130310f47494f2b75316a054f919990d5d1c524c24d94ac4897156865d23999547ce00392  MangoHud-v0.8.1-Source.tar.xz
 "

@@ -2,11 +2,11 @@
 # Maintainer: Bart Ribbers <bribbers@disroot.org>
 pkgname=qt5-qtwebsockets
 pkgver=5.15.10_git20230612
-pkgrel=2
+pkgrel=3
 _module="${pkgname#qt5-}"
 _pkgver=89fbe461e7091ae6a4689b7791293a06c9167776
 _fullname=$_module-$_pkgver
-pkgdesc="Provides WebSocket communication compliant with RFC 6455"
+pkgdesc="WebSocket communication compliant with RFC 6455"
 url="https://www.qt.io/developers/"
 arch="all"
 license="( LGPL-3.0-or-later OR GPL-3.0-only OR GPL-2.0-or-later ) AND Qt-GPL-exception-1.0"

@@ -2,8 +2,8 @@
 # Maintainer: Magnus Sandin <magnus.sandin@valitron.se>
 pkgname=libltc
 pkgver=1.3.2
-pkgrel=1
-pkgdesc="provides functionality to encode and decode LTC audio"
+pkgrel=2
+pkgdesc="Encode and decode LTC audio"
 url="https://github.com/x42/libltc"
 arch="all"
 license="LGPL-3.0-only"

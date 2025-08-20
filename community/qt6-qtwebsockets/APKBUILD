@@ -3,8 +3,8 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtwebsockets
 pkgver=6.9.1
-pkgrel=0
-pkgdesc="Provides WebSocket communication compliant with RFC 6455"
+pkgrel=1
+pkgdesc="WebSocket communication compliant with RFC 6455"
 url="https://qt.io/"
 arch="all"
 license="LGPL-2.1-only AND LGPL-3.0-only AND GPL-3.0-only AND Qt-GPL-exception-1.0"

@@ -3,8 +3,8 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtwebchannel
 pkgver=6.9.1
-pkgrel=0
-pkgdesc="Provides access to QObject or QML objects from HTML clients"
+pkgrel=1
+pkgdesc="Access to QObject or QML objects from HTML clients"
 url="https://qt.io/"
 arch="all"
 license="LGPL-2.1-only AND LGPL-3.0-only AND GPL-3.0-only AND Qt-GPL-exception-1.0"

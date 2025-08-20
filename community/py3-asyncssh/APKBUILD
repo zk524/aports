@@ -3,8 +3,8 @@
 pkgname=py3-asyncssh
 _relname=${pkgname#"py3-"}
 pkgver=2.21.0
-pkgrel=0
-pkgdesc="provides an asynchronous client and server implementation of the SSHv2 protocol on top of the Python 3.6+ asyncio framework"
+pkgrel=1
+pkgdesc="Asynchronous client and server implementation of the SSHv2 protocol on top of the asyncio framework"
 url="https://asyncssh.readthedocs.io/en/latest/"
 arch="all"
 license="EPL-2.0"

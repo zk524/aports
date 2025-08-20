@@ -3,8 +3,8 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtwebview
 pkgver=6.9.1
-pkgrel=0
-pkgdesc="Provides a way to display web content in a QML application"
+pkgrel=1
+pkgdesc="Display web content in a QML application"
 url="https://qt.io/"
 # s390x blocked by qt6-qtdeclarative
 # ppc64le, riscv64, and armhf blocked by qt6-qtwebengine

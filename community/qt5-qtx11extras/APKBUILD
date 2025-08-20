@@ -2,11 +2,11 @@
 # Maintainer: Bart Ribbers <bribbers@disroot.org>
 pkgname=qt5-qtx11extras
 pkgver=5.15.10_git20230424
-pkgrel=1
+pkgrel=2
 _module="${pkgname#qt5-}"
 _pkgver=74f81f0bfe17e5aabcebafcb0cf36f739133554c
 _fullname=$_module-$_pkgver
-pkgdesc="Provides platform-specific APIs for X11"
+pkgdesc="Platform-specific APIs for X11"
 url="https://www.qt.io/developers/"
 arch="all"
 license="( LGPL-3.0-or-later OR GPL-3.0-only OR GPL-2.0-or-later ) AND Qt-GPL-exception-1.0"

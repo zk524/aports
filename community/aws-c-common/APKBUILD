@@ -5,8 +5,7 @@ pkgver=0.12.4
 pkgrel=1
 pkgdesc="Core c99 package for AWS SDK for C including cross-platform primitives, configuration, data structures, and error handling"
 url="https://github.com/awslabs/aws-c-common"
-# s390x: fails tests
-arch="all !s390x"
+arch="all"
 license="Apache-2.0"
 makedepends="
 	cmake
@@ -14,7 +13,9 @@ makedepends="
 	samurai
 	"
 subpackages="$pkgname-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/awslabs/aws-c-common/archive/refs/tags/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/awslabs/aws-c-common/archive/refs/tags/v$pkgver.tar.gz
+	be.patch
+	"
 
 build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
@@ -42,4 +43,5 @@ package() {
 
 sha512sums="
 79ddadd0c6820341f62b10dd31360b8ee9540ace150e61eaed8a14808ab0209a18c4a15f1e41b7179e920e3aea8089840e0a643cac1377d9189955bd29c80092  aws-c-common-0.12.4.tar.gz
+edb0f761d0d1efbf2816cecf5fefe57d8ad11f3e3825d41c870332ccb6018f12398028254dd4243278db209d64824c1644290f8364877140865567780dd5fee3  be.patch
 "

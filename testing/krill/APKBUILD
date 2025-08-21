@@ -20,6 +20,7 @@ pkggroups="krill"
 install="
 	$pkgname.pre-install
 	$pkgname.post-deinstall
+	$pkgname.post-upgrade
 "
 subpackages="$pkgname-openrc $pkgname-doc krillup krillup-doc:krillup_doc krillta krillta-doc:krillta_doc"
 

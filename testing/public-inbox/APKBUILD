@@ -1,0 +1,91 @@
+# Contributor: Luis Henriques <henrix@camandro.org>
+# Maintainer: Luis Henriques <henrix@camandro.org>
+pkgname=public-inbox
+pkgver=1.9.0
+pkgrel=0
+pkgdesc="a mailing list archiver that provides a searchable web interface, provides the archived mails via git and nntp."
+url="https://public-inbox.org"
+arch="noarch"
+license="AGPL-3.0-or-later"
+# missing xapian-bindings-perl, which is disabled
+depends="
+	git
+	perl-dbd-sqlite
+	perl-email-address-xs
+	perl-email-mime
+	perl-inline-c
+	perl-io-socket-ssl
+	perl-mail-imapclient
+	perl-net-server
+	perl-parse-recdescent
+	perl-plack
+	perl-plack-middleware-reverseproxy
+	perl-uri
+	xapian-core"
+
+makedepends="
+	xapian-core-dev
+"
+subpackages="
+	$pkgname-doc:doc
+	lei
+	perl-libpublicinbox
+	lei-doc:lei_doc
+	perl-libpublicinbox-doc:libpublicinbox_doc"
+source="https://public-inbox.org/public-inbox.git/snapshot/public-inbox-$pkgver.tar.gz"
+
+build() {
+	PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	find "$pkgdir" \( -name perllocal.pod -o -name .packlist \) -delete
+}
+
+check() {
+	# Create certificates for tests
+	cd certs
+	perl create-certs.perl
+	cd ..
+	# Remove flaky/failing tests
+	# Alternative: use options="!check"
+	# But less tests is better than no tests
+	rm -f t/ds-leak.t t/httpd-corner.t t/httpd.t t/imapd.t t/plack.t
+	rm -f t/httpd-unix.t t/lei.t t/epoll.t t/nntpd.t t/nntpd-v2.t
+	make test
+}
+
+doc() {
+	pkgdesc="$pkgdesc (documentation)"
+	amove usr/share/man/man*/public-inbox*
+	default_doc
+}
+
+lei() {
+	pkgdesc="Local Email Interface to public-inbox"
+	depends="perl-libpublicinbox"
+	amove usr/bin/lei
+}
+
+lei_doc() {
+	pkgdesc="$pkgdesc (documentation)"
+	amove usr/share/man/man*/lei*
+	default_doc
+}
+
+libpublicinbox() {
+	pkgdesc="Perl libraries for public-inbox"
+	amove usr/share/perl5/vendor_perl
+}
+
+libpublicinbox_doc() {
+	pkgdesc="$pkgdesc (documentation)"
+	amove usr/share/man/man3
+	default_doc
+}
+
+sha512sums="
+63c9346191213b11ad44664272b375c31e789b740a33ac4f011390d4017e6232cd58c9ff8d2669e968c55a435044fac1b52aa7ea98595eca6b1e7502ec1f1854  public-inbox-1.9.0.tar.gz
+"

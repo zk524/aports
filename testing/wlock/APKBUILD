@@ -1,28 +1,24 @@
 # Contributor: Kurt H Maier <khm@sciops.net>
-# Maintainer:
+# Maintainer: Kurt H Maier <khm@sciops.net>
 pkgname=wlock
 pkgver=20250820
-pkgrel=1
+pkgrel=0
 pkgdesc="Itsy-bitsy session locker"
 url="https://codeberg.org/sewn/wlock"
 arch="all"
 license="GPL-3.0-or-later"
 depends="wayland-libs-client libxkbcommon"
 makedepends="pkgconf wayland-protocols wayland-dev libxkbcommon-dev"
-checkdepends=""
-install=""
 subpackages="$pkgname-doc"
-source="${pkgname}-${pkgver}.tar.gz::https://codeberg.org/sewn/${pkgname}/archive/master.tar.gz"
+source="${pkgname}-${pkgver}.tar.gz::https://codeberg.org/sewn/${pkgname}/archive/be975445fa0da7252f8e13b610c518dd472652d0.tar.gz"
 builddir="$srcdir/$pkgname"
-options="suid"
+options="suid !check"
+	# uses suid instead of PAM to validate passwd
+	# no tests in source, so no check phase in packaging
 
 build() {
-        export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
+	export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
 	make
-}
-
-check() {
-	:
 }
 
 package() {

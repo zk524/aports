@@ -1,0 +1,32 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=rocminfo
+pkgver=6.4.3
+pkgrel=0
+pkgdesc="ROCm Application for Reporting System Info"
+url="https://github.com/ROCm/rocminfo"
+# armhf,armv7,ppc64le,x86,loongarch64,riscv64,s390x,aarch64: rocr-runtime
+arch="all !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+license="NCSA"
+makedepends="rocm-cmake samurai rocr-runtime"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ROCm/rocminfo/archive/refs/tags/rocm-$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-rocm-$pkgver"
+options="!check" # no idea how to run tests
+
+build() {
+	cmake -Wno-dev -S "$builddir" -B build \
+		-DCMAKE_PREFIX_PATH=/usr \
+		-DROCRTST_BLD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$builddir/License.txt" \
+		"$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+sha512sums="
+2e7a7a4499614feeb0aaa3833662b6c391b7ea694db8887669408136d4dab66e546758b8ccdc8e8df6c4afc2fed0688716414d207208562ddac1731883304067  rocminfo-6.4.3.tar.gz
+"

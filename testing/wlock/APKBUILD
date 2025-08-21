@@ -9,7 +9,7 @@ arch="all"
 license="GPL-3.0-or-later"
 makedepends="wayland-protocols wayland-dev libxkbcommon-dev"
 subpackages="$pkgname-doc"
-source="${pkgname}-${pkgver}.tar.gz::https://codeberg.org/sewn/${pkgname}/archive/be975445fa0da7252f8e13b610c518dd472652d0.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/$pkgname/archive/be975445fa0da7252f8e13b610c518dd472652d0.tar.gz"
 builddir="$srcdir/$pkgname"
 options="suid !check"
 	# uses suid instead of PAM to validate passwd

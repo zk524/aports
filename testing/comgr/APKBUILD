@@ -1,0 +1,52 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=comgr
+pkgver=6.4.3
+pkgrel=0
+pkgdesc="AMDGPU GPU Code Object Manager"
+url="https://github.com/ROCm/llvm-project/tree/amd-staging/amd/comgr"
+# armhf,armv7,ppc64le,x86,loongarch64,riscv64,s390x,aarch64: llvm-rocm
+arch="all !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+license="Apache-2.0 WITH LLVM-exception"
+makedepends="
+	clang-rocm-dev
+	clang-rocm-extra-tools
+	clang-rocm-static
+	libxml2-dev
+	lld-rocm-dev
+	llvm-rocm-dev
+	llvm-rocm-gtest
+	llvm-rocm-static
+	llvm-rocm-test-utils=$pkgver-r$pkgrel
+	python3
+	rocm-cmake
+	rocm-core
+	rocm-device-libs
+	samurai
+	"
+subpackages="$pkgname-doc $pkgname-dev"
+source="https://github.com/ROCm/llvm-project/archive/refs/tags/rocm-$pkgver.tar.gz"
+builddir="$srcdir/llvm-project-rocm-$pkgver/amd/comgr"
+options="!check" # tests: todo
+
+build() {
+	cmake -B build -G Ninja -Wno-dev \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DBUILD_TESTING=OFF \
+		-DCMAKE_INSTALL_RPATH=/usr/lib/llvm-rocm/lib/ \
+		-DCMAKE_PREFIX_PATH="/usr/lib/llvm-rocm/lib/cmake/clang/;/usr/lib/llvm-rocm/lib/cmake/lld/"
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/comgr/LICENSE.txt"
+	install -d "$pkgdir/usr/share/licenses/amd_comgr"
+	mv "$pkgdir/usr/share/doc/amd_comgr/LICENSE.txt" \
+		"$pkgdir/usr/share/doc/amd_comgr/NOTICES.txt" \
+		"$pkgdir/usr/share/licenses/comgr/"
+}
+
+sha512sums="
+b6b4149c6426793f4497dfd1200079b0caef4d5a6f49c1f3a301d70f5f7b322b850085ff2f89d55df1dfab6d6a97948fe4084d4ec14654ee97cdab26e71a45c0  rocm-6.4.3.tar.gz
+"

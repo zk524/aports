@@ -1,5 +1,5 @@
 # Contributor: Kurt H Maier <khm@sciops.net>
-# Maintainer:
+# Maintainer: Kurt H Maier <khm@sciops.net>
 pkgname=widle
 pkgver=20250820
 pkgrel=0
@@ -7,21 +7,16 @@ pkgdesc="Run a command upon becoming idle"
 url="https://codeberg.org/sewn/widle"
 arch="all"
 license="GPL-3.0-or-later"
-depends="wayland-libs-client"
-makedepends="pkgconf wayland-protocols wayland-dev"
-checkdepends=""
-install=""
+makedepends="wayland-protocols wayland-dev"
 subpackages="$pkgname-doc"
-source="${pkgname}-${pkgver}.tar.gz::https://codeberg.org/sewn/${pkgname}/archive/master.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/$pkgname/archive/63a040494ec022612d32ee1f958753657dd363f2.tar.gz"
 builddir="$srcdir/$pkgname"
+options="!check"
+	# no tests in project, so no checks in packaging
 
 build() {
 	export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
 	make
-}
-
-check() {
-	:
 }
 
 package() {

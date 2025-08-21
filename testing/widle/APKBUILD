@@ -9,7 +9,7 @@ arch="all"
 license="GPL-3.0-or-later"
 makedepends="wayland-protocols wayland-dev"
 subpackages="$pkgname-doc"
-source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/$pkgname/archive/63a040494ec022612d32ee1f958753657dd363f2.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/widle/archive/63a040494ec022612d32ee1f958753657dd363f2.tar.gz"
 builddir="$srcdir/$pkgname"
 options="!check"
 	# no tests in project, so no checks in packaging

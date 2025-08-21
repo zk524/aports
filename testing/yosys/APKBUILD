@@ -5,8 +5,8 @@ pkgver=0.56
 pkgrel=0
 pkgdesc="Yosys Open SYnthesis Suite"
 url="https://yosyshq.net"
-# doesn't build
-arch="all !s390x !riscv64"
+# s390x: https://github.com/YosysHQ/yosys/issues/2645
+arch="all !s390x"
 license="ISC"
 depends="
 	abc
@@ -65,13 +65,6 @@ build() {
 check() {
 	# Assertion failed: selection contains 3 elements instead of the asserted 4: t:LUT3
 	rm -f tests/arch/quicklogic/pp3/fsm.ys
-	# remove tests failing on 32-bit platforms:
-	case "$CARCH" in
-	arm*|x86)
-		rm -f tests/simple/string_format.v
-		sed -i Makefile -e '/tests\/cxxrtl/d'
-		;;
-	esac
 	make CXX=g++ test
 }
 

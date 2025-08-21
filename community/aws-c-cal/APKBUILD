@@ -5,8 +5,7 @@ pkgver=0.9.2
 pkgrel=1
 pkgdesc="AWS Crypto Abstraction Layer: Cross-Platform, C99 wrapper for cryptography primitives"
 url="https://github.com/awslabs/aws-c-cal"
-# s390x: aws-c-common
-arch="all !s390x"
+arch="all"
 license="Apache-2.0"
 makedepends="
 	aws-c-common-dev
@@ -15,7 +14,9 @@ makedepends="
 	samurai
 	"
 subpackages="$pkgname-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/awslabs/aws-c-cal/archive/refs/tags/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/awslabs/aws-c-cal/archive/refs/tags/v$pkgver.tar.gz
+	be.patch
+	"
 
 build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
@@ -46,4 +47,5 @@ package() {
 
 sha512sums="
 c63d7efb776e30d0bc4e71b189b6e3af09514ae1f25e503b61902fc7610b036ece0b746c09dd1f55b317ac6f2856b5ee93d7e2186ae00ea32ee9e6e2df31e474  aws-c-cal-0.9.2.tar.gz
+64c67801f38f693f1fd4a759e11db6fa392722e2d210c1e8836a8c1a37163fb48b212cd10ab9a9aaf5712a1e70f35761f50ef11e6d55c43a1b932e2d4877ae15  be.patch
 "

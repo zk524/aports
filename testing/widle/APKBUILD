@@ -2,8 +2,8 @@
 # Maintainer:
 pkgname=widle
 pkgver=20250820
-pkgrel=1
-pkgdesc=" Run a command upon becoming idle "
+pkgrel=0
+pkgdesc="Run a command upon becoming idle"
 url="https://codeberg.org/sewn/widle"
 arch="all"
 license="GPL-3.0-or-later"

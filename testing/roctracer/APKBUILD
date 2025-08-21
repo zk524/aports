@@ -1,0 +1,59 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=roctracer
+pkgver=6.4.3
+pkgrel=0
+pkgdesc="ROCm tracer library for performance tracing"
+url="https://github.com/ROCm/rocm-systems/tree/develop/projects/roctracer"
+# armhf,armv7,ppc64le,x86,loongarch64,riscv64,s390x,aarch64: rocm-device-libs
+#arch="noarch !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+arch="" # FIXME: broken
+license="MIT"
+makedepends="
+	clang-rocm-dev
+	clang-rocm-extra-tools
+	clang-rocm-static
+	cmake
+	comgr-dev
+	hip
+	llvm-rocm-dev
+	llvm-rocm-gtest
+	llvm-rocm-static
+	py3-cppheaderparser
+	rocm-device-libs
+	rocminfo
+	rocr-runtime
+	samurai
+"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ROCm/roctracer/archive/refs/tags/rocm-$pkgver.tar.gz"
+options="!check" # test pending
+builddir="$srcdir/roctracer-rocm-$pkgver"
+
+prepare() {
+	default_prepare
+
+	# Build tries to use /opt/rocm/llvm/bin/clang++
+	# Can be overridden, but expects a very specific layout.
+	mkdir -p "$tmpdir/bin" "$tmpdir/llvm/bin"
+	ln -s /usr/lib/llvm-rocm/bin/clang++ "$tmpdir/llvm/bin/"
+	ln -s /usr/bin/rocm_agent_enumerator "$tmpdir/bin/"
+}
+
+build() {
+	export ROCM_PATH="$tmpdir/"
+	cmake -B build -G Ninja -Wno-dev \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MODULE_PATH="/usr/lib/cmake/hip/" \
+		-DCMAKE_PREFIX_PATH="/usr/lib/llvm-rocm/lib/cmake/clang/;usr/lib/cmake/AMDDeviceLibs/" \
+		-DHIP_ROOT_DIR=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$builddir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+sha512sums="
+c929786e2fbc34082d6d99c1f68e2ffd0eef1f9be31a6ccb385e50ec5059069b9d364f7a90301f184c966c01f9dfbd6cc6c1a4e8f5065c25d5f4d7673e42aad0  roctracer-6.4.3.tar.gz
+"

@@ -1,0 +1,26 @@
+From 812caea146c3c5df2c8878b8eea1e78c922d9ccd Mon Sep 17 00:00:00 2001
+From: Hugo Osvaldo Barrera <hugo@whynothugo.nl>
+Date: Tue, 19 Aug 2025 00:39:20 +0200
+Subject: [PATCH] device-libs: install into /usr/lib/gcn
+
+By default, bitcode files are installed into /usr/amdgcn
+---
+ amd/device-libs/cmake/OCL.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/amd/device-libs/cmake/OCL.cmake b/amd/device-libs/cmake/OCL.cmake
+index 1dabde51b8c0..e91c37c3f1ae 100644
+--- a/amd/device-libs/cmake/OCL.cmake
++++ b/amd/device-libs/cmake/OCL.cmake
+@@ -49,7 +49,7 @@ set (BC_EXT .bc)
+ set (LIB_SUFFIX ".lib${BC_EXT}")
+ set (STRIP_SUFFIX ".strip${BC_EXT}")
+ set (FINAL_SUFFIX "${BC_EXT}")
+-set (INSTALL_ROOT_SUFFIX "amdgcn/bitcode")
++set (INSTALL_ROOT_SUFFIX "share/amdgcn/bitcode")
+ 
+ if (NOT ROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_NEW STREQUAL "")
+   set(INSTALL_ROOT_SUFFIX "${ROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_NEW}/bitcode")
+-- 
+2.50.1
+

@@ -8,7 +8,7 @@ pkgdesc="High performance server-side application framework"
 url="https://seastar.io"
 # riscv64, loongarch64: valgrind
 # armhf armv7 x86 32bit not supported
-arch="all !x86 !armhf !armv7 !riscv64 !loongarch64"
+arch="all !x86 !armhf !armv7 !loongarch64"
 license="Apache-2.0"
 depends_dev="
 	$pkgname=$pkgver-r$pkgrel
@@ -39,7 +39,7 @@ makedepends="
 	yaml-cpp-dev
 	"
 case "$CARCH" in
-aarch64|x86_64) makedepends="$makedepends dpdk-dev" ;;
+aarch64|riscv64|x86_64) makedepends="$makedepends dpdk-dev" ;;
 esac
 checkdepends="py3-yaml"
 subpackages="$pkgname-dev $pkgname-testing"
@@ -48,7 +48,7 @@ builddir="$srcdir/$pkgname-$_ver"
 
 build() {
 	case "$CARCH" in
-		aarch64|x86_64) local _dpdk=ON ;;
+		aarch64|riscv64|x86_64) local _dpdk=ON ;;
 		*) 		local _dpdk=OFF ;;
 	esac
 	if [ "$CBUILD" != "$CHOST" ]; then

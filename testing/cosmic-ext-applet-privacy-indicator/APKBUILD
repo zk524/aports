@@ -1,0 +1,41 @@
+# Contributor: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: Clayton Craft <clayton@craftyguy.net>
+pkgname=cosmic-ext-applet-privacy-indicator
+pkgver=0.1.2
+pkgrel=0
+pkgdesc="Privacy indicator applet for the COSMIC Desktop Environment"
+url="https://github.com/D-Brox/cosmic-ext-applet-privacy-indicator"
+arch="aarch64 x86_64"
+license="GPL-3.0-only"
+depends="
+	cosmic-applets
+"
+makedepends="
+	cargo
+	clang-libclang
+	just
+	libxkbcommon-dev
+	pipewire-dev
+"
+options="net !check"  # fetch dependencies, no tests
+source="$pkgname-$pkgver.tar.gz::https://github.com/D-Brox/cosmic-ext-applet-privacy-indicator/archive/refs/tags/v$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	just build-release --frozen
+}
+
+check() {
+	cargo test --release --frozen
+}
+
+package() {
+	just rootdir="$pkgdir" install
+}
+sha512sums="
+2c3f975e8f4a6b7780d63803408b740531cfd7bb6b0826924f72ab50c15d84fb1f937113f8ad143ddbcd99636e7ea3710363700a6270f86e89e8453c12668ae6  cosmic-ext-applet-privacy-indicator-0.1.2.tar.gz
+"

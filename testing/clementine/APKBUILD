@@ -2,7 +2,7 @@
 # Maintainer:
 pkgname=clementine
 pkgver=1.4.1_git20250503
-pkgrel=0
+pkgrel=1
 _tag=1.4.1-44-g41bcdca7f
 pkgdesc="A modern music player and library organizer"
 url="https://clementine-player.org"

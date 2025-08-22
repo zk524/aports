@@ -1,7 +1,7 @@
 maintainer="leso-kn <info@lesosoftware.com>"
 pkgname=onnxruntime
 pkgver=1.22.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Cross-platform, high performance ML inferencing and training accelerator"
 url="https://onnxruntime.ai/"
 # x86, s390x, loongarch64: fails to build
@@ -38,6 +38,7 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/microsoft/onnxruntime/archiv
 	system.patch
 	0001-Remove-MATH_NO_EXCEPT-macro.patch
 	upb-fix.patch
+	gcc-15.patch
 	"
 options="net"
 
@@ -104,4 +105,5 @@ sha512sums="
 a8d51449f1f8bebab42e05603826d381da8b08ffee16fd987bef95d52ace50f7970116d03212fd945c412f501c1ede092f1777d87a7b3a2a7851e2883774c653  system.patch
 8f6129686fc3f241df174b8a86e957642e0b0a3a9e2ef15bea98ddea199291b444b6b39e4f56f8a7a2e64ee03113ad140fd664a7b6f33a8a9e23c40e883e08df  0001-Remove-MATH_NO_EXCEPT-macro.patch
 0a69996c407bc999bf3c5f1ca0594e2666890dddcce480213ca7c317613b0b1ad3382fb117bda492fbd2cd450dad1bb3a1d747b3565c16ae17dc0bbd3dc38577  upb-fix.patch
+bab8b2dfebda8c82a9311adbb9e8c83861e59eca3e52bb4a4d0cb407d13ef20178ed823213f34df50da05a4803b232ec66cc8c8519eca1dcf28eb71db8780ac2  gcc-15.patch
 "

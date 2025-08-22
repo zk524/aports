@@ -1,0 +1,12 @@
+diff --git a/sdk/include/opentelemetry/sdk/metrics/aggregation/aggregation_config.h b/sdk/include/opentelemetry/sdk/metrics/aggregation/aggregation_config.h
+index 0cae37f3..e36ddef6 100644
+--- a/sdk/include/opentelemetry/sdk/metrics/aggregation/aggregation_config.h
++++ b/sdk/include/opentelemetry/sdk/metrics/aggregation/aggregation_config.h
+@@ -6,6 +6,7 @@
+ #include <vector>
+ 
+ #include "opentelemetry/version.h"
++#include <cstdint>
+ 
+ OPENTELEMETRY_BEGIN_NAMESPACE
+ namespace sdk

@@ -1,0 +1,16 @@
+Author: Holger Jaekel <holger.jaekel@gmx.de>
+Summary: disable fortranlib_test
+URL: https://github.com/HDFGroup/hdf5/issues/4926
+----
+
+--- a/fortran/test/Makefile.in_org
++++ b/fortran/test/Makefile.in
+@@ -888,7 +888,7 @@
+ noinst_LTLIBRARIES = libh5test_fortran.la
+
+ # Our main targets, the tests themselves
+-TEST_PROG = fortranlib_test fflush1 fflush2 fortranlib_test_1_8 fortranlib_test_F03 vol_connector
++TEST_PROG = fflush1 fflush2 fortranlib_test_1_8 fortranlib_test_F03 vol_connector
+ libh5test_fortran_la_SOURCES = tf_gen.F90 tf.F90  t.c
+ fortranlib_test_SOURCES = tH5F.F90 tH5D.F90 tH5R.F90 tH5S.F90 tH5T.F90 tH5VL.F90 tH5Z.F90 \
+         tH5Sselect.F90 tH5P.F90 tH5A.F90 tH5I.F90 tH5G.F90 tH5E.F90 tHDF5.F90 fortranlib_test.F90

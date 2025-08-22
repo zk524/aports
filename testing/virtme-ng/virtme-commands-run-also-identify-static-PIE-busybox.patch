@@ -1,0 +1,30 @@
+From ec6625cf5a2fe810ee9e4b4603fbb0adb79a3409 Mon Sep 17 00:00:00 2001
+From: Luis Henriques <luis@igalia.com>
+Date: Mon, 14 Jul 2025 15:20:51 +0100
+Subject: [PATCH] virtme/commands/run: also identify static PIE busybox
+ binaries
+
+Static busybox binaries may also be PIE executables, in which case the
+string that shows in command 'file -L' may include 'static-pie linked':
+
+/bin/busybox.static: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), \
+  static-pie linked, BuildID[sha1]=d8ddaf19d360bb5bb79931f41e977e268c47bdc8, stripped
+
+Signed-off-by: Luis Henriques <luis@igalia.com>
+---
+ virtme/commands/run.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/virtme/commands/run.py b/virtme/commands/run.py
+index 9b34daaff96f..e2b5bbe5b117 100644
+--- a/virtme/commands/run.py
++++ b/virtme/commands/run.py
+@@ -930,7 +930,7 @@ def is_statically_linked(binary_path):
+         # Run the 'file' command on the binary and check for the string
+         # "statically linked"
+         result = subprocess.check_output(["file", binary_path], universal_newlines=True)
+-        return "statically linked" in result
++        return "statically linked" in result or "static-pie linked" in result
+     except subprocess.CalledProcessError:
+         return False
+ 

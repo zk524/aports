@@ -1,0 +1,30 @@
+# Contributor: Luis Henriques <henrix@camandro.org>
+# Maintainer: Luis Henriques <henrix@camandro.org>
+pkgname=virtme-ng
+pkgver=1.36
+pkgrel=0
+pkgdesc="tool that allows to easily and quickly recompile and test a Linux kernel"
+url="https://github.com/arighi/virtme-ng"
+arch="noarch"
+license="GPL-2.0-only"
+depends="qemu python3 py3-setuptools py3-argcomplete"
+makedepends="py3-argcomplete py3-gpep517 py3-setuptools"
+options="!check" # no tests
+subpackages="$pkgname-pyc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/arighi/virtme-ng/archive/refs/tags/v$pkgver.tar.gz
+	virtme-commands-run-also-identify-static-PIE-busybox.patch"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" .dist/*.whl
+}
+
+sha512sums="
+6b054fe7669bf2afef3c80d77e2f9d84da445620efd278d14f7ef8131524c9e63c728bd5509ced10f18feaa9d3e59205eec2e5951e8261cd4aefc8a39f67c227  virtme-ng-1.36.tar.gz
+45b48d052894d58d47be6beaaa8abe0e532d48a3ae06a4f189442cb3e83cd9e8aacd3ab93c05cb617e6ffdff23160b675e71eb57b3e8405b7efa1713f45e1d45  virtme-commands-run-also-identify-static-PIE-busybox.patch
+"

@@ -112,12 +112,6 @@ build() {
 	# Auto-detect it by guessing either.
 	local ffi_include_dir="$(pkg-config --cflags-only-I libffi | sed 's|^-I||g')"
 
-	local zstd=ON
-	# tries linking host libzstd in cross
-	if [ -n "$BOOTSTRAP" ]; then
-		zstd=OFF
-	fi
-
 	local targets= common_targets="AMDGPU;BPF;WebAssembly"
 	case "$CARCH" in
 		arm*) targets="-DLLVM_TARGETS_TO_BUILD=ARM;$common_targets";;
@@ -133,7 +127,7 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/$_prefix \
 		-DCMAKE_INSTALL_RPATH=/$_prefix \
 		\
-		-DLLVM_DEFAULT_TARGET_TRIPLE="$CBUILD" \
+		-DLLVM_DEFAULT_TARGET_TRIPLE="$CHOST" \
 		-DLLVM_HOST_TRIPLE="$CHOST" \
 		\
 		-DFFI_INCLUDE_DIR="$ffi_include_dir" \
@@ -148,15 +142,15 @@ build() {
 		-DLLVM_ENABLE_CURL=FORCE_ON \
 		-DLLVM_ENABLE_DUMP=ON \
 		-DLLVM_ENABLE_EH=ON \
-		-DLLVM_ENABLE_FFI=ON \
+		-DLLVM_ENABLE_FFI=FORCE_ON \
 		-DLLVM_ENABLE_LIBCXX=OFF \
 		-DLLVM_ENABLE_LIBEDIT=OFF \
 		-DLLVM_ENABLE_PIC=ON \
 		-DLLVM_ENABLE_RTTI=ON \
 		-DLLVM_ENABLE_SPHINX=OFF \
 		-DLLVM_ENABLE_TERMINFO=ON \
-		-DLLVM_ENABLE_ZLIB=ON \
-		-DLLVM_ENABLE_ZSTD=$zstd \
+		-DLLVM_ENABLE_ZLIB=FORCE_ON \
+		-DLLVM_ENABLE_ZSTD=FORCE_ON \
 		-DLLVM_INCLUDE_BENCHMARKS=OFF \
 		-DLLVM_INCLUDE_EXAMPLES=OFF \
 		-DLLVM_INSTALL_GTEST=ON \

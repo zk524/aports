@@ -1,0 +1,84 @@
+# Maintainer: Antoine Martin (ayakael) <dev@ayakael.net>
+pkgname=koreader
+pkgver=2025.04
+pkgrel=0
+pkgdesc="An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats"
+# s390x|riscv64|ppc64le|loongarch64: FTBFS
+# armhf|armv7|x86: Tests fail, segmentation fault
+arch="x86_64 aarch64"
+url="https://github.com/koreader/koreader/"
+license="AGPL-3.0-only"
+depends="
+	bash
+	sdl2
+	procps-ng
+	"
+makedepends="
+	autoconf
+	automake
+	cmake
+	coreutils
+	curl
+	diffutils
+	findutils
+	grep
+	libtool
+	linux-headers
+	meson
+	nasm
+	ninja-build
+	perl
+	pkgconf
+	wget
+	"
+source="
+	https://ayakael.net/api/packages/mirrors/generic/koreader/v$pkgver/koreader-v$pkgver.tar.gz
+	2085-bump-minimum-required-version-to-3.17.5.patch
+	"
+subpackages="$pkgname-doc"
+builddir="$srcdir"/$pkgname-v$pkgver
+
+# has vendored copies of system libraries
+sonameprefix="$pkgname:"
+
+prepare() {
+	default_prepare
+
+	# use absolute path to luajit in reader.lua
+	sed -i 's,./luajit,/usr/lib/koreader/luajit,' "$builddir"/reader.lua
+
+	# no need to test manually set version
+	rm "$builddir"/spec/unit/version_spec.lua
+}
+
+build() {
+	# add ninja bin to path
+	export PATH="$PATH":/usr/lib/ninja-build/bin
+
+	# default target is emulator build
+	make TARGET= KODEBUG= VERBOSE=
+}
+
+check() {
+	./base/utils/fake_tty.py make --assume-old=base testfront
+}
+
+package() {
+	install -Dm755 "$builddir"/platform/linux/koreader.sh "$pkgdir"/usr/bin/koreader
+	install -Dm644 "$builddir"/platform/linux/koreader.desktop -t "$pkgdir"/usr/share/applications/
+	install -Dm644 "$builddir"/resources/koreader.png -t "$pkgdir"/usr/share/pixmaps/
+	install -Dm644 "$builddir"/platform/linux/koreader.1 -t "$pkgdir"/usr/share/man/man1/
+
+	mkdir -p "$pkgdir"/usr/lib
+	cp -RL "$builddir"/koreader-emulator-*/koreader "$pkgdir"/usr/lib/koreader
+
+	# delete debug files
+	find "$pkgdir" -name '*.dbg' -delete
+
+	# version information
+	echo "v$pkgver" > "$pkgdir"/usr/lib/koreader/git-rev
+}
+sha512sums="
+002a1446580de037914a9372c49cc9c3a0ec3545227a9818f6633aef607a68b226ab41da013cd08664b28ed523b5f146f1fba1189e7fdd7bf276dbd5c7f141b5  koreader-v2025.04.tar.gz
+10b338c0bcd2ec037d145bea520f62cf0e86246c8cd44026368a96f3cc40e1bdb2e9f60fb08df03d3aff1067f81b72333e87dd468181fb699c1fdce2f25573b9  2085-bump-minimum-required-version-to-3.17.5.patch
+"

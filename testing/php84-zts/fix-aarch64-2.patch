@@ -1,0 +1,222 @@
+From ba8e3e1d798e12fba7a999967ae63e49b4ef22f4 Mon Sep 17 00:00:00 2001
+From: Dmitry Stogov <dmitry@zend.com>
+Date: Mon, 25 Nov 2024 10:29:41 +0300
+Subject: [PATCH] Update IR
+
+IR commit: ff7ee6c1e6090ba0ba7b47cb77939518304fab6b
+---
+ ext/opcache/jit/ir/ir.c            | 24 ++++++++++++++++++++++++
+ ext/opcache/jit/ir/ir.h            |  2 ++
+ ext/opcache/jit/ir/ir_aarch64.dasc |  8 ++++++++
+ ext/opcache/jit/ir/ir_cfg.c        | 16 +++-------------
+ ext/opcache/jit/ir/ir_fold.h       | 28 ++++++++++++++++++++++++++++
+ ext/opcache/jit/ir/ir_private.h    | 19 +++++++++++++++++++
+ ext/opcache/jit/ir/ir_sccp.c       |  4 ++--
+ 7 files changed, 86 insertions(+), 15 deletions(-)
+
+diff --git a/ext/opcache/jit/ir/ir.c b/ext/opcache/jit/ir/ir.c
+index 5da5beaae4e50..2ee00416b7dc3 100644
+--- a/ext/opcache/jit/ir/ir.c
++++ b/ext/opcache/jit/ir/ir.c
+@@ -1092,6 +1092,22 @@ void ir_set_op(ir_ctx *ctx, ir_ref ref, int32_t n, ir_ref val)
+ 	ir_insn_set_op(insn, n, val);
+ }
+ 
++ir_ref ir_get_op(ir_ctx *ctx, ir_ref ref, int32_t n)
++{
++	ir_insn *insn = &ctx->ir_base[ref];
++
++#ifdef IR_DEBUG
++	if (n > 3) {
++		int32_t count;
++
++		IR_ASSERT(IR_OP_HAS_VAR_INPUTS(ir_op_flags[insn->op]));
++		count = insn->inputs_count;
++		IR_ASSERT(n <= count);
++	}
++#endif
++	return ir_insn_op(insn, n);
++}
++
+ ir_ref ir_param(ir_ctx *ctx, ir_type type, ir_ref region, const char *name, int pos)
+ {
+ 	return ir_emit(ctx, IR_OPT(IR_PARAM, type), region, ir_str(ctx, name), pos);
+@@ -2820,6 +2836,10 @@ void _ir_VSTORE(ir_ctx *ctx, ir_ref var, ir_ref val)
+ 			}
+ 		} else if (insn->op == IR_VLOAD) {
+ 			if (insn->op2 == var) {
++				if (ref == val) {
++					/* dead STORE */
++					return;
++				}
+ 				break;
+ 			}
+ 		} else if (insn->op == IR_GUARD || insn->op == IR_GUARD_NOT) {
+@@ -2910,6 +2930,10 @@ void _ir_STORE(ir_ctx *ctx, ir_ref addr, ir_ref val)
+ 			}
+ 		} else if (insn->op == IR_LOAD) {
+ 			if (insn->op2 == addr) {
++				if (ref == val) {
++					/* dead STORE */
++					return;
++				}
+ 				break;
+ 			}
+ 			type2 = insn->type;
+diff --git a/ext/opcache/jit/ir/ir.h b/ext/opcache/jit/ir/ir.h
+index cf7580dc7496a..86e6dd51a9865 100644
+--- a/ext/opcache/jit/ir/ir.h
++++ b/ext/opcache/jit/ir/ir.h
+@@ -720,6 +720,8 @@ IR_ALWAYS_INLINE void ir_set_op3(ir_ctx *ctx, ir_ref ref, ir_ref val)
+ 	ctx->ir_base[ref].op3 = val;
+ }
+ 
++ir_ref ir_get_op(ir_ctx *ctx, ir_ref ref, int32_t n);
++
+ IR_ALWAYS_INLINE ir_ref ir_insn_op(const ir_insn *insn, int32_t n)
+ {
+ 	const ir_ref *p = insn->ops + n;
+diff --git a/ext/opcache/jit/ir/ir_aarch64.dasc b/ext/opcache/jit/ir/ir_aarch64.dasc
+index 11c0f320dd2b1..d9d0041c01bce 100644
+--- a/ext/opcache/jit/ir/ir_aarch64.dasc
++++ b/ext/opcache/jit/ir/ir_aarch64.dasc
+@@ -5247,6 +5247,14 @@ static void ir_emit_tls(ir_ctx *ctx, ir_ref def, ir_insn *insn)
+ |		ldr Rx(reg), [Rx(reg), #insn->op2]
+ |		ldr Rx(reg), [Rx(reg), #insn->op3]
+ ||	}
++||# elif defined(__MUSL__)
++||	if (insn->op3 == IR_NULL) {
++|		ldr Rx(reg), [Rx(reg), #insn->op2]
++||	} else {
++|		ldr Rx(reg), [Rx(reg), #-8]
++|		ldr Rx(reg), [Rx(reg), #insn->op2]
++|		ldr Rx(reg), [Rx(reg), #insn->op3]
++||	}
+ ||# else
+ ||//???	IR_ASSERT(insn->op2 <= LDR_STR_PIMM64);
+ |	ldr Rx(reg), [Rx(reg), #insn->op2]
+diff --git a/ext/opcache/jit/ir/ir_cfg.c b/ext/opcache/jit/ir/ir_cfg.c
+index c2893dcf292d6..0a36d5d9880d7 100644
+--- a/ext/opcache/jit/ir/ir_cfg.c
++++ b/ext/opcache/jit/ir/ir_cfg.c
+@@ -59,7 +59,7 @@ IR_ALWAYS_INLINE void _ir_add_predecessors(const ir_insn *insn, ir_worklist *wor
+ 
+ int ir_build_cfg(ir_ctx *ctx)
+ {
+-	ir_ref n, *p, ref, start, end, next;
++	ir_ref n, *p, ref, start, end;
+ 	uint32_t b;
+ 	ir_insn *insn;
+ 	ir_worklist worklist;
+@@ -145,18 +145,8 @@ int ir_build_cfg(ir_ctx *ctx)
+ 			start = ref;
+ 			/* Skip control nodes untill BB end */
+ 			while (1) {
+-				use_list = &ctx->use_lists[ref];
+-				n = use_list->count;
+-				next = IR_UNUSED;
+-				for (p = &ctx->use_edges[use_list->refs]; n > 0; p++, n--) {
+-					next = *p;
+-					insn = &ctx->ir_base[next];
+-					if ((ir_op_flags[insn->op] & IR_OP_FLAG_CONTROL) && insn->op1 == ref) {
+-						break;
+-					}
+-				}
+-				IR_ASSERT(next != IR_UNUSED);
+-				ref = next;
++				ref = ir_next_control(ctx, ref);
++				insn = &ctx->ir_base[ref];
+ 				if (IR_IS_BB_END(insn->op)) {
+ 					break;
+ 				}
+diff --git a/ext/opcache/jit/ir/ir_fold.h b/ext/opcache/jit/ir/ir_fold.h
+index 2e65ae3119f17..b23ea832df962 100644
+--- a/ext/opcache/jit/ir/ir_fold.h
++++ b/ext/opcache/jit/ir/ir_fold.h
+@@ -1513,6 +1513,34 @@ IR_FOLD(NOT(UGT))
+ 	IR_FOLD_NEXT;
+ }
+ 
++IR_FOLD(EQ(SUB, C_U8))
++IR_FOLD(EQ(SUB, C_U16))
++IR_FOLD(EQ(SUB, C_U32))
++IR_FOLD(EQ(SUB, C_U64))
++IR_FOLD(EQ(SUB, C_I8))
++IR_FOLD(EQ(SUB, C_I16))
++IR_FOLD(EQ(SUB, C_I32))
++IR_FOLD(EQ(SUB, C_I64))
++IR_FOLD(EQ(SUB, C_ADDR))
++IR_FOLD(NE(SUB, C_U8))
++IR_FOLD(NE(SUB, C_U16))
++IR_FOLD(NE(SUB, C_U32))
++IR_FOLD(NE(SUB, C_U64))
++IR_FOLD(NE(SUB, C_I8))
++IR_FOLD(NE(SUB, C_I16))
++IR_FOLD(NE(SUB, C_I32))
++IR_FOLD(NE(SUB, C_I64))
++IR_FOLD(NE(SUB, C_ADDR))
++{
++	/* (a - b) == 0 => a == b */
++	if (ctx->use_lists && ctx->use_lists[op1].count == 1 && op2_insn->val.u64 == 0) {
++		op1 = op1_insn->op1;
++		op2 = op1_insn->op2;
++		IR_FOLD_RESTART;
++	}
++	IR_FOLD_NEXT;
++}
++
+ IR_FOLD(ADD(_, C_U8))
+ IR_FOLD(ADD(_, C_U16))
+ IR_FOLD(ADD(_, C_U32))
+diff --git a/ext/opcache/jit/ir/ir_private.h b/ext/opcache/jit/ir/ir_private.h
+index 064d713b20147..f88a1574a286e 100644
+--- a/ext/opcache/jit/ir/ir_private.h
++++ b/ext/opcache/jit/ir/ir_private.h
+@@ -1032,6 +1032,25 @@ void ir_use_list_replace_all(ir_ctx *ctx, ir_ref ref, ir_ref use, ir_ref new_use
+ void ir_use_list_replace_one(ir_ctx *ctx, ir_ref ref, ir_ref use, ir_ref new_use);
+ bool ir_use_list_add(ir_ctx *ctx, ir_ref to, ir_ref new_use);
+ 
++IR_ALWAYS_INLINE ir_ref ir_next_control(const ir_ctx *ctx, ir_ref ref)
++{
++	ir_use_list *use_list = &ctx->use_lists[ref];
++	ir_ref n = use_list->count;
++	ir_ref *p;
++
++	IR_ASSERT(ir_op_flags[ctx->ir_base[ref].op] & IR_OP_FLAG_CONTROL);
++	for (p = &ctx->use_edges[use_list->refs]; n > 0; p++, n--) {
++		ir_ref next = *p;
++		ir_insn *insn = &ctx->ir_base[next];
++
++		if ((ir_op_flags[insn->op] & IR_OP_FLAG_CONTROL) && insn->op1 == ref) {
++			return next;
++		}
++	}
++	IR_ASSERT(0);
++	return IR_UNUSED;
++}
++
+ /*** Modification helpers ***/
+ #define MAKE_NOP(_insn) do { \
+ 		ir_insn *__insn = _insn; \
+diff --git a/ext/opcache/jit/ir/ir_sccp.c b/ext/opcache/jit/ir/ir_sccp.c
+index c5665873aa989..3705df45901e0 100644
+--- a/ext/opcache/jit/ir/ir_sccp.c
++++ b/ext/opcache/jit/ir/ir_sccp.c
+@@ -2213,7 +2213,7 @@ int ir_sccp(ir_ctx *ctx)
+ 				if (!may_benefit) {
+ 					IR_MAKE_BOTTOM(i);
+ 					if (insn->op == IR_FP2FP || insn->op == IR_FP2INT || insn->op == IR_TRUNC
+-					 || insn->op == IR_ZEXT || insn->op == IR_SEXT) {
++					 || insn->op == IR_ZEXT || insn->op == IR_SEXT || insn->op == IR_EQ || insn->op == IR_NE) {
+ 						ir_bitqueue_add(&worklist2, i);
+ 					}
+ 				} else if (!ir_sccp_fold(ctx, _values, i, insn->opt, insn->op1, insn->op2, insn->op3)) {
+@@ -2222,7 +2222,7 @@ int ir_sccp(ir_ctx *ctx)
+ 				} else if (_values[i].optx == IR_BOTTOM) {
+ 					insn = &ctx->ir_base[i];
+ 					if (insn->op == IR_FP2FP || insn->op == IR_FP2INT || insn->op == IR_TRUNC
+-					 || insn->op == IR_ZEXT || insn->op == IR_SEXT) {
++					 || insn->op == IR_ZEXT || insn->op == IR_SEXT || insn->op == IR_EQ || insn->op == IR_NE) {
+ 						ir_bitqueue_add(&worklist2, i);
+ 					}
+ 				}

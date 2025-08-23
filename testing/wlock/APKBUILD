@@ -6,6 +6,7 @@ pkgrel=0
 pkgdesc="Itsy-bitsy session locker"
 url="https://codeberg.org/sewn/wlock"
 arch="all"
+pkggroups="shadow"
 license="GPL-3.0-or-later"
 makedepends="wayland-protocols wayland-dev libxkbcommon-dev"
 subpackages="$pkgname-doc"
@@ -21,7 +22,7 @@ build() {
 }
 
 package() {
-	make PREFIX=/usr DESTDIR="$pkgdir" install
+	install -D -m2755 -g shadow "$builddir"/wlock "$pkgdir"/usr/bin/wlock
 	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 

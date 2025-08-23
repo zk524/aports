@@ -1,0 +1,41 @@
+# Contributor: Duncan Guthrie <dguthrie@posteo.net>
+# Contributor: User0 <user0thenyancat@proton.me>
+# Maintainer: User0 <user0thenyancat@proton.me>
+pkgname=libxsettings-client
+pkgver=0.10
+pkgrel=0
+pkgdesc="Xsettings client protocol library"
+url="https://standards.freedesktop.org/xsettings-spec/0.5/"
+arch="all"
+license="LGPL-2.1-or-later"
+depends="
+	libxsettings
+"
+makedepends="
+	autoconf
+	automake
+	libtool
+	libx11-dev
+"
+subpackages="$pkgname-dev"
+source="
+	$pkgname-$pkgver.tar.gz::https://downloads.yoctoproject.org/releases/matchbox/optional-dependencies/Xsettings-client-$pkgver.tar.gz
+"
+builddir="$srcdir/Xsettings-client-$pkgver"
+options="!check"
+
+build() {
+	autoreconf -fi
+
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	rm "$pkgdir/usr/include/xsettings-common.h"
+}
+
+sha512sums="
+051eaafa3410f82afea8f5909e5ef46548737f5b7bb3cb9c31262426ebc8e39ce4e84cfa76629cfb6b608fc764b2bbc3e7345a0e8e4257c7f6ea640c3b419634  libxsettings-client-0.10.tar.gz
+"

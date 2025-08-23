@@ -1,0 +1,29 @@
+# Maintainer: Willow Barraco <contact@willowbarraco.fr>
+pkgname=ctags-lsp
+pkgver=0.6.1
+pkgrel=0
+pkgdesc="LSP implementation using universal-ctags as backend"
+url="https://github.com/netmute/ctags-lsp/"
+arch="all"
+license="MIT"
+makedepends="go"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/netmute/ctags-lsp/archive/refs/tags/v$pkgver.tar.gz"
+options="net !check" # No test suite
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	make VERSION=$pkgver
+}
+
+package() {
+	install -Dm0755 ctags-lsp "$pkgdir"/usr/bin/ctags-lsp
+	install -Dm644 LICENSE "$pkgdir/usr/share/doc/$pkgname/LICENSE"
+}
+
+sha512sums="
+dc9da7c4000422012b53e7e4651f9ca661c5bbe0efd1cb5c0c557bd09cff0267edb517eedf2d7904b79cfd75def2b7b2f92568beab42102fca57a4c65ad222bb  ctags-lsp-0.6.1.tar.gz
+"

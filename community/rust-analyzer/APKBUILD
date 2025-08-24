@@ -1,7 +1,7 @@
 # Contributor: S.M Mukarram Nainar <theone@sm2n.ca>
 # Maintainer: team/rust <alpine@ptrcnull.me>
 pkgname=rust-analyzer
-pkgver=2025.07.28
+pkgver=2025.08.04
 _pkgver=${pkgver//./-}
 pkgrel=0
 pkgdesc="Rust compiler front-end for IDEs"
@@ -54,5 +54,5 @@ package() {
 }
 
 sha512sums="
-f7d3afc448d04bb395a491ec7f3562825ced0d7d65c072d0d70f24fddabd211a7f82e51060b615d7a79cca2218196bbfe4ccee2a83febb5f2822cf00dd0a8caf  rust-analyzer-2025.07.28.tar.gz
+67b0603528e0022f8284e674349b5fb9c5790d4b7ca8d90dd3875dca164ae877bfeebbfec78141ac4ac65035cfeb3b45c75f4d2690aa030c4690e5aac36e72c5  rust-analyzer-2025.08.04.tar.gz
 "

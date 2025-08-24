@@ -1,15 +1,16 @@
 # Contributor: Kurt H Maier <khm@sciops.net>
 # Maintainer: Kurt H Maier <khm@sciops.net>
 pkgname=widle
-pkgver=20250820
+pkgver=0_git20250820
 pkgrel=0
+_commit=63a040494ec022612d32ee1f958753657dd363f2
 pkgdesc="Run a command upon becoming idle"
 url="https://codeberg.org/sewn/widle"
 arch="all"
 license="GPL-3.0-or-later"
 makedepends="wayland-protocols wayland-dev"
 subpackages="$pkgname-doc"
-source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/widle/archive/63a040494ec022612d32ee1f958753657dd363f2.tar.gz"
+source="$pkgname-$pkgver-$commit.tar.gz::https://codeberg.org/sewn/widle/archive/$_commit.tar.gz"
 builddir="$srcdir/$pkgname"
 options="!check"
 	# no tests in project, so no checks in packaging
@@ -25,5 +26,5 @@ package() {
 }
 
 sha512sums="
-567db72004ec9d80e5b1ab23ebf3e5bd8f9724ef48bc7f7aebd4530c6825d9c32096964e6a37ce67e75aa3a2bd730b87deda59598f2607ae2a2904e14e4a5578  widle-20250820.tar.gz
+567db72004ec9d80e5b1ab23ebf3e5bd8f9724ef48bc7f7aebd4530c6825d9c32096964e6a37ce67e75aa3a2bd730b87deda59598f2607ae2a2904e14e4a5578  widle-0_git20250820-.tar.gz
 "

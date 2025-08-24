@@ -3,7 +3,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=mandoc
 pkgver=1.14.6
-pkgrel=13
+pkgrel=14
 pkgdesc="mandoc (formerly mdocml) UNIX manpage compiler toolset"
 url="https://mandoc.bsd.lv/"
 arch="all"
@@ -13,7 +13,7 @@ checkdepends="perl"
 install="$pkgname-apropos.post-deinstall"
 triggers="$pkgname-apropos.trigger=/usr/share/man/*"
 replaces="mdocml"
-subpackages="$pkgname-doc $pkgname-dev $pkgname-apropos $pkgname-soelim"
+subpackages="$pkgname-doc $pkgname-dev $pkgname-apropos::noarch $pkgname-soelim"
 source="https://mandoc.bsd.lv/snapshots/mandoc-$pkgver.tar.gz
 	dynamic-tagfile-support.patch
 	shared-libmandoc.patch

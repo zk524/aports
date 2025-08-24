@@ -2,7 +2,7 @@
 # Maintainer: Coco Liliace <coco@liliace.dev>
 _pyname=irc
 pkgname=py3-$_pyname
-pkgver=20.4.1
+pkgver=20.5.0
 pkgrel=0
 pkgdesc="Full-featured Python IRC library"
 url="https://github.com/jaraco/irc"
@@ -41,5 +41,5 @@ package() {
 }
 
 sha512sums="
-935b671b2930c3f7b9180686043582fcd50007bdd0de468b501e011c489e14fed50f1f32454facc64d059796a908ebf45e213694dd51fc391e58092e613a47ed  py3-irc-20.4.1.tar.gz
+3ec7ceb887df64b0212af23fb2c21e6ea13668f3fa53b6e5c3a81f16b681f0e800155342960a51cb054b84baca900a14d2a36ddeecbf1f4bd5df79bb96413d7c  py3-irc-20.5.0.tar.gz
 "

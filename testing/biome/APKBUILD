@@ -1,6 +1,6 @@
 maintainer="Matthias Ahouansou <matthias@ahouansou.cz>"
 pkgname=biome
-pkgver=2.1.4
+pkgver=2.2.0
 pkgrel=0
 pkgdesc="Toolchain of the web"
 url="https://biomejs.dev/"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-52c8fb71ded575b9aa1c6754f6ad94f3b44bcc95ca7c519ddcf13ae4694100182d9a49681ecbb88787543269f56481eb840c13efb7bbd34c4e98c62086afa114  biome-2.1.4.tar.gz
+33a3a0e9678e0ae4e5dcfd3ffb523d73d286c9678ae361386c792878c517ed3c854e3c7608e18baec391a2b0423bb4744aef5e854cce2b31541722690f748c4a  biome-2.2.0.tar.gz
 "

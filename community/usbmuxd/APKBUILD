@@ -20,7 +20,7 @@ license="GPL-2.0-or-later"
 install="$pkgname.post-install"
 subpackages="$pkgname-doc $pkgname-udev"
 source="$pkgname-$pkgver.tar.gz::https://github.com/libimobiledevice/usbmuxd/archive/$_commit.tar.gz
-	001-confiure-no-udev.patch
+	001-configure-no-udev.patch
 	"
 builddir="$srcdir/usbmuxd-$_commit"
 
@@ -57,5 +57,5 @@ udev() {
 
 sha512sums="
 ff67661bde9d501c447a68de6ebff3bcaaf5a9eebe7be97268edeb92ec6d679d2324fd0b8a31f5ddb6030ddc4d33997c1ad810e939a31dd6efba6392445a9513  usbmuxd-1.1.1_git20250201.tar.gz
-a8a4ed6877c691a44b53b2c554149c90034cbed8d48e0daf682aa7afbfb8f12cb05e4d99bd05dccc2e814f6001ccf19d61e9bff8c2da5e44ede386ea3565661f  001-confiure-no-udev.patch
+a8a4ed6877c691a44b53b2c554149c90034cbed8d48e0daf682aa7afbfb8f12cb05e4d99bd05dccc2e814f6001ccf19d61e9bff8c2da5e44ede386ea3565661f  001-configure-no-udev.patch
 "

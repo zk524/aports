@@ -18,7 +18,7 @@ options="suid !check"
 	# no tests in source, so no check phase in packaging
 
 build() {
-	export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
+	export CFLAGS="$CFLAGS -std=c99"
 	make
 }
 

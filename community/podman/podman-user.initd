@@ -1,0 +1,26 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name="Podman API user service"
+description="Listening service that answers API calls for Podman"
+
+command=/usr/bin/podman
+command_args="system service ${podman_opts:=--time 0} $podman_uri"
+
+extra_commands="start_containers"
+description_start_containers="Start containers with restart policy set to always"
+
+start_containers() {
+	ebegin "Starting containers with restart policy set to always"
+	$command start --all --filter restart-policy=always
+	eend $?
+}
+
+start_pre() {
+	modprobe tun
+	modprobe fuse
+}
+
+start_post() {
+	start_containers
+}

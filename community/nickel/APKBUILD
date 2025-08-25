@@ -1,19 +1,18 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=nickel
-pkgver=1.9.1
+pkgver=1.13.0
 pkgrel=0
 pkgdesc="Generic configuration language for less"
 url="https://nickel-lang.org/"
-# s390x, loongarch64: nix crate fails to build
-# riscv64: check_manual_snippets_doc_manual_syntax_md test hangs indefinitely
-arch="all !s390x !riscv64 !loongarch64"
+arch="all"
 license="MIT"
 makedepends="cargo cargo-auditable"
-checkdepends="python3"
+checkdepends="python3-dev"
 subpackages="$pkgname-doc $pkgname-language-server:_langserver"
 options="net"
 source="$pkgname-$pkgver.tar.gz::https://github.com/tweag/nickel/archive/refs/tags/$pkgver.tar.gz
 	explicit-dep-comrak.patch
+	update-onig.patch
 	"
 
 prepare() {
@@ -45,6 +44,7 @@ _langserver() {
 }
 
 sha512sums="
-23b926125f1c5ad7ff9fae1105f63164ea71b44c3cb1e4568e9fe40dec37e96e464c9c4ab8b4272f28ab35de6c3fa833e04e4815143aef4ec5ae16b9b62f9be0  nickel-1.9.1.tar.gz
+491b67f39e7904fb3594765161b0dbd8020bf02cc65e6d81be4cbb1e1653c97f917603bcd0384bb71856af91b65769ae49202b503be908457591ca334cc5cf9e  nickel-1.13.0.tar.gz
 a5d2c2899e81d480702f4f43d42373019a28d032e711a12d133b320ff4ad43b158bb4fb9577a5bfbc150131913d7267a8fe511b908b1e62b09de089fb440a677  explicit-dep-comrak.patch
+13d64b4f634668c953e98dbe4e75469f83c09c930437ffa67f4cad2360c93612eb999d9890737ee234974b6917288b0a3e039eac161d3d4e9c73dac7c2511476  update-onig.patch
 "

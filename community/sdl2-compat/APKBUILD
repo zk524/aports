@@ -12,7 +12,7 @@ makedepends="
 	samurai
 	sdl3-dev
 	"
-subpackages="$pkgname-dev $pkgname-doc"
+subpackages="$pkgname-static $pkgname-dev $pkgname-doc"
 source="https://github.com/libsdl-org/sdl2-compat/releases/download/release-$pkgver/sdl2-compat-$pkgver.tar.gz"
 options="!check" # flaky
 

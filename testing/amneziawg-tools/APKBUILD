@@ -1,0 +1,65 @@
+pkgname=amneziawg-tools
+pkgver=1.0.20241018
+pkgrel=0
+pkgdesc="AmneziaWG is a contemporary version of the popular VPN protocol, WireGuard"
+url="https://docs.amnezia.org/documentation/amnezia-wg/"
+arch="all"
+license="GPL-2.0-only"
+_wg_quick_deps="
+	bash
+	cmd:resolvconf
+	iproute2
+	"
+makedepends="libmnl-dev $_wg_quick_deps"
+depends="$pkgname-awg $pkgname-awg-quick"
+install="$pkgname-openrc.post-install"
+subpackages="
+	$pkgname-doc
+	$pkgname-bash-completion
+	$pkgname-awg:_split
+	$pkgname-awg-quick:_split:noarch
+	$pkgname-openrc
+	"
+options="!check"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/amnezia-vpn/amneziawg-tools/archive/v$pkgver.tar.gz
+	wg-quick.initd
+	wg-quick-different-sudo.patch
+	"
+
+build() {
+	make -C src
+}
+
+package() {
+	mkdir -p "$pkgdir/usr/share/doc/$pkgname"
+
+	make -C src \
+		DESTDIR="$pkgdir" \
+		WITH_BASHCOMPLETION=yes \
+		WITH_WGQUICK=yes \
+		WITH_SYSTEMDUNITS=no \
+		install
+
+	find "$builddir"/contrib -name '.gitignore' -delete
+	cp -rf "$builddir"/contrib "$pkgdir/usr/share/doc/$pkgname/"
+
+	install -Dm755 "$srcdir"/wg-quick.initd "$pkgdir"/etc/init.d/awg-quick
+}
+
+_split() {
+	local cmd=${subpkgname/$pkgname-}
+	pkgdesc="$pkgdesc ($cmd)"
+	case $cmd in
+		awg-quick) depends="$pkgname-awg=$pkgver-r$pkgrel $_wg_quick_deps" ;;
+		*) depends= ;;
+	esac
+	mkdir -p "$subpkgdir"/usr/bin
+	mv "$pkgdir"/usr/bin/$cmd "$subpkgdir"/usr/bin/
+}
+
+sha512sums="
+cc6ba3ea8cc4e8ec75c690926e3bc37e942e3019ba4a560efecab70103a1c91be48db6066ef250ad1cbf6bb6cff50dac1d2980147ec1eed860872133068b0595  amneziawg-tools-1.0.20241018.tar.gz
+443590d0c0779522e218d0a3a3e6ec2fb496783d5148f9dc2e2fafb7117351646ca6279631e6eefac40af841df90996fe2ce5f562168c33fa05523687e37b6ea  wg-quick.initd
+bf623fa31215d2e90078950dc18b9e69004235aa2e87cc4910ce710ba51119fb76c345a9cce1d0aa946fad1ccb5a40e9734ff3424e8d2d16cd00c1f1e0fe4916  wg-quick-different-sudo.patch
+"

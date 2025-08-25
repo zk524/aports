@@ -1,0 +1,12 @@
+diff --git a/pyproject.toml.orig b/pyproject.toml
+index 5aa18b40e6c..fe28b84bbec 100644
+--- a/pyproject.toml.orig
++++ b/pyproject.toml
+@@ -95,6 +95,7 @@ filterwarnings = [
+     "ignore: websockets.legacy is deprecated.*:DeprecationWarning",
+     "ignore: websockets.server.WebSocketServerProtocol is deprecated.*:DeprecationWarning",
+     "ignore: websockets.client.connect is deprecated.*:DeprecationWarning",
++	"ignore: websockets.exceptions.InvalidStatusCode is deprecated",
+ ]
+ 
+ [tool.coverage.run]

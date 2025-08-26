@@ -7,7 +7,7 @@ pkgdesc="library providing OPRF and Threshold OPRF"
 url="https://github.com/stef/liboprf"
 arch="all"
 license="GPL-3.0-or-later"
-makedepends="gcc libsodium-dev py3-gpep517"
+makedepends="gcc libsodium-dev py3-gpep517 py3-setuptools"
 subpackages="$pkgname-dev
 	py3-pyoprf-pyc
 	py3-pyoprf:_py3

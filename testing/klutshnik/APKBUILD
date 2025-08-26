@@ -10,65 +10,65 @@ arch="x86_64 aarch64" # limited by zig aport
 makedepends="gcc liboprf-dev py3-gpep517 zig cmark"
 depends="py3-klutshnik"
 subpackages="$pkgname-doc
-             libklutshnik:_lib
-             py3-klutshnik-pyc
-             py3-klutshnik:_py3:noarch
-             klutshnikd:_server"
+	libklutshnik:_lib
+	py3-klutshnik-pyc
+	py3-klutshnik:_py3:noarch
+	klutshnikd:_server"
              
 source="$pkgname-$pkgver.tar.gz::https://github.com/stef/klutshnik/archive/refs/tags/v$pkgver.tar.gz
-        missing-cc-runtime.patch
-        man-install.patch
-        fix-makefile.patch"
+	missing-cc-runtime.patch
+	man-install.patch
+	fix-makefile.patch"
 options="!check net" # no tests, net needed for zig dependancies (see build.zig.zon)
 
 # We may want other than "baseline" for other targets, when enabled by zig
 case "$CARCH" in
-   aarch64|x86_64) _cputarget=baseline ;;
+	aarch64|x86_64) _cputarget=baseline ;;
 esac
 
 build() {
-        make
-        cd python
-        gpep517 build-wheel \
-                --wheel-dir "$builddir"/.dist \
-                --output-fd 3 3>&1 >&2
-        cd ../server
-        zig build -Doptimize=ReleaseSafe ${_cputarget:+-Dcpu="$_cputarget"} -Dpie=true -Drelro=true
-        cd ../man
-        make
+	make
+	cd python
+	gpep517 build-wheel \
+		--wheel-dir "$builddir"/.dist \
+		--output-fd 3 3>&1 >&2
+	cd ../server
+	zig build -Doptimize=ReleaseSafe ${_cputarget:+-Dcpu="$_cputarget"} -Dpie=true -Drelro=true
+	cd ../man
+	make
 }
 
 package() {
-        DESTDIR=$pkgdir PREFIX=/usr make install
-        cd python
-        python3 -m installer -d "$pkgdir" "$builddir"/.dist/*.whl
-        python3 -m compileall -fq "$pkgdir"/usr/lib/python*
-        cd ../man
-        DESTDIR=$pkgdir PREFIX=/usr make install
-        install -Dm644 "$builddir"/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
-        install -Dm755 "$builddir"/server/zig-out/bin/klutshnikd -t "$pkgdir/usr/bin/"
+	DESTDIR=$pkgdir PREFIX=/usr make install
+	cd python
+	python3 -m installer -d "$pkgdir" "$builddir"/.dist/*.whl
+	python3 -m compileall -fq "$pkgdir"/usr/lib/python*
+	cd ../man
+	DESTDIR=$pkgdir PREFIX=/usr make install
+	install -Dm644 "$builddir"/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+	install -Dm755 "$builddir"/server/zig-out/bin/klutshnikd -t "$pkgdir/usr/bin/"
 }
 
 _py3() {
-   pkgdesc="$pkgdesc (client)"
-   depends="libklutshnik"
+	pkgdesc="$pkgdesc (client)"
+	depends="libklutshnik"
 
-   amove usr/lib/python3.*
+	amove usr/lib/python3.*
 }
 
 _lib() {
-   pkgdesc="$pkgdesc (client library)"
-   subpackages="libklutshnik-dev"
+	pkgdesc="$pkgdesc (client library)"
+	subpackages="libklutshnik-dev"
 
-   amove usr/lib/lib*
-   amove usr/lib/pkgconfig/
-   amove usr/include
+	amove usr/lib/lib*
+	amove usr/lib/pkgconfig/
+	amove usr/include
 }
 
 _server() {
-   pkgdesc="$pkgdesc (server)"
+	pkgdesc="$pkgdesc (server)"
 
-   amove usr/bin/klutshnikd
+	amove usr/bin/klutshnikd
 }
 
 sha512sums="

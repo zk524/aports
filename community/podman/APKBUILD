@@ -2,7 +2,7 @@
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=podman
 pkgver=5.6.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Simple management tool for pods, containers and images"
 url="https://podman.io/"
 license="Apache-2.0"
@@ -148,6 +148,6 @@ docker_doc() {
 sha512sums="
 146858b4e64c638a20c7865b294180c344a0fd7c4815a0f95c69abe04397c1aef53379e34f3f092184d663cc6f4967db2872a5aa969e1aa5a8f06c86ccbd14e1  podman-5.6.1.tar.gz
 5a395b94d75bcc8b87cc3bafbcf1f61a411ee37256dc1ddb27e21ad49b912227601423e387c2f111f773a4a19936b586a308279297cef9c8a64ccfdd87123615  no-systemd.patch
-f8941dc3f8c6b08b288e3347ef2d782140f6e46809da0353f3695338a2de75a971b312e57d09b0a0ea51557568d888b367e3b234be550aea8386321878f4a22f  podman.initd
+0df06167f606f08f0af547b1fecd56d2160e17ee606d1248a25c9658f17f350641d6d15e5dfd7dbb18205367dea17e901330383dab5169717ce99f4bbbcce8b0  podman.initd
 ec6e6d3f72d0ab6c90a30b2cca5152c0d0f1e402ae671289263d7bf3b5141de9d67c3593f20b6075cedd214b7fb1506e69ff7b4f9691b43b391389343ab9b9b1  podman.confd
 "

@@ -1,0 +1,79 @@
+# Contributor: stf <l0ls0fo2i@ctrlc.hu>
+# Maintainer: stf <l0ls0fo2i@ctrlc.hu>
+pkgname=klutshnik
+pkgver=0.2.1
+pkgrel=0
+pkgdesc="data-at-rest updatable threshold encryption Key Management System"
+url="https://github.com/stef/klutshnik"
+license="GPLv3"
+arch="x86_64 aarch64" # limited by zig aport
+makedepends="gcc liboprf-dev py3-gpep517 zig cmark"
+depends="py3-klutshnik"
+subpackages="$pkgname-doc
+             libklutshnik:_lib
+             py3-klutshnik-pyc
+             py3-klutshnik:_py3:noarch
+             klutshnikd:_server"
+             
+source="$pkgname-$pkgver.tar.gz::https://github.com/stef/klutshnik/archive/refs/tags/v$pkgver.tar.gz
+        missing-cc-runtime.patch
+        man-install.patch
+        fix-makefile.patch"
+options="!check net" # no tests, net needed for zig dependancies (see build.zig.zon)
+
+# We may want other than "baseline" for other targets, when enabled by zig
+case "$CARCH" in
+   aarch64|x86_64) _cputarget=baseline ;;
+esac
+
+build() {
+        make
+        cd python
+        gpep517 build-wheel \
+                --wheel-dir "$builddir"/.dist \
+                --output-fd 3 3>&1 >&2
+        cd ../server
+        zig build -Doptimize=ReleaseSafe ${_cputarget:+-Dcpu="$_cputarget"} -Dpie=true -Drelro=true
+        cd ../man
+        make
+}
+
+package() {
+        DESTDIR=$pkgdir PREFIX=/usr make install
+        cd python
+        python3 -m installer -d "$pkgdir" "$builddir"/.dist/*.whl
+        python3 -m compileall -fq "$pkgdir"/usr/lib/python*
+        cd ../man
+        DESTDIR=$pkgdir PREFIX=/usr make install
+        install -Dm644 "$builddir"/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+        install -Dm755 "$builddir"/server/zig-out/bin/klutshnikd -t "$pkgdir/usr/bin/"
+}
+
+_py3() {
+   pkgdesc="$pkgdesc (client)"
+   depends="libklutshnik"
+
+   amove usr/lib/python3.*
+}
+
+_lib() {
+   pkgdesc="$pkgdesc (client library)"
+   subpackages="libklutshnik-dev"
+
+   amove usr/lib/lib*
+   amove usr/lib/pkgconfig/
+   amove usr/include
+}
+
+_server() {
+   pkgdesc="$pkgdesc (server)"
+
+   amove usr/bin/klutshnikd
+}
+
+sha512sums="
+684450e63afee99d573420ed81f4cd7b18da45ac9e2cea63d1efd11772dab6d698f79388ffce50e0efbd3ecfae0c374e79e184282659fe5bbe16d7a0976c39f9  klutshnik-0.2.1.tar.gz
+f1aef35ccf41a7c9f2f1cd31f34495a7783074f55c9d57c89f576bf7b325eb4a50de0a4688bebe5bf4c86747f0c4f05ce2a1cae496c23bbc547c7bb9a14c77af  missing-cc-runtime.patch
+8f912d711593e470a768cd125fa1b56d9af640d915e7b834ddf72ddbf0e1677e860a4169cfb370b9b19414d9142e716cd5d2a113a04c874025089ca1b8762224  man-install.patch
+804dfaa3549237b5d7a566449cc1f5f961c3f8afdcc0e3ea892de7b6efef4376e11ac4de3720213acc8038be16aaf75c42a9a86e42c6b903c1ede8e3f64b4fc9  fix-makefile.patch
+"

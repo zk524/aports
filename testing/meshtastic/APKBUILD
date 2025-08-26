@@ -1,0 +1,60 @@
+# Contributor: Oleg Titov <oleg.titov@gmail.com>
+# Maintainer: Oleg Titov <oleg.titov@gmail.com>
+pkgname=meshtastic
+pkgver=2.7.1
+pkgrel=0
+pkgdesc="Python API & client shell for talking to Meshtastic devices"
+url="https://github.com/meshtastic/python"
+arch="noarch"
+license="Apache-2.0"
+depends="
+	py3-bleak
+	py3-dotmap
+	py3-numpy
+	py3-packaging
+	py3-pexpect
+	py3-protobuf
+	py3-pypubsub
+	py3-pyqrcode
+	py3-pyserial
+	py3-pytap2
+	py3-requests
+	py3-tabulate
+	py3-yaml
+	"
+makedepends="py3-gpep517 py3-poetry-core"
+checkdepends="
+	py3-hypothesis
+	py3-parse
+	py3-print-color
+	py3-platformdirs
+	py3-ppk2-api
+	py3-pyarrow
+	py3-pytest
+	"
+subpackages="$pkgname-doc $pkgname-pyc"
+source="meshtastic-$pkgver.tar.gz::https://github.com/meshtastic/python/archive/refs/tags/$pkgver.tar.gz"
+builddir="$srcdir/python-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+
+	install -Dm644 README.md -t "$pkgdir"/usr/share/doc/$pkgname
+}
+
+sha512sums="
+98ff7354cf44a011342e5c93d55f0899ec37d3ba09c71f5edb301b1af575665f1024eea584ee7d21e6c0010a4861436bd719f678408e780461a7696cdb0abc50  meshtastic-2.7.1.tar.gz
+"

@@ -8,20 +8,20 @@ url="https://github.com/stef/liboprf"
 arch="all"
 license="GPL-3.0-or-later"
 makedepends="gcc libsodium-dev py3-gpep517 py3-setuptools"
-subpackages="$pkgname-dev
-	py3-pyoprf-pyc
-	py3-pyoprf:_py3
-	"
+subpackages="$pkgname-dev"
+	#py3-pyoprf-pyc
+	#py3-pyoprf:_py3
+	#"
 source="$pkgname-$pkgver.tar.gz::https://github.com/stef/liboprf/archive/refs/tags/v$pkgver.tar.gz
 	fix-noise_xk-check.patch"
 
 build() {
 	cd src
 	make
-	cd ../python
-	gpep517 build-wheel \
-		--wheel-dir "$builddir"/.dist \
-		--output-fd 3 3>&1 >&2
+	#cd ../python
+	#gpep517 build-wheel \
+	#	--wheel-dir "$builddir"/.dist \
+	#	--output-fd 3 3>&1 >&2
 
 }
 
@@ -31,16 +31,16 @@ check() {
 
 package() {
 	DESTDIR=$pkgdir PREFIX=/usr make -C src install
-	python3 -m installer -d "$pkgdir" .dist/*.whl
-	python3 -m compileall -fq "$pkgdir"/usr/lib/python*
+	#python3 -m installer -d "$pkgdir" .dist/*.whl
+	#python3 -m compileall -fq "$pkgdir"/usr/lib/python*
 	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-_py3() {
-	pkgdesc="$pkgdesc (python modules)"
-	depends="liboprf"
-	amove usr/lib/python3.*
-}
+#_py3() {
+#	pkgdesc="$pkgdesc (python modules)"
+#	depends="liboprf py3-pysodium py3-SecureString py3-pyserial py3-udev py3-ble_serial py3-pyserial-asyncio"
+#	amove usr/lib/python3.*
+#}
 
 sha512sums="
 9d598c98d28b91fbd5bd8e30b914ecf5d1db79c309039b3e730b9d0bf49b812962572dc0b7646794bdd89f2fc9cbdc433947067d69bfa708f62460cd3867c058  liboprf-0.9.1.tar.gz

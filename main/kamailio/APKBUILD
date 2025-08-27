@@ -157,37 +157,37 @@ _mod_list_basic="async
 	"
 
 # - extra used modules, with no extra dependency
-_mod_list_extras="auth_diameter \
-	auth_xkeys \
-	call_control \
-	call_obj \
-	cnxcc \
-	dmq \
-	dmq_usrloc \
-	domainpolicy \
-	file_out \
-	influxdbc \
-	log_custom \
-	msrp \
-	nosip \
-	pdb \
-	pvtpl \
-	qos \
-	rtjson \
-	sca \
-	seas \
-	sms \
-	ss7ops \
-	sst \
-	statsd \
-	tcpops \
-	timer \
-	tmrec \
-	tsilo \
-	uac_redirect \
-	xhttp \
-	xhttp_rpc \
-	xprint \
+_mod_list_extras="auth_diameter
+	auth_xkeys
+	call_control
+	call_obj
+	cnxcc
+	dmq
+	dmq_usrloc
+	domainpolicy
+	file_out
+	influxdbc
+	log_custom
+	msrp
+	nosip
+	pdb
+	pvtpl
+	qos
+	rtjson
+	sca
+	seas
+	sms
+	ss7ops
+	sst
+	statsd
+	tcpops
+	timer
+	tmrec
+	tsilo
+	uac_redirect
+	xhttp
+	xhttp_rpc
+	xprint
 	"
 
 # - common modules depending on database

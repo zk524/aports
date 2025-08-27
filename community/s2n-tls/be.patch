@@ -1,0 +1,15 @@
+Fixes https://github.com/aws/s2n-tls/commit/004b05e41722409c0092f0373f5aadb24bfe8fa9
+Fixes https://github.com/aws/s2n-tls/issues/4097
+
+--- a/crypto/s2n_hkdf.c
++++ b/crypto/s2n_hkdf.c
+@@ -82,7 +82,8 @@
+             POSIX_GUARD(s2n_hmac_update(hmac, prev, hash_len));
+         }
+         POSIX_GUARD(s2n_hmac_update(hmac, info->data, info->size));
+-        POSIX_GUARD(s2n_hmac_update(hmac, &curr_round, 1));
++        uint8_t curr_round_byte = curr_round;
++        POSIX_GUARD(s2n_hmac_update(hmac, &curr_round_byte, 1));
+         POSIX_GUARD(s2n_hmac_digest(hmac, prev, hash_len));
+ 
+         cat_len = hash_len;

@@ -5,8 +5,7 @@ pkgver=1.5.24
 pkgrel=1
 pkgdesc="AWS C99 implementation of the TLS/SSL protocols"
 url="https://github.com/aws/s2n-tls"
-# s390x: fails a bunch of tests
-arch="all !s390x"
+arch="all"
 license="Apache-2.0"
 depends_dev="openssl-dev"
 makedepends="
@@ -16,7 +15,9 @@ makedepends="
 	samurai
 	"
 subpackages="$pkgname-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/aws/s2n-tls/archive/refs/tags/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/aws/s2n-tls/archive/refs/tags/v$pkgver.tar.gz
+	be.patch
+	"
 
 build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
@@ -52,4 +53,5 @@ dev() {
 
 sha512sums="
 b8f8993fab586307fb1a60bf7192f6de1031bac164f15ee4f1cc41abe8d0633db93b155798fbd0f056fca703d27d58e6107f547351c1655a1532694ae02cf617  s2n-tls-1.5.24.tar.gz
+7150ad9309271aa70e27ffdb01711376bd873f445ae6b0244a0c69692908504db65a28ed9a413daa1292b382ee1df5395beecfbba59e6e1815816c0459bf2ef7  be.patch
 "

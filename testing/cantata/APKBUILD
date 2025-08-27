@@ -1,0 +1,33 @@
+# Contributor: Ronald Cantillo <rooyca@gmail.com>
+# Maintainer: Ronald Cantillo <rooyca@gmail.com>
+pkgname=cantata
+pkgver=3.3.1
+pkgrel=0
+pkgdesc="Qt client for the music player daemon (MPD)"
+url="https://github.com/nullobsi/cantata/"
+arch="all !armhf" # missing package: qt6-qtmultimedia
+license="GPL-3.0-or-later"
+depends="libmtp taglib udisks2 libmusicbrainz libcdio-paranoia mpg123"
+makedepends="ninja cmake qt6-qttools-dev qt6-qtsvg-dev qt6-qtmultimedia-dev"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/nullobsi/cantata/archive/refs/tags/v$pkgver.tar.gz"
+
+build() {
+		cmake -B build -S "$builddir" -Wno-dev \
+			-DQT_DIR=/usr/lib/cmake/Qt6 \
+			-DCMAKE_BUILD_TYPE=None \
+			-DCMAKE_INSTALL_PREFIX=/usr \
+			-DCMAKE_INSTALL_LIBEXECDIR=/usr/bin
+
+		cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+
+	install -Dm644 README -t "$pkgdir"/usr/share/doc/$pkgname/
+}
+
+sha512sums="
+1d70f5be223d20e75faedefcb2db3833d77ef28fab2ba747ebb77fdb20b45416c19e453b49f61bcd7dbbc77c166e640adf474c40b80e71fdbd0f05b653e02c81  cantata-3.3.1.tar.gz
+"

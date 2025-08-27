@@ -70,8 +70,18 @@ makedepends="bison
 	unixodbc-dev
 	zlib-static
 	"
-	# These are in testing  / community - can't enable for kamailio in main
-	# librdkafka-dev dnssec-tools-dev libmicrohttpd-dev
+
+_makedepends_community="libjwt2-dev
+	libmicrohttpd-dev
+	libphonenumber-dev
+	librdkafka-dev
+	mongo-c-driver-dev
+	"
+
+_makedepends_testing="dnssec-tools-dev
+	secsipidx
+	"
+
 source="kamailio-${pkgver}$_suffix.tar.gz::https://github.com/kamailio/kamailio/archive/$_gitcommit.tar.gz
 	kamailio.initd
 	"
@@ -79,6 +89,8 @@ source="kamailio-${pkgver}$_suffix.tar.gz::https://github.com/kamailio/kamailio/
 install="$pkgname.pre-install $pkgname.pre-upgrade"
 
 [ "$CARCH" = "armv7" ] && options="$options textrels"
+[ -n "$use_community" ] && makedepends="$makedepends $_makedepends_community"
+[ -n "$use_testing" ] && makedepends="$makedepends $_makedepends_testing"
 
 # secfixes:
 #   5.1.4-r0:
@@ -281,6 +293,9 @@ _mod_list_http_async="http_async_client"
 # - modules depending on memcache library
 _mod_list_memcached="memcached"
 
+# - modules depending on libmicrohttpd library
+_mod_list_microhttpd="microhttpd"
+
 # - modules depending on openssl library
 _mod_list_tls="crypto tls"
 
@@ -296,8 +311,14 @@ _mod_list_websocket="lwsc websocket"
 # - modules depending on dnssec-tools-dev
 _mod_list_dnssec="dnssec"
 
+# - modules depending on phonenum
+_mod_list_phonenum="phonenum"
+
 # - modules depending on libsctp
 _mod_list_sctp="sctp"
+
+# - modules depending on secsipidx
+_mod_list_secsipid="secsipid"
 
 # - modules depending on openssl library
 _mod_list_authephemeral="auth_ephemeral"
@@ -392,6 +413,9 @@ _mod_list_mongodb="db_mongodb ndb_mongodb"
 # - modules depending on jansson library
 _mod_list_jansson="jansson janssonrpcc acc_json"
 
+# - modules depending on libjwt2 library
+_mod_list_jwt="jwt"
+
 # - modules depending on libm
 _mod_list_jsdt="app_jsdt"
 
@@ -482,6 +506,19 @@ subpackages="authephemeral
 	xml
 	xmpp
 	"
+
+_subpackages_community="jwt
+	kafka
+	microhttpd
+	mongodb
+	phonenum
+	"
+
+_subpackages_testing="secsipid
+	"
+
+[ -n "$use_community" ] && subpackages="$subpackages $_subpackages_community"
+[ -n "$use_testing" ] && subpackages="$subpackages $_subpackages_testing"
 
 _modules="$_module_group_kstandard"
 for _i in $subpackages; do
@@ -682,6 +719,11 @@ jansson() {
 		"$_mod_list_jansson"
 }
 
+jwt() {
+	_generic_pkg "provides JWT (JSON Web Token) functions" \
+		"$_mod_list_jwt"
+}
+
 geoip2() {
 	_generic_pkg "MaxMind GeoIP lookup support" \
 		"$_mod_list_geoip2"
@@ -700,6 +742,11 @@ uuid() {
 memcached() {
 	_generic_pkg "memcached support" \
 		"$_mod_list_memcached"
+}
+
+microhttpd() {
+	_generic_pkg "embedded HTTP server using libmicrohttpd" \
+		"$_mod_list_microhttpd"
 }
 
 rabbitmq() {
@@ -763,20 +810,25 @@ mqtt() {
 		"$_mod_list_mqtt"
 }
 
-# kafka() {
-#		_generic_pkg "Produce and send messages to a Kafka server" \
-#		"$_mod_list_kafka"
-# }
+kafka() {
+		_generic_pkg "Produce and send messages to a Kafka server" \
+		"$_mod_list_kafka"
+}
 
 rabbitmq() {
 	_generic_pkg "RabbitMQ related modules for Kamailio" \
 		"$_mod_list_rabbitmq"
 }
 
-# dnssec() {
-#	_generic_pkg "DNSSEC implementation for SIP routing" \
-#		"$_mod_list_dnssec"
-# }
+dnssec() {
+	_generic_pkg "DNSSEC implementation for SIP routing" \
+		"$_mod_list_dnssec"
+}
+
+secsipid() {
+	_generic_pkg "This module implements STIR (Secure Telephony Identity Revisited) and SHAKEN (Signature-based Handling of Asserted information using toKENs)" \
+		"$_mod_list_secsipid"
+}
 
 sipdump() {
 	_generic_pkg "This module writes SIP traffic and some associated details into local files" \
@@ -798,6 +850,11 @@ lost() {
 		"$_mod_list_lost"
 }
 
+mongodb() {
+	_generic_pkg "connector for MongoDB NoSQL server" \
+		"$_mod_list_mongodb"
+}
+
 xhttp_prom() {
 	_generic_pkg "Metrics for Prometheus monitoring." \
 		"$_mod_list_xhttp_prom"
@@ -811,6 +868,11 @@ slack() {
 lrkproxy() {
 	_generic_pkg "RTP packets relay with kernel based forwarding" \
 		"$_mod_list_lrkproxy"
+}
+
+phonenum() {
+	_generic_pkg "module to get normalize and get details about a phone number" \
+		"$_mod_list_phonenum"
 }
 
 nghttp2() {

@@ -191,40 +191,40 @@ _mod_list_extras="auth_diameter
 	"
 
 # - common modules depending on database
-_mod_list_db="acc \
-	alias_db \
-	auth_db \
-	avpops \
-	cfg_db \
-	db_berkeley \
-	db_cluster \
-	db_flatstore \
-	dialog \
-	dispatcher \
-	domain \
-	drouting \
-	group \
-	htable \
-	imc \
-	matrix \
-	mohqueue \
-	msilo \
-	mtree \
-	pdt \
-	permissions \
-	pipelimit \
-	prefix_route \
-	p_usrloc \
-	registrar \
-	sipcapture \
-	siptrace \
-	speeddial \
-	sqlops \
-	topos_htable \
-	uac \
-	uri_db \
-	userblocklist \
-	usrloc \
+_mod_list_db="acc
+	alias_db
+	auth_db
+	avpops
+	cfg_db
+	db_berkeley
+	db_cluster
+	db_flatstore
+	dialog
+	dispatcher
+	domain
+	drouting
+	group
+	htable
+	imc
+	matrix
+	mohqueue
+	msilo
+	mtree
+	pdt
+	permissions
+	pipelimit
+	prefix_route
+	p_usrloc
+	registrar
+	sipcapture
+	siptrace
+	speeddial
+	sqlops
+	topos_htable
+	uac
+	uri_db
+	userblocklist
+	usrloc
 	"
 
 # - common modules depending on database, using UID db schema

@@ -303,24 +303,24 @@ _mod_list_sctp="sctp"
 _mod_list_authephemeral="auth_ephemeral"
 
 # - modules related to SIMPLE presence extensions
-_mod_list_presence="presence \
-	presence_conference \
-	presence_dfks \
-	presence_dialoginfo \
-	presence_mwi \
-	presence_profile \
-	presence_reginfo \
-	presence_xml \
-	pua \
-	pua_bla \
-	pua_dialoginfo \
-	pua_reginfo \
-	pua_rpc \
-	pua_usrloc \
-	pua_xmpp \
-	rls \
-	xcap_client \
-	xcap_server \
+_mod_list_presence="presence
+	presence_conference
+	presence_dfks
+	presence_dialoginfo
+	presence_mwi
+	presence_profile
+	presence_reginfo
+	presence_xml
+	pua
+	pua_bla
+	pua_dialoginfo
+	pua_reginfo
+	pua_rpc
+	pua_usrloc
+	pua_xmpp
+	rls
+	xcap_client
+	xcap_server
 	"
 
 # - modules depending on lua library

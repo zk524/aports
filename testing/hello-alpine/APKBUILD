@@ -1,0 +1,26 @@
+# Contributor: Rahul Vishwakarma <rahulvs2809@gmail.com>
+# Maintainer: Rahul Vishwakarma <rahulvs2809@gmail.com>
+pkgname=hello-alpine
+pkgver=1.0.2
+pkgrel=0
+pkgdesc="A simple hello alpine go application"
+url="https://github.com/manzil-infinity180/hello-alpine"
+arch="x86_64 aarch64"
+license="Apache-2.0 license"
+
+options="!check"
+builddir="$srcdir/"
+
+case "$CARCH" in
+  x86_64)  source="https://github.com/manzil-infinity180/hello-alpine/releases/download/v$pkgver/hello-alpine_${pkgver}_linux_amd64.tar.gz" ;;
+  aarch64) source="https://github.com/manzil-infinity180/hello-alpine/releases/download/v$pkgver/hello-alpine_${pkgver}_linux_arm64.tar.gz" ;;
+esac
+
+package() {
+    install -Dm755 "$srcdir/hello-alpine" "$pkgdir/usr/bin/hello-alpine"
+}
+
+
+sha512sums="
+26720f1e5cf702b9a1a501df3442a3af40eecf65517cbc5093e36437826c11863fc00865bc06d28fd3ba9c204953f56264d08777dec63a2ae78c5f98fd684dda  hello-alpine_1.0.2_linux_arm64.tar.gz
+"

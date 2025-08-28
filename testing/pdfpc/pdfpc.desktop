@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=pdfpc
+GenericName=PDF Presenter
+Icon=viewpdf
+Comment=pdfpc - A PDF Presenter Console with multi-monitor support for PDF files
+Exec=/usr/bin/pdfpc %f
+Terminal=false
+Type=Application
+Categories=Viewer;Graphics;
+MimeType=application/pdf;application/epub+zip;application/vnd.ms-xpsdocument;

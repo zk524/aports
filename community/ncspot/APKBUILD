@@ -1,7 +1,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=ncspot
-pkgver=1.1.2
+pkgver=1.3.1
 pkgrel=0
 pkgdesc="Cross-platform ncurses Spotify client inspired by ncmpc and the likes"
 url="https://github.com/hrkfdn/ncspot"
@@ -17,9 +17,7 @@ makedepends="
 	pulseaudio-dev
 	python3
 	"
-source="https://github.com/hrkfdn/ncspot/archive/v$pkgver/ncspot-$pkgver.tar.gz
-	cargo.lock.patch
-	"
+source="https://github.com/hrkfdn/ncspot/archive/v$pkgver/ncspot-$pkgver.tar.gz"
 options="!check"  # there's only one unit test (in v0.8.1)
 
 # Build with ncurses_backend instead of termion_backend, enable cover and share_selection.
@@ -48,6 +46,5 @@ package() {
 }
 
 sha512sums="
-81f79f7fb92998faccf12482a029057ee80758fb522ec9d34427a193d5dd5c1ffe6390e3f327f8883e0d27925f715025e8eab16e80888326931c6bf4deced3ba  ncspot-1.1.2.tar.gz
-cbaf3dc7fb4c0f789445c0abc46c9bf49fc82d71a8934f16f7aeef7423bbcd2e61717a8aeb949767c35db6c664ff8a574d747a03df27101fb758f544ac507b8f  cargo.lock.patch
+48e303c896f537aea5c09512750051173cc695aae24ab79391d07e32815e1d86a2e68170d1602cfb75252b29b36661070e608bfc74a464b00ec32288e1ae250b  ncspot-1.3.1.tar.gz
 "

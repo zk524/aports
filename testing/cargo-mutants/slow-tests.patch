@@ -1,0 +1,22 @@
+diff --git a/tests/main.rs b/tests/main.rs
+index f428de9..0240e96 100644
+--- a/tests/main.rs
++++ b/tests/main.rs
+@@ -724,7 +724,7 @@ fn mutants_causing_tests_to_hang_are_stopped_by_manual_timeout() {
+     // Also test that it accepts decimal seconds
+     let out = run()
+         .arg("mutants")
+-        .args(["-t", "8.1", "--build-timeout=15.5"])
++        .args(["-t", "8.1", "--build-timeout=50.5"])
+         .current_dir(tmp_src_dir.path())
+         .env_remove("RUST_BACKTRACE")
+         .timeout(OUTER_TIMEOUT)
+@@ -806,7 +806,7 @@ fn constfn_mutation_passes_check() {
+     let tmp_src_dir = copy_of_testdata("hang_when_mutated");
+     let cmd = run()
+         .arg("mutants")
+-        .args(["--check", "--build-timeout=10"])
++        .args(["--check", "--build-timeout=60"])
+         .current_dir(tmp_src_dir.path())
+         .env_remove("RUST_BACKTRACE")
+         .timeout(OUTER_TIMEOUT)

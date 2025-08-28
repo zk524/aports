@@ -1,9 +1,8 @@
 # Contributor: Kurt H Maier <khm@sciops.net>
 # Maintainer: Kurt H Maier <khm@sciops.net>
 pkgname=wlock
-pkgver=0_git20240913
+pkgver=1.0
 pkgrel=0
-_commit=be975445fa0da7252f8e13b610c518dd472652d0
 pkgdesc="Itsy-bitsy session locker"
 url="https://codeberg.org/sewn/wlock"
 arch="all"
@@ -11,14 +10,13 @@ pkggroups="shadow"
 license="GPL-3.0-or-later"
 makedepends="wayland-protocols wayland-dev libxkbcommon-dev"
 subpackages="$pkgname-doc"
-source="$pkgname-$pkgver-$_commit.tar.gz::https://codeberg.org/sewn/wlock/archive/$_commit.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/wlock/archive/$pkgver.tar.gz"
 builddir="$srcdir/$pkgname"
 options="suid !check"
-	# uses suid instead of PAM to validate passwd
+	# uses sgid instead of PAM to validate passwd
 	# no tests in source, so no check phase in packaging
 
 build() {
-	export CFLAGS="$CFLAGS -std=c99"
 	make
 }
 
@@ -28,5 +26,5 @@ package() {
 }
 
 sha512sums="
-8c087414f8bc42e88e31404de11f68273726fedd686fe154b0529a32869076c877a727c9e699c3981a9f15001eae6af3adc513c15b6d649cc084ddfe13125d1a  wlock-0_git20240913-be975445fa0da7252f8e13b610c518dd472652d0.tar.gz
+4517bf46e90e0f92e1357a3b4d8d92a42519ec32622244e0574825c18069710808c487e351ff742bc2ce6ae30bae9535babe19bd6b8657d636331121a5ec12e7  wlock-1.0.tar.gz
 "

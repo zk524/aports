@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S shiori 2>/dev/null
+adduser -S -D -h /var/lib/shiori -s /sbin/nologin -G shiori -g shiori shiori 2>/dev/null
+
+exit 0

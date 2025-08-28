@@ -1,0 +1,15 @@
+diff --git a/src/Services/CalendarEvents/Util.vala b/src/Services/CalendarEvents/Util.vala
+index c3ab6bc..b6df89c 100644
+--- a/src/Services/CalendarEvents/Util.vala
++++ b/src/Services/CalendarEvents/Util.vala
+@@ -161,8 +161,8 @@
+             }
+         }
+ 
+-        time_t start_unix = start_time.as_timet_with_zone (system_timezone);
+-        time_t end_unix = end_time.as_timet_with_zone (system_timezone);
++        time_t start_unix = (time_t) start_time.as_timet_with_zone (system_timezone);
++        time_t end_unix = (time_t) end_time.as_timet_with_zone (system_timezone);
+ 
+         /* If the selected date is inside the event */
+         if (start_unix < selected_date_unix && selected_date_unix_next < end_unix) {

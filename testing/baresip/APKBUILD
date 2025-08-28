@@ -1,8 +1,8 @@
 # Contributor: Francesco Colista <fcolista@alpinelinux.org>
 # Maintainer: Francesco Colista <fcolista@alpinelinux.org>
 pkgname=baresip
-pkgver=3.20.0
-pkgrel=1
+pkgver=4.0.0
+pkgrel=0
 pkgdesc="Baresip is a modular SIP User-Agent with audio and video support"
 url="https://github.com/baresip/baresip"
 arch="all"
@@ -63,5 +63,5 @@ package() {
 }
 
 sha512sums="
-bd77e553dd9dfe49fe4a1b06f4ec21c72edaaa90d6d798a078a3286ce7d809679327cbaf0b803bda3b7050ba5c5e3483d78b1451625f5f4d91352019129cde5e  baresip-3.20.0.tar.gz
+96f3776ec687cafdd6accbcbe2f18665a78f5be5e499615a967cdc9f3bc77fc8a643c7eedb9e6e6f7ed2d1c5f395f1845c64ac3a759ebd9b3eb51ea83d50d140  baresip-4.0.0.tar.gz
 "

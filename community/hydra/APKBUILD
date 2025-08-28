@@ -2,7 +2,7 @@
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=hydra
 pkgver=9.5
-pkgrel=1
+pkgrel=2
 pkgdesc="fast network logon cracker with support for many different services"
 url="https://github.com/vanhauser-thc/thc-hydra"
 arch="all"
@@ -11,7 +11,10 @@ makedepends="ncurses-dev openssl-dev pcre2-dev mariadb-dev afpfs-ng-dev samba-de
 	freerdp2-dev libidn-dev libpq-dev subversion-dev mongo-c-driver-dev
 	libssh-dev libmemcached-dev"
 subpackages="$pkgname-doc"
-source="https://github.com/vanhauser-thc/thc-hydra/archive/refs/tags/v$pkgver/thc-hydra-$pkgver.tar.gz"
+source="
+	https://github.com/vanhauser-thc/thc-hydra/archive/refs/tags/v$pkgver/thc-hydra-$pkgver.tar.gz
+	gcc-15.patch
+	"
 builddir="$srcdir/thc-hydra-$pkgver"
 options="!check" # no tests
 
@@ -35,4 +38,5 @@ package() {
 
 sha512sums="
 a8fe42d175d184cdb82072f3a963b956d767fa908aaf1cbbc0746b6a67cfd37f8b5e3ecf9be82085a7f6c1ef57e91a8bf05bfeb41e96708899b6c8d7f05eee06  thc-hydra-9.5.tar.gz
+5056adb0a642ff872a60662626386f13ac8811e89a00049358326ac925a0aef4c9a8b4e1b73545a09a600088d2b552a58c295eac52cf0041e44b3c79397f9329  gcc-15.patch
 "

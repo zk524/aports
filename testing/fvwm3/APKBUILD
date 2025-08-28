@@ -1,0 +1,71 @@
+# Contributor: Thomas Adam <thomas@fvwm.org>
+# Maintainer: Thomas Adam <thomas@fvwm.org>
+pkgname=fvwm3
+pkgver=1.1.0
+pkgrel=0
+pkgdesc="FVWM3 - a virtual desktop window manager"
+url="https://fvwm.org"
+arch="all"
+license="GPL-2.0-or-later"
+depends="!fvwm"
+makedepends="
+	asciidoctor
+	autoconf
+	automake
+	fontconfig-dev
+	freetype-dev
+	gettext-dev
+	go
+	libevent-dev
+	libpng-dev
+	librsvg-dev
+	libx11-dev
+	libxcursor-dev
+	libxext-dev
+	libxft-dev
+	libxpm-dev
+	libxrandr-dev
+	libxt-dev
+	perl
+	readline-dev
+	"
+subpackages="$pkgname-doc"
+source="
+https://github.com/fvwmorg/fvwm3/releases/download/$pkgver/fvwm3-$pkgver.tar.gz
+fvwmprompt-disable-goflags.patch
+"
+
+# bin/FvwmPrompt uses go, ensure these are set, or to use defaults if not.
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+# Overriding prepare() because bin/Makefile.am is patched so needs
+# regenerating.
+prepare() {
+	default_prepare
+
+	autoreconf -fvi
+}
+
+build() {
+	./configure \
+		--prefix=/usr \
+		--disable-bidi \
+		--enable-mandoc \
+		--enable-golang
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+47eea05cbdecf4da3313b9183fa938544b451b9f133d7a68062feb222c3c1af3873402f80b60485d603afe8cd23a03f3e86a503fc1f2070e1ad2e6e64d012341  fvwm3-1.1.0.tar.gz
+4efb1640f024d5a652a29eee68bf11b2dd58ceaeb91d5e42d03ef35ed7d230dd8e8550c18ca9e608b01165af4df4cb7e5c3d4dcf5e9a12e082ededbd411669bb  fvwmprompt-disable-goflags.patch
+"

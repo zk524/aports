@@ -1,0 +1,7 @@
+#!/bin/sh
+
+addgroup -S invidious 2>/dev/null
+adduser -S -D -H -h /dev/null -s /sbin/nologin -G invidious \
+	-g "invidious user" invidious 2>/dev/null
+
+exit 0

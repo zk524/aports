@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+
+supervisor=supervise-daemon
+name=invidious
+command="/usr/bin/invidious"
+command_user="${INVIDIOUS_USER:-invidious}"
+supervise_daemon_args="--env INVIDIOUS_CONFIG_FILE='${INVIDIOUS_CONFIG_FILE:-/etc/invidious/config.yaml}'"
+pidfile="/run/invidious.pid"
+
+depend() {
+  need net
+  after firewall
+}

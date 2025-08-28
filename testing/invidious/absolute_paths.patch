@@ -1,0 +1,57 @@
+diff --git a/src/invidious.cr b/src/invidious.cr
+index e0bd0101..de0aff87 100644
+--- a/src/invidious.cr
++++ b/src/invidious.cr
+@@ -213,7 +213,7 @@ end
+ 
+ # Init Kemal
+ 
+-public_folder "assets"
++public_folder "/usr/share/invidious/assets"
+ 
+ Kemal.config.powered_by_header = false
+ add_handler FilteredCompressHandler.new
+diff --git a/src/invidious/database/base.cr b/src/invidious/database/base.cr
+index 0fb1b6af..7eee55b2 100644
+--- a/src/invidious/database/base.cr
++++ b/src/invidious/database/base.cr
+@@ -36,7 +36,7 @@ module Invidious::Database
+       LOGGER.info("check_enum: CREATE TYPE #{enum_name}")
+ 
+       PG_DB.using_connection do |conn|
+-        conn.as(PG::Connection).exec_all(File.read("config/sql/#{enum_name}.sql"))
++        conn.as(PG::Connection).exec_all(File.read("/usr/share/invidious/config/sql/#{enum_name}.sql"))
+       end
+     end
+   end
+@@ -49,7 +49,7 @@ module Invidious::Database
+       LOGGER.info("check_table: check_table: CREATE TABLE #{table_name}")
+ 
+       PG_DB.using_connection do |conn|
+-        conn.as(PG::Connection).exec_all(File.read("config/sql/#{table_name}.sql"))
++        conn.as(PG::Connection).exec_all(File.read("/usr/share/invidious/config/sql/#{table_name}.sql"))
+       end
+     end
+ 
+@@ -57,7 +57,7 @@ module Invidious::Database
+ 
+     struct_array = struct_type.type_array
+     column_array = get_column_array(PG_DB, table_name)
+-    column_types = File.read("config/sql/#{table_name}.sql").match(/CREATE TABLE public\.#{table_name}\n\((?<types>[\d\D]*?)\);/)
++    column_types = File.read("/usr/share/invidious/config/sql/#{table_name}.sql").match(/CREATE TABLE public\.#{table_name}\n\((?<types>[\d\D]*?)\);/)
+       .try &.["types"].split(",").map(&.strip).reject &.starts_with?("CONSTRAINT")
+ 
+     return if !column_types
+diff --git a/src/invidious/helpers/i18n.cr b/src/invidious/helpers/i18n.cr
+index 76e477a4..f520bc72 100644
+--- a/src/invidious/helpers/i18n.cr
++++ b/src/invidious/helpers/i18n.cr
+@@ -72,7 +72,7 @@ def load_all_locales
+   locales = {} of String => Hash(String, JSON::Any)
+ 
+   LOCALES_LIST.each_key do |name|
+-    locales[name] = JSON.parse(File.read("locales/#{name}.json")).as_h
++    locales[name] = JSON.parse(File.read("/usr/share/invidious/locales/#{name}.json")).as_h
+   end
+ 
+   return locales

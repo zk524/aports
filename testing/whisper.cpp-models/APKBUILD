@@ -1,0 +1,68 @@
+# Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
+pkgname=whisper.cpp-models
+pkgver=0_git20231010
+_commit=d15393806e24a74f60827e23e986f0c10750b358
+pkgrel=0
+pkgdesc="OpenAI's Whisper models converted for use with whisper.cpp"
+url="https://huggingface.co/ggerganov/whisper.cpp"
+# s390x: limited by whisper.cpp
+arch="noarch !s390x"
+# From https://github.com/openai/whisper:
+# > Whisper's code and model weights are released under the MIT License. See LICENSE for further details.
+# These are the model weights repackaged for whisper.cpp
+license="MIT"
+depends="whisper.cpp"
+
+# Quantized models are smaller and faster to process
+_quantization="q5_1"
+# Models above small are huge and slow. Users can still download them
+# by hand.
+_models="
+	tiny
+	tiny.en
+	base
+	base.en
+	small
+	small.en
+	"
+
+for model in $_models; do
+	source="$source $pkgname-$model-$_commit.bin::https://huggingface.co/ggerganov/whisper.cpp/resolve/$_commit/ggml-$model-$_quantization.bin?download=true"
+	subpackages="$subpackages whisper.cpp-model-$model:_subpkg"
+done
+
+options="!check" # no unit tests provided
+
+package() {
+	for model in $_models; do
+		depends="$depends whisper.cpp-model-$model"
+	done
+
+	mkdir -p "$pkgdir"/usr/share/whisper.cpp
+	mkdir -p "$pkgdir"/usr/bin
+	for model in $_models; do
+		cp "$srcdir/$pkgname-$model-$_commit.bin" "$pkgdir/usr/share/whisper.cpp/ggml-$model-$_quantization.bin"
+		cat > "$pkgdir/usr/bin/whisper.cpp-$model" << EOF
+#!/bin/sh
+exec whisper.cpp -m /usr/share/whisper.cpp/ggml-$model-$_quantization.bin "\$@"
+EOF
+		chmod +x "$pkgdir/usr/bin/whisper.cpp-$model"
+	done
+}
+
+_subpkg() {
+	local model
+	model="${subpkgname#whisper.cpp-model-}"
+	pkgdesc="$model model for whisper.cpp"
+	amove "usr/share/whisper.cpp/ggml-$model-$_quantization.bin"
+	amove "usr/bin/whisper.cpp-$model"
+}
+
+sha512sums="
+f032e0667c3b5875b65482454b9ca50f59394dcdee4eaf915ec9a69aeed13204c82dff7b722f6b6ba963d16ef4a74f1a3a9b7deee244dcb508f30457c431ac9b  whisper.cpp-models-base-d15393806e24a74f60827e23e986f0c10750b358.bin
+06e92ef11759dc998475257cb18d55c7bea952f2fb2f06410dd76ce08a404139ad6af55da78d8fa188ac0f3df94ffb2a73ac2f2e1ecd3fd674d2a2178b49f883  whisper.cpp-models-base.en-d15393806e24a74f60827e23e986f0c10750b358.bin
+236225e5dbbf0745d34b74174446f5261742fe973988851499b30b6f6db6ce35bb79fdbe1dcbdecfecd807200f20fad2bbc27e73bd13c42a25a8583b8941bfe6  whisper.cpp-models-tiny-d15393806e24a74f60827e23e986f0c10750b358.bin
+9cf58733baf9410b224198d837ad95c3e46903c6b933792684832ee76a7aa775bd1ed8146370c5017677bc892da773cb85809cf62584026d8fe2bc60678bfd87  whisper.cpp-models-tiny.en-d15393806e24a74f60827e23e986f0c10750b358.bin
+e2be6b2094d2a24524c4ca928faef4756382dbdd168f1229609040e66cf8928f54d96a3ac2b287cd2c6cf731577738400eaa6868da3fb1dc9ec2c151e71ebb79  whisper.cpp-models-small-d15393806e24a74f60827e23e986f0c10750b358.bin
+8ab886863fce4298b8c43506b5ab52eb15bc2a38549460b41120c1f4d8d17de7ae1da7f1b4b36f8f86e10ec659f159b8087375b7b1ae844702b723a4ae05153e  whisper.cpp-models-small.en-d15393806e24a74f60827e23e986f0c10750b358.bin
+"

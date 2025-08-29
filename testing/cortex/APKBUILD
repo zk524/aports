@@ -1,0 +1,100 @@
+# Contributor: Díaz Urbaneja Diego <sodomon2@gmail.com>
+# Maintainer: Díaz Urbaneja Diego <sodomon2@gmail.com>
+pkgname=cortex
+pkgver=0.4.37
+_realver=$pkgver-2
+_enginename=cortex.llamacpp
+_enginever=0.1.23
+_llamacpp_commit=d94c6e0ccbd29ee1ba4f44e9caa8682ad94df9fa
+_kompute_commit=4565194ed7c32d1d2efa32ceab4d3c6cae006306
+pkgrel=0
+pkgdesc="Self-Hosted, Open-Source Replacement for OpenAI Platform"
+url="https://cortex.so/"
+# build failed
+arch="all !ppc64le !aarch64 !loongarch64"
+license="Apache-2.0 AND AGPL-3.0-only" # Apache-2.0 for cortex and AGPL-3.0-only for engine
+makedepends="
+	brotli-dev
+	c-ares-dev
+	cmake
+	drogon-dev
+	gtest-dev
+	hiredis-dev
+	jsoncpp-dev
+	libpq-dev
+	linux-headers
+	mariadb-dev
+	openssl-dev
+	openssl-libs-static
+	samurai
+	sqlite-dev
+	trantor-dev
+	util-linux-dev
+	yaml-cpp-dev
+	zlib-dev
+	"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/janhq/cortex/archive/v$_realver.tar.gz
+	$_enginename-$_enginever.tar.gz::https://github.com/janhq/cortex.llamacpp/archive/v$_enginever.tar.gz
+	$_enginename-llamacpp.tar.gz::https://github.com/ggerganov/llama.cpp/archive/$_llamacpp_commit.tar.gz
+	$_enginename-kompute.tar.gz::https://github.com/nomic-ai/kompute/archive/$_kompute_commit.tar.gz
+	"
+builddir="$srcdir/$pkgname-$_realver/cortex-cpp"
+_enginebuilddir="$srcdir/$_enginename-$_enginever"
+
+if [ "$CBUILD" != "$CHOST" ]; then
+	_crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+fi
+
+prepare() {
+	default_prepare
+	cp -r "$srcdir/llama.cpp-$_llamacpp_commit"/* "$_enginebuilddir/llama.cpp/"
+	cp -r "$srcdir/kompute-$_kompute_commit"/* "$_enginebuilddir/llama.cpp/ggml/src/kompute/"
+
+	# no download pre-built engines.
+	sed -i 's|include(engines/cortex.llamacpp/engine.cmake)||g' "$builddir/CMakeLists.txt"
+}
+
+build_engine() {
+	cd $_enginebuilddir
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DBUILD_SHARED_LIBS=OFF \
+		-DLLAMA_NATIVE=OFF \
+		-DCMAKE_BUILD_TYPE=None \
+		$_crossopts
+	cmake --build build
+	cd "$builddir"
+}
+
+build() {
+	build_engine
+
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_BUILD_TYPE=None \
+		$_crossopts
+	cmake --build build
+}
+
+check() {
+	ctest --test-dir build --output-on-failure
+}
+
+package() {
+	install -Dm755 "$_enginebuilddir/build/libengine.so" -t "$pkgdir/usr/lib/$pkgname/engines/$_enginename"
+	install -Dm755 "$builddir/build/cortex-cpp" -t "$pkgdir/usr/lib/$pkgname/"
+
+	mkdir -p "$pkgdir"/usr/bin
+	ln -sv "/usr/lib/$pkgname/cortex-cpp" "$pkgdir/usr/bin/$pkgname"
+}
+
+sha512sums="
+670ed5fa707468dfb55acc2738ecc2e7d336fa00a544001280172a903918388fae5fa1e51440afc9f26b8daa121694a36edbea619d1fbb3262bce584bfb650d8  cortex-0.4.37.tar.gz
+2bfbeb95004d17c0a4af017de2206d42864fc98d40c2b3d481823f5212d80aac77c56b4dc7510a4fe2ccc3abe50a8625e123ceb558e421c4096a5e5d7ef97c9e  cortex.llamacpp-0.1.23.tar.gz
+97bfd9f08a898ed70d90ac7ba093f9e5608ecf46af1263b398e9e78bd7d50e0e3265b53cfcbf999a9dd6a701ffea6ab5d770c56f0f1391a510ee206163d8b692  cortex.llamacpp-llamacpp.tar.gz
+64f4baab0ec7c51f5f2f72e367857070c10d0a51370ac7efaf9bb75d3bcbef0b861112717254fa1a750388e00651b7ca17df6e88fa58e77f4c53b6357f49053c  cortex.llamacpp-kompute.tar.gz
+"

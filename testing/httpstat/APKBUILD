@@ -1,0 +1,39 @@
+# Contributor: Meng Zhuo <mengzhuo@iscas.ac.cn>
+# Maintainer: Meng Zhuo <mengzhuo@iscas.ac.cn>
+pkgname=httpstat
+pkgver=1.2.1
+pkgrel=0
+pkgdesc="httpstat like curl -v, with colours"
+url="https://github.com/davecheney/httpstat"
+arch="all"
+license="MIT"
+makedepends="go"
+options="net" # go dependencies
+subpackages="$pkgname-doc"
+
+source="$pkgname-$pkgver.tar.gz::https://github.com/davecheney/httpstat/archive/refs/tags/v$pkgver.tar.gz"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go-mod"}"
+
+prepare() {
+	default_prepare
+	go mod tidy
+}
+
+build() {
+	go build -ldflags "-X main.version=$pkgver" -o httpstat main.go
+}
+
+check() {
+	go test ./...
+}
+
+package() {
+	install -Dm755 ./httpstat -t "$pkgdir"/usr/bin/
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+2953d8277101da5d7ceea33fc4970200b983d97598553eb62d6569e580248e8ba62689a84cc168e4036e49dc8bff0a2992889602fb81acfa6689229ee2e03281  httpstat-1.2.1.tar.gz
+"

@@ -1,0 +1,34 @@
+# Maintainer: Maarten van Gompel <proycon@anaproy.nl>
+pkgname=stam
+pkgver=0.11.1
+pkgrel=0
+pkgdesc="Command line tools for working with stand-off annotations on text"
+url="https://annotation.github.io/stam"
+arch="all"
+license="GPL-3.0-only"
+makedepends="cargo cargo-auditable"
+source="$pkgname-$pkgver.tar.gz::https://github.com/annotation/stam-tools/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-tools-$pkgver"
+options="net" #fetch cargo crates
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET"
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test
+}
+
+package() {
+	install -Dm755 target/release/stam -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+992ce22559c6748e5002e68c57911ae7c0c12e418881d9b29b237ca47df83b5a40099d8dcb171d2341e525a35b0c8639968f788ce2aad1aa8da1b92435df98c0  stam-0.11.1.tar.gz
+"

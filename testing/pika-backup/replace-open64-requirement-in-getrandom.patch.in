@@ -1,0 +1,11 @@
+--- a/../cargo/registry/src/index.crates.io-REPLACEME/getrandom-0.2.8/src/util_libc.rs
++++ b/../cargo/registry/src/index.crates.io-REPLACEME/getrandom-0.2.8/src/util_libc.rs
+@@ -101,8 +101,6 @@
+
+ cfg_if! {
+     if #[cfg(any(target_os = "linux", target_os = "emscripten"))] {
+-        use libc::open64 as open;
+-    } else {
+         use libc::open;
+     }
+ }

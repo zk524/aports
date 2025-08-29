@@ -1,0 +1,32 @@
+--- a/meson.build.orig
++++ b/meson.build
+@@ -4,7 +4,6 @@
+         'package', 'name',
+         check: true
+     ).stdout(),
+-    'rust',
+     version: run_command(
+         find_program(meson.project_source_root() / 'build-aux/meson-cargo-manifest.py'),
+         'package', 'version',
+@@ -13,19 +12,16 @@
+     meson_version: '>=0.57',
+ )
+
++
+ i18n = import ('i18n')
+ gnome = import ('gnome')
+
+-dependency('gtk4', version: '>= 4.10.0')
+-dependency('libadwaita-1', version: '>= 1.3.0')
+-
+ bindir = get_option('prefix') / get_option('bindir')
+ etcdir = get_option('prefix') / get_option('sysconfdir')
+ usrdir = get_option('prefix') / get_option('datadir')
+
+-meson.add_dist_script('build-aux/meson-dist-vendor.sh')
++#meson.add_dist_script('build-aux/meson-dist-vendor.sh')
+
+ subdir('data')
+ subdir('help')
+ subdir('po')
+-subdir('src')

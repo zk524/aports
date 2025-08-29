@@ -1,5 +1,5 @@
 # Contributor: Leonardo Arena <rnalrd@alpinelinux.org>
-# Maintainer: Thomas Kienlen <kommander@laposte.net>
+maintainer="Thomas Kienlen <kommander@laposte.net>"
 pkgname=plib
 pkgver=1.8.5
 pkgrel=3

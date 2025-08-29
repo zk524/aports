@@ -1,5 +1,5 @@
 # Contributor: Thomas Kienlen <kommander@laposte.net>
-# Maintainer: Thomas Kienlen <kommander@laposte.net>
+maintainer="Thomas Kienlen <kommander@laposte.net>"
 pkgname=kiwix-tools
 pkgver=3.7.0_git20250613
 _commit=acad8a85ab4706ff527cabdaac4635a930f3bdd4

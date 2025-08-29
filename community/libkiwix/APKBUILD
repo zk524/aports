@@ -1,5 +1,5 @@
 # Contributor: Thomas Kienlen <kommander@laposte.net>
-# Maintainer: Thomas Kienlen <kommander@laposte.net>
+maintainer="Thomas Kienlen <kommander@laposte.net>"
 pkgname=libkiwix
 pkgver=14.0.0
 pkgrel=1

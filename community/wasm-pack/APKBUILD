@@ -1,7 +1,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=wasm-pack
-pkgver=0.13.0
-pkgrel=1
+pkgver=0.13.1
+pkgrel=0
 pkgdesc="rust to wasm build tool"
 url="https://github.com/rustwasm/wasm-pack"
 # s390x: limited by lld & rust-wasm
@@ -18,6 +18,7 @@ makedepends="
 	cmake
 	curl-dev
 	openssl-dev>3
+	patchelf
 	wasi-sdk
 	zstd-dev
 	"
@@ -29,13 +30,10 @@ export OPENSSL_NO_VENDOR=1
 prepare() {
 	default_prepare
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided libzstd.
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		zstd = { rustc-link-lib = ["zstd"] }
 	EOF
 
@@ -51,10 +49,17 @@ check() {
 }
 
 package() {
-	install -Dm755 target/release/wasm-pack \
-		-t "$pkgdir"/usr/bin
+	install -Dm755 target/release/wasm-pack -t "$pkgdir"/usr/bin
+
+	cd "$pkgdir"
+
+	# Fix wrong RUNPATH: $ORIGIN/../../../../../../../../../../usr/lib/rustlib/x86_64-alpine-linux-musl/lib
+	#  -> /usr/lib/rustlib/x86_64-alpine-linux-musl/lib
+	local rpath="$(patchelf --print-rpath usr/bin/wasm-pack)"
+	rpath="$(realpath "${rpath#\$ORIGIN}")"
+	patchelf --set-rpath "$rpath" usr/bin/wasm-pack
 }
 
 sha512sums="
-1b379c2f3b814ec29245226d8e65fd119e179897f8a3ab115680a5a13bf71b4c1eb64d9c64f496dd3ccb9afe9e7a74f0d692799656eedb884b537fa97657c900  wasm-pack-v0.13.0.tar.gz
+9ac5c4736d78fdcff76b349635c6eb23ea9915acc87389f288b7e350bb1fcfacf222054beb090b3c8bc790371a69d223e05f3fc3a7bd4a6d4e9c8c860f4ff183  wasm-pack-v0.13.1.tar.gz
 "

@@ -38,12 +38,10 @@ makedepends="
 	py3-pytest-asyncio
 	"
 checkdepends="
-	py3-dash
 	py3-pexpect
 	py3-pytest
 	py3-pytest-asyncio
 	py3-setuptools
-	py3-dash-bootstrap-components
 	"
 source="py3-meshtastic-$pkgver.tar.gz::https://github.com/meshtastic/python/archive/refs/tags/$pkgver.tar.gz"
 builddir="$srcdir"/python-$pkgver

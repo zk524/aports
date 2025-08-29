@@ -57,6 +57,9 @@ CBUILDROOT="$(CTARGET=$TARGET_ARCH . "$sharedir"/functions.sh ; echo $CBUILDROOT
 [ -z "$CBUILDROOT" ] && die "CBUILDROOT not set for $TARGET_ARCH"
 export CBUILD
 
+# fail early on unknown architectures
+[ "$(arch_to_hostspec "$TARGET_ARCH")" = unknown ] && die "Unknown architecture, check $sharedir/functions.sh"
+
 # deduce aports directory
 [ -z "$APORTS" ] && APORTS=$(realpath $(dirname $0)/../)
 [ -e "$APORTS/main/build-base" ] || die "Unable to deduce aports base checkout"

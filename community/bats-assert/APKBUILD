@@ -1,7 +1,7 @@
 # Contributor: qaqland <qaq@qaq.land>
 # Maintainer: qaqland <qaq@qaq.land>
 pkgname=bats-assert
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=0
 pkgdesc="Common assertions for Bats"
 url="https://github.com/bats-core/bats-assert"
@@ -20,5 +20,5 @@ package() {
 }
 
 sha512sums="
-797689b91df5018b717c09578e1c0f6fea11f344c2e5985ec5eaca89bab39aafa7d88b31043a34576bcdf0ab5cf160c9624ee3167bd0854d7b16aa947b3928e4  bats-assert-2.1.0.tar.gz
+d4ae612466a4b29f2261228170c7af9ef06842536fcd5f3d39215648af66b1b96452fb78f81f6a0e0a7b12c7eb6167521a8f205a33da825cec28397696672cbe  bats-assert-2.2.0.tar.gz
 "

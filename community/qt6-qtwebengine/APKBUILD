@@ -2,8 +2,8 @@
 # group=qt6
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qt6-qtwebengine
-pkgver=6.9.1
-pkgrel=1
+pkgver=6.9.2
+pkgrel=0
 # latest commit of 130-based branch of qtwebengine-chromium
 _chromium_commit="0e01f03726a82bd9f924ab711a7cb29dacaeb5d2"
 pkgdesc="Provides support for web applications using the Chromium browser project"
@@ -341,7 +341,7 @@ dev() {
 }
 
 sha512sums="
-b8cbcb79b7ce6fb8a1afd1ec20912fc1094b8d2ae0f713a13f480277b691ec7045c8ce5621be8816e05cbb17af1a7900d8eedb283dc554da0dbc3e30991c9fda  qt6-qtwebengine-6.9.1.tar.gz
+d8849c9bb3c6c4b4b39988f0044e05103ab166a784281ce400e2a2f3a30d46381421aa112f65b56ba94bf8f681c7c2b23a69dacf8eea41e1f494220764d1cffe  qt6-qtwebengine-6.9.2.tar.gz
 f773062ff9395b3901c55b1f9e7ecdbb732ed846c37c1f6fe4b2b7adbfbe39074ecbaa3ad46961521db0b1845669857107fb08326d07e4ba1c96249bddecacc9  qtwebengine-chromium-0e01f03726a82bd9f924ab711a7cb29dacaeb5d2.tar.gz
 00b6cd42f36e6d201b3f9fbb6461a1ca0e3134c1721bc8f467809b3cd8360d18330ab6f32fe0fe938da7fe01978b9dc7187f7b5c2e153ea8a68b6a49452c1cb9  0001-Enable-building-on-musl.patch
 7b6ed37975c55e5ebc20b9a6207044b6f86102d69caa6fdd457078a7ae242026d3de5537651d3d86497ba18ddd1e97523aa082da4dff703a8a4f618bccd4af57  0002-temp-failure-retry.patch

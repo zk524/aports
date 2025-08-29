@@ -2,7 +2,7 @@
 # Maintainer: Alex Yam <alex@alexyam.com>
 pkgname=pulsar-client-cpp
 pkgver=3.7.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Apache Pulsar C++ client"
 url="https://github.com/apache/pulsar-client-cpp"
 arch="all"
@@ -26,6 +26,7 @@ makedepends="
 source="$pkgname-$pkgver.tar.gz::https://github.com/apache/pulsar-client-cpp/archive/refs/tags/v$pkgver.tar.gz
 	no-werror.patch
 	protobuf-31.patch
+	gcc-15.patch
 	"
 
 build() {
@@ -50,9 +51,10 @@ build() {
 package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
-# 20591a050403d9e49a75c52cba1555a3568d7ec85212d051808ac6e308d8adcc846df25e2f0d14dda0a75ccadace346e9b95a13508b31c31be661a96cbf9e2f4  cxx17.patch
+
 sha512sums="
 771b46c5aac55d56873e2a0e2219452fdd50e0c18414a6b12ae6a81213a44b0dd0ec8a7ff8c3c01e77c918eaba423b2f8313ba9d1a81dc02ba9ad5952bb4032f  pulsar-client-cpp-3.7.1.tar.gz
 82f616be35251bc73cdb2ebb6919433a5ea3774b789b8de701478a8b7a3a17c3c6a2e820a757190b066bd8a1b9c16e29f68c28fe65a165a111cd48abe5eb778e  no-werror.patch
 96e7cd2824600648704a51fff763a1a4b97fa1c2c770d9b8263c10dbc0842c0d475fcb19db99cbc4542349c0c76d1db4c144062aa2c0613e7b33835762f50f1a  protobuf-31.patch
+0816fb1fcfe8ccc95f8b66e5818de3a32fe5716301b0d3ca8ba46a9003d40b93bfcc0ddbe94fa66a50983976b6a66e138c6dda898b56e6495e0ee3ec0b9cad8b  gcc-15.patch
 "

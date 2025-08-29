@@ -1,0 +1,24 @@
+diff --git a/include/Arcus/Types.h b/include/Arcus/Types.h
+index 9fdcc60..c8d1b82 100644
+--- a/include/Arcus/Types.h
++++ b/include/Arcus/Types.h
+@@ -4,6 +4,7 @@
+ #ifndef ARCUS_TYPES_H
+ #define ARCUS_TYPES_H
+ 
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ 
+diff --git a/src/PlatformSocket_p.h b/src/PlatformSocket_p.h
+index b1e9aa5..c76b808 100644
+--- a/src/PlatformSocket_p.h
++++ b/src/PlatformSocket_p.h
+@@ -4,6 +4,7 @@
+ #ifndef ARCUS_PLATFORM_SOCKET_P_H
+ #define ARCUS_PLATFORM_SOCKET_P_H
+ 
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ 

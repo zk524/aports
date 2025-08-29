@@ -4,7 +4,7 @@ pkgname=kismet
 _pkgver=2023-07-R1
 pkgver=${_pkgver/-R/.}
 pkgver=0.${pkgver/-/}
-pkgrel=8
+pkgrel=9
 pkgdesc="Wireless network and device detector"
 url="https://www.kismetwireless.net/"
 arch="all"
@@ -28,7 +28,10 @@ subpackages="$pkgname-logtools
 	$pkgname-nxp-kw41z:nxp_kw41z
 	"
 options="!check" # no test-suite available
-source="$pkgname-$pkgver.tar.xz::https://www.kismetwireless.net/code/kismet-$_pkgver.tar.xz"
+source="
+	$pkgname-$pkgver.tar.xz::https://www.kismetwireless.net/code/kismet-$_pkgver.tar.xz
+	gcc-15.patch
+	"
 builddir="$srcdir/kismet-$_pkgver"
 
 prepare() {
@@ -91,4 +94,5 @@ nxp_kw41z() {
 
 sha512sums="
 b8b320b8e09be5be582848ce8a1a66f71a96eccc3c78f52d3f1f18122abbe614ff3b5a55b5fcedf3e6a1fc959a72838adc0d7278ffd6c25a1c179a1caf5584ce  kismet-0.202307.1.tar.xz
+5a5b986f70bb509e300a9ce6b7b8eea7fd2d9eafdfcefbbe6561321ba1c7541e817a14e4ef3d1415e4440f7bff74b02a4579c2355acf9e2892052ae869c3e1da  gcc-15.patch
 "

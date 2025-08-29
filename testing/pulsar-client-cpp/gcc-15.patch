@@ -1,0 +1,48 @@
+diff --git a/include/pulsar/Authentication.h b/include/pulsar/Authentication.h
+index fb74df6..1423575 100644
+--- a/include/pulsar/Authentication.h
++++ b/include/pulsar/Authentication.h
+@@ -22,6 +22,7 @@
+ #include <pulsar/Result.h>
+ #include <pulsar/defines.h>
+ 
++#include <cstdint>
+ #include <functional>
+ #include <map>
+ #include <memory>
+diff --git a/include/pulsar/BrokerConsumerStats.h b/include/pulsar/BrokerConsumerStats.h
+index 37eb454..7fafad9 100644
+--- a/include/pulsar/BrokerConsumerStats.h
++++ b/include/pulsar/BrokerConsumerStats.h
+@@ -23,6 +23,7 @@
+ #include <pulsar/Result.h>
+ #include <pulsar/defines.h>
+ 
++#include <cstdint>
+ #include <functional>
+ #include <iostream>
+ #include <memory>
+diff --git a/lib/BatchReceivePolicy.cc b/lib/BatchReceivePolicy.cc
+index 8487656..94a1805 100644
+--- a/lib/BatchReceivePolicy.cc
++++ b/lib/BatchReceivePolicy.cc
+@@ -19,6 +19,7 @@
+ 
+ #include <pulsar/BatchReceivePolicy.h>
+ 
++#include <cstdint>
+ #include "BatchReceivePolicyImpl.h"
+ #include "LogUtils.h"
+ 
+diff --git a/lib/NamespaceName.cc b/lib/NamespaceName.cc
+index d635480..48123a5 100644
+--- a/lib/NamespaceName.cc
++++ b/lib/NamespaceName.cc
+@@ -18,6 +18,7 @@
+  */
+ #include "NamespaceName.h"
+ 
++#include <cstdint>
+ #include <iostream>
+ #include <memory>
+ #include <sstream>

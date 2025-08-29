@@ -1,0 +1,47 @@
+# Contributor: Topoetry <leo.tisane@disroot.org>
+# Maintainer: Topoetry <leo.tisane@disroot.org>
+pkgname=guitarix
+pkgver=0.46.0
+pkgrel=0
+pkgdesc="Virtual guitar amplifier for Linux."
+url="https://guitarix.org/"
+arch="aarch64 x86 x86_64"
+license="GPL-3.0-or-later"
+makedepends="boost-dev curl-dev eigen-dev glibmm-dev gtkmm3-dev glib-dev jack-dev liblo-dev libsndfile-dev fftw-dev gtk+3.0-dev lv2-dev lilv-dev lrdf-dev raptor2-dev sassc waf zita-convolver-dev"
+subpackages="$pkgname-jack $pkgname-lv2 $pkgname-dev"
+source="$pkgname-$pkgver.tar.xz::https://github.com/brummer10/guitarix/releases/download/V$pkgver/guitarix2-$pkgver.tar.xz"
+# check: no test suite
+options="!check"
+
+build() {
+	python3 waf configure \
+		--prefix=/usr \
+		--enable-lfs \
+		--no-desktop-update \
+		--disable-nls \
+		--shared-lib \
+		--lib-dev \
+		--no-faust \
+		--no-avahi \
+		--no-bluez
+	python3 waf build
+}
+
+package() {
+	python3 waf install --destdir="$pkgdir"
+}
+
+jack() {
+	pkgdesc="Virtual guitar amplifier for Linux. Standalone package."
+	depends="font-roboto"
+	amove usr/bin/guitarix
+	amove usr/share/applications
+}
+lv2() {
+	pkgdesc="Virtual guitar amplifier for Linux. Lv2 plugin package."
+	amove usr/lib/lv2
+}
+
+sha512sums="
+cdb8eccdd230bade493cf0b7fd2a6e748fcaf3c3fd6b5ed5fbd6134d08be9518c93400625d63e386b436fcef3e1738cae543256b09941445436d7f2bf41649a0  guitarix-0.46.0.tar.xz
+"

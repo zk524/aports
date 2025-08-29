@@ -7,8 +7,8 @@
 pkgname=nodejs
 # Note: Update only to LTS versions! Other versions are supported only for
 #  9 months by upstream.
-pkgver=22.16.0
-pkgrel=3
+pkgver=22.19.0
+pkgrel=0
 pkgdesc="JavaScript runtime built on V8 engine - LTS version"
 url="https://nodejs.org/"
 arch="all"
@@ -299,7 +299,7 @@ dev() {
 }
 
 sha512sums="
-50a41c315f86a682e9f67c8259d4e1180571ea1d66efe8454662acaa1a5f6ee2297f88ca3dc4b7a6a76885739e0c5de25a1b13ccb4e39e987ae6b3b3f03152ab  node-v22.16.0.tar.gz
+8f79ba7a6260f6ba97ffbb11fee7ebfdf49cc0fb062c3a379e7634cc4d32bc28aa4e2695e24fbbfbbb79b9d47ab6c5493551f058ed7dcc2f3c7069aef8869f2e  node-v22.19.0.tar.gz
 784e692513b9d7d45dce82ac047415b76227770ed5231c57f8ccfb6ae148332cac82a3d8539c33247eeb041cd8d23331fed8dba7c35fad07f6aec6a440b89040  ncrypto-include-openssl-rand.h.patch
 37dc38704eae165e6940393c08bb182120dcec119739bda4961706f3aa955bf9669c371bcfa0317269f8f08e01d4c6c204f2c595d583d649433a659a44113bfb  v8-ppc64le-compat.patch
 37955e69b0548b582a3877df05361d0d5f342f7c0d84b58f2772e8601cd9d6f702f4a016a51023b80dc187b81a0143a5a78e7462f85a7bc7f2474f6c8b5e5fe4  v8-riscv-trap-handler.patch

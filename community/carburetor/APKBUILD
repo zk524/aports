@@ -1,7 +1,7 @@
 # Contributor: Jakob Meier <comcloudway@ccw.icu>
 # Maintainer: Jakob Meier <comcloudway@ccw.icu>
 pkgname=carburetor
-pkgver=4.5.1
+pkgver=5.1.0
 pkgrel=0
 pkgdesc="Graphical settings app for tractor in GTK"
 url="https://framagit.org/tractor/carburetor"
@@ -12,21 +12,34 @@ depends="
 	libadwaita
 	tractor
 	py3-gobject3
+	py3-pycountry
 "
-makedepends="gettext py3-gpep517 py3-setuptools py3-wheel py3-pytest"
-subpackages="$pkgname-doc $pkgname-lang $pkgname-pyc"
-source="https://framagit.org/tractor/carburetor/-/archive/$pkgver/carburetor-$pkgver.tar.gz"
+makedepends="
+	desktop-file-utils
+	gettext
+	glib-dev
+	py3-gpep517
+	py3-meson-python
+	py3-setuptools
+	py3-wheel
+	meson
+	"
+checkdepends="py3-pytest"
+subpackages="$pkgname-doc $pkgname-lang"
+source="https://framagit.org/tractor/carburetor/-/archive/$pkgver/carburetor-$pkgver.tar.gz
+	fix-pycountry.patch
+	"
 # no tests available
 options="!check"
 
 build() {
-	gpep517 build-wheel \
-		--wheel-dir .dist \
-		--output-fd 3 3>&1 >&2
+	abuild-meson \
+		. output
+	meson compile -C output
 }
 
 package() {
-	python3 -m installer -d "$pkgdir" .dist/*.whl
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 
 	# generate translation files
 	find po -iname '*.po' | \
@@ -38,18 +51,9 @@ package() {
 
 	# Install man page
 	install -Dm0644 -t "$pkgdir/usr/share/man/man1" data/carburetor.1
-
-	# Install desktop integration files
-	install -Dm0644 -t "$pkgdir/usr/share/applications" data/io.frama.tractor.carburetor.desktop
-	install -Dm0644 -t "$pkgdir/usr/share/metainfo" data/metainfo/io.frama.tractor.carburetor.metainfo.xml
-
-	# Install icons
-	install -Dm644 data/icons/scalable/apps/io.frama.tractor.carburetor.svg -t "$pkgdir/usr/share/icons/hicolor/scalable/apps"
-	install -Dm644 data/icons/symbolic/apps/io.frama.tractor.carburetor-symbolic.svg -t "$pkgdir/usr/share/icons/hicolor/symbolic/apps"
-	mkdir -p "$pkgdir/usr/share/icons/hicolor/"
-	cp -dpr data/icons/* "$pkgdir/usr/share/icons/hicolor/"
 }
 
 sha512sums="
-e571670bfbfd315a29f93b18d929d7a449b620058b937c0090808e105e98ab00eef17cbe45fc465990dbc4f0b44e1fd1be4fac295ad6efb169eb3e53a3b68a40  carburetor-4.5.1.tar.gz
+76c87edda1c5bc29748d52ca96bf56e244f5c4cdb09a87922b4e3dab9d57a8ff59b5e4d5598757552d0fa70d4502bf01296213e94115c3b9dd9316ea600f6677  carburetor-5.1.0.tar.gz
+6611eb6f4d12ad2b505e58a30c031735386491b9a85690e7ee3cc9d692d0204daaf1248f60172d370a6333c2640ce3ab96dff6c7d2a73b5f92d12c174ef6fa33  fix-pycountry.patch
 "

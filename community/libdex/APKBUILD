@@ -1,6 +1,6 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=libdex
-pkgver=0.10.1
+pkgver=0.11.0
 pkgrel=0
 # NOTE: Upgrade only to even-numbered versions (e.g. 1.18.x, 1.20.x)!
 pkgdesc="Future-based programming for GLib-based applications"
@@ -36,6 +36,6 @@ package() {
 }
 
 sha512sums="
-ada18b95eaddfccfa1d73889979c914c646fe78ff93878346db0a40483206263429b9a97a073b7129da8eeefcb80a1911f994f04f306aa41877c102683a4a1ef  libdex-0.10.1.tar.xz
+3dd5f6109bf497c62cbdebc6c6e70fe3ecdd081f1eeba25ec718970cb74d1317987a038f84c1d174ec61d6018d5f6584d9741fd4166f5b49836465b7845f4155  libdex-0.11.0.tar.xz
 c64dad8be4999efd66bdc82c919023306a96d437b99d18d948fe61b8d48686bedbe8260f6230e834bd2770c40a83ca9f40e0a04f4936f5097c9c791b984df8ec  ucontext.patch
 "

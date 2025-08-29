@@ -1,0 +1,28 @@
+diff --git a/libfoundry/meson.build b/libfoundry/meson.build
+index 9b394a5..7e688b4 100644
+--- a/libfoundry/meson.build
++++ b/libfoundry/meson.build
+@@ -60,11 +60,7 @@ version_conf = configuration_data()
+ version_conf.set('VERSION', meson.project_version())
+ version_conf.set('MAJOR_VERSION', version_split[0])
+ version_conf.set('MINOR_VERSION', version_split[1])
+-if version_split[2][0] in ['a','b','r']
+-  version_conf.set('MICRO_VERSION', 0)
+-else
+-  version_conf.set('MICRO_VERSION', version_split[2])
+-endif
++version_conf.set('MICRO_VERSION', 0)
+ 
+ configure_file(
+           input: 'foundry-version.h.in',
+diff --git a/meson.build b/meson.build
+index fbc647a..b76e86b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('foundry', 'c',
+-          version: '1.0.alpha',
++          version: '1.0_alpha',
+     meson_version: '>= 1.1',
+   default_options: [ 'warning_level=2', 'werror=false', 'c_std=gnu11', ],
+ )

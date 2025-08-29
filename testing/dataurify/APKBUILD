@@ -1,0 +1,25 @@
+maintainer="Mohammed Qureshi <meow@swee.codes>"
+pkgname=dataurlify
+pkgver=1.0
+pkgrel=0
+pkgdesc="Convert files to data: URIs"
+url="https://git.swee.codes/swee/dataurlify"
+arch="all !loongarch64" # loongarch64 blocked by libc crate
+license="Apache-2.0"
+makedepends="cargo icu-data-full"
+options="!check" # No way to test build
+builddir="dataurlify"
+source="$pkgver.tar.gz::https://git.swee.codes/swee/dataurlify/archive/$pkgver.tar.gz"
+
+build() {
+	cargo build --release
+}
+
+package() {
+	mkdir -p $pkgdir/usr/bin
+	mv $srcdir/dataurlify/target/release/dataurlify $pkgdir/usr/bin/dataurlify
+}
+
+sha512sums="
+d8293dacee5f4fa4364c592d714b4e214d4f80bde23db26af524289a2ad0c2f3805bdd3f34a7ba29ee748d4f8c789b5102a11a525505dcb1bfc4584448ec3eef  1.0.tar.gz
+"

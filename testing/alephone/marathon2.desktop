@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Marathon 2: Durandal
+Exec=/usr/bin/alephone '/usr/share/AlephOne/Marathon 2'
+Terminal=false
+StartupNotify=false
+Categories=Game;

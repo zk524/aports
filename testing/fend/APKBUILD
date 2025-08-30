@@ -1,0 +1,54 @@
+# Maintainer: Paul Zinselmeyer <info@pfzetto.de>
+pkgname=fend
+pkgver=1.5.5
+pkgrel=0
+pkgdesc="Arbitrary-precision unit-aware calculator"
+url="https://github.com/printfn/fend"
+arch="all"
+license="MIT"
+depends="openssl"
+makedepends="cargo cargo-auditable openssl-dev"
+# add doc-build dependencies for architectures that are supported by pandoc-cli
+case "$CARCH" in
+	x86_64|aarch) makedepends="$makedepends pandoc-cli bash" ;;
+esac
+# doc-subpackage is available for all architectures for inclusion of MIT License
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/printfn/fend/archive/refs/tags/v$pkgver.tar.gz"
+options="net" # needed for 'cargo fetch' in prepare()
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	# build manpages on architectures that are supported by pandoc-cli
+	case "$CARCH" in
+		x86_64|aarch) ./documentation/build.sh ;;
+	esac
+
+	cargo auditable build -p fend --frozen --release
+}
+
+check() {
+	cargo test --workspace -p fend --release --frozen
+}
+
+package() {
+	# install manpages on architectures that are supported by pandoc-cli
+	case "$CARCH" in
+		x86_64|aarch) install -Dm644 ./documentation/fend.1 "$pkgdir"/usr/share/man/man1/fend.1 ;;
+	esac
+
+	# install LICENSE
+	install -Dm644 LICENSE.md "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+	# install application
+	install -Dm755 target/release/fend "$pkgdir"/usr/bin/fend
+}
+
+sha512sums="
+44ab12d5a7f77fc578ce7247b6a42568d764a413476785ea3d258315d37846b68cc8d9cf21c14bd643c775b48212e8ab207a3ad0b1fdbb4ce63d3a944e982bc6  fend-1.5.5.tar.gz
+"

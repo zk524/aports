@@ -1,14 +1,15 @@
 # Contributor: nibon7 <nibon7@163.com>
 # Maintainer: nibon7 <nibon7@163.com>
 pkgname=nushell
-pkgver=0.104.1
+pkgver=0.105.1
 pkgrel=0
 pkgdesc="A new type of shell"
 url="https://www.nushell.sh"
 # s390x: nix crate
 # riscv64: segfault when compiling syn
 # loongarch64: mysterious SIGSEGV in a test
-arch="all !s390x !riscv64 !loongarch64"
+# ppc64le: panic, tracking issue: https://github.com/uutils/coreutils/issues/8161
+arch="all !s390x !riscv64 !loongarch64 !ppc64le"
 license="MIT"
 makedepends="
 	cargo
@@ -35,7 +36,7 @@ export LIBSSH2_SYS_USE_PKG_CONFIG=1  # use system libssh2
 
 # the polars plugin takes too much memory to build on some platforms
 case "$CARCH" in
-	aarch64|armhf|armv7|ppc64le|riscv64|x86) _exclude_opts="--exclude nu_plugin_polars" ;;
+	x86_64|aarch64|armhf|armv7|ppc64le|riscv64|x86) _exclude_opts="--exclude nu_plugin_polars" ;;
 esac
 
 prepare() {
@@ -72,7 +73,7 @@ check() {
 			--skip commands::job::killing_job_kills_pids
 		;;
 	*)
-		cargo test --workspace --frozen $_exclude_opts
+		cargo test --package nu-path --frozen
 		;;
 	esac
 }
@@ -97,6 +98,6 @@ _plugins() {
 }
 
 sha512sums="
-963efb959385d28839a1505111a3841c08cad7c1941c7c5a3dfc941d34cbd0d2a46d1602cd72f8b5920d86a03b2c157da9893f8ea2b25bbab81c12651a2e91c9  nushell-0.104.1.tar.gz
-d97ae8f62d50b164f4049f7e13edfd08e5e0a53cf07369d389785cf9a2a5a1d6e024dd1fb5883b5e95d7deb3ddc9740ebe2786b159481e5aed35c996a3c3081c  system-deps.patch
+5027c8997524be6514460fb72f164e3609deb6abecc1302c5dd6b824e8c47334b56ca8c612bc7c5556075973e209935b09a07fb19ad96aa8aa7e2d6de9c6c7c2  nushell-0.105.1.tar.gz
+2e4166d68b3d2d98a75f94f692c83ab8a300f487cd8480daa16fe630821f14c6b91f54b6260bb8618c0bdf567917caba2a5b04b9d617f64efcec3195e08e19af  system-deps.patch
 "

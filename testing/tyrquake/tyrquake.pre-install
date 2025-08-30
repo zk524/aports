@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S tyrquake 2>/dev/null
+adduser -S -D -H -s /sbin/nologin -G tyrquake -g "Tyr-Quake QuakeWorld server" tyrquake 2>/dev/null
+
+exit 0

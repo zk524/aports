@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+
+name="tyrquake"
+description="TyrQuake QuakeWorld server"
+
+supervisor=supervise-daemon
+
+command="/usr/bin/tyr-qwsv"
+
+command_user="tyrquake:tyrquake"
+
+depend() {
+	need net
+	after firewall
+}

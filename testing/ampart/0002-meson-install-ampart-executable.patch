@@ -1,0 +1,27 @@
+From 26f6fa19dd17ea87d17326930d9610e4732133a0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=2E=20Neusch=C3=A4fer?= <j.ne@posteo.net>
+Date: Thu, 6 Mar 2025 20:42:53 +0100
+Subject: [PATCH] meson: install ampart executable
+
+executables are only installed if the 'install' parameter is explicitly set
+to true.
+
+https://mesonbuild.com/Reference-manual_functions.html#executable_install
+---
+ meson.build | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 2d77182..e1050fc 100644
+--- a/meson.build
++++ b/meson.build
+@@ -7,4 +7,5 @@ executable('ampart',
+     'src/cli.c', 'src/dtb.c', 'src/dts.c', 'src/ept.c', 'src/gzip.c', 'src/io.c', 'src/main.c', 'src/parg.c', 'src/size.c', 'src/stringblock.c', 'src/util.c', 'src/version.c',
+     dependencies : zlibdep,
+     include_directories: incdir,
+-    c_args: '-DVERSION="@0@"'.format(meson.project_version()))
++    c_args: '-DVERSION="@0@"'.format(meson.project_version()),
++    install: true)
+-- 
+2.48.1
+

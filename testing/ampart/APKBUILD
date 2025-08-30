@@ -1,0 +1,43 @@
+# Contributor: J. Neuschäfer <j.ne@posteo.net>
+# Maintainer: J. Neuschäfer <j.ne@posteo.net>
+pkgname=ampart
+pkgver=1.4.1
+pkgrel=0
+pkgdesc="A partition tool for Amlogic's proprietary emmc partition format"
+url="https://github.com/7Ji/ampart"
+# s390x: won't work, the code assumes a little-endian CPU
+arch="all !s390x"
+license="GPL-3.0-or-later"
+makedepends="meson bash zlib-dev linux-headers"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/7Ji/ampart/archive/refs/tags/v$pkgver.tar.gz
+	0001-io_find_disk-rewrite-for-portability-and-robustness.patch
+	0002-meson-install-ampart-executable.patch"
+builddir="$srcdir/ampart-$pkgver"
+options="!check"  # doesn't have tests
+
+prepare() {
+	default_prepare
+
+	# build-only-version.sh would normally determine the version based on git
+	echo "echo '$pkgver-r$pkgrel (Alpine Linux)'" > scripts/build-only-version.sh
+}
+
+build() {
+	abuild-meson \
+		. output
+	meson compile -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+
+	install -Dm644 doc/*.md   -t "$pkgdir"/usr/share/doc/"$pkgname"
+	install -Dm644 doc/imgs/* -t "$pkgdir"/usr/share/doc/"$pkgname"/imgs
+}
+
+sha512sums="
+577ea86c0ebf4dfce2ee6f97d59d12e341a47943f92d2f987f3c8bcc612b7e3dcaf81d587fe97c52650c54a62450a3d827756032b46f1b01357a5ad8e499364d  ampart-1.4.1.tar.gz
+d52a9d8b78d65d99a502b93d57a7ffeba35beabbcf2e34d710e08b93fa8f3dca9e15346584927053ea17ea25c52ddf858a2d68cc79b0a1f6cad4a5982dccd00b  0001-io_find_disk-rewrite-for-portability-and-robustness.patch
+5e64b461dbf19ddbd7587173b0fc4bef1cf92bc3b194eb272da9abbcb5c03e57a715df71e2193818f0217eed2ceb7bbaa35357ed024f8f0ff6caf784b5c6ebff  0002-meson-install-ampart-executable.patch
+"

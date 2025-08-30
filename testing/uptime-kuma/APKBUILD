@@ -1,0 +1,51 @@
+# Contributor: Adam Thiede <me@adamthiede.com>
+# Maintainer: Adam Thiede <me@adamthiede.com>
+pkgname=uptime-kuma
+pkgver=1.23.16
+pkgrel=0
+pkgdesc="A fancy self-hosted monitoring tool"
+url="https://uptime.kuma.pet"
+# armhf builds depend on libc.musl-armv7.so.1; disabling
+arch="all !armhf"
+license="MIT"
+depends="nodejs"
+makedepends="npm python3"
+subpackages="$pkgname-openrc"
+pkgusers="uptimekuma"
+install="$pkgname.pre-install"
+source="$pkgname-$pkgver.tar.gz::https://github.com/louislam/uptime-kuma/archive/refs/tags/$pkgver.tar.gz
+	$pkgname-$pkgver-dist.tar.gz::https://github.com/louislam/uptime-kuma/releases/download/$pkgver/dist.tar.gz
+	uptime-kuma.initd
+"
+options="net !check" # npm install needs net, cypress tests only run on arm64/x86_64
+case "$CARCH" in
+	x86_64|aarch64)
+		options="net";;
+esac
+
+
+build() {
+	npm ci --omit dev
+}
+
+check() {
+	# don't want to include dev/test dependencies in node_modules
+	mv node_modules "$srcdir"/node_modules
+	npm install cross-env
+	npm run test
+	rm -rf node_modules && mv "$srcdir"/node_modules .
+}
+
+package() {
+	mv "$srcdir"/dist "$builddir"/dist
+	mkdir -p "$pkgdir"/usr/lib
+	cp -r "$builddir" "$pkgdir"/usr/lib/uptime-kuma
+	chown -R uptimekuma "$pkgdir"/usr/lib/uptime-kuma
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+}
+
+sha512sums="
+a132d1cd796fbd868782627edfd45d2a6bd3d2fadece23e0bbf000e6a30482659062a43c4590c98e390cac9b8c1926efd8ff01c5b358b7ccea4438259b86f24e  uptime-kuma-1.23.16.tar.gz
+65b80429aa527dad7023d78be84511d1c373402d500df58c17a0ca73e3e634c2de1fd162fdba11301b4f0b7a337d918fb282ee73988183a97d07c6d654e092d6  uptime-kuma-1.23.16-dist.tar.gz
+9d027033fb27b7266811e026a55dae7d00d48f0a7308813093749b58d0058a41ae6ea5b4fef6cc7c6ba2bf14db72f9412197b997336295e6dfc1ecea94d60180  uptime-kuma.initd
+"

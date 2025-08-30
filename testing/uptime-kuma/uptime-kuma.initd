@@ -1,0 +1,10 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name=uptime-kuma
+description="A fancy self-hosted monitoring tool"
+
+command=/usr/bin/node
+command_args="server/server.js"
+command_user=uptimekuma
+directory="/usr/lib/uptime-kuma"

@@ -1,0 +1,49 @@
+# Maintainer: Jianhua Lu <lujianhua000@gmail.com>
+pkgname=netease-cloud-music-gtk
+pkgver=2.5.0
+pkgrel=0
+pkgdesc="Rust + GTK based Netease Cloud Music Player for Linux."
+url="https://github.com/gmg137/netease-cloud-music-gtk"
+arch="all"
+license="GPL-3.0-or-later"
+depends="
+	gst-plugins-good
+	gst-plugins-ugly
+"
+makedepends="
+	cargo
+	desktop-file-utils
+	gstreamer-dev
+	gst-plugins-base-dev
+	gst-plugins-bad-dev
+	gtk4.0-dev
+	libadwaita-dev
+	meson
+	openssl-dev
+"
+checkdepends="xvfb-run"
+subpackages="$pkgname-lang"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/gmg137/netease-cloud-music-gtk/archive/refs/tags/$pkgver.tar.gz
+	ncm.patch
+"
+
+build() {
+	abuild-meson \
+		-Db_lto=true \
+		. output
+	meson compile -C output
+}
+
+check() {
+	xvfb-run -a meson test --no-rebuild --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+3d4dbd4b53df0bb46fe8443a1d1562788dedc5fb07f3c08c11e8c1ba13cc31df6696bc685197681f11464db5edaae54afc9f10b25214c09ef7aa7a57d1a70e4b  netease-cloud-music-gtk-2.5.0.tar.gz
+1492b1e30e9c816fd83debef87b93553566e62737f5e4b63637e5946d174a4fe1c333d7c01d73c75c2e6819d1680cb12993e83544db41f1a706fc70023a0c6a9  ncm.patch
+"

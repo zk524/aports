@@ -1,0 +1,39 @@
+# Maintainer: qaqland <qaq@qaq.land>
+pkgname=netease-cloud-music-gtk
+pkgver=2.5.2
+pkgrel=0
+pkgdesc="Rust + GTK based Netease Cloud Music Player for Linux."
+url="https://github.com/gmg137/netease-cloud-music-gtk"
+arch="all"
+license="GPL-3.0-or-later"
+depends="
+	gst-plugins-good
+	gst-plugins-ugly
+	"
+makedepends="
+	cargo
+	desktop-file-utils
+	gst-plugins-bad-dev
+	gst-plugins-base-dev
+	gstreamer-dev
+	gtk4.0-dev
+	libadwaita-dev
+	meson
+	openssl-dev
+	"
+subpackages="$pkgname-lang"
+source="$pkgname-$pkgver.tar.gz::https://github.com/gmg137/netease-cloud-music-gtk/archive/refs/tags/$pkgver.tar.gz"
+options="!check net" # cargo, upstream has no tests
+
+build() {
+	abuild-meson -Db_lto=true . output
+	meson compile -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+c5d8f47c6880303927c4ace9f9678356c89ebce70ab252c6f22d0deea325c7297ddb1d0cd0e3e3bc8f20b5d77c3719d9c502ed07093242236fa65d1fd315d0c7  netease-cloud-music-gtk-2.5.2.tar.gz
+"

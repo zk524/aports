@@ -1,6 +1,6 @@
 maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
 pkgname=ruff
-pkgver=0.12.7
+pkgver=0.12.9
 pkgrel=0
 pkgdesc="Extremely fast Python linter"
 url="https://github.com/astral-sh/ruff"
@@ -79,5 +79,5 @@ _python() {
 }
 
 sha512sums="
-86ad98d27f3ccf39b2a66d01b4ac523806ead5e92c2701ca07cdfdf8c352c6d7216e6ace1480639385abf8bfc6d168f07a49a72e5c0b64d22dfe138974cc9e1f  ruff-0.12.7.tar.gz
+1430e13625a391c017dd08d7b8b0b436011e1010fbac871393cbbc8d443277d96e257e464a2f6830d38562d7137baabcf65e170a7f7e2ec53936ed9a5b5de3c7  ruff-0.12.9.tar.gz
 "

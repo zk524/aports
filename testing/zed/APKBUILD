@@ -1,9 +1,8 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=zed
-pkgver=0.138.4
-_pkgver=${pkgver/_/-}
-pkgrel=5
+pkgver=0.186.12
+pkgrel=0
 pkgdesc="High-performance multiplayer code editor (experimental package!)"
 url="https://zed.dev"
 # TODO: Enable on more arches later.
@@ -18,9 +17,12 @@ makedepends="
 	cargo
 	cargo-auditable
 	clang-dev
+	cmake
 	curl-dev
 	fontconfig-dev
+	gettext-envsubst
 	libgit2-dev
+	libx11-dev
 	libxcb-dev
 	libxkbcommon-dev
 	mimalloc2-dev
@@ -31,20 +33,14 @@ makedepends="
 	wayland-dev
 	zstd-dev
 	"
-source="https://github.com/zed-industries/zed/archive/v$_pkgver/zed-$_pkgver.tar.gz
-	zed-libexec.patch
-	auto-updater-disabler.patch
-	system-curl.patch
-	system-openssl.patch
-	system-sqlite.patch
-	dont-download-node.patch
-	dont-download-supermaven.patch
-	zed-desktop.patch
+source="
+	https://github.com/zed-industries/zed/archive/v$pkgver/zed-$pkgver.tar.gz
 	defaults.patch
-	cargo.lock.patch
+	dont-download-binaries.patch
+	dont-download-supermaven.patch
+	system-sqlite.patch
 	"
-builddir="$srcdir/$pkgname-$_pkgver"
-options="!check"  # FIXME: building fails on out of memory
+options="!check net"  # FIXME: building fails on out of memory
 
 # TODO:
 # - unbundle fonts
@@ -52,15 +48,28 @@ options="!check"  # FIXME: building fails on out of memory
 # - unbundle tree-sitter parsers
 # - remove Supermaven integration (not usable on Alpine)?
 
+_appid="dev.zed.Zed"
+
 unset CARGO_PROFILE_RELEASE_PANIC  # is this needed?
 export CARGO_PROFILE_RELEASE_STRIP="symbols"
 
-export RELEASE_VERSION="$_pkgver"
+# for the desktop file
+export DO_STARTUP_NOTIFY="true"
+export APP_ICON="zed"
+export APP_NAME="Zed"
+# Upstream recommends name "zed" but that's already taken by ZFS Event Daemon.
+export APP_CLI="/usr/bin/zed-editor"
+export APP_ID="dev.zed.Zed"
+export APP_ARGS="%U"
+
+export RELEASE_VERSION="$pkgver"
 # Disable automatic updates.
 export ZED_UPDATE_EXPLANATION="Please use apk to update zed"
 
 prepare() {
 	default_prepare
+
+	envsubst < "crates/zed/resources/zed.desktop.in" > "$APP_ID".desktop
 
 	# Rust target triple.
 	local target="$(rustc -vV | sed -n 's/host: //p')"
@@ -88,8 +97,9 @@ check() {
 
 package() {
 	install -D -m755 target/release/zed "$pkgdir"/usr/libexec/zed-editor
-	# Upstream recommends name "zed" but that's already taken by ZFS Event Daemon.
 	install -D -m755 target/release/cli "$pkgdir"/usr/bin/zed-editor
+
+	install -D -m0644 -t $pkgdir/usr/share/applications/ "$APP_ID".desktop
 
 	install -D -m644 crates/zed/resources/zed.desktop.in "$pkgdir"/usr/share/applications/zed.desktop
 	install -D -m644 crates/zed/resources/app-icon.png "$pkgdir"/usr/share/icons/hicolor/512x512/apps/zed.png
@@ -97,15 +107,9 @@ package() {
 }
 
 sha512sums="
-d7f7d7c7868674b9e9cfb779a62bd237d3d62bec55b3fc9bd39f5f424140d519cbbf16f30091af0bc0524d013d8ccb0c9d0b825bb989eeb694df515edb285d61  zed-0.138.4.tar.gz
-f0d53426a514b3c84e2394cd8b49cccbeba38d9b2f5c95565f7b74c32dea15ac6f77ee163cfac0df319944b777abae8f81935029cff04aee3b98b7c5e34abe89  zed-libexec.patch
-b56fee2f4ab305588919b96f49de8a4a762000208b220d3126bc188a739388d163f1ca7eb04360610a7e30ccfb399ebc4b64f856fc67e208417724b8862c8908  auto-updater-disabler.patch
-31f53310d35c2e9112460007c899fedda66d24561d7348f39ca8809423f4c5d6c22721c0d3e155d859c406733fb137d7be7015770e242b64b963cb2fe1b8f430  system-curl.patch
-e05bd7921f5b611d7ed7857b4a613b2b01b152794d5a7e6bcc4c5767e9bd10937be29ace0a4af154104e631a8665f10433828c7744b29a7bffc825adaac30da4  system-openssl.patch
-54a17784e428efc1564298f9e2a79e6c78386a4af47ea8c5d6c1df3543305258937b654d40841e281e9abadeb0f11ab6d5b1cc463d0d5770eceeace0819f833a  system-sqlite.patch
-4a023dcdceb5d4511adda570d25690e76cc16e90dcffd57095fdd9f6acccfbd9d3efcf3032441fb632257f2435c64bb93cc6cb3b8b3771be9cd25abe1e67ecf6  dont-download-node.patch
-c6aab3cb834a3e345324632499599f15dd2856f3d5fbffcc280fd31cbcb76c5f5fb0efe74cb55e53568058100b287101a558e53f88b7b81beb1f8136e61731c5  dont-download-supermaven.patch
-be0d02d3b994965402bd5e84efc8c06f8a0f98c88fb091d0f514d26bff268d0a02dd79982a9dfb60cc8b656d59c474a53be5d26eadb8dfd306676b1aa67e3441  zed-desktop.patch
-50d6b709441b7943799e208fef992d2b2db38ee15a2ef1608894f6b8b1fec7c83c437f6f9441b6bc79d0a1b2b094911d892964398b4597a98b11226922ad0285  defaults.patch
-69586a09cbb9ba560414ea020260e535ef25ff8d194266892d4f27c3744f00e8704a4947c898631503d0133886b31d30e06dfc12b78c4147340baf7b88d7ba04  cargo.lock.patch
+8d77e3e235af182f10dfda777fcdbfe90d13ab56daf04cb3d7203ca8e113781dd64754b956865de0422abf05e1a3f104ea479b303f2724075b01fc5129eedad6  zed-0.186.12.tar.gz
+a69d07d8650087a6bdf8783d429af383a06e27fc55418dac0b2575db264f9528e8459791bc48b0a73c80c3f4c3ea73d9adae564ca74cc42e50a8952e51f5c17f  defaults.patch
+6093eddac605a93873a9468c4ed42cdd4dd571a970f4a22cad3333333b7d058589116e85342f9e6d544b40c5e184e32ebe481ab6f7d3bef91e20938eb385fef2  dont-download-binaries.patch
+a371d7e25d5590e41219ee0b2368884992ae95c3f453ea5c4c477317bf0694796f0fa4f45f1d7248a95d00e043633a0d41664975ea12089a39e5ef5300c0b95c  dont-download-supermaven.patch
+306b430b72549a30cf5e2ba3388b1b89742bc0663485d2a8f0db874742c09b6bf6b036cf00037f59fb1b4d6c821e8ca5cafc666cef79b28d5c7ff2cd789414ba  system-sqlite.patch
 "

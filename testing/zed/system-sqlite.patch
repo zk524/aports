@@ -1,5 +1,25 @@
---- a/crates/sqlez/Cargo.toml
-+++ b/crates/sqlez/Cargo.toml
-@@ -17 +17 @@
--libsqlite3-sys = { version = "0.26", features = ["bundled"] }
-+libsqlite3-sys = { version = "0.26", features = ["buildtime_bindgen"] }
+diff --git a/Cargo.lock b/Cargo.lock
+index ac9b127..e28b9ff 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -9056,6 +9056,7 @@ version = "0.30.1"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "2e99fb7a497b1e3339bc746195567ed8d3e24945ecd636e3619d20b9de9e9149"
+ dependencies = [
++ "bindgen 0.69.5",
+  "cc",
+  "pkg-config",
+  "vcpkg",
+diff --git a/Cargo.toml b/Cargo.toml
+index cf227b8..04fb6d2 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -469,7 +469,7 @@ jsonwebtoken = "9.3"
+ jupyter-protocol = { git = "https://github.com/ConradIrwin/runtimed", rev = "7130c804216b6914355d15d0b91ea91f6babd734" }
+ jupyter-websocket-client = {  git = "https://github.com/ConradIrwin/runtimed" ,rev = "7130c804216b6914355d15d0b91ea91f6babd734" }
+ libc = "0.2"
+-libsqlite3-sys = { version = "0.30.1", features = ["bundled"] }
++libsqlite3-sys = { version = "0.30.1", features = ["buildtime_bindgen"] }
+ linkify = "0.10.0"
+ log = { version = "0.4.16", features = ["kv_unstable_serde", "serde"] }
+ lsp-types = { git = "https://github.com/zed-industries/lsp-types", rev = "c9c189f1c5dd53c624a419ce35bc77ad6a908d18" }

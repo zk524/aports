@@ -1,0 +1,52 @@
+diff --git a/crates/eval/src/eval.rs b/crates/eval/src/eval.rs
+index 79d03ce..f47ccfc 100644
+--- a/crates/eval/src/eval.rs
++++ b/crates/eval/src/eval.rs
+@@ -398,7 +398,7 @@ pub fn init(cx: &mut App) -> Arc<AgentAppState> {
+         let settings = &ProjectSettings::get_global(cx).node;
+         let options = NodeBinaryOptions {
+             allow_path_lookup: !settings.ignore_system_version,
+-            allow_binary_download: true,
++            allow_binary_download: false,
+             use_paths: settings.path.as_ref().map(|node_path| {
+                 let node_path = PathBuf::from(shellexpand::tilde(node_path).as_ref());
+                 let npm_path = settings
+diff --git a/crates/project/src/lsp_store.rs b/crates/project/src/lsp_store.rs
+index c182b84..577dde5 100644
+--- a/crates/project/src/lsp_store.rs
++++ b/crates/project/src/lsp_store.rs
+@@ -203,7 +203,7 @@ impl LocalLspStore {
+             adapter.name.0
+         );
+ 
+-        let binary = self.get_language_server_binary(adapter.clone(), delegate.clone(), true, cx);
++        let binary = self.get_language_server_binary(adapter.clone(), delegate.clone(), false, cx);
+         let pending_workspace_folders: Arc<Mutex<BTreeSet<Url>>> = Default::default();
+         let pending_server = cx.spawn({
+             let adapter = adapter.clone();
+diff --git a/crates/remote_server/src/unix.rs b/crates/remote_server/src/unix.rs
+index 425a36f..c796df1 100644
+--- a/crates/remote_server/src/unix.rs
++++ b/crates/remote_server/src/unix.rs
+@@ -798,7 +798,7 @@ fn initialize_settings(
+         let options = NodeBinaryOptions {
+             allow_path_lookup: !settings.ignore_system_version,
+             // TODO: Implement this setting
+-            allow_binary_download: true,
++            allow_binary_download: false,
+             use_paths: settings.path.as_ref().map(|node_path| {
+                 let node_path = PathBuf::from(shellexpand::tilde(node_path).as_ref());
+                 let npm_path = settings
+diff --git a/crates/zed/src/main.rs b/crates/zed/src/main.rs
+index 183c693..8977644 100644
+--- a/crates/zed/src/main.rs
++++ b/crates/zed/src/main.rs
+@@ -398,7 +398,7 @@ fn main() {
+             let options = NodeBinaryOptions {
+                 allow_path_lookup: !settings.ignore_system_version,
+                 // TODO: Expose this setting
+-                allow_binary_download: true,
++                allow_binary_download: false,
+                 use_paths: settings.path.as_ref().map(|node_path| {
+                     let node_path = PathBuf::from(shellexpand::tilde(node_path).as_ref());
+                     let npm_path = settings

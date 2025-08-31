@@ -1,0 +1,52 @@
+# Contributor: lonjil <alpine@lonjil.xyz>
+maintainer="lonjil <alpine@lonjil.xyz>"
+pkgname=age-plugin-yubikey
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="YubiKey plugin for age"
+url="https://github.com/str4d/age-plugin-yubikey"
+license="MIT OR Apache-2.0"
+arch="all"
+makedepends="cargo cargo-auditable pcsc-lite-dev openssl-dev"
+source="https://github.com/str4d/age-plugin-yubikey/archive/v$pkgver/age-plugin-yubikey-$pkgver.tar.gz
+	"
+options="net" # cargo fetch
+
+case "$CARCH" in
+armhf|armv7|x86)
+	# tests fail to compile on 32-bit targets
+	options="$options !check"
+	;;
+s390x)
+	# some tests can't run on s390x because rage isn't available
+	# allow non-rage tests to run
+	;;
+*)
+	checkdepends="rage"
+	;;
+esac
+
+prepare() {
+	default_prepare
+
+	rm rust-toolchain.toml
+
+	cargo fetch --locked
+}
+
+build() {
+	RUSTFLAGS="-C target-feature=-crt-static" cargo auditable build --frozen --release
+}
+
+check() {
+	RUSTFLAGS="-C target-feature=-crt-static" cargo test --frozen
+}
+
+package() {
+	cd target/release
+
+	install -Dm755 age-plugin-yubikey -t "$pkgdir"/usr/bin
+}
+sha512sums="
+51fca0390113a87b8424ae1f3cebca572eefa1e23ce57d377ed1177a8d2bc82c0bb4e97fc86e108d89a2843824f3e316a06c3c6394895ce68dd2d2ccc1711846  age-plugin-yubikey-0.5.0.tar.gz
+"

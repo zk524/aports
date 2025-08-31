@@ -28,6 +28,7 @@ checkdepends="
 	py3-requests
 	py3-virtualenv
 	"
+install="$pkgname.post-install $pkgname.post-upgrade $pkgname.pre-deinstall"
 subpackages="$pkgname-pyc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/xonsh/xonsh/archive/$pkgver.tar.gz
 	no-col.patch

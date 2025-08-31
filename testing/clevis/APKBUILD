@@ -2,11 +2,11 @@
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=clevis
 pkgver=21
-pkgrel=0
+pkgrel=1
 pkgdesc="Pluggable framework for automated decryption"
 url="https://github.com/latchset/clevis"
 license="GPL-3.0-or-later WITH OpenSSL-Exception"
-arch="all"
+arch="all !armhf" # blocked by dracut
 depends="bash cryptsetup jose libpwquality"
 makedepends="
 	asciidoc
@@ -14,6 +14,7 @@ makedepends="
 	cmd:pcscd
 	cmd:pkcs11-tool
 	curl
+	dracut-dev
 	meson
 	tpm2-tools
 	cryptsetup-dev
@@ -28,6 +29,7 @@ subpackages="
 	$pkgname-dbg
 	$pkgname-doc
 	$pkgname-bash-completion
+	$pkgname-dracut
 	"
 source="https://github.com/latchset/clevis/archive/v$pkgver/clevis-$pkgver.tar.gz"
 options="!check" # tests fail on buildozer, but pass on GitLab CI
@@ -43,6 +45,12 @@ check() {
 
 package() {
 	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+dracut() {
+	pkgdesc="$pkgdesc (dracut module)"
+
+	amove usr/lib/dracut/modules.d
 }
 
 sha512sums="

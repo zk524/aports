@@ -5,12 +5,12 @@ pkgver=3.40.9
 pkgrel=0
 pkgdesc="Geographic Information System (GIS) that supports vector, raster & database formats"
 url="https://qgis.org/"
-# armhf: py3-qscintilla qt5-qt3d-dev qt5-qtlocation-dev missing
-# ppc64le, riscv64 and loongarch64: qt5-qtwebengine-dev missing
+# armhf: py3-qscintilla-qt6 qt5-qt3d-dev missing
+# ppc64le and riscv64: qt5-qtwebengine-dev missing
 # s390x: grass-gis-dev netcdf-dev qt5-qtwebengine-dev missing
-arch="all !armhf !ppc64le !riscv64 !s390x !loongarch64"
+arch="all !armhf !ppc64le !riscv64 !s390x"
 license="GPL-2.0-or-later"
-depends="font-opensans font-cantarell qt5-qtbase-sqlite postgresql-client"
+depends="font-opensans font-cantarell qt6-qtbase-sqlite postgresql-client"
 makedepends="
 	bison
 	cmake
@@ -36,22 +36,23 @@ makedepends="
 	protobuf-dev
 	py3-ply
 	py3-pyqt-builder
-	py3-qscintilla
-	py3-qt5
+	py3-qscintilla-qt6
+	py3-qt6
 	py3-sip
 	python3-dev
-	qca-dev
-	qscintilla-dev
-	qt5-qt3d-dev
-	qt5-qtbase-dev
-	qt5-qtlocation-dev
-	qt5-qtmultimedia-dev
-	qt5-qtserialport-dev
-	qt5-qtsvg-dev
-	qt5-qttools-dev
-	qt5-qtwebengine-dev
+	qca-qt6-dev
+	qscintilla-qt6-dev
+	qt6-qt3d-dev
+	qt6-qt5compat-dev
+	qt6-qtbase-dev
+	qt6-qtlocation-dev
+	qt6-qtmultimedia-dev
+	qt6-qtserialport-dev
+	qt6-qtsvg-dev
+	qt6-qttools-dev
+	qt6-qtwebengine-dev
 	qtkeychain-dev
-	qwt-dev
+	qwt-qt6-dev
 	samurai
 	sqlite-dev
 	unixodbc-dev
@@ -83,6 +84,7 @@ build() {
 		-DQGIS_CGIBIN_SUBDIR=libexec/qgis \
 		-DBINDINGS_GLOBAL_INSTALL=TRUE \
 		-DENABLE_TESTS="$(want_check && echo TRUE || echo FALSE)" \
+		-DBUILD_WITH_QT6=TRUE \
 		-DWITH_3D=TRUE \
 		-DWITH_ANALYSIS=TRUE \
 		-DWITH_AUTH=TRUE \
@@ -220,7 +222,7 @@ package() {
 dev() {
 	default_dev
 	amove usr/share/qgis/FindQGIS.cmake
-	amove usr/lib/qt5/plugins/designer/libqgis_customwidgets.so*
+	amove usr/lib/qt6/plugins/designer/libqgis_customwidgets.so*
 }
 
 server() {
@@ -251,7 +253,7 @@ py3() {
 	amove usr/lib/libqgispython.so*
 	amove usr/share/qgis/python/
 	amove usr/lib/python3*/site-packages/qgis/
-	amove usr/lib/python3*/site-packages/PyQt5/uic/widget-plugins/
+	amove usr/lib/python3*/site-packages/PyQt6/uic/widget-plugins/
 }
 
 sha512sums="

@@ -6,11 +6,7 @@ pkgver=0.14.1
 pkgrel=0
 pkgdesc="General-purpose programming language designed for robustness, optimality, and maintainability"
 url="https://ziglang.org/"
-# arm*, loongarch64, ppc64le, riscv64: we don't build all LLVM targets, but zig requires all.
-# previously arm*, x86: fails to build (allocation failed)
-# previously ppc64le,riscv64: builds but the test command crashes
-# s390x: blocked by lld-dev
-arch="x86_64 aarch64"
+arch="all"
 license="MIT"
 install="$pkgname.pre-upgrade"
 _llvmver=19

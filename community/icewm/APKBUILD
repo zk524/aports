@@ -26,6 +26,7 @@ makedepends="
 	libxft-dev
 	libxinerama-dev
 	libxpm-dev
+	libxcursor-dev
 	libxrandr-dev
 	markdown
 	perl
@@ -51,7 +52,7 @@ build() {
 package() {
 	DESTDIR="$pkgdir" cmake --install build
 
-	rm -r "$pkgdir"/home
+	rm -r "${pkgdir:?}"/home
 }
 
 sha512sums="

@@ -1,0 +1,362 @@
+From bba64827a11104f7d33d211b3c2574506a5e48c5 Mon Sep 17 00:00:00 2001
+From: Michael Brown <mcb30@ipxe.org>
+Date: Sun, 14 Jan 2024 12:12:18 +0000
+Subject: [PATCH 2/2] [build] Fix building with newer binutils
+
+Newer versions of the GNU assembler (observed with binutils 2.41) will
+complain about the ".arch i386" in files assembled with "as --64",
+with the message "Error: 64bit mode not supported on 'i386'".
+
+In files such as stack.S that contain no instructions to be assembled,
+the ".arch i386" is redundant and may be removed entirely.
+
+In the remaining files, fix by moving ".arch i386" below the relevant
+".code16" or ".code32" directive, so that the assembler is no longer
+expecting 64-bit instructions to be used by the time that the ".arch
+i386" directive is encountered.
+
+Reported-by: Ali Mustakim <alim@forwardcomputers.com>
+Signed-off-by: Michael Brown <mcb30@ipxe.org>
+---
+ arch/i386/core/setjmp.S                 | 2 +-
+ arch/i386/tests/gdbstub_test.S          | 1 +
+ arch/x86/core/patch_cf.S                | 1 +
+ arch/x86/drivers/net/undiisr.S          | 2 +-
+ arch/x86/interface/pcbios/e820mangler.S | 2 +-
+ arch/x86/interface/pxe/pxe_entry.S      | 1 +
+ arch/x86/prefix/bootpart.S              | 2 +-
+ arch/x86/prefix/dskprefix.S             | 2 +-
+ arch/x86/prefix/exeprefix.S             | 2 +-
+ arch/x86/prefix/hdprefix.S              | 2 +-
+ arch/x86/prefix/libprefix.S             | 1 +
+ arch/x86/prefix/lkrnprefix.S            | 2 +-
+ arch/x86/prefix/mbr.S                   | 2 +-
+ arch/x86/prefix/mromprefix.S            | 2 +-
+ arch/x86/prefix/nbiprefix.S             | 2 +-
+ arch/x86/prefix/nullprefix.S            | 2 +-
+ arch/x86/prefix/pxeprefix.S             | 2 +-
+ arch/x86/prefix/unlzma.S                | 3 ++-
+ arch/x86/prefix/usbdisk.S               | 2 +-
+ arch/x86/transitions/liba20.S           | 1 +
+ arch/x86/transitions/libkir.S           | 2 +-
+ 21 files changed, 22 insertions(+), 16 deletions(-)
+
+diff --git a/arch/i386/core/setjmp.S b/arch/i386/core/setjmp.S
+index 81d3b491..4db0a7fb 100644
+--- a/arch/i386/core/setjmp.S
++++ b/arch/i386/core/setjmp.S
+@@ -1,8 +1,8 @@
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ 	.text
+-	.arch i386
+ 	.code32
++	.arch i386
+ 
+ 	/* Must match jmp_buf structure layout */
+ 	.struct	0
+diff --git a/arch/x86/core/stack.S b/arch/x86/core/stack.S
+index 995c397c..cee616da 100644
+--- a/arch/x86/core/stack.S
++++ b/arch/x86/core/stack.S
+@@ -1,5 +1,6 @@
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
++	.code16
+ 	.arch i386
+ 
+ #ifdef __x86_64__
+diff --git a/arch/x86/core/stack16.S b/arch/x86/core/stack16.S
+index 4bc6f081..e1359ebb 100644
+--- a/arch/x86/core/stack16.S
++++ b/arch/x86/core/stack16.S
+@@ -1,5 +1,6 @@
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
++	.code16
+ 	.arch i386
+ 
+ /****************************************************************************
+diff --git a/arch/i386/tests/gdbstub_test.S b/arch/i386/tests/gdbstub_test.S
+index 739b0527..9f96ca4e 100644
+--- a/arch/i386/tests/gdbstub_test.S
++++ b/arch/i386/tests/gdbstub_test.S
+@@ -1,3 +1,4 @@
++	.code32
+ 	.arch i386
+ 
+ 	.section ".data", "aw", @progbits
+diff --git a/arch/x86/core/patch_cf.S b/arch/x86/core/patch_cf.S
+index 4365563f..7ad1d42b 100644
+--- a/arch/x86/core/patch_cf.S
++++ b/arch/x86/core/patch_cf.S
+@@ -23,8 +23,8 @@
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ 	.text
+-	.arch i386
+ 	.code16
++	.arch i386
+ 
+ /****************************************************************************
+  * Set/clear CF on the stack as appropriate, assumes stack is as it should
+diff --git a/arch/x86/drivers/net/undiisr.S b/arch/x86/drivers/net/undiisr.S
+index 2428d1f5..2a062e73 100644
+--- a/arch/x86/drivers/net/undiisr.S
++++ b/arch/x86/drivers/net/undiisr.S
+@@ -11,8 +11,8 @@ FILE_LICENCE ( GPL2_OR_LATER )
+ #define PIC2_ICR 0xa0
+ 	
+ 	.text
+-	.arch i386
+ 	.code16
++	.arch i386
+ 
+ 	.section ".text16", "ax", @progbits
+ 	.globl undiisr
+diff --git a/arch/x86/interface/pcbios/e820mangler.S b/arch/x86/interface/pcbios/e820mangler.S
+index d5d97b48..3be3c6a6 100644
+--- a/arch/x86/interface/pcbios/e820mangler.S
++++ b/arch/x86/interface/pcbios/e820mangler.S
+@@ -24,8 +24,8 @@
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ 	.text
+-	.arch i386
+ 	.code16
++	.arch i386
+ 
+ #define SMAP 0x534d4150
+ 
+diff --git a/arch/x86/interface/pxe/pxe_entry.S b/arch/x86/interface/pxe/pxe_entry.S
+index 663aa842..42ba8b52 100644
+--- a/arch/x86/interface/pxe/pxe_entry.S
++++ b/arch/x86/interface/pxe/pxe_entry.S
+@@ -26,6 +26,7 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ #include <librm.h>
+ 
++	.code16
+ 	.arch i386
+ 
+ /****************************************************************************
+diff --git a/arch/x86/prefix/bootpart.S b/arch/x86/prefix/bootpart.S
+index 6d0c6034..a55023ff 100644
+--- a/arch/x86/prefix/bootpart.S
++++ b/arch/x86/prefix/bootpart.S
+@@ -6,9 +6,9 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #define STACK_SIZE	0x2000
+ 	
+ 	.text
++	.code16
+ 	.arch i386
+ 	.section ".prefix", "awx", @progbits
+-	.code16
+ 
+ /*
+  * Find active partition
+diff --git a/arch/x86/prefix/dskprefix.S b/arch/x86/prefix/dskprefix.S
+index 0503f113..8f5107c0 100644
+--- a/arch/x86/prefix/dskprefix.S
++++ b/arch/x86/prefix/dskprefix.S
+@@ -25,10 +25,10 @@ FILE_LICENCE ( GPL2_ONLY )
+ .equ	SYSSEG, 0x1000			/* system loaded at SYSSEG<<4 */
+ 
+ 	.org	0
++	.code16
+ 	.arch i386
+ 	.text
+ 	.section ".prefix", "ax", @progbits
+-	.code16
+ 	.globl	_dsk_start
+ _dsk_start:
+ 
+diff --git a/arch/x86/prefix/exeprefix.S b/arch/x86/prefix/exeprefix.S
+index c351456e..e8f8c104 100644
+--- a/arch/x86/prefix/exeprefix.S
++++ b/arch/x86/prefix/exeprefix.S
+@@ -37,9 +37,9 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #define PSP_CMDLINE_START 0x81
+ 
+ 	.text
++	.code16
+ 	.arch i386
+ 	.org 0
+-	.code16
+ 	.section ".prefix", "awx", @progbits
+ 
+ signature:
+diff --git a/arch/x86/prefix/hdprefix.S b/arch/x86/prefix/hdprefix.S
+index 28c8a532..4ee3669b 100644
+--- a/arch/x86/prefix/hdprefix.S
++++ b/arch/x86/prefix/hdprefix.S
+@@ -3,9 +3,9 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #include <librm.h>
+ 
+ 	.text
++	.code16
+ 	.arch i386
+ 	.section ".prefix", "awx", @progbits
+-	.code16
+ 	.org 0
+ 	.globl	_hd_start
+ _hd_start:
+diff --git a/arch/x86/prefix/libprefix.S b/arch/x86/prefix/libprefix.S
+index ffb21105..763aa4da 100644
+--- a/arch/x86/prefix/libprefix.S
++++ b/arch/x86/prefix/libprefix.S
+@@ -26,6 +26,7 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ #include <librm.h>
+ 
++	.code16
+ 	.arch i386
+ 
+ /* Image compression enabled */
+diff --git a/arch/x86/prefix/lkrnprefix.S b/arch/x86/prefix/lkrnprefix.S
+index 922181f0..13ce4de2 100644
+--- a/arch/x86/prefix/lkrnprefix.S
++++ b/arch/x86/prefix/lkrnprefix.S
+@@ -5,8 +5,8 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #define BZI_LOAD_HIGH_ADDR 0x100000
+ 
+ 	.text
+-	.arch i386
+ 	.code16
++	.arch i386
+ 	.section ".prefix", "ax", @progbits
+ 	.globl	_lkrn_start
+ _lkrn_start:
+diff --git a/arch/x86/prefix/mbr.S b/arch/x86/prefix/mbr.S
+index 032c0e77..0c717216 100644
+--- a/arch/x86/prefix/mbr.S
++++ b/arch/x86/prefix/mbr.S
+@@ -1,9 +1,9 @@
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ 	.text
++	.code16
+ 	.arch i386
+ 	.section ".prefix", "awx", @progbits
+-	.code16
+ 	.org 0
+ 
+ 	.globl mbr
+diff --git a/arch/x86/prefix/mromprefix.S b/arch/x86/prefix/mromprefix.S
+index 2b5c6bf6..b317de6d 100644
+--- a/arch/x86/prefix/mromprefix.S
++++ b/arch/x86/prefix/mromprefix.S
+@@ -42,8 +42,8 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #include "pciromprefix.S"
+ 
+ 	.text
+-	.arch i386
+ 	.code16
++	.arch i386
+ 
+ /* Obtain access to payload by exposing the expansion ROM BAR at the
+  * address currently used by a suitably large memory BAR on the same
+diff --git a/arch/x86/prefix/nbiprefix.S b/arch/x86/prefix/nbiprefix.S
+index de38e4af..22679f14 100644
+--- a/arch/x86/prefix/nbiprefix.S
++++ b/arch/x86/prefix/nbiprefix.S
+@@ -3,8 +3,8 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #include <librm.h>
+ 
+ 	.text
+-	.arch i386
+ 	.code16
++	.arch i386
+ 	.section ".prefix", "ax", @progbits
+ 	.org 0
+ 
+diff --git a/arch/x86/prefix/nullprefix.S b/arch/x86/prefix/nullprefix.S
+index bd0ff339..e3add670 100644
+--- a/arch/x86/prefix/nullprefix.S
++++ b/arch/x86/prefix/nullprefix.S
+@@ -2,10 +2,10 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
+ 	.org	0
+ 	.text
++	.code16
+ 	.arch i386
+ 
+ 	.section ".prefix", "ax", @progbits
+-	.code16
+ _prefix:
+ 
+ 	.section ".text16", "ax", @progbits
+diff --git a/arch/x86/prefix/pxeprefix.S b/arch/x86/prefix/pxeprefix.S
+index 52ea1803..06572e7a 100644
+--- a/arch/x86/prefix/pxeprefix.S
++++ b/arch/x86/prefix/pxeprefix.S
+@@ -12,9 +12,9 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #define PXE_HACK_EB54			0x0001
+ 
+ 	.text
++	.code16
+ 	.arch i386
+ 	.org 0
+-	.code16
+ 
+ #include <librm.h>
+ #include <undi.h>
+diff --git a/arch/x86/prefix/unlzma.S b/arch/x86/prefix/unlzma.S
+index ce18c756..8c524c46 100644
+--- a/arch/x86/prefix/unlzma.S
++++ b/arch/x86/prefix/unlzma.S
+@@ -44,7 +44,8 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL );
+  */
+ 
+ 	.text
+-	.arch i586
++	.code32
++	.arch i486
+ 	.section ".prefix.lib", "ax", @progbits
+ 
+ #ifdef CODE16
+diff --git a/arch/x86/prefix/usbdisk.S b/arch/x86/prefix/usbdisk.S
+index 977de6dd..de493858 100644
+--- a/arch/x86/prefix/usbdisk.S
++++ b/arch/x86/prefix/usbdisk.S
+@@ -3,9 +3,9 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #include <config/console.h>
+ 
+ 	.text
++	.code16
+ 	.arch i386
+ 	.section ".prefix", "awx", @progbits
+-	.code16
+ 	.org 0
+ 
+ #include "mbr.S"
+diff --git a/arch/x86/transitions/liba20.S b/arch/x86/transitions/liba20.S
+index 6c1e1f62..36ee3e7a 100644
+--- a/arch/x86/transitions/liba20.S
++++ b/arch/x86/transitions/liba20.S
+@@ -24,6 +24,7 @@
+ 
+ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ 
++	.code16
+ 	.arch i386
+ 
+ /****************************************************************************
+diff --git a/arch/x86/transitions/libkir.S b/arch/x86/transitions/libkir.S
+index fa9459d5..1e735f1d 100644
+--- a/arch/x86/transitions/libkir.S
++++ b/arch/x86/transitions/libkir.S
+@@ -32,9 +32,9 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL )
+ #define BOCHSBP xchgw %bx, %bx
+ 
+ 	.text
++	.code16
+ 	.arch i386
+ 	.section ".text16", "awx", @progbits
+-	.code16
+ 	
+ /****************************************************************************
+  * init_libkir (real-mode or 16:xx protected-mode far call)
+-- 
+2.46.2
+

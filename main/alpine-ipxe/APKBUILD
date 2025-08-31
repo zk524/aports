@@ -2,16 +2,18 @@
 # Maintainer: Carlo Landmeter <clandmeter@alpinelinux.org>
 pkgname=alpine-ipxe
 pkgver=1.20.1
-pkgrel=1
+pkgrel=2
 pkgdesc="iPXE build for Alpine Linux netboot"
 url="https://boot.alpinelinux.org"
-arch="x86 aarch64"
+arch="x86 x86_64 aarch64"
 license="GPL-2.0-or-later"
 makedepends="xz-dev perl coreutils bash syslinux xorriso"
 options="!strip !check !archcheck !tracedeps" # no tests
 source="ipxe-$pkgver.tar.gz::https://github.com/ipxe/ipxe/archive/v$pkgver.tar.gz
 	gcc-10.patch
 	gcc-11.patch
+	0001-librm-Use-explicit-operand-size-when-pushing-a-label.patch
+	0002-build-Fix-building-with-newer-binutils.patch
 	DST_Root_CA_X3.pem
 	alpine-netboot-ca.crt
 	boot.ipxe
@@ -81,6 +83,8 @@ sha512sums="
 39142187c7b84e81ed95865b2c6ca6624fd10ee49350741bcf4beff47cd4ebdce91eca9d7b4d3d91e45b96bd50fa554fa6b71e8e3ea6bcc474b0a71f5d35e5cd  ipxe-1.20.1.tar.gz
 99d6dfbfe3a1a5c3792246c18976d7aab708301a4a1163978a22ae2c3052ca59c10fa5a418d131b783f2c230d78c05aad8f295e87cf82e48479dfb345d8793be  gcc-10.patch
 83469bf56d9bd344eb686dbd1cae85c731794c506ac7bbaecdd00d15f7a2497f512ef1364ecccf0f58099d6c4b9ed86eb8614fa0373c262f7a8b5a5bd3460d5a  gcc-11.patch
+106634d431eef3aec34ee4c7d4ca37d0b84b64362ec1f47466a51022ca2879ff99a6888ecf13d5924a5453f762524e50cce74f252e31c58d12fd3544e8f668d9  0001-librm-Use-explicit-operand-size-when-pushing-a-label.patch
+53c37bbc2d45c551533dce02d009bcc176173fc47b078ea9d8472af2f2e55b11b9ed78fd986ee6ed654eab69214c16659cee9195ce2c0b936b7d660c6fc9b72e  0002-build-Fix-building-with-newer-binutils.patch
 1f52b62aa9e3ec0656ea3cb5c8e52eda924d58728e64bb03ca6c112858b91b13cf0a9328b105bb232973e240406b240ed14e72b5bd325e82e6fddf3126dbcc58  DST_Root_CA_X3.pem
 68030e3f30983ee45c7f740445a246ea0df225becdd0644e06ffdbd84682ac576934dab79fecceb31b70929d81ce85b40301a977862bf7beb042270be21e6d34  alpine-netboot-ca.crt
 5a4f1edd0178e696e919e93b90689091f669bffe77ebb9da10d4872d208205fe42b285551f541a07b2067054a2344639052e2b297a582a1f71d907797a77d719  boot.ipxe

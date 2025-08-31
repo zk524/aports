@@ -1,0 +1,50 @@
+# Maintainer: Lassebq <lassebq.mine@gmail.com>
+pkgname=gpu-screen-recorder
+_pkgver=r717.01b8cdc # printf "r%s.%s\n" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+pkgver=4.1.0
+pkgrel=0
+pkgdesc="Shadowplay-like screen recorder for Linux."
+url="https://git.dec05eba.com/gpu-screen-recorder"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	ffmpeg-dev
+	libx11-dev
+	libxcomposite-dev
+	libxrandr-dev
+	libxfixes-dev
+	libxdamage-dev
+	libxi-dev
+	pulseaudio-dev
+	libva-dev
+	libcap-dev
+	libcap-setcap
+	libdrm-dev
+	wayland-dev
+	dbus-dev
+	pipewire-dev
+	meson
+	"
+options="setcap"
+source="$pkgname-$pkgver.tar.gz::https://dec05eba.com/snapshot/gpu-screen-recorder.git.$_pkgver.tar.gz"
+builddir="$srcdir"
+
+build() {
+	abuild-meson \
+		-Dportal=true \
+		-Dnvidia_suspend_fix=true \
+		output .
+	meson compile -C output
+}
+
+check() {
+	meson test --no-rebuild --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+528825f579f6f4cff6534ecafd6a40b93ae32baee87b1cf08a6bc0e6eee492260507aa32031ed81276653a1f442047a8b2c911d1e413c87336c8489905e882b8  gpu-screen-recorder-4.1.0.tar.gz
+"

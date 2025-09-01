@@ -1,8 +1,7 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-# Maintainer: Bart Ribbers <bribbers@disroot.org>
+maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=libiodata
-pkgver=0.19.11_git2
-pkgrel=2
+pkgver=0.19.14
+pkgrel=0
 pkgdesc="A library for reading and writing simple structured data"
 url="https://github.com/sailfishos/libiodata"
 arch="all"
@@ -28,5 +27,5 @@ package() {
 }
 
 sha512sums="
-3ed1f4e117bcc591cbfd4418467bdd33608d49f232b438134bc2b78ebd97ef3f5d7d97099310099cde38cf20ce1802af194858a2a4b42d3491f66236e427ab6f  libiodata-0.19.11+git2.tar.gz
+204a517f27e85f15764e36a9ba773c434711ea6ab2d1c6b68389cb2b29cfdfb8fefe3bc6d53e7f7d604720ce2e3230779ae09d60dd31f8641c5da978b8af4c51  libiodata-0.19.14.tar.gz
 "

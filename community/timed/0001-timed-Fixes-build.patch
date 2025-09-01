@@ -1,0 +1,19 @@
+diff --git a/src/server/server.pro b/src/server/server.pro
+index a4f2987..f72c73c 100644
+--- a/src/server/server.pro
++++ b/src/server/server.pro
+@@ -70,7 +70,13 @@ SOURCES += \
+     ofonomodemmanager.cpp \
+     modemwatcher.cpp \
+     ofonoconstants.cpp \
+-    ntpcontroller.cpp
++    ntpcontroller.cpp \
++    config.type.cpp \
++    customization.type.cpp \
++    queue.type.cpp \
++    settings.type.cpp \
++    timed-cust-rc.type.cpp \
++    tzdata.type.cpp
+ 
+ SOURCES += credentials.cpp
+ HEADERS += credentials.h

@@ -5,7 +5,7 @@ pkgname=docker
 pkgver=28.3.3
 _cli_commit=980b85681696fbd95927fd8ded8f6d91bdca95b0    # https://github.com/docker/cli/releases/tag/v$pkgver
 _moby_commit=bea959c7b793b32a893820b97c4eadc7c87fabb0   # https://github.com/moby/moby/releases/tag/v$pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc="Pack, ship and run any application as a lightweight container"
 url="https://www.docker.io/"
 arch="all"
@@ -68,6 +68,7 @@ install="$pkgname-engine.pre-install"
 
 subpackages="
 	$pkgname-engine:engine
+	$pkgname-rootless-extras-openrc:rootless_openrc:noarch
 	$pkgname-openrc:engine_openrc:noarch
 	$pkgname-cli:cli
 	$pkgname-doc:cli_doc:noarch
@@ -83,6 +84,7 @@ source="
 	docker.initd
 	docker.confd
 	docker-rootless-extras.conf
+	docker-user.initd
 	"
 
 builddir="$srcdir"
@@ -159,6 +161,8 @@ package() {
 
 	install -Dm755 "$srcdir"/docker.initd "$pkgdir"/etc/init.d/docker
 	install -Dm644 "$srcdir"/docker.confd "$pkgdir"/etc/conf.d/docker
+
+	install -Dm755 "$srcdir"/docker-user.initd "$pkgdir"/etc/user/init.d/docker
 }
 
 engine() {
@@ -200,10 +204,19 @@ rootless() {
 	install -Dm644 "$srcdir/docker-rootless-extras.conf" "$subpkgdir/etc/modules-load.d/docker-rootless-extras.conf"
 }
 
+rootless_openrc() {
+	pkgdesc="Extras to run docker as in rootless mode (OpenRC init scripts)"
+	depends="$pkgname-rootless-extras"
+	install_if="openrc $pkgname-rootless-extras=$pkgver-r$pkgrel"
+
+	amove etc/user/init.d/docker
+}
+
 sha512sums="
 f7583b07154ad397c3f9a37db37e5dd4644100d1389d1ef3158c769c765a76583e2efc7d736f151ac69869359b3e572565ac581bf0f4f2975088dc698de80af8  cli-28.3.3.tar.gz
 c94511b5951d998a892389927382f7b436633ed6e85a6b86a03c1ba1ef9304023a55aafe49b83f1f420e5e7aaf3b94ec6a0864f6c45e7aca714b3fe2165d47bc  moby-28.3.3.tar.gz
 dd499b92058fc4d7d19e0c9030b1f390f58ac40be423442732cb7d02067ed2e43c464511772a21d4f347ec34f037ddd00cc1243dc41c8ce85151ac6142611d61  docker.initd
 43432a05e5776910d45364aee9070932aa89f70eb9e69d3b7ed8e17d9a70eaed4c8c29b3524888214c7ddba592399e781a72255f7eb8fafd80c9f532a9481fac  docker.confd
 45499bbd9d607cb782b014a2d5697d7279f327ac630accf249a13785d91e15fb0ba1ae2edc10b6b42fcf40b7ce23ef160a40d8cda17b3084d68fe8c54a84b8f4  docker-rootless-extras.conf
+8ba664d89e89238e2bebf6b91098f9cab60382ef4d2649c662faeaeb5ab61e52ead39be34326eb59616c65c0245a85a86b20887ccb1ca7b73350f3546a887278  docker-user.initd
 "

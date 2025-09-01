@@ -75,7 +75,7 @@ subpackages="
 	$pkgname-bash-completion
 	$pkgname-fish-completion
 	$pkgname-zsh-completion
-	$pkgname-rootless-extras:rootless
+	$pkgname-rootless-extras:rootless:noarch
 	"
 
 source="
@@ -197,7 +197,6 @@ cli_doc() {
 rootless() {
 	pkgdesc="Extras to run docker as in rootless mode"
 	url="https://docs.docker.com/engine/security/rootless/"
-	arch="noarch"
 	depends="$pkgname rootlesskit slirp4netns fuse-overlayfs"
 
 	install -Dm755 "$srcdir/moby-$pkgver/contrib/dockerd-rootless.sh" "$subpkgdir/usr/bin/dockerd-rootless"

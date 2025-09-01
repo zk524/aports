@@ -1,17 +1,18 @@
 # Contributor: Maarten van Gompel <proycon@anaproy.nl>
 # Maintainer: Willow Barraco <contact@willowbarraco.fr>
 pkgname=wvkbd
-pkgver=0.17
+pkgver=0.18
 pkgrel=0
-pkgdesc="On-screen virtual keyboard for wayland compositors using wlroots"
+pkgdesc="On-screen virtual keyboard for wayland compositors using wlroots."
 url="https://git.sr.ht/~proycon/wvkbd"
 arch="all"
 license="GPL-3.0-or-later"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-mobintl $pkgname-deskintl $pkgname-doc"
 options="!check" # has no tests
 makedepends="fontconfig wayland-dev libxkbcommon-dev pango-dev scdoc"
 source="$pkgname-v$pkgver.tar.gz::https://git.sr.ht/~proycon/wvkbd/archive/v$pkgver.tar.gz"
 builddir="$srcdir/$pkgname-v$pkgver"
+provides="wvkbd-mobintl wvkbd-deskintl"
 
 build() {
 	make all
@@ -19,8 +20,24 @@ build() {
 
 package() {
 	make PREFIX=/usr DESTDIR="$pkgdir" install
+	make clean && make PREFIX=/usr DESTDIR="$pkgdir" LAYOUT=deskintl install
 }
 
+mobintl() {
+	pkgdesc="$pkgdesc - mobile international layout"
+	provides="wvkbd-mobintl"
+	mkdir -p "$subpkgdir/usr/bin/"
+	cp $pkgdir/usr/bin/wvkbd-mobintl $subpkgdir/usr/bin/
+}
+
+deskintl() {
+	pkgdesc="$pkgdesc - desktop international layout"
+	provides="wvkbd-deskintl"
+	mkdir -p "$subpkgdir/usr/bin/"
+	cp $pkgdir/usr/bin/wvkbd-deskintl $subpkgdir/usr/bin/
+}
+
+
 sha512sums="
-49eaf26c634b074b18b8a9c37764fadf8d47e5be5e68fd2d5520dd09d1948cdbb9bba9c118fa699c557840c772489b8f19c3fd07090726e1c6a9dae1615ae706  wvkbd-v0.17.tar.gz
+4e8ee74b869e017f9bee062a926aad04ab352e2d6cdfa90583538dbc74a21f8e4e23c9573650997921cb09aa352c4afadc47fd397d2dfe5da6a310e6abf70b4f  wvkbd-v0.18.tar.gz
 "

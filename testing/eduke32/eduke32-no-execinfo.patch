@@ -1,0 +1,17 @@
+skip execinfo.h
+
+--- eduke32-old/source/build/src/sdlayer.cpp
++++ eduke32-new/source/build/src/sdlayer.cpp
+@@ -322,12 +322,6 @@
+ //
+ //
+ 
+-/* XXX: libexecinfo could be used on systems without gnu libc. */
+-#if !defined _WIN32 && defined __GNUC__ && !defined __OpenBSD__ && !(defined __APPLE__ && defined __BIG_ENDIAN__) && !defined GEKKO && !defined EDUKE32_TOUCH_DEVICES && !defined __OPENDINGUX__
+-# define PRINTSTACKONSEGV 1
+-# include <execinfo.h>
+-#endif
+-
+ static inline char grabmouse_low(char a);
+ 
+ #ifndef __ANDROID__

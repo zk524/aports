@@ -1,0 +1,10 @@
+#!/sbin/openrc-run
+
+name="mpris-scrobbler"
+supervisor="supervise-daemon"
+command="/usr/bin/mpris-scrobbler"
+
+depend() {
+	need dbus
+	after firewall
+}

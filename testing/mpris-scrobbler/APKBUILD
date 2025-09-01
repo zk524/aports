@@ -1,0 +1,36 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+maintainer="Angelo Verlain <hey@vixalien.com>"
+pkgname=mpris-scrobbler
+pkgver=0.5.7
+pkgrel=0
+pkgdesc="submit the songs you're playing to listenbrainz.org, libre.fm and last.fm"
+url="https://github.com/mariusor/mpris-scrobbler"
+arch="all"
+license="MIT"
+makedepends="meson dbus-dev libevent-dev curl-dev json-c-dev"
+subpackages="$pkgname-openrc"
+source="
+  $pkgname-$pkgver.tar.gz::https://github.com/mariusor/mpris-scrobbler/archive/refs/tags/v$pkgver.tar.gz
+	mpris-scrobbler.initd
+	"
+
+build() {
+	abuild-meson \
+		output .
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+
+	install -m755 -D "$srcdir"/$pkgname.initd "$pkgdir"/etc/user/init.d/$pkgname
+}
+
+sha512sums="
+c732783ab135c572910104f64a98fb7bc4dc3b56cd4b8b034e711caf61b77dad4e86df9b78a841b9fcfd59324744bcc1040d3c0145a148ac465fe7c43603ff2e  mpris-scrobbler-0.5.7.tar.gz
+858668433179b77bfdc97ecc492ea0ca7c4121fd11133d6fc47a7061bbfa1e8b73064cc8e4ec4d3b0cc1c666854e0e3341ba6744deec9fb27ffc14c85538993d  mpris-scrobbler.initd
+"

@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+
+name=$RC_SVCNAME
+supervisor=supervise-daemon
+command=/usr/bin/gpio-manager
+command_args=""
+command_user="gpio-manager"
+command_background=true
+pidfile="/run/${RC_SVCNAME}.pid"
+output_logger="logger -t '${RC_SVCNAME}' -p daemon.info"
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"
+
+depend() {
+        use logger
+}

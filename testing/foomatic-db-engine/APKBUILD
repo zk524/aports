@@ -1,0 +1,32 @@
+# Maintainer: omni <omni+alpine@hack.org>
+pkgname=foomatic-db-engine
+pkgver=4.0.13
+pkgrel=0
+pkgdesc="Tools for using the foomatic database of printers and printer drivers"
+url="https://openprinting.github.io/projects/02-foomatic/"
+arch="all"
+license="GPL-2.0-or-later"
+depends="cups-filters perl"
+makedepends="cups-dev
+	foomatic-db
+	ghostscript-dev
+	libxml2-dev
+	perl-dev
+	"
+subpackages="$pkgname-doc"
+source="https://www.openprinting.org/download/foomatic/foomatic-db-engine-$pkgver.tar.gz"
+
+build() {
+	export PERL_INSTALLDIRS=vendor
+	# avoid #!/bin/bash in foomatic-getpjloptions
+	SH=/bin/sh ./configure --prefix=/usr
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+da6a0dd9c0d7935d59a4bdd5454c1b7dcb81508f17a98ebfb9fd50fb6b5ed593f4b226715030f22c082c5328c7f7e99d775eeadcb444db5c8ad1441a11a179bf  foomatic-db-engine-4.0.13.tar.gz
+"

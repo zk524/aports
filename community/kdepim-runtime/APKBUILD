@@ -3,7 +3,7 @@
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=kdepim-runtime
 pkgver=25.04.2
-pkgrel=0
+pkgrel=1
 pkgdesc="Extends the functionality of kdepim"
 url="https://kontact.kde.org/"
 # armhf blocked by qt6-qtdeclarative
@@ -52,7 +52,9 @@ checkdepends="
 	"
 subpackages="$pkgname-dbg $pkgname-lang"
 _repo_url="https://invent.kde.org/pim/kdepim-runtime.git"
-source="https://download.kde.org/stable/release-service/$pkgver/src/kdepim-runtime-$pkgver.tar.xz"
+source="https://download.kde.org/stable/release-service/$pkgver/src/kdepim-runtime-$pkgver.tar.xz
+	0001-kdepim-runtime-Do-not-request-password-twice.patch
+	"
 
 build() {
 	cmake -B build -G Ninja \
@@ -96,4 +98,5 @@ package() {
 
 sha512sums="
 08f1be5a5a040bc7747cb8898165f3036485e666da08657778081d16df1d7392b23d65ebfee3260b0e027ea243455f183905d39715c84e07ad196d43671ae492  kdepim-runtime-25.04.2.tar.xz
+9916ef4ca715c8035efdb35b38b5e06dccc4136e13bd24e841577bb4d05e4f0595b60a9a0ad556c3b48ffa7590231b43bdd05d1b28f0f4e82a9fdd234258c4b5  0001-kdepim-runtime-Do-not-request-password-twice.patch
 "

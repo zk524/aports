@@ -2,7 +2,7 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=nerd-fonts
 pkgver=3.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Patched developer targeted fonts with a high number of glyphs"
 url="https://nerdfonts.com"
 arch="noarch"
@@ -37,6 +37,9 @@ _fonts="
 	ia-writer,iA-Writer,iMWriting,iA~Writer
 	ibm-plex-mono,IBMPlexMono,BlexMono,IBM~Plex~Mono
 	inconsolata,Inconsolata,,
+	iosevka-term-slab,IosevkaTermSlab,IosevkaTermSlab,Iosevka~Term~Slab
+	iosevka-term,IosevkaTerm,IosevkaTerm,Iosevka~Term
+	iosevka,Iosevka,,
 	jetbrains-mono,JetBrainsMono,JetBrainsMono,JetBrains~Mono
 	liberation-mono,LiberationMono,LiterationMono,Liberation~Mono
 	meslo,Meslo,,
@@ -48,8 +51,8 @@ _fonts="
 	space-mono,SpaceMono,SpaceMono,Space~Mono
 	terminus,Terminus,Terminess,Terminus
 	tinos,Tinos,,
-	ubuntu,Ubuntu,,
 	ubuntu-mono,UbuntuMono,UbuntuMono,Ubuntu~Mono
+	ubuntu,Ubuntu,,
 	victor-mono,VictorMono,VictorMono,Victor~Mono
 	"
 _depends_all=""
@@ -97,7 +100,9 @@ _subpackage() {
 	esac
 
 	cd "$builddir"
-	install -Dm644 ./"$fontname"*.*tf -t "$subpkgdir"/usr/share/fonts/${subpkgname#font-}/
+	# `mv` is used instead of `install` to avoid duplicating font files in packages with similar <fontname>
+	install -dm 755 "$subpkgdir"/usr/share/fonts/${subpkgname#font-}
+	mv ./"$fontname"*.?tf "$subpkgdir"/usr/share/fonts/${subpkgname#font-}/
 }
 
 _symbols() {
@@ -135,6 +140,9 @@ e7625a28bffdb73e96aef21c47186bf75b7c7884aadba37e0b5beca5f34b6f25d0f458907e4ddccb
 2e4368f8285531fa0b27e2d55bd079126aeb54371ffc5623d8980f9f3ef6ca479f6f3709b58a62682e6bce04eaaba1a29cff39a4a85b47e9a1c6fff966b64527  font-ia-writer-nerd-3.2.1.tar.xz
 ac465368f72f93e7ce44c43b6fccca3f434245ab11b7f4f4cf75bd0330c1ab008017adac1278f620a1342eb3d9188a45f18fcaf3b47d5eff65c9682a9477fe93  font-ibm-plex-mono-nerd-3.2.1.tar.xz
 a47ee99edd1490319bd9e19860b326b4d9b2a7c05e63917d99ca1817f58964545f935b1531c79f3179e95caf32d073ad899591dfc11278e0361cf1345fde2ffc  font-inconsolata-nerd-3.2.1.tar.xz
+85da3eb688d0209f341ed20d1918509729171bfe0a11cf1408a3401e77bb855273c7c176583dc4f1a407ce52830af767b2511a495574ac8abae9453c80d2e864  font-iosevka-nerd-3.2.1.tar.xz
+125597f674678139164592804d48022239abf9d259368506a40b008f2083ef46c5455eb93b26eb33fa1b510758209916d65bb0d370c9c8bc5f15e9223bbc40b5  font-iosevka-term-nerd-3.2.1.tar.xz
+01c516c3452582c2517af595788e006394983a2167041a3eff20a2c7def23e662983188340921cb395b1c570611daf2079882baea067d81b0d993b7e944384a3  font-iosevka-term-slab-nerd-3.2.1.tar.xz
 b4eb3d2e95881de683d655d5b4f40d681d138a08450a366bd5778ea1103d29153b7ddabe320c44ff569c10bed4f825531ac2ce2c44235c0e488713828d143c27  font-jetbrains-mono-nerd-3.2.1.tar.xz
 5b9bb855e1b98adab1b65e02ccb4593f692248c6ebc64f0976e0380c09b7a2c0140f0867d852f070643b3cc5a4a17e0811c3162613a6380cc9ff19e594a02d2d  font-liberation-mono-nerd-3.2.1.tar.xz
 5364b31502e54884e4dc0dac61e19c026cfac5b1f9a02053d57ecdba2ec249851e2766f252952ff3afdf51ca59bc705422715f6942836312333f6b2000e3402a  font-meslo-nerd-3.2.1.tar.xz

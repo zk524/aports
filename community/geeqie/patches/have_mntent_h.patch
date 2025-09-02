@@ -1,0 +1,45 @@
+--- a/src/collect-io.cc
++++ b/src/collect-io.cc
+@@ -29,7 +29,7 @@
+ #include <gdk/gdk.h>
+ #include <glib-object.h>
+ 
+-#if defined(__GLIBC__)
++#if defined(HAVE_MNTENT_H)
+ #include <mntent.h>
+ #else
+ #include <sys/mount.h>
+@@ -55,7 +55,7 @@
+ namespace
+ {
+ 
+-#if defined(__GLIBC__)
++#if defined(HAVE_MNTENT_H)
+ using MFILE = FILE;
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC(MFILE, endmntent)
+ #endif
+@@ -140,7 +140,7 @@
+ 		       g_str_has_prefix(filename, dirname);
+ 	};
+ 
+-#if defined(__GLIBC__)
++#if defined(HAVE_MNTENT_H)
+ 	g_autoptr(MFILE) mount_entries = setmntent("/proc/mounts", "r");
+ 	if (mount_entries == nullptr)
+ 		{
+--- a/meson.build
++++ b/meson.build
+@@ -142,6 +142,13 @@
+ conf_data = configuration_data()
+ conf_data.set('DEBUG', debug)
+ 
++
++# Detect if mntent.h is available
++has_mntent_h = cc.has_header('mntent.h')
++if has_mntent_h
++    add_project_arguments('-DHAVE_MNTENT_H', language: ['c', 'cpp'])
++endif
++
+ conf_data.set('HAVE_GTK4', 0)
+ option = get_option('gtk4')
+ if option.enabled()

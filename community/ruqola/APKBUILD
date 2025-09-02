@@ -2,7 +2,7 @@
 # group=kde-other
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=ruqola
-pkgver=2.3.2
+pkgver=2.5.1
 pkgrel=0
 pkgdesc="A Qt client for Rocket Chat"
 url="https://invent.kde.org/network/ruqola"
@@ -40,7 +40,7 @@ makedepends="
 	"
 checkdepends="xwayland-run"
 _repo_url="https://invent.kde.org/network/ruqola.git"
-source="https://download.kde.org/stable/ruqola/ruqola-$pkgver.tar.xz"
+source="https://download.kde.org/stable/ruqola/$pkgver/ruqola-$pkgver.tar.xz"
 
 build() {
 	cmake -B build -G Ninja \
@@ -71,5 +71,5 @@ package() {
 }
 
 sha512sums="
-73c939344a0c634bd684ff99b957a0bc4b1e5ebb674a5f39637ea2f01e7f1c49c74cc88e34ad0061c4fd8aba9e46037640226b823e636e4e19aae161ee432d4b  ruqola-2.3.2.tar.xz
+354efa1d702027e937d2f99e9fb0df1e3a1d6db04f5813c94403349c47482475c9081c7246bd9eec2e5bd0c6e5f4dcad113d71d06f32ee94aced666b18771fe4  ruqola-2.5.1.tar.xz
 "

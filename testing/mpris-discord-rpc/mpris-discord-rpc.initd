@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+name="mpris-discord-rpc"
+description="Linux Discord rich presence for music, using MPRIS with album cover and progress bar support"
+supervisor=supervise-daemon
+
+command="/usr/bin/mpris-discord-rpc"
+
+depend() {
+	need dbus
+	after net firewall
+}

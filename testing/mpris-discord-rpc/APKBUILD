@@ -1,0 +1,42 @@
+# Contributor:
+# Maintainer:
+pkgname=mpris-discord-rpc
+pkgver=0.5.1
+pkgrel=0
+pkgdesc="Linux Discord rich presence for music, using MPRIS with album cover and progress bar support"
+url="https://github.com/patryk-ku/mpris-discord-rpc"
+arch="all"
+license="MIT"
+makedepends="cargo cargo-auditable openssl-dev dbus-dev"
+subpackages="$pkgname-openrc"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/patryk-ku/mpris-discord-rpc/archive/refs/tags/v$pkgver.tar.gz
+	mpris-discord-rpc.initd
+	"
+options="net"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/mpris-discord-rpc "$pkgdir"/usr/bin/mpris-discord-rpc
+
+	install -m755 -D "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/user/init.d/$pkgname
+}
+
+sha512sums="
+62455dfc4515d0c2a9333be6f7f9a557f599a1cbab2fe54983e043cd2f0afc547851e9cce76de9857408765042cca4d9dc23af77049366d957804239f755e187  mpris-discord-rpc-0.5.1.tar.gz
+c39229581d983fd360f9554e322c32a0e408eb8828d030248ba818930290ffb4829333b64e78289bfa901e39b1736f4605237ce4108109a15119dd4eb166e9aa  mpris-discord-rpc.initd
+"

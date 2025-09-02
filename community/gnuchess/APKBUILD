@@ -9,6 +9,7 @@ makedepends="automake autoconf gettext-tiny-dev xz"
 license="GPL-3.0-or-later"
 subpackages="$pkgname-doc"
 source="https://ftp.gnu.org/gnu/chess/gnuchess-$pkgver.tar.gz"
+options="!check" # No tests
 
 # secfixes:
 #   6.2.9-r0:

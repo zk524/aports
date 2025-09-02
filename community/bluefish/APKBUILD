@@ -10,6 +10,7 @@ license="GPL-3.0-or-later"
 makedepends="libtool libxml2-dev gtk+3.0-dev enchant2-dev gucharmap-dev intltool"
 subpackages="$pkgname-lang $pkgname-doc"
 source="https://www.bennewitz.com/bluefish/stable/source/bluefish-$pkgver.tar.bz2"
+options="!check" # No tests
 
 prepare() {
 	default_prepare

@@ -10,6 +10,7 @@ license="GPL-2.0-or-later OR GPL-1.0-or-later OR Artistic-1.0-Perl"
 makedepends="linux-headers"
 subpackages="$pkgname-doc"
 source="https://linukz.org/download/cd-discid-$pkgver.tar.gz"
+options="!check" # No tests
 
 build() {
 	make

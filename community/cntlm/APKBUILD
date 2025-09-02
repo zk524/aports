@@ -10,6 +10,7 @@ subpackages="$pkgname-doc $pkgname-openrc"
 source="https://downloads.sourceforge.net/project/cntlm/cntlm/cntlm%20$pkgver/cntlm-$pkgver.tar.gz
 	cntlm.initd
 	"
+options="!check" # No tests
 
 build() {
 	./configure --prefix=/usr \

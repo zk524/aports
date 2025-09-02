@@ -25,7 +25,7 @@ source="
 
 	fix-no-system-headers.patch
 	"
-
+options="!check" # Too complicated to run
 builddir="$srcdir/gcc-$pkgver"
 _workingdir="$builddir/build"
 

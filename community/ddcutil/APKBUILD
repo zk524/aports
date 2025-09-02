@@ -22,6 +22,7 @@ makedepends="
 	"
 subpackages="$pkgname-dev $pkgname-doc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/rockowitz/ddcutil/archive/v$pkgver.tar.gz"
+options="!check" # No automated tests
 
 prepare() {
 	default_prepare

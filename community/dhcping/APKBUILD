@@ -11,6 +11,7 @@ subpackages="$pkgname-doc"
 source="http://www.mavetju.org/download/dhcping-$pkgver.tar.gz
 	fix-endless-getopt-loop.patch
 	"
+options="!check" # No tests
 
 prepare() {
 	default_prepare

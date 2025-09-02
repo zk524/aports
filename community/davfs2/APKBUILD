@@ -17,6 +17,7 @@ source="https://download.savannah.gnu.org/releases/davfs2/davfs2-$pkgver.tar.gz
 	100-musl-compat.patch
 	200-newer-neon.patch
 	"
+options="!check" # No tests
 
 prepare() {
 	default_prepare

@@ -9,6 +9,7 @@ license="GPL-2.0-or-later"
 subpackages="$pkgname-lang"
 makedepends="autoconf automake gtk+3.0-dev intltool libjpeg-turbo-dev"
 source="https://github.com/lxde/gpicview/archive/refs/tags/$pkgver/gpicview-$pkgver.tar.gz"
+options="!check" # No tests
 
 prepare() {
 	default_prepare

@@ -3,7 +3,7 @@
 # Maintainer: Umar Getagazov <umar@handlerug.me>
 pkgname=xone-src
 _modname=${pkgname%-src}
-pkgver=0.4.3
+pkgver=0.4.4
 pkgrel=0
 pkgdesc="Linux kernel driver for Xbox One and Xbox Series X|S accessories (sources)"
 url="https://github.com/dlundqvist/xone"
@@ -37,6 +37,6 @@ package() {
 }
 
 sha512sums="
-9ca71ffabfaf3fa89cbc73b99b99ce0d7a11bf47c00344a3e9a6b0bac00ba79bc0d2ba866d3bad78c20bd05aef965d706acde62e46aef3075c91fe0b88fa1fba  xone-v0.4.3.tar.gz
+51b2b6417db69cc8e150bf94e191e5178b3e0e94ddf41f24aaf672c4d589195222c746bbe2ccf55ccf75bffa9dc29ac6fe3dbbc67d9493f55d98d26aeff5601e  xone-v0.4.4.tar.gz
 838de6003c723dc3955986b9cde883cae6e29c90995798110f285b1b1b362116f9e3a065f541e8d5d132dc460d245b37ce7479e9189b63e5fe9adf0c5f37529f  modules-load.conf
 "

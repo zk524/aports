@@ -1,0 +1,33 @@
+diff -urwN src/klutshnik-0.2.1/makefile patched/klutshnik-0.2.1/makefile
+--- a/makefile	2025-08-19 01:13:25.000000000 +0200
++++ b/makefile	2025-08-24 03:52:09.002000105 +0200
+@@ -4,10 +4,10 @@
+        -Wformat=2 -Wconversion -Wimplicit-fallthrough \
+ 		 -fasynchronous-unwind-tables -fpic -fstack-clash-protection -fcf-protection=full \
+ 		 -Werror=format-security -Werror=implicit-function-declaration -Wl,-z,defs -Wl,-z,relro \
+-		 -ftrapv -Wl,-z,noexecstack $(INCLUDES) -D_BSD_SOURCE -D_DEFAULT_SOURCE
++		 -ftrapv -Wl,-z,noexecstack -D_BSD_SOURCE -D_DEFAULT_SOURCE
+ 
+ #LDFLAGS?=/usr/lib/liboprf.a /usr/lib/liboprf-noiseXK.a -lsodium
+-LDFLAGS?=-loprf -lsodium
++LIBS=-loprf -lsodium
+ CC?=gcc
+ SOEXT?=so
+ STATICEXT?=a
+@@ -48,7 +48,7 @@
+ OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
+ 
+ libklutshnik.$(SOEXT): $(SOURCES)
+-	$(CC) -fPIC -shared $(CPPFLAGS) $(CFLAGS) $(SOFLAGS) -o libklutshnik.$(SOEXT) $^ $(LDFLAGS)
++	$(CC) -fPIC -shared $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(SOFLAGS) -o libklutshnik.$(SOEXT) $^ $(LDFLAGS) $(LIBS)
+ 
+ libklutshnik.$(STATICEXT): $(OBJECTS)
+ 	$(AR) rcs $@ $^
+@@ -95,4 +95,7 @@
+ clean:
+ 	@rm -f *.o libklutshnik.$(STATICEXT) libklutshnik.$(SOEXT) libklutshnik.pc
+ 
++%.o: %.c
++	$(CC) $(CFLAGS) -fPIC $(INCLUDES) -c $< -o $@
++
+ PHONY: clean

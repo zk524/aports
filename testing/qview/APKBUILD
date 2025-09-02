@@ -1,0 +1,29 @@
+# Contributor: Camelia Lavender <cam@camelia.dev>
+# Maintainer: Camelia Lavender <cam@camelia.dev>
+pkgname=qview
+_realname=qView
+pkgver=7.1
+pkgrel=0
+pkgdesc="An image viewer designed with minimalism and usability in mind"
+url="https://interversehq.com/qview/"
+arch="all"
+license="GPL-3.0-or-later"
+depends="hicolor-icon-theme"
+makedepends="qt6-qtbase-dev qt6-qttools-dev"
+builddir="$srcdir/$_realname-$pkgver"
+source="$pkgname-$pkgver.tar.gz::https://github.com/jurplel/qView/archive/refs/tags/$pkgver.tar.gz"
+options="!check"  # requires a working display
+
+build() {
+	# /usr/bin/qmake6 is a broken symlink on Alpine 3.22
+	/usr/lib/qt6/bin/qmake6 PREFIX=/usr
+	make
+}
+
+package() {
+	make INSTALL_ROOT="$pkgdir/" install
+}
+
+sha512sums="
+cc7930a83f34a1a1d3b8339dd85b087801d35fb8de1a2601ff779285b8a9db93a116c3422166e5b528aa8c4610d64a5d6a10917d6f311d16151aeabc6e46b536  qview-7.1.tar.gz
+"

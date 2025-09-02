@@ -1,20 +1,27 @@
 maintainer="Hoang Nguyen <folliekazetani@protonmail.com>"
 pkgname=nickel
-pkgver=1.9.1
+pkgver=1.12.2
 pkgrel=0
 pkgdesc="Generic configuration language for less"
 url="https://nickel-lang.org/"
 # s390x, loongarch64: nix crate fails to build
-# riscv64: check_manual_snippets_doc_manual_syntax_md test hangs indefinitely
-arch="all !s390x !riscv64 !loongarch64"
+# riscv64, ppc64le: tests hang indefinitely
+arch="all !s390x !riscv64 !loongarch64 !ppc64le"
 license="MIT"
-makedepends="cargo cargo-auditable"
+makedepends="
+	cargo
+	cargo-auditable
+	oniguruma-dev
+	"
 checkdepends="python3"
 subpackages="$pkgname-doc $pkgname-language-server:_langserver"
 options="net"
-source="$pkgname-$pkgver.tar.gz::https://github.com/tweag/nickel/archive/refs/tags/$pkgver.tar.gz
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/tweag/nickel/archive/refs/tags/$pkgver.tar.gz
 	explicit-dep-comrak.patch
 	"
+
+export RUSTONIG_DYNAMIC_LIBONIG=1  # use system libonig
 
 prepare() {
 	default_prepare
@@ -24,6 +31,7 @@ prepare() {
 
 build() {
 	cargo auditable build --frozen --release --workspace \
+		--features package-experimental \
 		--bin nickel --bin nls
 }
 
@@ -45,6 +53,6 @@ _langserver() {
 }
 
 sha512sums="
-23b926125f1c5ad7ff9fae1105f63164ea71b44c3cb1e4568e9fe40dec37e96e464c9c4ab8b4272f28ab35de6c3fa833e04e4815143aef4ec5ae16b9b62f9be0  nickel-1.9.1.tar.gz
+abc416ec93af767ae64e262ece48b52ccbafe087b974c9f7e645af9ca062893f3857d87c58627c0b7dbd36171cef98d886f04d75b55dd540697fe6d2eb902509  nickel-1.12.2.tar.gz
 a5d2c2899e81d480702f4f43d42373019a28d032e711a12d133b320ff4ad43b158bb4fb9577a5bfbc150131913d7267a8fe511b908b1e62b09de089fb440a677  explicit-dep-comrak.patch
 "

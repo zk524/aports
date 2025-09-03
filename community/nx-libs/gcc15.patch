@@ -1,0 +1,13 @@
+diff --git a/nx-X11/programs/Xserver/dbe/dbe.c b/nx-X11/programs/Xserver/dbe/dbe.c
+index 44657131..1707db8b 100644
+--- a/nx-X11/programs/Xserver/dbe/dbe.c
++++ b/nx-X11/programs/Xserver/dbe/dbe.c
+@@ -56,7 +56,7 @@
+ /* GLOBALS */
+ 
+ /* Per-screen initialization functions [init'ed by DbeRegisterFunction()] */
+-static Bool	(* DbeInitFunct[MAXSCREENS])();	/* pScreen, pDbeScreenPriv */
++static Bool	(* DbeInitFunct[MAXSCREENS])(ScreenPtr, DbeScreenPrivPtr);	/* pScreen, pDbeScreenPriv */
+ 
+ /* These are static globals copied to DBE's screen private for use by DDX */
+ static int	dbeScreenPrivIndex;

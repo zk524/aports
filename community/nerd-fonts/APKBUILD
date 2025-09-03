@@ -21,9 +21,9 @@ builddir="$srcdir"
 # <origname> is used only for pkgdesc and it may be empty.
 # "~" will be replaced with a single whitespace.
 _fonts="
-	anonymous-pro,AnonymousPro,Anonymice,Anonymous~Pro
+	anonymous-pro,AnonymousPro,AnonymicePro,Anonymous~Pro
 	arimo,Arimo,,
-	bitstrom-wera-sans-mono,BitstreamVeraSansMono,BitstromWeraNerdFontMono,Bitstrom~Wera~Sans~Mono
+	bitstrom-wera-sans-mono,BitstreamVeraSansMono,BitstromWera,Bitstrom~Wera~Sans~Mono
 	cascadia-code,CascadiaCode,CaskaydiaCove,Cascadia~Code
 	comic-shanns-mono,ComicShannsMono,ComicShannsMono,Comic~Shanns~Mono
 	dejavu-sans-mono,DejaVuSansMono,DejaVuSansM,DejaVu~Sans~Mono

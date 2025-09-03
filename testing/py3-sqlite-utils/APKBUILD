@@ -1,0 +1,38 @@
+# Contributor: Wen Heping <wenhepingalpine@sohu.com>
+# Maintainer: Wen Heping <wenhepingalpine@sohu.com>
+pkgname=py3-sqlite-utils
+pkgver=3.38
+pkgrel=0
+# _pkgreal is used by apkbuild-pypi to find modules at PyPI
+_pkgreal=sqlite-utils
+pkgdesc="CLI tool and Python library for manipulating SQLite databases"
+url="https://pypi.org/project/sqlite-utils/"
+arch="noarch"
+license="Apache License, Version 2.0"
+depends="py3-sqlite-fts4 py3-click py3-click-default-group py3-tabulate py3-dateutil py3-pluggy"
+makedepends="py3-gpep517 py3-setuptools py3-wheel"
+checkdepends="py3-pytest py3-hypothesis"
+subpackages="$pkgname-pyc"
+source="https://files.pythonhosted.org/packages/source/s/sqlite-utils/sqlite_utils-$pkgver.tar.gz"
+builddir="$srcdir/sqlite_utils-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+998d0c0a3eab7ea359d7986f24be0d387c839020314cb6e66534f9f9c0f868b3552290b3263ab881fc956e8dca3bc06fc9083a17f2cd1c89b50a8e00d1f7b86b  sqlite_utils-3.38.tar.gz
+"

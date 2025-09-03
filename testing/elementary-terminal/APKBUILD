@@ -1,0 +1,40 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+# Maintainer: Angelo Verlain <hey@vixalien.com>
+pkgname=elementary-terminal
+pkgver=7.0.0
+pkgrel=0
+pkgdesc="Terminal emulator designed for elementary OS"
+url="https://github.com/elementary/terminal"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	granite-dev
+	gtk+3.0-dev
+	libhandy1-dev
+	meson
+	musl-dev
+	vala
+	vte3-dev
+	xvfb-run
+	"
+subpackages="$pkgname-doc $pkgname-lang"
+source="$pkgname-$pkgver.tar.gz::https://github.com/elementary/terminal/archive/refs/tags/$pkgver.tar.gz"
+
+builddir="$srcdir/terminal-$pkgver"
+
+build() {
+	abuild-meson . output
+	meson compile -C output
+}
+
+check() {
+	meson test --no-rebuild --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+a18ea96ed8c2913d582e5ab33ccee53096f58214361726d8578e66a6bd76a56193b2a8658b07564d0bc9680c2e85553eb5aaca041a4e8b48dde6f537296c5429  elementary-terminal-7.0.0.tar.gz
+"

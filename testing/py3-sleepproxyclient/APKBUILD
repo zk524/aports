@@ -1,0 +1,66 @@
+# Contributor: Gil Pedersen <gpdev@gpost.dk>
+# Maintainer: Gil Pedersen <gpdev@gpost.dk>
+pkgname=py3-sleepproxyclient
+_pkgname=sleepproxyclient
+pkgver=2.3
+pkgrel=0
+pkgdesc="A SleepProxyClient implementation"
+url="https://github.com/awein/SleepProxyClient"
+arch="noarch"
+license="GPL-3.0-only"
+depends="python3 py3-dnspython py3-netifaces avahi-tools"
+makedepends="python3-dev coreutils"
+subpackages="$pkgname-doc $pkgname-pyc $_pkgname-scripts:_scripts $_pkgname-elogind:_elogind"
+source="https://github.com/awein/SleepProxyClient/archive/v$pkgver/$_pkgname-$pkgver.tar.gz
+	10-use-module.patch
+	30-avahi-check.patch"
+builddir="$srcdir/SleepProxyClient-$pkgver"
+
+replaces="py-sleepproxyclient" # Backwards compatibility
+provides="py-sleepproxyclient=$pkgver-r$pkgrel" # Backwards compatibility
+
+build() {
+	python3 -m py_compile "$builddir/$_pkgname.py"
+}
+
+check() {
+	# Just do a basic check that it loads
+	python3 "$builddir/sleepproxyclient.py" --interfaces lo > /dev/null
+}
+
+package() {
+	local sitedir=$(python3 -c 'import site; print(site.getsitepackages()[0])')
+
+	install -Dm0644 "$builddir/$_pkgname.py" -t "$pkgdir/$sitedir"
+	install -Dm0644 "$builddir"/__pycache__/*.pyc -t "$pkgdir/$sitedir/__pycache__"
+
+	install -Dm0644 "$builddir/README.md" -t "$pkgdir/usr/share/doc/$_pkgname"
+	install -Dm0644 "$builddir/LICENSE" -t "$pkgdir/usr/share/licenses/$_pkgname"
+}
+
+_scripts() {
+	pkgdesc="Helper scripts for $pkgname"
+	depends="$pkgname bash logger"
+
+	install -Dm0755 \
+		"$builddir/sleepproxyclient.sh" \
+		"$builddir/00_sleepproxyclient" \
+		-t "$subpkgdir/usr/share/$_pkgname/scripts"
+
+	sed -E -i 's/^(SPC.*=.*)$/#\1/g' "$builddir/debian/sleepproxyclient.default"
+	install -Dm0644 "$builddir/debian/sleepproxyclient.default" -T "$subpkgdir/etc/default/$_pkgname"
+}
+
+_elogind() {
+	pkgdesc="Automatic (elogind) system sleep hook for $pkgname"
+	depends="$_pkgname-scripts elogind cmd:service"
+
+	mkdir -p "$subpkgdir/usr/libexec/elogind/system-sleep"
+	ln -s "/usr/share/$_pkgname/scripts/00_sleepproxyclient" "$subpkgdir/usr/libexec/elogind/system-sleep/00_sleepproxyclient"
+}
+
+sha512sums="
+be185229186cc42a6c1b5d00d9a3a55bb61c4bd89273ebf7f3306ad14d302c03452e33510882fac59cadd090e58dac92c22f0747610ff82e439f8ba5fb2379ce  sleepproxyclient-2.3.tar.gz
+46decfd46737295fba17e62777290d10949507a2a689c2fe0d705067417d9d676957f324e8b61394e6c289e5297f6c387ec5427ff252ba7561ae7705218e251e  10-use-module.patch
+4981ec464484bd7b02883b5f690a65a9319af6e7e9bf906352a0f9f1152a5c2d56b670fdca8266b9e50d9ce2dc12a3234beaa317ccfa744dc7bd46f7548bbc27  30-avahi-check.patch
+"

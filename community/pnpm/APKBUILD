@@ -2,7 +2,7 @@
 # Contributor: Fabricio Silva <hi@fabricio.dev>
 maintainer="Fabricio Silva <hi@fabricio.dev>"
 pkgname=pnpm
-pkgver=10.15.0
+pkgver=10.15.1
 pkgrel=0
 pkgdesc="Fast, disk space efficient package manager"
 url="https://pnpm.io"
@@ -67,7 +67,7 @@ package() {
 }
 
 sha512sums="
-486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b  pnpm-10.15.0.tgz
-f53903c506a676393dd8b31e1194b92612bfa877a8e17edc530e308921caf454248e181a3e620a17a941eba126349128963b2b0b1e48f8d927307c9cf335290e  0001-no-check-for-updates.patch
-5582d11fcd1782f40a4f9269b477af25057e3a3d60cddef8b64a8592fafdc7a572822c8267a7abf9e8bfa4b726dcb291885642070a838e360fc542cee10c9569  0002-no-self-update.patch
+34e538c329b5553014ca8e8f4535997f96180a1d0f614339357449935350d924e22f8614682191264ec33d1462ac21561aff97f6bb18065351c162c7e8f6de67  pnpm-10.15.1.tgz
+dc9d93b43958568a6d37316acf0f262d2b72eb173c26824aaa3e9d0ccdf43e4ae3a0e056fcefdaee9a7f12822a8cc05a25c641e437048e72e93ba74ff0fef1b0  0001-no-check-for-updates.patch
+a670eee8d941da1eebc489318311162309496c63638f84f9695f2083678dd73f2f1394222ae1a7bd59931a00642af352f2aa17a8e0acbd2786f7a7abe3f7f747  0002-no-self-update.patch
 "

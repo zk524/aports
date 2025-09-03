@@ -3,9 +3,10 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=py3-matplotlib
-pkgver=3.10.3
+pkgver=3.10.6
+_imgver=3.10.3
 _ftver=2.13.1
-pkgrel=2
+pkgrel=0
 pkgdesc="Python3 library for plots"
 url="https://matplotlib.org"
 arch="all"
@@ -67,14 +68,12 @@ subpackages="
 	"
 # from https://src.fedoraproject.org/rpms/python-matplotlib/tree/rawhide
 source="https://github.com/matplotlib/matplotlib/archive/v$pkgver/matplotlib-v$pkgver.tar.gz
-	https://github.com/QuLogic/mpl-images/archive/v$pkgver-with-freetype-$_ftver/mpl-images-$pkgver-ft$_ftver.tar.gz
+	https://github.com/QuLogic/mpl-images/archive/v$_imgver-with-freetype-$_ftver/mpl-images-$_imgver-ft$_ftver.tar.gz
 	0001-matplotlibrc-path-search-fix.patch
 	0002-Set-FreeType-version-to-2.13.1-and-update-tolerances.patch
 	0003-Unpin-meson-python-build-requirement.patch
 	0004-Use-old-stride_windows-implementation-on-32-bit-x86.patch
 	0005-Partially-revert-TST-Fix-minor-issues-in-interactive.patch
-	pillow13.patch
-	python3.14.patch
 	"
 builddir="$srcdir/matplotlib-$pkgver"
 
@@ -102,7 +101,7 @@ check() {
 	for _module in matplotlib mpl_toolkits
 	do
 		cp -r lib/$_module/* test-env/lib/python$python_version/site-packages/$_module
-		cp -r "$srcdir"/mpl-images-$pkgver-with-freetype-$_ftver/lib/$_module/* test-env/lib/python$python_version/site-packages/$_module
+		cp -r "$srcdir"/mpl-images-$_imgver-with-freetype-$_ftver/lib/$_module/* test-env/lib/python$python_version/site-packages/$_module
 	done
 
 	# musl locale deficiencies
@@ -253,13 +252,11 @@ wx_pyc() {
 }
 
 sha512sums="
-a321d3eebd043fb20ce56e1b0795923d4dad559e449a31058256167eb70ef5bb71714400949c33da4d311545f4a5a97af82ebafec4889161044993b4c3511cb9  matplotlib-v3.10.3.tar.gz
+caf7dc80ecbe93d47b65af1fb605dbcd0c384d6e453c76171dfef9c42db0b7045a9413e5fcb1a46a738d95e161431fb013b531353e01b82c5c7d3cf461e67e7b  matplotlib-v3.10.6.tar.gz
 bb32e57bbd341c652d03361e3785145a9e89f59709eb588882f81cba4061c8aa7250c0d46ed07a588d75a055d72bbc6126c59e8777634385a458287f6ef8812f  mpl-images-3.10.3-ft2.13.1.tar.gz
 8a8590f69acbb2b7896e5269fd066b3b7bd4563f230306505500829d059dc736a6d7cfc1805ff58edc9545d51db685cd7827593ef88651443c9150b3c5d093a9  0001-matplotlibrc-path-search-fix.patch
 fc6076275d9e2e6ae5d89ccd066d90a3736ef765cc790de503f8e25f8c729e80dc4a9bfe7bb19c6f31a71d6b0ca22d88d18a14f79de72a73207d1d8f0534046e  0002-Set-FreeType-version-to-2.13.1-and-update-tolerances.patch
 b5eaa828b3cd98a28ca7c51a81b4f6264e93fe5279d1bdf6661a8e913f8ef2a005f9b99f0b69a987999061b2133b138b2b180cf630687c0a28a49514de520aaf  0003-Unpin-meson-python-build-requirement.patch
 21da2dde4db4d513e6af086ccd7d4cdbe2faf016e11bb7a273ef4825f8e9b2291f8c42d6ec9b4ebe4d4d80f655739fe4ff683f07f0b7adfb4d2e4960eba0c699  0004-Use-old-stride_windows-implementation-on-32-bit-x86.patch
 89433c2e704373fa3ca3a77e661c41dd7ce40df2b8da34e5dcfc732145ab39cf7245f64122c1eff4da230b889ec1e1cf935366c18b903b3157daa9ebc91db339  0005-Partially-revert-TST-Fix-minor-issues-in-interactive.patch
-57ba1fefec92a6258ea32210942bb65647d628ca6f29047edb601a7a3f5f2cc4ab24ab5a7c09438304a2324e2bb6c1c5f2d904aa0347023d593111e5295e2571  pillow13.patch
-e135d3a31e6556a0fba9671852053edce51093705097cd3536e8ce81d9a6f7cdc17c11db4088b8b31854a3223f18f145bb8ec6a13858f366d2042150eb8b8e0c  python3.14.patch
 "

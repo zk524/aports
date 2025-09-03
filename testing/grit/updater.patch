@@ -1,0 +1,21 @@
+diff --git a/crates/cli/src/commands/mod.rs b/crates/cli/src/commands/mod.rs
+index 08b1261..49cf507 100644
+--- a/crates/cli/src/commands/mod.rs
++++ b/crates/cli/src/commands/mod.rs
+@@ -143,6 +143,7 @@ pub enum Commands {
+     #[clap(name = "auth")]
+     Auth(Auth),
+     /// Install supporting binaries
++    #[clap(skip)]
+     Install(InstallArgs),
+     /// Install grit modules
+     Init(InitArgs),
+@@ -362,7 +363,7 @@ async fn run_command() -> Result<()> {
+         Commands::Install(_) => {}
+         Commands::Plumbing(_) => {}
+         _ => {
+-            updater.check_for_update().await?;
++            // updater.check_for_update().await?;
+         }
+     }
+ 

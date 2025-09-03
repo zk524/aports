@@ -1,0 +1,44 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+maintainer="Angelo Verlain <hey@vixalien.com>"
+pkgname=elementary-greeter
+pkgver=8.0.1
+pkgrel=0
+pkgdesc="Login and Lock Screen greeter for elementary OS and Pantheon, using LightDM"
+url="https://github.com/elementary/greeter"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	accountsservice-dev
+	desktop-file-utils
+	gnome-desktop-dev
+	granite-dev
+	gtk+3.0-dev
+	libhandy1-dev
+	lightdm-dev
+	meson
+	mutter47-dev
+	vala
+	wayland-dev
+	"
+subpackages="$pkgname-lang"
+source="$pkgname-$pkgver.tar.gz::https://github.com/elementary/greeter/archive/refs/tags/$pkgver.tar.gz"
+
+builddir="$srcdir/greeter-$pkgver"
+
+build() {
+	abuild-meson \
+		output .
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+f963ff763cfff18f37033f8526ee6c0b57c7f819d7bd6d241d6ab13f8b1c58f3206f312e1124b4bb9d6a9423ac361147b8fcd1a53df4f2fbce9938aa5707e2ef  elementary-greeter-8.0.1.tar.gz
+"

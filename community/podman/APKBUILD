@@ -46,6 +46,8 @@ source="https://github.com/containers/podman/archive/v$pkgver/podman-$pkgver.tar
 
 	podman.initd
 	podman.confd
+	podman-user.initd
+	podman-user.confd
 	"
 
 # secfixes:
@@ -107,6 +109,9 @@ package() {
 
 	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
 	install -Dm644 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+
+	install -Dm755 "$srcdir"/$pkgname-user.initd "$pkgdir"/etc/user/init.d/$pkgname
+	install -Dm644 "$srcdir"/$pkgname-user.confd "$pkgdir"/etc/user/conf.d/$pkgname
 }
 
 remote() {
@@ -148,4 +153,6 @@ sha512sums="
 5a395b94d75bcc8b87cc3bafbcf1f61a411ee37256dc1ddb27e21ad49b912227601423e387c2f111f773a4a19936b586a308279297cef9c8a64ccfdd87123615  no-systemd.patch
 f8941dc3f8c6b08b288e3347ef2d782140f6e46809da0353f3695338a2de75a971b312e57d09b0a0ea51557568d888b367e3b234be550aea8386321878f4a22f  podman.initd
 ec6e6d3f72d0ab6c90a30b2cca5152c0d0f1e402ae671289263d7bf3b5141de9d67c3593f20b6075cedd214b7fb1506e69ff7b4f9691b43b391389343ab9b9b1  podman.confd
+8a0cada3f23c4b5b09ba7380e3119504eb84e202ded30bce6c68621074887afddd61692b97761fb930c2500ba7d395947d3c242ea6d733fb46aed5cb43f024fe  podman-user.initd
+ec6e6d3f72d0ab6c90a30b2cca5152c0d0f1e402ae671289263d7bf3b5141de9d67c3593f20b6075cedd214b7fb1506e69ff7b4f9691b43b391389343ab9b9b1  podman-user.confd
 "

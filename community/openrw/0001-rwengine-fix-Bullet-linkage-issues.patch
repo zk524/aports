@@ -1,0 +1,25 @@
+From a76e642ecf988d17f22814bcc64d17fe8983038a Mon Sep 17 00:00:00 2001
+From: David Heidelberg <david@ixit.cz>
+Date: Wed, 11 Dec 2024 05:49:02 -0500
+Subject: [PATCH] ysys
+
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ rwengine/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git ./rwengine/CMakeLists.txt ./rwengine/CMakeLists.txt
+index 4b638495..2c26f36e 100644
+--- ./rwengine/CMakeLists.txt
++++ ./rwengine/CMakeLists.txt
+@@ -172,6 +172,7 @@ endif()
+ target_include_directories(rwengine
+     PUBLIC
+         "${CMAKE_CURRENT_SOURCE_DIR}/src"
++	"${BULLET_INCLUDE_DIRS}"
+     )
+ 
+ openrw_target_apply_options(TARGET rwengine
+-- 
+2.45.2
+

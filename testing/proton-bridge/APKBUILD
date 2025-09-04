@@ -1,0 +1,86 @@
+# Contributor: Aemilia Scarlett <aemilia@ferret.town>
+# Maintainer: Aemilia Scarlett <aemilia@ferret.town>
+pkgname=proton-bridge
+pkgver=3.6.1
+pkgrel=0
+pkgdesc="Proton Mail Bridge application"
+url="https://proton.me/mail/bridge"
+# armhf/armv7: Temporarily disabled until sentry-native can be moved to a system package but that will require making a new aport first.
+# s390x: Temporarily disabled until the saferith dependency can be fixed on s390x, or a local workaround can be devised.
+arch="all !s390x !armhf !armv7"
+license="GPL-3.0-or-later"
+pkgusers="$pkgname"
+pkggroups="$pkgname"
+depends="proton-bridge-cli"
+makedepends="go libsecret-dev cmake ninja-build qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtsvg-dev protobuf-dev grpc-dev bash zip ninja-is-really-ninja perl curl git"
+subpackages="$pkgname-cli"
+options="!check"
+_vcpkgver=2023.08.09
+source="$pkgname-$pkgver.tar.gz::https://github.com/ProtonMail/proton-bridge/archive/v$pkgver.tar.gz
+	vcpkg-$_vcpkgver.tar.gz::https://github.com/microsoft/vcpkg/archive/$_vcpkgver.tar.gz
+	fix-vcpkg-for-multi-arch.patch
+	fix-vcpkg-arch-detection.patch
+	fix-makefile.patch
+	fix-cmake-setting-arch.patch
+	proton-bridge.initd
+	"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+export CGO_CFLAGS="-D_LARGEFILE64_SOURCE" # Musl 1.2.4 broke compatibility with Open64, this is a workaround.
+
+case "$CARCH" in
+arm*|aarch64|s390x|ppc64le|riscv) export VCPKG_FORCE_SYSTEM_BINARIES=1 ;;
+esac
+
+prepare() {
+	# The proton-bridge build system expects vcpkg to live in proton-bridge/extern/vcpkg
+	rm -rf "$builddir"/extern/vcpkg/
+	mv "$srcdir"/vcpkg-$_vcpkgver/ "$builddir"/extern/vcpkg/
+
+	default_prepare
+
+	# If we don't do this, proton-bridge will bring in qt6 libs into a subfolder and locally link to them instead of system qt6.
+	truncate -s0 "$builddir"/internal/frontend/bridge-gui/bridge-gui/DeployLinux.cmake
+}
+
+build() {
+	make build-nogui
+	cp "$builddir"/bridge "$builddir"/proton-bridge # I don't know why I have to do this but I do else it breaks.
+	make build-gui
+}
+
+check() {
+	make test
+}
+
+package() {
+	install -D -m755 "$builddir"/cmd/Desktop-Bridge/deploy/linux/bridge-gui "$pkgdir"/usr/bin/bridge-gui
+
+	install -D -m644 "$builddir"/cmd/Desktop-Bridge/deploy/linux/proton-bridge.desktop "$pkgdir"/usr/share/applications/proton-bridge.desktop
+	install -D -m644 "$builddir"/cmd/Desktop-Bridge/deploy/linux/logo.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/protonmail-bridge.svg
+	install -D -m644 "$builddir/LICENSE" "$pkgdir"/usr/share/licenses/$pkgname
+}
+
+cli() {
+	depends=""
+
+	mkdir $subpkgdir
+
+	install -D -m755 "$builddir"/cmd/Desktop-Bridge/deploy/linux/bridge "$subpkgdir"/usr/bin/bridge
+
+	install -D -m644 "$builddir/LICENSE" "$subpkgdir"/usr/share/licenses/$pkgname
+	install -D -m644 "$builddir"/doc/*.md "$subpkgdir"/usr/share/doc/protonmail/bridge
+
+	install -Dm755 "$srcdir"/proton-bridge.initd "$subpkgdir"/etc/init.d/proton-bridge
+}
+sha512sums="
+39e11815cdfdcd741ba04ee6776ce4bd959715d8d5bb8345b7f7b1a66b5fa5b66890ebc0353b1f5566a822e0ad1c4757fd022b67f4c66e91113b5e700db04abd  proton-bridge-3.6.1.tar.gz
+91f896a1ab77bb057697ac76733cdf9c1beb849184c1c974a11ec66e6034b950bc5da75aa6894079dc46a4aefc10f35a620738f6f312dd11d58f3c2df35d1a78  vcpkg-2023.08.09.tar.gz
+8e1dce8df7144e2b78398df64b1597bce82a0ee6a381b56c3920e18d45e9baf7f159a3fbf34848d6d56d9925273490121a405619f17c553c05c4defd5f58003d  fix-vcpkg-for-multi-arch.patch
+937ddd0e6418fc045fc14d6ac365e0033e3a5b9aeb21942422e435555b08974d6def8bbf4c0a52cf5e75c50a21c41b800402b1699d324ee1e32442ba3ca9175b  fix-vcpkg-arch-detection.patch
+c83c77a16f66012abf55d0563af8c250477a0f621ec1750d67c8133dd25ed0bea93c5181873227e797c4c0b7f07cc441a86e1cd55e4a8049a540988408096ef0  fix-makefile.patch
+a4614271e68cbfbf3418eeaee80b9e53c2d06889aebf051661e6a4016df3620f2b95bbebb79d7ba630c11e1addd41077e499e7c6f82732665855b847482692e2  fix-cmake-setting-arch.patch
+b21c5939a24913406f527d69e0878963e350be3dc8913aada9b0f21f05fea8f1597aed715ee4639a911881b63efaa30022a6cffadbf7b91f2066d6b28702100b  proton-bridge.initd
+"

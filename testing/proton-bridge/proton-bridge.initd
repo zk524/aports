@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+
+supervisor=supervise-daemon
+
+name=proton-bridge
+command="/usr/bin/bridge"
+command_args="-n"
+command_background=true
+pidfile="/run/${RC_SVCNAME}.pid"
+error_log="/var/log/proton-bridge.log"
+command_user="proton-bridge:proton-bridge"
+
+depend() {
+        need net
+}
+
+start_pre() {
+        checkpath -f --owner "$command_user" --mode 0644 \
+                /var/log/proton-bridge.log
+}

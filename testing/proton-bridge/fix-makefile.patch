@@ -1,0 +1,11 @@
+--- proton-bridge-3.6.1/Makefile.orig
++++ proton-bridge-3.6.1/Makefile
+@@ -131,7 +131,7 @@
+ 	cp -pf ./LICENSE ${DEPLOY_DIR}/linux/
+ 	cp -pf ./Changelog.md ${DEPLOY_DIR}/linux/
+ 	cp -pf ./dist/${EXE_NAME}.desktop ${DEPLOY_DIR}/linux/
+-	mv ${LAUNCHER_EXE} ${DEPLOY_DIR}/linux/
++	# mv ${LAUNCHER_EXE} ${DEPLOY_DIR}/linux/
+ 
+ ${DEPLOY_DIR}/darwin: ${EXE_TARGET} build-launcher
+ 	mv ${EXE_GUI_TARGET} ${EXE_TARGET_DARWIN}

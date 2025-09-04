@@ -11,6 +11,7 @@ makedepends="
 	libcap-dev
 	meson
 	"
+triggers="$pkgname.trigger=/usr/lib/sysusers.d:/etc/sysusers.d:/usr/lib/tmpfiles.d:/etc/tmpfiles.d"
 subpackages="$pkgname-doc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/chimera-linux/sd-tools/archive/refs/tags/v$pkgver.tar.gz
 	drop-bash-dep.patch

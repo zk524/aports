@@ -19,6 +19,7 @@ makedepends="
 	libuv-dev
 	libxcb-dev
 	ninja-build
+	ninja-is-really-ninja
 	pulseaudio-dev
 	python3
 	py3-sphinx

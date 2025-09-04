@@ -67,7 +67,7 @@ build() {
 
 package() {
 	cd "$builddir"/build
-	cmake --build . --target install -- DESTDIR="$pkgdir"
+	DESTDIR="$pkgdir" cmake --build . --target install
 }
 
 sha512sums="

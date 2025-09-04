@@ -1,0 +1,40 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0dd498e..9726c65 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -5,7 +5,7 @@ WARN_CLANG=-Wformat-nonliteral -Wstrncat-size -Wformat-security -Wsign-conversio
+ WARN_GCC=-Wformat=2 -Wformat-overflow=2 -Wformat-nonliteral -Wformat-truncation=2 -Wnull-dereference -Wstrict-overflow=2 -Wstringop-overflow=4 -Walloca-larger-than=4096 -Wtype-limits -Wconversion -Wtrampolines -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fno-common -Wcast-align
+ CFLAGS ?= -g
+ OPTS=-I. -O3 $(CFLAGS) -fcommon
+-CPPFLAGS += -D_GNU_SOURCE
++CPPFLAGS += -D_GNU_SOURCE -Wno-deprecated-declarations -Wno-unused-command-line-argument
+ # -Wall -g -pedantic
+ LIBS=-lm
+ DESTDIR ?=
+diff --git a/hydra-mod.c b/hydra-mod.c
+index de86f66..bda06f0 100644
+--- a/hydra-mod.c
++++ b/hydra-mod.c
+@@ -60,7 +60,8 @@ RSA *rsa = NULL;
+ int32_t my_select(int32_t fd, fd_set *fdread, fd_set *fdwrite, fd_set *fdex, long sec, long usec);
+ 
+ /* ----------------- alarming functions ---------------- */
+-void alarming() {
++void alarming(int signal) {
++  (signal);
+   fail++;
+   alarm_went_off++;
+ 
+diff --git a/hydra-smb.c b/hydra-smb.c
+index 6fc5bbd..ce13e0a 100644
+--- a/hydra-smb.c
++++ b/hydra-smb.c
+@@ -1207,7 +1207,7 @@ unsigned long SMBSessionSetup(int32_t s, char *szLogin, char *szPassword, char *
+   hydra_send(s, (char *)buf, iOffset + iByteCount, 0);
+ 
+   nReceiveBufferSize = hydra_recv(s, bufReceive, sizeof(bufReceive));
+-  if (/*(bufReceive == NULL) ||*/ (nReceiveBufferSize == 0))
++  if (/*bufReceive == NULL ||*/ nReceiveBufferSize == 0)
+     return -1;
+ 
+   /* 41 - Action (Guest/Non-Guest Account) */

@@ -57,4 +57,8 @@ https://dl-cdn.alpinelinux.org/alpine/$branch/main
 https://dl-cdn.alpinelinux.org/alpine/$branch/community
 EOF
 
-tar --numeric-owner --exclude='dev/*' -c -C "$tmp" . | gzip -9n > "$outfile"
+find "$tmp" -exec touch -h -d "@$SOURCE_DATE_EPOCH" -- {} +
+
+{ cd "$tmp"; find .; } | LC_ALL=C sort |
+	tar --no-recursion --numeric-owner --exclude='dev/?*' -c -C "$tmp" -T - |
+	gzip -9n > "$outfile"

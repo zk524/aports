@@ -1,0 +1,67 @@
+# Contributor: Lucas Ieks <lucas@ieks.cc>
+# Maintainer: Lucas Ieks <lucas@ieks.cc>
+pkgname=trenchbroom
+pkgver=2025.3
+pkgrel=0
+pkgdesc="Cross-platform level editor"
+url="https://trenchbroom.github.io/"
+# most are blocked by pandoc, aarch64 doesn't build because of a header conflict
+arch="x86_64"
+license="GPL-3.0-or-later"
+makedepends="cmake
+	samurai
+	assimp-dev
+	freeimage-dev
+	freetype-dev
+	miniz-dev
+	catch2
+	fmt-dev
+	glew-dev
+	tinyxml2-dev
+	qt6-qtbase-dev
+	qt6-qtsvg-dev
+	gtest-dev
+	pandoc"
+subpackages="$pkgname-doc"
+source="trenchbroom-$pkgver.tar.gz::https://github.com/TrenchBroom/TrenchBroom/archive/refs/tags/v$pkgver.tar.gz
+	musl.patch
+	wayland.patch
+	version.patch
+	remove-vcpkg.patch"
+builddir="$srcdir/TrenchBroom-$pkgver"
+
+build() {
+	export OVERRIDE_VERSION="v$pkgver"
+	export QT_QPA_PLATFORM=offscreen
+	cmake -B "$srcdir/build" -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build "$srcdir/build"
+}
+
+check() {
+	export QT_QPA_PLATFORM=offscreen
+	# adapted from CI-linux.sh
+	cd "$srcdir/build/lib/vm/test"
+	./vm-test
+	cd "$srcdir/build/lib/kdl/test"
+	./kdl-test
+	cd "$srcdir/build/common/test"
+	./common-test
+	./common-regression-test
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install "$srcdir/build"
+}
+
+doc() {
+	default_doc
+	amove usr/share/TrenchBroom/manual
+}
+
+sha512sums="
+1921bb549ff591c8d4a65fac26281d42a55a4776205bc1eba61b3a5f3a849ce4ec2798850cd24aac290457ab3119f134da481b9270ddee5b7488d851aab689a2  trenchbroom-2025.3.tar.gz
+a08f4689a1953702fb2fee8fac94e8db04488cfc18e9a209cacb3c09d554887c72ec318a5ef6c12919352b09b3fa87342fc2c9891682d3c7fb3b68a158346a40  musl.patch
+2ce9426ac55d159e02c4f23f49172b81a2635e12b1042616247e5c2e7c990f9a94c73d6a824ad995388422c04081be96e79d240171f5b18aa7ee5ed21396ed20  wayland.patch
+3bf74a55600769c6c613635b81150c347e5e472fcb1ba569e1787dec254788b53970fd460b0ef7480b4f75c41b8d2fee92c7b76083825ea148b73a3ea57c9091  version.patch
+49d9f65f261b3f5c7751519bedad43f589eabd16e5fc1d8221ba1cc264e41827b8eb95496f70fa6b77c4c30254721bf30b978b5eebab44a8817c9c7bd3368759  remove-vcpkg.patch
+"

@@ -1,0 +1,33 @@
+# Contributor: Lucas Ieks <lucas@ieks.cc>
+# Maintainer: Lucas Ieks <lucas@ieks.cc>
+pkgname=miniz
+pkgver=3.0.2
+pkgrel=0
+pkgdesc="Compression library implementing zlib (RFC 1950) & deflate (RFC 1951) specifications"
+url="https://github.com/richgel999/miniz"
+arch="all"
+license="MIT"
+makedepends="cmake samurai"
+subpackages="$pkgname-dev"
+source="miniz-$pkgver.tar.gz::https://github.com/richgel999/miniz/archive/refs/tags/$pkgver.tar.gz
+	cmake-version.patch"
+# tests don't compile
+options="!check"
+
+build() {
+	cmake -B "$srcdir/build" -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build "$srcdir/build"
+}
+
+check() {
+	sh ./test.sh
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install "$srcdir/build"
+}
+
+sha512sums="
+426054403121f84a2ac365f7545b35fb217b41061aebaffce483568d3d374d453ab87987c599a85f1f745e0ec7144a3181ed9b100f354e2823f165ba286b0611  miniz-3.0.2.tar.gz
+7e7d6c8a468ec6f887661b5d7ee26f6c2f2b3e78aaa77ed0d95f8109f193d5e2d391d6ba1f09a6282292acdd0aaca3bd856f99f694af1d85014079fb5bea6b95  cmake-version.patch
+"

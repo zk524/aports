@@ -1,0 +1,66 @@
+Skip execinfo.h dependency
+
+diff --git a/common/src/TrenchBroomStackWalker.cpp b/common/src/TrenchBroomStackWalker.cpp
+index a8d68f09b..ca2ec5f68 100644
+--- a/common/src/TrenchBroomStackWalker.cpp
++++ b/common/src/TrenchBroomStackWalker.cpp
+@@ -23,7 +23,7 @@
+ 
+ #include "StackWalker.h"
+ #endif
+-#else
++#elif __GLIBC__
+ #include <execinfo.h>
+ #endif
+ 
+@@ -36,8 +36,7 @@
+ 
+ namespace tb
+ {
+-#ifdef _WIN32
+-#ifdef _MSC_VER
++#if defined(_WIN32) && defined(_MSC_VER)
+ 
+ // use https://stackwalker.codeplex.com/
+ class TBStackWalker : public StackWalker
+@@ -92,14 +91,7 @@ std::string TrenchBroomStackWalker::getStackTraceFromContext(void* context)
+ {
+   return getStackTraceInternal(static_cast<CONTEXT*>(context));
+ }
+-#else
+-// TODO: not sure what to use on mingw
+-std::string TrenchBroomStackWalker::getStackTrace()
+-{
+-  return "";
+-}
+-#endif
+-#else
++#elif __GLIBC__
+ std::string TrenchBroomStackWalker::getStackTrace()
+ {
+   const auto MaxDepth = 256;
+@@ -122,6 +114,12 @@ std::string TrenchBroomStackWalker::getStackTrace()
+   free(strs);
+   return ss.str();
+ }
++#else
++// TODO: not sure what to use on mingw
++std::string TrenchBroomStackWalker::getStackTrace()
++{
++  return "";
++}
+ #endif
+ 
+ } // namespace tb
+diff --git a/lib/vm/include/vm/scalar.h b/lib/vm/include/vm/scalar.h
+index cc7076184..c4043e375 100644
+--- a/lib/vm/include/vm/scalar.h
++++ b/lib/vm/include/vm/scalar.h
+@@ -26,6 +26,7 @@
+ #include <cassert>
+ #include <cmath>
+ #include <cstddef>
++#include <cstdint>
+ #include <limits>
+ #include <optional>
+ #include <tuple>

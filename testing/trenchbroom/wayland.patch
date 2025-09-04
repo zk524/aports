@@ -1,0 +1,13 @@
+Workaround to prevent crash on wayland: https://github.com/nigels-com/glew/issues/172
+
+--- TrenchBroom-2025.3/common/src/ui/GLContextManager.cpp
++++ TrenchBroom-2025.3-patched/common/src/ui/GLContextManager.cpp
+@@ -58,7 +58,7 @@
+ static void initializeGlew()
+ {
+   glewExperimental = GL_TRUE;
+-  if (const auto glewState = glewInit(); glewState != GLEW_OK)
++  if (const auto glewState = glewInit(); glewState != GLEW_OK && glewState != GLEW_ERROR_NO_GLX_DISPLAY)
+   {
+     throw RenderException{fmt::format(
+       "Error initializing glew: {}",

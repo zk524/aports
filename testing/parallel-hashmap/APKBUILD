@@ -1,0 +1,32 @@
+# Contributor: Marcus Holland-Moritz <alpine-apk@mhxnet.de>
+# Maintainer: Marcus Holland-Moritz <alpine-apk@mhxnet.de>
+
+pkgname=parallel-hashmap
+pkgver=2.0.0
+pkgrel=0
+pkgdesc="A family of header-only, very fast and memory-friendly hashmap and btree containers"
+url="https://github.com/greg7mdp/parallel-hashmap"
+arch="noarch"
+license="Apache-2.0"
+makedepends="cmake samurai"
+source="$pkgname-$pkgver.tar.gz::https://github.com/greg7mdp/parallel-hashmap/archive/refs/tags/v$pkgver.tar.gz"
+
+build() {
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DPHMAP_BUILD_EXAMPLES=OFF \
+		-DPHMAP_BUILD_TESTS=ON
+	cmake --build build
+}
+
+check() {
+	ctest --test-dir build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+edd5ff6eb492bf0b34fcbb6594d3d07256c9498b677a3d8b41fd14329d7149f0fc11c697591447e4ea14e83268d98e129c34dfb11c87401c3cee35aaa016fc6e  parallel-hashmap-2.0.0.tar.gz
+"

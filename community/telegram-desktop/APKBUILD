@@ -12,10 +12,8 @@ pkgdesc="Telegram Desktop messaging app"
 options="!check" # no test suite
 url="https://desktop.telegram.org/"
 # armhf blocked by qt5-qtwayland
-# ppc64le and s390x blocked by tg_owt
-# x86, riscv64: textrels
-# riscv64: libdispatch
-arch="all !x86 !ppc64le !s390x !armhf !riscv64"
+# s390x blocked by libjxl
+arch="all !s390x !armhf"
 license="GPL-3.0-or-later WITH OpenSSL"
 _commitid=51743dfd01dff6179e2d8f7095729caa4e2222e9
 depends="qt6-qtimageformats font-opensans"

@@ -1,7 +1,7 @@
 # Contributor: Olliver Schinagl <oliver@schinagl.nl>
 # Maintainer: Olliver Schinagl <oliver@schinagl.nl>
 pkgname=stress-ng
-pkgver=0.19.03
+pkgver=0.19.04
 pkgrel=0
 pkgdesc="stress-ng will stress test a computer system in various selectable ways"
 url="https://github.com/ColinIanKing/stress-ng"
@@ -30,5 +30,5 @@ package() {
 }
 
 sha512sums="
-36bb7e6106558df647b305ff7b3aed58e8d076e93f3abd5013104d1275f45562311135c142c33f8963c57686b4b777fada24bb7f372f1c33b77675c846754c07  stress-ng-0.19.03.tar.gz
+2370ff5b0f3d2b3a370e3b1c40889f8f0ad24edfeebf06ba539ae92f3281f7c11ed70fa7dbfcb9533e313c288807829631c687ce6ec90b3a10b195526f7b315f  stress-ng-0.19.04.tar.gz
 "

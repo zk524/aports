@@ -1,0 +1,83 @@
+# Contributor: Real Root <user3mila@disroot.org>
+
+pkgname='openarena'
+pkgver=0.8.8
+pkgrel=0
+_commit=74046d7a5c4d55b93a2cc41c37b36f9e945374e6
+pkgdesc="A fast-paced 3D first-person shooter, similar to id Software Inc.'s Quake III Arena"
+url="http://openarena.ws/"
+license="GPL"
+arch="x86 x86_64 aarch64 armv7"
+makedepends="git
+	make
+	grep
+	sdl2-dev
+	libxmp-dev
+	libvorbis-dev
+	sdl12-compat
+	sdl12-compat-dev
+	libc6-compat
+	speex-dev
+	speexdsp-dev
+	curl-dev
+	openal-soft-dev
+"
+depends="sdl2 libvorbis curl libxmp openal-soft"
+_relver='088'
+source="$pkgname-$_commit.tar.gz::https://github.com/OpenArena/engine/archive/$_commit.tar.gz
+	https://web.archive.org/web/20240716135128if_/http://download.tuxfamily.org/openarena/rel/088/openarena-0.8.8.zip
+	openarena128.png
+	openarena.desktop
+	openarena.sh
+	oa_ded.sh
+"
+
+build() {
+	cd "$srcdir/engine-$_commit"
+
+	if [ $(uname -m) == 'aarch64' ]; then
+		if grep -qF "aarch64" code/qcommon/q_platform.h; then
+			echo "Code has aarch64!"
+		else
+			echo "Give code aarch64!"
+			sed -i 's/arm/aarch64/g' code/qcommon/q_platform.h
+		fi
+	fi
+
+	make \
+		USE_INTERNAL_SPEEX=0 \
+		USE_INTERNAL_JPEG=0 \
+		USE_INTERNAL_OGG=0 \
+		USE_INTERNAL_OPUS=0 \
+		USE_INTERNAL_ZLIB=0 \
+		USE_OPENAL_DLOPEN=0 \
+		USE_CURL_DLOPEN=0 
+}
+
+package() {
+	install -dm755 "$pkgdir/usr/bin" "$pkgdir/usr/share/icons/hicolor/128x128/apps/" "$pkgdir/usr/share/applications/" "$pkgdir/usr/share/openarena"
+	  
+	# copy assets
+	mv "$srcdir/openarena-$pkgver/baseoa" "$pkgdir/usr/share/openarena/baseoa"
+
+	# copy compiled files
+	install -Dm 755 "$srcdir"/engine-"$_commit"/build/release-linux-$(uname -m)/openarena.$(uname -m) "$pkgdir/usr/share/openarena/openarena"
+	install -Dm 755 "$srcdir"/engine-"$_commit"/build/release-linux-$(uname -m)/oa_ded.$(uname -m) "$pkgdir/usr/share/openarena/oa_ded"
+
+	# install wrappers
+	install -Dm 755 "$srcdir"/openarena.sh "$pkgdir/usr/bin/openarena"
+	install -Dm 755 "$srcdir"/oa_ded.sh "$pkgdir/usr/bin/oa_ded"
+	
+	# create application-shortcuts
+	install -Dm 644 "$srcdir"/openarena128.png "$pkgdir"/usr/share/icons/hicolor/128x128/apps/
+	install -Dm 644 "$srcdir"/openarena.desktop "$pkgdir"/usr/share/applications/
+}
+
+sha512sums="
+693976d742410174b406b8788056f4c41c8c11b1a0a6e1d8ccd29728bfa705946bc6d6076e3e9ce6e5e63e255df2edf31a6a7fe3c1babad63f255d4e5e321f6d  openarena-74046d7a5c4d55b93a2cc41c37b36f9e945374e6.tar.gz
+9fa4dabe8a3428dc3cbec97f3b4d20c04569c14cdd00b60e6391c6dd61e310f246ff5ec97e7549821b3d6f5f94b140eb5411a2ddd83dafcad66937b7f78ea8dd  openarena-0.8.8.zip
+40db0814fcc4f8ac765d57f4e7de83ffe077403debcda3b1c1ebbc541792cb34d31b934937dc5b1dfc60c1ee495ef6b5bbf43139c15ab0b6c71dbf5de780c97a  openarena128.png
+6f34b6042aa9a3bedc50ba2b602bc59a5c35c11129065eabaefef685278f5d9f388170eb05c5bdf40559f37911d25c2d83679c6951a616a3146c86962479bc3e  openarena.desktop
+7feda63553a292c3dcc1ea1deec5eeffd85ef3a98077c1508e0b9634336492a0701c14569f630872e2e883ee7d546c1be29fa23b1d39c47473469ffebfed952b  openarena.sh
+4e3595c1ed82f85feff0e21889fce4b5f2091640d52639d4ac67516ede1a94899967f5f298e107f7668e45604a16329f468451980686309d70910b736afcc6b3  oa_ded.sh
+"

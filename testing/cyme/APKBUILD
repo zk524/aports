@@ -1,0 +1,35 @@
+# Maintainer: Maarten van Gompel <proycon@anaproy.nl>
+pkgname=cyme
+pkgver=2.1.0
+pkgrel=0
+pkgdesc="List system USB buses and devices"
+url="https://github.com/tuna-f1sh/cyme"
+arch="all"
+license="GPL-3.0-only"
+makedepends="cargo cargo-auditable"
+subpackages="$pkgname-doc $pkgname-bash-completion $pkgname-fish-completion"
+source="$pkgname-$pkgver.tar.gz::https://github.com/tuna-f1sh/cyme/archive/refs/tags/v$pkgver.tar.gz"
+options="!check" # No test suite / unit tests
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+package() {
+	install -Dm755 target/release/cyme -t "$pkgdir"/usr/bin/
+
+	install -Dm 644 doc/cyme.bash "$pkgdir"/usr/share/bash-completion/completions/cyme
+	install -Dm 644 doc/cyme.fish "$pkgdir"/usr/share/fish/vendor_completions.d/cyme.fish
+
+	install -Dm644 "$builddir"/doc/cyme.1 "$pkgdir"/usr/share/man/man1/cyme.1
+}
+
+sha512sums="
+8b044d7722a30b836ed01e81b220b8112ce59d64677e45dd342a852e1d64388d24b7b0ca202ae7de2833379f4a5b4dac598a71b382a8930d3910cf025b1c9023  cyme-2.1.0.tar.gz
+"

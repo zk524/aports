@@ -2,7 +2,7 @@
 # Maintainer: Sodface <sod@sodface.com>
 pkgname=libodiosacd
 pkgver=25.4.1
-pkgrel=0
+pkgrel=1
 pkgdesc="SACD decoder library"
 url="https://tari.in/www/software/libodiosacd/"
 arch="all"
@@ -10,8 +10,9 @@ license="GPL-3.0-or-later"
 makedepends="cmake gnu-libiconv-dev samurai"
 options="!check" # no test suite
 subpackages="$pkgname-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/tari01/libodiosacd/archive/refs/tags/$pkgver.tar.gz"
-
+# Upstream missing
+# source="$pkgname-$pkgver.tar.gz::https://github.com/tari01/libodiosacd/archive/refs/tags/$pkgver.tar.gz"
+source="https://distfiles.alpinelinux.org/distfiles/edge/libodiosacd-$pkgver.tar.gz"
 build() {
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \

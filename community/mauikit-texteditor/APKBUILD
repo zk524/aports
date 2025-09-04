@@ -7,7 +7,7 @@ pkgname=mauikit-texteditor
 pkgver=4.0.0
 pkgrel=0
 pkgdesc="MauiKit Text Editor components"
-# armhf blocked by qt5-qtdeclarative
+# armhf blocked by qt6-qtdeclarative
 arch="all !armhf"
 url="https://mauikit.org/"
 license="GPL-2.0-or-later"

@@ -11,7 +11,7 @@ pkgrel=0
 pkgdesc="Telegram Desktop messaging app"
 options="!check" # no test suite
 url="https://desktop.telegram.org/"
-# armhf blocked by qt5-qtwayland
+# armhf blocked by qt6-qtwayland
 # ppc64le and s390x blocked by tg_owt
 # x86, riscv64: textrels
 # riscv64: libdispatch

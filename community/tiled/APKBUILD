@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="powerful tile map editor"
 url="http://mapeditor.org"
 # ppc64le: Segfault.
-# riscv64: qt5 fails to ever be found on riscv64
+# riscv64: qt6 fails to ever be found on riscv64
 # armhf: hangs in build
 # 32-bit: no qbs
 arch="all !armv7 !x86 !armhf !ppc64le !riscv64"

@@ -8,7 +8,7 @@ pkgver=4.0.0
 pkgrel=0
 pkgdesc="Terminal support components for Maui applications"
 url="https://mauikit.org/"
-# armhf blocked by mauikit -> qt5-qtdeclarative
+# armhf blocked by mauikit -> qt6-qtdeclarative
 arch="all !armhf"
 license="GPL-2.0-or-later"
 depends="kirigami"

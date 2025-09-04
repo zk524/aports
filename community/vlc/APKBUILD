@@ -216,7 +216,6 @@ check() {
 qt() {
 	pkgdesc="Qt frontend for VLC"
 	depends="vlc=$pkgver-r$pkgrel"
-	cd "$pkgdir"
 	# scan for elf files that directly or indirectly depends on
 	# libQt* libraries
 	find . -type f \

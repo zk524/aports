@@ -138,7 +138,6 @@ dev() {
 
 	amove usr/bin/nss-config
 
-	cd "$pkgdir"
 	for i in usr/include usr/lib/pkgconfig; do
 		if [ -e "$pkgdir/$i" ] || [ -L "$pkgdir/$i" ]; then
 			d="$subpkgdir/${i%/*}"  # dirname $i

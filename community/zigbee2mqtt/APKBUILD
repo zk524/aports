@@ -139,7 +139,6 @@ dbg() {
 	pkgdesc="$pkgdesc (.map files for debugging)"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
 	# shellcheck disable=SC2046
 	amove $(find usr/lib/$pkgname -type f -name '*.map')
 }

@@ -58,8 +58,8 @@ package() {
 }
 
 tests() {
-	find "$pkgdir" -name tests -type d | while read -r p; do
-		amove "${p#"$pkgdir"}"
+	find . -name tests -type d | while read -r p; do
+		amove "$p"
 	done
 }
 

@@ -194,8 +194,8 @@ miniperl() {
 }
 
 doc() {
-	local file; find "$pkgdir" -name "*.pod" | while read -r file; do
-		amove "${file#"$pkgdir"}"
+	local file; find . -name "*.pod" | while read -r file; do
+		amove "$file"
 	done
 	default_doc
 }

@@ -227,7 +227,6 @@ _mv_driver() {
 		"$subpkgdir"/etc/libvirt \
 		"$subpkgdir"/etc/logrotate.d
 	local _d
-	cd "$pkgdir"
 	for _d in $_drivers; do
 		# shellcheck disable=1087
 		find . -name "*$_d[.-]*" -o -name "*$_d" | while read -r _f; do

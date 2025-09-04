@@ -293,7 +293,6 @@ splitlib() {
 
 	local libname="${subpkgname#"$pkgname"-}"
 	libname=${libname//-/_}
-	cd "$pkgdir"
 	local _f
 	find . -name "librte_$libname.so.*" | while read -r _f
 	do

@@ -70,9 +70,8 @@ dev() {
 	# move created symlinks- all dev binaries
 	amove usr/bin
 
-	find "$pkgdir"/"$_qt6_prefix"/bin/ -type f ! -name "qmlscene" | while read -r f; do
-		file=$(basename $f)
-		amove "$_qt6_prefix"/bin/$file
+	find "$_qt6_prefix"/bin/ -type f ! -name "qmlscene" | while read -r f; do
+		amove "$f"
 	done
 
 	amove usr/lib/qt6/sbom
@@ -81,8 +80,8 @@ dev() {
 private_dev() {
 	depends="qt6-qtbase-private-dev"
 
-	local file; find "$pkgdir"/usr/include -type d -name private | while read -r file; do
-		amove "${file#"$pkgdir"}"
+	local file; find usr/include -type d -name private | while read -r file; do
+		amove "$file"
 	done
 
 	amove usr/lib/cmake/*Private

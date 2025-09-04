@@ -192,7 +192,6 @@ dev() {
 		usr/lib/cmake \
 		usr/lib/qt5/bin \
 		usr/bin
-	cd "$pkgdir"
 	find usr/ -name '*.prl' | while read -r i; do
 		amove "$i"
 	done
@@ -254,7 +253,7 @@ x11() {
 		usr/lib/qt5/plugins/printsupport* \
 		usr/lib/qt5/plugins/xcbglintegrations
 
-	scanelf -Rn "$pkgdir"/usr/ | grep -E '(libX|libQt5Gui|libGL)' && return 1
+	scanelf -Rn usr/ | grep -E '(libX|libQt5Gui|libGL)' && return 1
 	return 0
 }
 

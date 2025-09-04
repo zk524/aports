@@ -167,8 +167,6 @@ dev() {
 	pkgdesc="$pkgdesc (development files)"
 	depends="$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
-
 	install -dm755 "$subpkgdir"
 
 	amove $(find . \( -type f -o -type l \) \( -name "*.p_*" -o -name "lib*_p.a" \))

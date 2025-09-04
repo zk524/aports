@@ -63,8 +63,6 @@ package() {
 dev() {
 	default_dev
 
-	cd "$pkgdir"
-
 	local path; find $_ocamldir \( \
 			-name '*.cmt' -o \
 			-name '*.cmti' -o \

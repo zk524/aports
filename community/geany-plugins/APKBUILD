@@ -104,7 +104,6 @@ _plugin() {
 	local _d
 	mkdir -p "$subpkgdir"/usr/lib/geany
 	mv "$pkgdir"/usr/lib/geany/$1.so "$subpkgdir"/usr/lib/geany/
-	cd "$pkgdir"
 	for _d in usr/*/geany-plugins/"$1"; do
 		if [ -d "$_d" ]; then
 			mkdir -p "$subpkgdir"/${_d%/*}

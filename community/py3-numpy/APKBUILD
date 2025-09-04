@@ -67,8 +67,8 @@ f2py() {
 tests() {
 	pkgdesc="Tests for $pkgname"
 	install_if="$pkgname=$pkgver-r$pkgrel"
-	find "$pkgdir" -name tests -type d | while read -r p; do
-		amove "${p#"$pkgdir"}"
+	find . -name tests -type d | while read -r p; do
+		amove "$p"
 	done
 }
 

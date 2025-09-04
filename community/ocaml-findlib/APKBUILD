@@ -76,7 +76,6 @@ dev() {
 
 	default_dev
 
-	cd "$pkgdir"
 	mkdir -p "$subpkgdir"/$sitelib
 	mv $sitelib/*.mli \
 		$sitelib/Makefile.config \

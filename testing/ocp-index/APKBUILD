@@ -64,8 +64,6 @@ _libdev() {
 	pkgdesc="$pkgdesc (development files)"
 	depends="$depends_dev ocaml-$pkgname=$pkgver-r$pkgrel"
 
-	cd "$pkgdir"
-
 	local path; find $_ocamldir \( \
 			-name '*.cmt' -o \
 			-name '*.cmti' -o \

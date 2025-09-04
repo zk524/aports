@@ -60,8 +60,6 @@ dev() {
 		${pkgname}_ppx=$pkgver-r$pkgrel"
 	provides="${pkgname}_ppx-dev ${pkgname}_react-dev"
 
-	cd "$pkgdir"
-
 	local path; find usr/lib/ocaml \( \
 			-name '*.cmt' -o \
 			-name '*.cmti' -o \

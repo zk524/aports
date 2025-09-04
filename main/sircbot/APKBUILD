@@ -51,7 +51,6 @@ _split() {
 	pkgdesc="Sircbot client for Lua $_ver"
 	install_if="lua$_ver lua-sircbot=$pkgver-r$pkgrel"
 	depends=
-	cd "$pkgdir"
 	for d in usr/lib/lua usr/share/lua; do
 		if [ -d "$pkgdir"/$d/$_ver ]; then
 			mkdir -p "$subpkgdir"/$d

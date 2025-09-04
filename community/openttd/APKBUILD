@@ -50,7 +50,6 @@ package() {
 lang() {
 	pkgdesc="$pkgdesc (localizations)"
 
-	cd "$pkgdir"
 	mkdir -p "$subpkgdir"/usr/share/games/openttd/lang
 	find usr/share/games/openttd/lang/ ! -name 'english.lng' -type f \
 		-exec mv {} "$subpkgdir"/{} \;

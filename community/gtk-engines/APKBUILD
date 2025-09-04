@@ -41,7 +41,6 @@ _mv_engine() {
 	pkgdesc="GTK $1 engine"
 	replaces="gtk-engines"
 	depends=
-	cd "$pkgdir"
 	find -name "$2" | while read i; do
 		mkdir -p "$subpkgdir"/${i%/*}
 		mv $i "$subpkgdir"/$i

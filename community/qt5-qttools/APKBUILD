@@ -108,7 +108,6 @@ package() {
 dev() {
 	default_dev
 
-	cd "$pkgdir"
 	for i in designer lconvert linguist lrelease lupdate pixeltool \
 		qhelpgenerator lprodump lrelease-pro lupdate-pro qcollectiongenerator \
 		qdoc; do
@@ -124,7 +123,6 @@ dev() {
 
 _assistant() {
 	pkgdesc="Documentation browser for Qt5"
-	cd "$pkgdir"
 	amove usr/bin/assistant* \
 		$_qt5_prefix/bin/assistant \
 		usr/share/applications/*assistant* \
@@ -133,7 +131,6 @@ _assistant() {
 
 _dbusviewer() {
 	pkgdesc="D-Bus debugger and viewer"
-	cd "$pkgdir"
 	amove usr/bin/qdbusviewer* \
 		$_qt5_prefix/bin/qdbusviewer \
 		usr/share/applications/qdbusviewer* \

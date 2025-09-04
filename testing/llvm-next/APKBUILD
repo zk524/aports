@@ -1300,7 +1300,6 @@ pyc() {
 	pkgdesc="Precompiled Python bytecode for $pysrcpkg"
 	install_if="$pysrcpkg=$pkgver-r$pkgrel pyc"
 
-	cd "$pkgdir" || return 0
 	local IFS=$'\n'
 	amove $(find usr/lib/python*/site-packages/"$pymodule"* \
 			-type d -name __pycache__)

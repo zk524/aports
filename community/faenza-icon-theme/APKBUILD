@@ -96,7 +96,6 @@ _app() {
 	else
 		install_if=
 	fi
-	cd "$pkgdir"
 	for glob in "$@"; do
 		find . -name "$glob" | while read path; do
 			mkdir -p "$subpkgdir/${path%/*}"

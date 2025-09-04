@@ -48,7 +48,6 @@ utils() {
 	provider_priority=1
 	replaces="exfatprogs"
 
-	cd "$pkgdir"
 	local file; for file in $(find usr/sbin ! -name "mount*" -a ! -type d); do
 		amove $file
 	done

@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+name="LACT"
+description="Linux GPU Control Application"
+
+: "${supervisor=supervise-daemon}"
+command="/usr/bin/lact"
+command_args="daemon"
+
+depend() {
+    need localmount
+
+    after bootmisc consolefont modules netmount
+    after ypbind autofs openvpn gpm lircmd
+    after quota keymaps
+    before alsasound
+    want logind
+
+    provide lactd lact-daemon
+}

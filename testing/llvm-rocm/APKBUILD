@@ -1,0 +1,562 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+_pkgname=llvm
+pkgver=6.4.3
+pkgrel=0
+pkgname=$_pkgname-rocm
+pkgdesc="ROCm LLVM toolchain"
+_clangdesc="Clang from the ROCm toolchain"
+_llddesc="LLD from the ROCm toolchain"
+url="https://rocm.docs.amd.com/en/latest/reference/rocmcc.html"
+# armhf, armv7: CMake Generate step failed.  Build files cannot be regenerated correctly
+# ppc64le: compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp:366:41: error: invalid application of 'sizeof' to an incomplete type 'struct pt_regs'
+# x86: compiler-rt/lib/builtins/emutls.c:291:3: error: 'ct_assert_0' declared as an array with a negative size:
+# loongarch64, riscv64, s390x, aarch64: error: unknown target triple 'unknown'
+arch="all !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+license="Apache-2.0 WITH LLVM-exception"
+depends_dev="
+	$pkgname=$pkgver-r$pkgrel
+	curl-dev
+	libffi-dev
+	zlib-dev
+	zstd-dev
+	$pkgname-test-utils=$pkgver-r$pkgrel
+	"
+makedepends_host="
+	$depends_dev
+	binutils-dev
+	curl-static
+	libxml2-dev
+	"
+makedepends_build="
+	chrpath
+	py3-setuptools
+	python3
+	rocm-cmake
+	rocm-core
+	samurai
+	"
+# diffutils for diff: unrecognized option: strip-trailing-cr
+# coreutils for 'od' binary
+checkdepends="bash coreutils diffutils"
+subpackages="
+	$pkgname-gtest:_gtest
+	$pkgname-static:llvmstatic
+	$pkgname-libs:llvmlibs
+	$pkgname-linker-tools:linktools
+	$pkgname-dev:llvmdev
+	$pkgname-test-utils:_test_utils
+	lld-rocm:_lld
+	lld-rocm-libs:lldlibs
+	lld-rocm-dev:llddev
+	clang-rocm-extra-tools:extra
+	clang-rocm:_clang
+	clang-rocm-static:clangstatic
+	clang-rocm-headers:headers:noarch
+	clang-rocm-libclang
+	clang-rocm-libs:clanglibs
+	clang-rocm-dev:clangdev
+	clang-rocm-ccache:_ccache:noarch
+	"
+source="
+	https://github.com/ROCm/llvm-project/archive/refs/tags/rocm-$pkgver.tar.gz
+	0001-Disable-dynamic-lib-tests-for-musl-s-dlclose-is-noop.patch
+	0002-Fix-more-tests-on-linux-musl.patch
+	0003-Fix-macho-test-for-32-bit.patch
+	0004-Fix-failures-in-AllocationTests-MappedMemoryTest.-on.patch
+	0005-Use-CMAKE_INSTALL_PREFIX-for-setting-LLVM_INSTALL_PR.patch
+	0006-always-set-a-larger-stack-size-explicitly.patch
+	0007-Skip-roundeven-tests.patch
+	0008-Enable-stack-protector-by-default.patch
+	0009-clang-add-fortify-include-paths-for-musl-triplets.patch
+	0010-clang-enable-fortify-by-default-on-optimizing-musl-t.patch
+	0011-clang-use-as-needed-by-default.patch
+	0012-Add-LLD_BUILD_SHARED_LIBS-option.patch
+	0013-rocm-llvm-gold-plugin-fix-ModuleName.patch
+	0014-Remove-mallopt-to-fix-build-on-musl.patch
+	0015-Add-musl-triples.patch
+	"
+builddir="$srcdir/llvm-project-rocm-$pkgver"
+sonameprefix="$pkgname:"
+
+_prefix="usr/lib/llvm-rocm"
+
+# Major version for base llvm.
+_majorver=19
+
+# gcc is for libgcc-dev which we don't have split
+_depends_clang="
+	fortify-headers>=1.1-r2
+	gcc
+	libstdc++-dev
+	musl-dev
+	"
+
+# llvm-config and llvm-tblgen are needed for cross-compiling, otherwise
+# CMake tries to build them, even when LLVM_NATIVE_TOOL_DIR is set
+# llvm-dev provides llvm-config; clang provides clang-tblgen
+if [ "$CBUILD" != "$CHOST" ]; then
+	makedepends_host="
+		$makedepends_host
+		$_depends_clang
+		"
+	makedepends_build="
+		$makedepends_build
+		$pkgname-dev
+		cmd:llvm-rocm-tblgen
+		clang-rocm
+		lld-rocm
+		"
+	_cmake_cross_options="
+		-DCMAKE_SYSTEM_NAME=Linux
+		-DCMAKE_SYSTEM_PROCESSOR=$CARCH
+		-DCMAKE_SYSROOT=$CBUILDROOT
+		-DCMAKE_AR=/usr/bin/llvm-rocm-ar
+		-DCMAKE_NM=/usr/bin/llvm-rocm-nm
+		-DCMAKE_RANLIB=/usr/bin/llvm-rocm-ranlib
+		-DCMAKE_ASM_COMPILER=clang--rocm
+		-DCMAKE_ASM_COMPILER_TARGET=$CHOST
+		-DCMAKE_C_COMPILER=clang--rocm
+		-DCMAKE_C_COMPILER_TARGET=$CHOST
+		-DCMAKE_CXX_COMPILER=clang++--rocm
+		-DCMAKE_CXX_COMPILER_TARGET=$CHOST
+		-DCMAKE_LINKER_TYPE=LLD
+		-DLLVM_ENABLE_LLD=ON
+		-DLLVM_NATIVE_TOOL_DIR=/$_prefix/bin
+		-DLLVM_TABLEGEN=/usr/bin/llvm-rocm-tblgen
+		-DCLANG_TABLEGEN=/usr/bin/clang-rocm-tblgen
+		"
+	# support stripping by placing abuild's expected stripcmd in $tmpdir/bin
+	export PATH="$PATH:$tmpdir/bin"
+	# we don't need build-base-$CTARGET_ARCH, LLVM/Clang has what is needed
+	export BOOTSTRAP=nobase
+	export CC=clang-20 CXX=clang++-20
+	# --sysroot is handled by CMAKE_SYSROOT in $_cmake_cross_options
+	export CFLAGS="$BUILDCFLAGS" CXXFLAGS="$BUILDCXXFLAGS"
+	export CPPFLAGS="$BUILDCPPFLAGS" LDFLAGS="$BUILDLDFLAGS"
+fi
+
+_llvm_targets="-DLLVM_TARGETS_TO_BUILD=AMDGPU"
+case "$CARCH" in
+x86*)	_llvm_targets="$_llvm_targets;X86" ;;
+arm*)	_llvm_targets="$_llvm_targets;ARM" ;;
+ppc*)	_llvm_targets="$_llvm_targets;PowerPC" ;;
+# *)	_llvm_targets="" ;;
+*)	;;
+esac
+
+prepare() {
+	default_prepare
+
+	if [ "$CBUILD" != "$CHOST" ]; then
+		mkdir -p "$tmpdir"/bin
+
+		ln -sv /usr/bin/llvm-rocm-strip "$tmpdir"/bin/$CHOST-strip
+	fi
+
+	cd llvm
+
+	# Known broken test on musl
+	rm -v test/CodeGen/AArch64/wineh4.mir
+
+	# Archs that do not build the X86 target above need to
+	# have llvm-debuginfo-analyzer tests disabled due to:
+	# https://github.com/llvm/llvm-project/issues/106876
+	if [ -n "$_llvm_targets" ]; then
+		rm -v test/tools/llvm-debuginfo-analyzer/WebAssembly/01-wasm-compare-logical-elements.test \
+			test/tools/llvm-debuginfo-analyzer/WebAssembly/01-wasm-select-logical-elements.test \
+			test/tools/llvm-debuginfo-analyzer/WebAssembly/03-wasm-incorrect-lexical-scope-typedef.test \
+			test/tools/llvm-debuginfo-analyzer/WebAssembly/04-wasm-missing-nested-enumerators.test \
+			test/tools/llvm-debuginfo-analyzer/WebAssembly/05-wasm-incorrect-lexical-scope-variable.test
+	fi
+
+	case "$CARCH" in
+	armv7|x86)
+		rm -v test/tools/llvm-size/radix.test
+		;;
+	armhf)
+		rm -v test/tools/llvm-size/radix.test \
+			test/ExecutionEngine/frem.ll
+		;;
+	esac
+}
+
+build() {
+	# Auto-detect it by guessing either.
+	local ffi_include_dir="$(pkg-config --cflags-only-I libffi | sed 's|^-I||g')"
+
+	# Interferes with detection of compiler flags when building with Clang.
+	# (For example, -fPIC won't be detected, which causes failures later on.)
+	# This is due to an arch-specific -Wunused-command-line-argument warning,
+	# but the archs affected may change in future versions of Clang.
+	if $CC --version | grep -qi clang; then
+		export CFLAGS="${CFLAGS//-fstack-clash-protection}"
+	fi
+	if $CXX --version | grep -qi clang; then
+		export CXXFLAGS="${CXXFLAGS//-fstack-clash-protection}"
+	fi
+
+	# Many flags according to
+	# https://github.com/ROCm/ROCm/blob/rocm-6.4.3/tools/rocm-build/build_lightning.sh#L302
+	cmake -S llvm -B build -G Ninja -Wno-dev \
+		-DCLANG_CONFIG_FILE_SYSTEM_DIR=/etc/clang-rocm \
+		-DCLANG_DEFAULT_PIE_ON_LINUX=ON \
+		-DCLANG_ENABLE_ARCMT=OFF \
+		-DCLANG_ENABLE_STATIC_ANALYZER=OFF \
+		-DCLANG_INCLUDE_TESTS=OFF \
+		-DCLANG_LINK_CLANG_DYLIB=ON \
+		-DCLANG_PLUGIN_SUPPORT=ON \
+		-DCLANG_SYSTEMZ_DEFAULT_ARCH=z196 \
+		-DCLANG_VENDOR=Alpine \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/$_prefix \
+		-DCMAKE_INSTALL_RPATH=/$_prefix/lib \
+		-DCOMPILER_RT_BUILD_GWP_ASAN=OFF \
+		-DENABLE_LINKER_BUILD_ID=ON \
+		-DFFI_INCLUDE_DIR="$ffi_include_dir" \
+		-DLIBCLANG_BUILD_STATIC=ON \
+		-DLIBCXX_HAS_MUSL_LIBC=ON \
+		-DLLD_BUILD_SHARED_LIBS=ON \
+		-DLLVM_APPEND_VC_REV=OFF \
+		-DLLVM_BINUTILS_INCDIR=/usr/include \
+		-DLLVM_BUILD_DOCS=OFF \
+		-DLLVM_BUILD_EXAMPLES=OFF \
+		-DLLVM_BUILD_LLVM_DYLIB=ON \
+		-DLLVM_BUILD_TESTS="$(want_check && echo ON || echo OFF)" \
+		-DLLVM_ENABLE_ASSERTIONS=OFF \
+		-DLLVM_ENABLE_CURL=FORCE_ON \
+		-DLLVM_ENABLE_DUMP=ON \
+		-DLLVM_ENABLE_EH=ON \
+		-DLLVM_ENABLE_FFI=FORCE_ON \
+		-DLLVM_ENABLE_LIBCXX=OFF \
+		-DLLVM_ENABLE_LIBEDIT=OFF \
+		-DLLVM_ENABLE_PIC=ON \
+		-DLLVM_ENABLE_PROJECTS="clang;lld;clang-tools-extra" \
+		-DLLVM_ENABLE_RTTI=ON \
+		-DLLVM_ENABLE_RUNTIMES="compiler-rt;libunwind;libcxx;libcxxabi" \
+		-DLLVM_ENABLE_SPHINX=OFF \
+		-DLLVM_ENABLE_ZLIB=FORCE_ON \
+		-DLLVM_ENABLE_ZSTD=FORCE_ON \
+		-DLLVM_HOST_TRIPLE="$CHOST" \
+		-DLLVM_INCLUDE_BENCHMARKS=OFF \
+		-DLLVM_INCLUDE_EXAMPLES=OFF \
+		-DLLVM_INSTALL_GTEST=ON \
+		-DLLVM_INSTALL_UTILS=ON \
+		-DLLVM_LINK_LLVM_DYLIB=ON \
+		-DLLVM_USE_PERF=ON \
+		$_cmake_cross_options \
+		$_llvm_targets
+
+	cmake --build build
+}
+
+check() {
+	ninja -C build check-llvm
+}
+
+package() {
+	depends="$pkgname-linker-tools=$pkgver-r$pkgrel"
+
+	DESTDIR="$pkgdir" cmake --install build
+
+	# Symlink files from /usr/lib/llvm*/bin to /usr/bin.
+	mkdir -p "$pkgdir"/usr/bin
+	(cd "$pkgdir"/$_prefix
+	local name newname path; for path in bin/*; do
+		name=${path##*/}
+		# Add version infix/suffix to the executable name.
+		case "$name" in
+			*-$_majorver) newname=${name%%-"$_majorver"}-rocm ;;
+			clang++) newname="$name-rocm" ;;
+			clang-tblgen) newname="clang-rocm-${name#clang-}" ;;
+			count|llc|lli|not|opt) newname="$name-rocm" ;;
+			llvm-*) newname="llvm-rocm-${name#llvm-}" ;;
+			*)
+				continue ;;
+		esac
+		ln -sv ../lib/llvm-rocm/bin/$name "$pkgdir"/usr/bin/$newname
+	done)
+
+	mkdir -p "$pkgdir"/usr/include "$pkgdir"/usr/lib/cmake
+
+	# symlink include to /usr/include/llvm$_llvmver
+	ln -sv ../lib/llvm-rocm/include "$pkgdir"/usr/include/llvm-rocm
+
+	# symlink cmake dirs to system cmake location, so find_package works
+	local f; for f in clang lld llvm; do
+		ln -sv ../llvm-rocm/lib/cmake/$f "$pkgdir"/usr/lib/cmake/$f-rocm
+	done
+
+	# # for bfd to work with clang -flto, you need to put the linker plugin in the bfd dir too,
+	# # not just usr/lib.
+	# mkdir -p "$pkgdir"/usr/lib/bfd-plugins
+	# ln -sv ../llvm-rocm/lib/LLVMgold.so "$pkgdir"/usr/lib/bfd-plugins/LLVMgold-rocm.so
+
+	# # also add a suffix-version variant of llvm-config, as that's what things normally check for
+	# ln -sv ../lib/llvm-rocm/bin/llvm-config "$pkgdir"/usr/bin/llvm-config-rocm
+
+	# create system clang config
+	# clang doesn't really have a way to set default -march abi options, so use the system config dir
+	# see the clang UsersManual for how this config directory is parsed / fallback order.
+	# this is set based on our gcc baseline. see the --with arguments in main/gcc.
+	mkdir -p "$pkgdir"/etc/clang-rocm
+	# silent the unused-command-line-argument warning for -fstack-clash-protection,
+	# which is in abuild's default.conf but unimplemented for some architectures.
+	# (reference: https://maskray.me/blog/2023-08-25-clang-wunused-command-line-argument)
+	cat > clang.cfg <<-EOF
+	-fstack-clash-protection
+	EOF
+	cat > clang++.cfg <<-EOF
+	@clang.cfg
+	EOF
+
+	local arm32_enabled x86_enabled
+	if [ -z "$_llvm_targets" ]; then
+		arm32_enabled=true
+		x86_enabled=true
+	else
+		case "$_llvm_targets" in
+		*X86*)	x86_enabled=true ;;
+		*)	x86_enabled=false ;;
+		esac
+		case "$_llvm_targets" in
+		*ARM*)	arm32_enabled=true ;;
+		*)	arm32_enabled=false ;;
+		esac
+	fi
+	# clang defaults to pentium4 on i*86- triples.
+	# see https://github.com/llvm/llvm-project/issues/61347
+	$x86_enabled && cat > "$(arch_to_hostspec x86).cfg" <<-EOF
+	-march=pentium-m -mfpmath=sse
+	EOF
+	# clang defaults to 'armv6' for armhf, i.e. no -zk.
+	# -zk is also a deprecated name for -kz.
+	$arm32_enabled && cat > "$(arch_to_hostspec armhf).cfg" <<-EOF
+	-march=armv6kz
+	-mfpu=vfp
+	-mtune=arm1176jzf-s
+	EOF
+	# it's possible to do CHOST-clang.cfg and similar to make it per-tool
+	# which is given priority over the separate target and driver configs
+	mv -v ./*-linux-musl*.cfg "$pkgdir"/etc/clang-rocm/ || :
+	mv -v ./clang*.cfg "$pkgdir"/etc/clang-rocm/
+
+	# delete things we don't want non-latest of
+	rm -v "$pkgdir"/$_prefix/share/clang/bash-autocomplete.sh
+	rm -v "$pkgdir"/$_prefix/share/clang/clang-*.el
+	rm -v "$pkgdir"/$_prefix/share/clang/clang-format-bbedit.applescript
+
+	(cd "$pkgdir"/$_prefix/lib
+	for f in liblld*.so*; do
+		ln -sv ../lib/llvm-rocm/lib/$f "$pkgdir"/usr/lib/$f
+	done)
+
+	mkdir -p "$pkgdir"/usr/lib/clang "$pkgdir"/usr/lib/ccache/bin
+
+	# compat symlink back to fix clang with -no-canonical-prefixes
+	ln -sv ../llvm-rocm/lib/clang/rocm "$pkgdir"/usr/lib/clang/rocm
+
+	# create ccache symlinks, for clang$_majorver-ccache subpackage
+	ln -sv ../../../bin/ccache "$pkgdir"/usr/lib/ccache/bin/clang-rocm
+	ln -sv ../../../bin/ccache "$pkgdir"/usr/lib/ccache/bin/clang++-rocm
+}
+
+_gtest() {
+	pkgdesc="LLVM $_majorver gtest static libraries"
+	depends=""
+
+	amove \
+		$_prefix/lib/libLLVMTesting*.a \
+		$_prefix/lib/libllvm_gtest*.a \
+		$_prefix/include/llvm-gmock \
+		$_prefix/include/llvm-gtest
+}
+
+llvmstatic() {
+	pkgdesc="LLVM rocm static libraries"
+	depends=""
+
+	amove $_prefix/lib/libLLVM*.a
+}
+
+llvmlibs() {
+	pkgdesc="LLVM rocm runtime library"
+	depends=""
+
+	amove $_prefix/lib/libLLVM.so.*
+}
+
+linktools() {
+	pkgdesc="$pkgdesc (linker plugins)"
+
+	amove \
+		$_prefix/lib/LLVMgold* \
+		$_prefix/lib/libLTO.so*
+}
+
+llvmdev() {
+	pkgdesc="$pkgdesc (development files)"
+	depends="$depends_dev"
+
+	# usr/lib/cmake/llvm* \
+	amove \
+		$_prefix/include/llvm*/ \
+		$_prefix/lib/cmake/llvm/ \
+		$_prefix/lib/libLLVM*.so \
+		$_prefix/lib/libRemarks*
+}
+
+_test_utils() {
+	pkgdesc="LLVM rocm utilities for executing LLVM and Clang style test suites (binaries)"
+	depends=""
+
+	amove \
+		usr/bin/count-rocm \
+		usr/bin/not-rocm \
+		$_prefix/bin/FileCheck \
+		$_prefix/bin/count \
+		$_prefix/bin/not
+}
+
+_lld() {
+	pkgdesc="$_llddesc"
+
+	amove \
+		$_prefix/bin/*lld* \
+		$_prefix/bin/wasm-ld
+}
+
+lldlibs() {
+	pkgdesc="$_llddesc (libraries)"
+
+	amove \
+		usr/lib/liblld*.so.* \
+		$_prefix/lib/liblld*.so.*
+}
+
+llddev() {
+	pkgdesc="$_llddesc (development files)"
+	depends="lld-rocm=$pkgver-r$pkgrel"
+
+	amove \
+		usr/lib/cmake/lld-rocm \
+		usr/lib/liblld*.so \
+		$_prefix/include/lld \
+		$_prefix/lib/cmake/lld \
+		$_prefix/lib/liblld*.so
+}
+
+extra() {
+	pkgdesc="Extra tools built using Clang's tooling APIs"
+
+	amove \
+		$_prefix/bin/clang-apply-replacements* \
+		$_prefix/bin/clang-change-namespace* \
+		$_prefix/bin/clang-doc* \
+		$_prefix/bin/clang-format* \
+		$_prefix/bin/clang-include-cleaner* \
+		$_prefix/bin/clang-include-fixer* \
+		$_prefix/bin/clang-move* \
+		$_prefix/bin/clang-offload-bundler* \
+		$_prefix/bin/clang-pseudo* \
+		$_prefix/bin/clang-query* \
+		$_prefix/bin/clang-refactor* \
+		$_prefix/bin/clang-rename* \
+		$_prefix/bin/clang-reorder-fields* \
+		$_prefix/bin/clang-repl* \
+		$_prefix/bin/clang-scan-deps* \
+		$_prefix/bin/clang-tidy* \
+		$_prefix/bin/clangd* \
+		$_prefix/bin/c-index-test* \
+		$_prefix/bin/diagtool* \
+		$_prefix/bin/find-all-symbols* \
+		$_prefix/bin/git-clang-format* \
+		$_prefix/bin/hmaptool* \
+		$_prefix/bin/modularize* \
+		$_prefix/bin/pp-trace* \
+		$_prefix/bin/run-clang-tidy* \
+		$_prefix/share/clang/clang-*.py \
+		$_prefix/share/clang/run-find-all-symbols.py \
+		$_prefix/share/clang-doc
+}
+
+_clang() {
+	pkgdesc="$_clangdesc"
+	# the libraries should always exactly match, not just by soname
+	depends="
+		$pkgname-linker-tools=$pkgver-r$pkgrel
+		$subpkgname-headers=$pkgver-r$pkgrel
+		$subpkgname-libs=$pkgver-r$pkgrel
+		$_depends_clang
+		"
+
+	amove \
+		etc/clang* \
+		usr/bin/clang* \
+		usr/lib/clang \
+		$_prefix/bin/*-arch \
+		$_prefix/bin/clang*
+}
+
+clangdev() {
+	pkgdesc="$_clangdesc (development files)"
+	depends="clang-rocm=$pkgver-r$pkgrel"
+
+	amove \
+		usr/lib/cmake/clang-rocm \
+		$_prefix/include/clang*/ \
+		$_prefix/lib/cmake/clang \
+		$_prefix/lib/libclang*.so
+}
+
+clangstatic() {
+	pkgdesc="$_clangdesc (static library)"
+
+	amove \
+		$_prefix/lib/libclang*.a \
+		$_prefix/lib/libfindAllSymbols.a
+}
+
+clanglibs() {
+	pkgdesc="$_clangdesc (C++ interface)"
+
+	amove $_prefix/lib/libclang-cpp.so.*
+}
+
+libclang() {
+	pkgdesc="$_clangdesc (C interface)"
+	depends="clang-rocm-headers=$pkgver-r$pkgrel"
+
+	amove $_prefix/lib/libclang.so.*
+}
+
+headers() {
+	pkgdesc="$_clangdesc (header files)"
+
+	amove $_prefix/lib/clang/$_majorver/include
+}
+
+_ccache() {
+	pkgdesc="$_clangdesc (ccache symlinks)"
+	install_if="clang-rocm=$pkgver-r$pkgrel ccache"
+
+	amove usr/lib/ccache/bin
+}
+
+sha512sums="
+b6b4149c6426793f4497dfd1200079b0caef4d5a6f49c1f3a301d70f5f7b322b850085ff2f89d55df1dfab6d6a97948fe4084d4ec14654ee97cdab26e71a45c0  rocm-6.4.3.tar.gz
+d9060fe8927c3a27cd42c99c0ab1c0e5fc541d50d9a633e6a8f9148a91820aca3b04859ad75e6121108adde699b593a94e424afe83673f7d14058cf8a08bfa39  0001-Disable-dynamic-lib-tests-for-musl-s-dlclose-is-noop.patch
+30577e13b0bea26e6d348caa39ac816732deb2420b065e1d4172b4925f54c2f3655645fcae57a615fe6b2eabea69b1da431179f2de99dee6f59c3b9b7c402166  0002-Fix-more-tests-on-linux-musl.patch
+0f43e14440675f591faa92d0118000a4a2567084d88dfe81623eff7d443591df61446310be27990e3a8e75aec64bb0dc19d03f05f9ec43d3b3161a5366d3f1da  0003-Fix-macho-test-for-32-bit.patch
+90362d0283a5de365d155216a7a502084545b42e4f4589d9c6731428b1d3fc3f22be46ae37fa81567e57719a106dccb5901cbb152a2ad46641ca564ebc64a673  0004-Fix-failures-in-AllocationTests-MappedMemoryTest.-on.patch
+c228ab4f40ebb3b048852510e822024c8f2e457b70f525be6d979d819c9fa3fa6e7b0e8369cf7b7d586aa19339095197f9236d09b570c9328e61231c913d5b70  0005-Use-CMAKE_INSTALL_PREFIX-for-setting-LLVM_INSTALL_PR.patch
+7301541ae2877065e2216dea52aa3a9ce2007649cba5a9eb94e46817571f15f18eaf1b1c0328739ac14bd7d34a5f35cfc8fe59d60deba81b08d85731c2473e8c  0006-always-set-a-larger-stack-size-explicitly.patch
+c52bbe578b4d978c8c1000cd5f9f2f358c1e52fea28750968f70f775e84bcf28c46d7ecc0eaf3cd67a978d78d7724cb92bae5308c6bc24db0e3830dcad8fd2c6  0007-Skip-roundeven-tests.patch
+3563c72cd1253fb5728feb93bd0950c6b30c75d11af99c23e75f91ff3f24c4c015a7a7d1f5f6ee7ddb006a125a410150f40395fa58be5e5b5d2eb2f93aafb0c8  0008-Enable-stack-protector-by-default.patch
+a038c373e03301f32597204f766561805baa2d1cbace2b30d46ae4afb3393c1eba3225a82cbcef55e06d5b0369f175621fc2fb1d387a979fbbb79eded50a3f7c  0009-clang-add-fortify-include-paths-for-musl-triplets.patch
+df3d6ee032dd86f41eb7d624583d934e2b89338d2dc930679c838602a120a901adf1244491606a989986dcfe8d419e3a9505bb0d025c99225221ebd4b952f0b2  0010-clang-enable-fortify-by-default-on-optimizing-musl-t.patch
+44c794f8e9a3bd525c0fa90f66197f948744b3a24bf7ac1badb3467a6d9a6eec002801786277ec81f48b35db3455a1e03ec406dcf4d6ca977ddb0c182b6cd1fd  0011-clang-use-as-needed-by-default.patch
+b56a32209679cc3980a82f4a7698d5759c41a7666ac7e18f43517479902a720c9e5ac5cf6208ada3776eef0244aa12669901772e51a821df2977288718ac555c  0012-Add-LLD_BUILD_SHARED_LIBS-option.patch
+74468c62e0fd1f9d4e02bbdb9a7e02c63aef355b2a378caa3a2a60913b53e659b26182c00d86e8533161907542f492345d910c3695a1bb7147f0a4abdd878178  0013-rocm-llvm-gold-plugin-fix-ModuleName.patch
+b6afa0279d1fd8a26f822eae9eb4ff1064fab080b8127643cd015bc4c98c483013b52fe90db35fe0b6261908ceaf40fef548d2f2c87354f722bbfdd5926032d8  0014-Remove-mallopt-to-fix-build-on-musl.patch
+57d7ebc27ae5e2f5add89f481b7615f33e781fbc8231c7f3b7f31006aca25601cc0b7b2a5f04526b99e396363c8b9ee7d94e5b992f27878a5f0708b2b057d2cc  0015-Add-musl-triples.patch
+"

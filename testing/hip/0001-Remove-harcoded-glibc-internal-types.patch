@@ -1,0 +1,46 @@
+From 2e55c7993a7ccbb537b5a866942c40710d238367 Mon Sep 17 00:00:00 2001
+From: Hugo Osvaldo Barrera <hugo@whynothugo.nl>
+Date: Thu, 21 Aug 2025 21:34:52 +0200
+Subject: [PATCH 1/2] Remove harcoded glibc internal types
+
+---
+ rocclr/os/os.hpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/rocclr/os/os.hpp b/rocclr/os/os.hpp
+index 8509cc362..ac8cf2796 100644
+--- a/rocclr/os/os.hpp
++++ b/rocclr/os/os.hpp
+@@ -383,7 +383,7 @@ inline void Os::ThreadAffinityMask::clear(uint cpu) { CPU_CLR(cpu, &mask_); }
+ inline bool Os::ThreadAffinityMask::isSet(uint cpu) const { return CPU_ISSET(cpu, &mask_); }
+ 
+ inline bool Os::ThreadAffinityMask::isEmpty() const {
+-  for (__cpu_mask bits : mask_.__bits) {
++  for (auto bits : mask_.__bits) {
+     if (bits != 0) {
+       return false;
+     }
+@@ -407,7 +407,7 @@ inline void Os::ThreadAffinityMask::adjust(cpu_set_t& mask) const {
+ 
+ inline uint Os::ThreadAffinityMask::countSet() const {
+   uint count = 0;
+-  for (__cpu_mask bits : mask_.__bits) {
++  for (auto bits : mask_.__bits) {
+     count += countBitsSet(bits);
+   }
+   return count;
+@@ -415,9 +415,9 @@ inline uint Os::ThreadAffinityMask::countSet() const {
+ 
+ inline uint Os::ThreadAffinityMask::getFirstSet() const {
+   uint i = 0;
+-  for (__cpu_mask bits : mask_.__bits) {
++  for (auto bits : mask_.__bits) {
+     if (bits != 0) {
+-      return leastBitSet(bits) + (i * (8 * sizeof(__cpu_mask)));
++      return leastBitSet(bits) + (i * (8 * sizeof(((cpu_set_t *)0)->__bits[0])));
+     }
+ 
+     ++i;
+-- 
+2.51.0
+

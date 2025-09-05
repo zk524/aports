@@ -1,0 +1,71 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=hip
+pkgver=6.4.3
+pkgrel=1
+pkgdesc="Heterogeneous-computing Interface for Portability"
+url="https://github.com/ROCm/rocm-systems/tree/develop/projects/hip"
+# armhf,armv7,ppc64le,x86,loongarch64,riscv64,s390x,aarch64: rocminfo
+#arch="all !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+arch="" # FIXME: doesn't build
+license="MIT"
+options="!check"  # upstream tests disabled as in PKGBUILD (HIP_CATCH_TEST=0)
+# XXX: roctracer seems to be used if available here
+makedepends="
+	comgr-dev
+	clang-rocm
+	hipcc
+	llvm-rocm
+	llvm-rocm-gtest
+	llvm-rocm-static
+	mesa-dev
+	perl
+	py3-cppheaderparser
+	rocm-cmake
+	rocm-core
+	rocminfo
+	rocprofiler-register
+	rocprofiler-register-dev
+	samurai
+"
+subpackages="$pkgname-doc"
+source="
+	hip-$pkgver.tar.gz::https://github.com/ROCm/hip/archive/refs/tags/rocm-$pkgver.tar.gz
+	clr-$pkgver.tar.gz::https://github.com/ROCm/clr/archive/refs/tags/rocm-$pkgver.tar.gz
+	hipother-$pkgver.tar.gz::https://github.com/ROCm/hipother/archive/refs/tags/rocm-$pkgver.tar.gz
+	0001-Remove-harcoded-glibc-internal-types.patch
+	0002-Add-missing-include.patch
+"
+options="!check" # no idea how to run tests
+builddir="$srcdir/clr-rocm-$pkgver"
+
+build() {
+	export HIP_CLANG_PATH=/usr/lib/llvm-rocm/bin/
+	export PATH="$PATH:/usr/lib/llvm-rocm/bin/"
+	cmake -B build -G Ninja -Wno-dev -S "$srcdir/clr-rocm-$pkgver" \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D HIP_PLATFORM=amd \
+		-D HIP_COMMON_DIR="$srcdir/hip-rocm-$pkgver" \
+		-D HIPCC_BIN_DIR=/usr/bin \
+		-D HIPNV_DIR="$srcdir/hipother-rocm-$pkgver/hipnv" \
+		-D CLR_BUILD_HIP=ON \
+		-D LLVM_ROOT=/usr/lib/llvm-rocm/ \
+		-D CLR_BUILD_OCL=OFF
+	cmake --build build
+
+}
+
+# FIXME: seems to also install hipcc???
+package() {
+	DESTDIR="$pkgdir" cmake --install "$builddir/build"
+
+	install -Dm644 "$srcdir/hip-rocm-$pkgver/LICENSE.txt" \
+		-t "$pkgdir/usr/share/licenses/$pkgname/"
+}
+sha512sums="
+1fa32ca7f9f2024e66cbe0bd8faaeeaf5240ce2f962f5bfa29815ff7bdcf5c4c4dac2d0d0354c3a5215df6ebec1e1b32bc10e560d9292a0bd019da1773724e54  hip-6.4.3.tar.gz
+38daec86ea9c8e60f420b4eec5e96d88a4e51585dcbb7352bec27f0c712f4b856f413c42e2585c031a81e8046065d76763c624500ba786ae0e9133278f00418c  clr-6.4.3.tar.gz
+32239e2a896303865065e009d1de71ac6b6cd193346a1daa99e44751d9dab5c08f7e2b668603692c5c2986047d3f3d97c518cdea9365204b8fa91478d0751548  hipother-6.4.3.tar.gz
+0092e0d44682e2183f50e212f9c61e002e691d4e0b85bb5e7b848409262aa4974f1484749fd2239df67286a6a0e64dfba3c83c3101855467fe1b4f24e2d04880  0001-Remove-harcoded-glibc-internal-types.patch
+16ae3eb5f40e9ce313d7ee3e1d138a959961f15785228996421d5ecaeb02361cde218cd82e3c9eb36703e5614a374b24c21420f0e36f3b6145c840d566ed328b  0002-Add-missing-include.patch
+"

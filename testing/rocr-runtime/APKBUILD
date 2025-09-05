@@ -1,0 +1,57 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=rocr-runtime
+pkgver=6.4.3
+pkgrel=0
+pkgdesc="User-mode API to access AMDGPU graphics hardware"
+# Development happens in https://github.com/ROCm/rocm-systems
+# But releases are still being pulished in the deprecated repo below.
+url="https://github.com/ROCm/ROCR-Runtime"
+# armhf,armv7,ppc64le,x86,loongarch64,riscv64,s390x,aarch64: rocm-device-libs
+arch="all !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+license="NCSA"
+depends="rocm-core numactl pciutils rocm-device-libs"
+makedepends="
+	clang-rocm-dev
+	clang-rocm-extra-tools
+	clang-rocm-static
+	cmake
+	elfutils-dev
+	libdrm-dev
+	libxml2-dev
+	lld-rocm
+	llvm-rocm-dev
+	llvm-rocm-gtest
+	llvm-rocm-static
+	numactl-dev
+	rocm-device-libs
+	rocprofiler-register-dev
+	samurai
+"
+subpackages="$pkgname-doc"
+options="!check"  # no test suite available
+source="$pkgname-$pkgver.tar.gz::https://github.com/ROCm/ROCR-Runtime/archive/refs/tags/rocm-$pkgver.tar.gz
+	fix-missing-include.patch
+	7946ddb6474f6bb4cf13225a4b47e78d9669e4c2.patch
+"
+builddir="$srcdir/ROCR-Runtime-rocm-$pkgver"
+
+build() {
+	cmake -B build -G Ninja -Wno-dev -S "$builddir" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_PREFIX_PATH="/usr/lib/llvm-rocm/lib/cmake/clang/;/usr/lib/llvm-rocm/lib/cmake/lld/" \
+		-DCMAKE_CXX_FLAGS="$CXXFLAGS -DNDEBUG" \
+		-DBUILD_SHARED_LIBS=ON
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$builddir/LICENSE.txt" \
+		"$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+sha512sums="
+424af4015d7fe50c97ec27314bfbb21a768617afc29a7ce2fb61edb1fc3933e9451e285ce94a6177c33aed26f7e8c223343c0ec3936e0fe918a85361e6873ba2  rocr-runtime-6.4.3.tar.gz
+4f0dd03ce535f244bae8e802948898c7e33bf91c3cb0157ea5bf53cd8a2315f2ad27d5db782f19160dd04f25972990735115c292a231dcf273dcfee311e76214  fix-missing-include.patch
+0fa570c6b2ed6c8887809ae14cb62e194af0a2ab210ca085e329900c3fd5c78ab45e5eef877699e01536c094a9924dfdff1fb9db7d5d3bc9176cfb6220c39f9c  7946ddb6474f6bb4cf13225a4b47e78d9669e4c2.patch
+"

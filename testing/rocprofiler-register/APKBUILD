@@ -1,0 +1,42 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=rocprofiler-register
+pkgver=6.4.3
+pkgrel=0
+pkgdesc="Coordinate modifications to intercept API tables by the ROCprofiler"
+url="https://github.com/ROCm/rocprofiler-register"
+# armhf, armv7, x86: build fails due to type mismatch on 32bit
+arch="all !armhf !armv7 !x86"
+license="MIT"
+depends="bash"
+makedepends="rocm-cmake samurai glog-dev fmt-dev "
+subpackages="$pkgname-doc $pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ROCm/rocprofiler-register/archive/refs/tags/rocm-$pkgver.tar.gz
+	disable-cpack.patch
+	system-depends.patch
+	"
+options="!check" # no idea how to run tests
+builddir="$srcdir/$pkgname-rocm-$pkgver"
+
+build() {
+	cmake -Wno-dev -S "$builddir" -B build \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DROCPROFILER_REGISTER_BUILD_GLOG=OFF \
+		-DROCPROFILER_REGISTER_BUILD_FMT=OFF
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$builddir/LICENSE" \
+		"$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+	# remove tests
+	rm -rf "$pkgdir/usr/share/rocprofiler-register/tests/"
+}
+
+sha512sums="
+1abb5fd45c465756aaff9b1d7b6c6ca41236a1dba8efd84b6d9911a6ca92dfd952f867a8ec97c9789d7357cf4f6274427d6ae289e0096c5495672736684876cf  rocprofiler-register-6.4.3.tar.gz
+71c8ec39fe3f17aa69c7889d4adbc8ea20f468fe516945e638d073252a3ae453e3205a3f482675ae2c1a13be5ec7176b8146a9484691d317aa2e48ba3f8453a7  disable-cpack.patch
+06dfbd31500ba882a37a5b61a61a482bbcf528d246a235202080c32a6dbcb91f01bd51ab8a03c1b2667ac5ba74af4b01dc7c27e2f97b32899f212a47b71050ce  system-depends.patch
+"

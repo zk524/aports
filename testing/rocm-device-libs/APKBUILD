@@ -1,0 +1,51 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=rocm-device-libs
+pkgver=6.4.3
+pkgrel=0
+pkgdesc="AMD device language runtime libraries"
+url="https://github.com/ROCm/llvm-project/tree/amd-staging/amd/device-libs"
+# armhf,armv7,ppc64le,x86,loongarch64,riscv64,s390x,aarch64: llvm-rocm
+arch="noarch !armhf !armv7 !ppc64le !x86 !loongarch64 !riscv64 !s390x !aarch64"
+license="Apache-2.0 WITH LLVM-exception"
+makedepends="
+	clang-rocm-dev
+	clang-rocm-extra-tools
+	clang-rocm-static
+	llvm-rocm
+	llvm-rocm-gtest
+	llvm-rocm-static
+	rocm-cmake
+	rocm-core
+	samurai
+	"
+subpackages="$pkgname-doc"
+source="
+	https://github.com/ROCm/llvm-project/archive/refs/tags/rocm-$pkgver.tar.gz
+	0016-DeviceLibs-CMake-Policy-CMP0053-is-no-longer-support.patch
+	"
+# FIXME: device-libs installs into /usr/amdgcn.
+#        0017-device-libs-install-into-usr-share-gcn.patch fixes that, but
+#        breaks dependant packages.
+builddir="$srcdir/llvm-project-rocm-$pkgver/amd/device-libs"
+
+build() {
+	cmake -B build -G Ninja -Wno-dev \
+		-DCLANG_INSTALL_PREFIX=/usr/lib/llvm-rocm/ \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_PREFIX_PATH=/usr/lib/llvm-rocm/lib/cmake/clang/
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -d "$pkgdir/usr/share/licenses/rocm-device-libs"
+	mv "$pkgdir/usr/share/doc/ROCm-Device-Libs/LICENSE.TXT" \
+		"$pkgdir/usr/share/licenses/rocm-device-libs/"
+	rmdir "$pkgdir/usr/share/doc/ROCm-Device-Libs/"
+}
+
+sha512sums="
+b6b4149c6426793f4497dfd1200079b0caef4d5a6f49c1f3a301d70f5f7b322b850085ff2f89d55df1dfab6d6a97948fe4084d4ec14654ee97cdab26e71a45c0  rocm-6.4.3.tar.gz
+eb19ad52a74daea4b6c4d276c4317b7839a48861bd23c4454b3d9ff55355180db1da359bb7d181cbe23dcc0c271eca09a5afb12fd9225de02e7c0daa64ee09df  0016-DeviceLibs-CMake-Policy-CMP0053-is-no-longer-support.patch
+"

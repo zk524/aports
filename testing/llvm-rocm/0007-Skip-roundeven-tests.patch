@@ -1,0 +1,35 @@
+From f0cdcd02ed84286c217ba1390c7fbc4cb6d7b4ac Mon Sep 17 00:00:00 2001
+From: Unknown <unknown>
+Date: Mon, 18 Aug 2025 11:03:01 +0200
+Subject: [PATCH] Skip roundeven tests
+
+See: https://github.com/llvm/llvm-project/issues/47657
+---
+ llvm/test/ExecutionEngine/Interpreter/intrinsics.ll | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/llvm/test/ExecutionEngine/Interpreter/intrinsics.ll b/llvm/test/ExecutionEngine/Interpreter/intrinsics.ll
+index c62c41470690..ea5693081ae6 100644
+--- a/llvm/test/ExecutionEngine/Interpreter/intrinsics.ll
++++ b/llvm/test/ExecutionEngine/Interpreter/intrinsics.ll
+@@ -13,8 +13,6 @@ declare float  @llvm.trunc.f32(float)
+ declare double @llvm.trunc.f64(double)
+ declare float  @llvm.round.f32(float)
+ declare double @llvm.round.f64(double)
+-declare float  @llvm.roundeven.f32(float)
+-declare double @llvm.roundeven.f64(double)
+ declare float  @llvm.copysign.f32(float, float)
+ declare double @llvm.copysign.f64(double, double)
+ 
+@@ -31,8 +29,6 @@ define i32 @main() {
+   %trunc64 = call double @llvm.trunc.f64(double 0.000000e+00)
+   %round32 = call float @llvm.round.f32(float 0.000000e+00)
+   %round64 = call double @llvm.round.f64(double 0.000000e+00)
+-  %roundeven32 = call float @llvm.roundeven.f32(float 0.000000e+00)
+-  %roundeven64 = call double @llvm.roundeven.f64(double 0.000000e+00)
+   %copysign32 = call float @llvm.copysign.f32(float 0.000000e+00, float 0.000000e+00)
+   %copysign64 = call double @llvm.copysign.f64(double 0.000000e+00, double 0.000000e+00)
+   ret i32 0
+-- 
+2.50.1
+

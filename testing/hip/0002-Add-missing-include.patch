@@ -1,0 +1,32 @@
+From 5d8b6d3149372ca7e9585c4b057331b39c1816f7 Mon Sep 17 00:00:00 2001
+From: Hugo Osvaldo Barrera <hugo@whynothugo.nl>
+Date: Thu, 21 Aug 2025 21:39:28 +0200
+Subject: [PATCH 2/2] Add missing include
+
+On musl, this fails to build since basename(3) is undefined:
+
+    /tmp/src/clr-rocm-6.4.3/rocclr/os/os_posix.cpp:736:27: error: 'basename' was not declared in this scope; did you mean 'rename'?
+      736 |     appName = std::string(basename(buff.get()));
+          |                           ^~~~~~~~
+          |                           rename
+
+Add the missing import.
+---
+ rocclr/os/os_posix.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rocclr/os/os_posix.cpp b/rocclr/os/os_posix.cpp
+index 86c199b5b..f5a6f4ade 100644
+--- a/rocclr/os/os_posix.cpp
++++ b/rocclr/os/os_posix.cpp
+@@ -39,6 +39,7 @@
+ #include <pthread.h>
+ #include <dlfcn.h>
+ #include <signal.h>
++#include <libgen.h>
+ 
+ #include <sys/prctl.h>
+ 
+-- 
+2.51.0
+

@@ -1,0 +1,32 @@
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=rocsparse
+pkgver=3.4.0
+_rocmver=6.4.3
+pkgrel=0
+pkgdesc="Basic Linear Algebra Subroutines (BLAS) for sparse computation"
+url="https://github.com/ROCm/rocSPARSE"
+# FIXME: missing hip
+arch=""
+license="MIT"
+makedepends="cmake samurai hipcc clang-rocm"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ROCm/rocSPARSE/archive/refs/tags/rocm-$_rocmver.tar.gz"
+options="!check net" # test pending, fetches something (FIXME!)
+builddir="$srcdir/rocSPARSE-rocm-$_rocmver"
+
+build() {
+	export PATH="$PATH:/usr/lib/llvm-rocm/bin/"
+	export CXX=clang
+	cmake -B build -G Ninja -Wno-dev \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$builddir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+sha512sums="
+e82a15ac726c16c418bcaf253817fbca919cedb8c25085793cfd0a984816ea6ffe8d98c0dca867a1bc56b4cd36a03fa3abb3c40a63e9c222c4a230aadd370b7d  rocsparse-3.4.0.tar.gz
+"

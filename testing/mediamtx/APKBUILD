@@ -1,0 +1,66 @@
+maintainer="Krystian Chachuła <krystian@krystianch.com>"
+pkgname=mediamtx
+pkgver=1.11.2
+_hlsjsver=1.5.20
+pkgrel=0
+pkgdesc="Real-time media server and proxy"
+url="https://github.com/bluenviron/mediamtx"
+arch="all"
+license="MIT"
+makedepends="go"
+install="$pkgname.pre-install"
+subpackages="$pkgname-openrc $pkgname-doc"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/bluenviron/mediamtx/archive/refs/tags/v$pkgver.tar.gz
+	hlsjs-$_hlsjsver.zip::https://github.com/video-dev/hls.js/releases/download/v$_hlsjsver/release.zip
+	LICENSE-hlsjs::https://raw.githubusercontent.com/video-dev/hls.js/refs/tags/v$_hlsjsver/LICENSE
+	mediamtx.initd
+	mediamtx.confd
+	0001-rpicamera-disable.patch
+	"
+options="net !check"  # some tests depend on binding to ports
+
+prepare() {
+	default_prepare
+	go mod download
+	echo -n v$pkgver > internal/core/VERSION
+	cp "$srcdir"/dist/hls.min.js internal/servers/hls/
+}
+
+build() {
+	export CGO_CFLAGS="$CFLAGS"
+	export CGO_LDFLAGS="$LDFLAGS"
+
+	go build .
+}
+
+check() {
+	go test ./internal/...
+}
+
+package() {
+	install -m 755 -D "$builddir"/mediamtx \
+		"$pkgdir"/usr/bin/mediamtx
+
+	install -m 644 -D "$builddir"/mediamtx.yml \
+		"$pkgdir"/etc/mediamtx/mediamtx.yml
+
+	install -Dm 644 -t "$pkgdir"/usr/share/doc/mediamtx/ \
+		LICENSE
+	install -Dm 644 -t "$pkgdir"/usr/share/doc/mediamtx/ \
+		"$srcdir"/LICENSE-hlsjs
+
+	install -m755 -D "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/init.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.confd \
+		"$pkgdir"/etc/conf.d/$pkgname
+}
+
+sha512sums="
+dfa40d74a64a8cb0214dda351de5efb0d5103de62525fa65a1fc217497752e77a2b54cf21afab426b737f88efbd65c708903550d4d8cd4d78468a9a54f7c363b  mediamtx-1.11.2.tar.gz
+d67e73c981dd3059ee9e39ad5c4a3bcfcab8207b0fd3c5813011f309965ef78d2d65a11536edc4f8487711a6128957195067b1e2f90ac81740bd1686eee15be9  hlsjs-1.5.20.zip
+f6613fb9e2f05874d4302a2468e40b57357c3006fd19d6183025dbe0c2c430daaecb6cb8919b431b0526461952a23364232dc482200dd93da8013ae3a7364718  LICENSE-hlsjs
+16a2caeabc6e5cf01d25bfe309ba616ee8d576e409e196434d608bae25311ac21c3fb174aa8289c0e5328bf43f2c44b6a04242a3a94b13763b5734e4d58cf4b2  mediamtx.initd
+2b040484bb6a2c76592fe6f3eafb3cce5408a4c6894a3947228a21728827ebbd98ce322294eb435c7d8818b6674f440ffc6666e8c98c6df62f1fbc32d6efe15e  mediamtx.confd
+d20fb897194fd6fa8dfe3214e48a810cdc00c6336c923a0312a90026757349f4e955d7fac5b096b93419eb1415c5e8f250b4075579c9d129a7b6078d1dea26bb  0001-rpicamera-disable.patch
+"

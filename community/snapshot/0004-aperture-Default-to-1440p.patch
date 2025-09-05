@@ -1,0 +1,26 @@
+From f6078cf28c1705566c20932255e58017e05bfcaf Mon Sep 17 00:00:00 2001
+From: Robert Mader <robert.mader@collabora.com>
+Date: Wed, 5 Feb 2025 22:03:56 +0100
+Subject: [PATCH] aperture: Default to 1440p
+
+For SDM845/OnePlus6 testing.
+---
+ aperture/src/utils.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/aperture/src/utils.rs b/aperture/src/utils.rs
+index 3c29bb9..85b347c 100644
+--- a/aperture/src/utils.rs
++++ b/aperture/src/utils.rs
+@@ -32,7 +32,7 @@ pub(crate) mod caps {
+     pub(crate) fn best_mode(caps: &gst::Caps) -> Option<Size> {
+         const MIN_WIDTH: i32 = 640;
+         const MIN_HEIGHT: i32 = 480;
+-        const MAX_HEIGHT: i32 = 720;
++        const MAX_HEIGHT: i32 = 1440;
+         const OPTIMAL_RATIO: f32 = 16.0 / 9.0;
+ 
+         let mut best_size_optimal_ratio: Option<Size> = None;
+-- 
+2.48.1
+

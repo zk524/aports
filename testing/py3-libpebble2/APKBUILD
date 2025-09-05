@@ -1,0 +1,54 @@
+# Contributor: Will Sinatra <wpsinatra@gmail.com>
+# Maintainer: Will Sinatra <wpsinatra@gmail.com>
+pkgname=py3-libpebble2
+_pkgname=libpebble2
+pkgver=0.0.27_git20250808
+_commit=23e2eb92cfc084e6f9e8c718711ac994ef606d18
+pkgrel=0
+pkgdesc="Python library for communicating with Pebble smartwatches"
+url="https://github.com/coredevices/libpebble2"
+arch="noarch"
+license="MIT"
+depends="
+	py3-six
+	py3-websocket-client
+	py3-pyserial
+	"
+makedepends="
+	py3-gpep517
+	py3-setuptools
+	py3-build
+	py3-installer
+	py3-wheel
+	"
+checkdepends="py3-pytest"
+subpackages="$pkgname-pyc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/coredevices/libpebble2/archive/$_commit.tar.gz"
+builddir="$srcdir/$_pkgname-$_commit"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+
+	# Skip tests that use deprecated array.tostring() method
+	.testenv/bin/python3 -m pytest tests/ -v \
+		--deselect tests/test_voice_protocol.py::TestVoiceProtocol::test_dictation_result \
+		--deselect tests/test_voice_protocol.py::TestVoiceProtocol::test_session_setup_command \
+		--deselect tests/test_voice_protocol.py::TestVoiceProtocol::test_session_setup_result \
+		--deselect tests/test_voice_protocol.py::TestVoiceProtocol::test_transcription
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+7533825a71a68fcddba92d66a1b06d52f725384fc3f25a23f00ef7dc28f416516900e552ccfa48447a5553406144a4ba4845f8df16080e015accbc97cd388234  py3-libpebble2-0.0.27_git20250808.tar.gz
+"

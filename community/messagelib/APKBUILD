@@ -5,9 +5,8 @@ pkgname=messagelib
 pkgver=25.08.0
 pkgrel=0
 pkgdesc="KDE PIM messaging library"
-# armhf blocked by qt6-qtdeclarative
-# armv7, ppc64le, s390x, riscv64 blocked by qt6-qtwebengine
-arch="all !armv7 !armhf !ppc64le !s390x !riscv64"
+# armhf, x86, ppc64le, s390x, riscv64 blocked by qt6-qtwebengine
+arch="all !x86 !armhf !ppc64le !s390x !riscv64"
 url="https://kontact.kde.org/"
 license="LGPL-2.0-only OR LGPL-3.0-only AND GPL-2.0-or-later"
 depends_dev="
@@ -68,10 +67,6 @@ subpackages="$pkgname-dev $pkgname-lang"
 _repo_url="https://invent.kde.org/pim/messagelib.git"
 source="https://download.kde.org/stable/release-service/$pkgver/src/messagelib-$pkgver.tar.xz"
 
-case "$CARCH" in
-	x86) options="$options !check";;
-esac
-
 build() {
 	cmake -B build -G Ninja \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -110,7 +105,6 @@ check() {
 		webengineviewer-findbar-findbarbase
 		"
 	case "$CARCH" in
-		x86) tests="$tests webengineviewer-webengineexportpdfpagejobtest" ;;
 		loongarch64) tests="$tests akonadi-mysql-viewergrantleethemesupporttest" ;;
 		aarch64) tests="$tests messagecomposer-recipientseditor" ;;
 	esac

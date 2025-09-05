@@ -1,0 +1,7 @@
+# Configuration for /etc/init.d/livekit
+
+# Location of the configuration file
+#livekit_config="/etc/livekit/livekit.yaml"
+
+# Additional arguments to be passed when starting livekit
+#livekit_opts=""

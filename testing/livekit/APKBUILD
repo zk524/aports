@@ -1,0 +1,60 @@
+# Contributor: Tom MTT. <tom@baboum.org>
+# Maintainer: Tom MTT. <tom@baboum.org>
+pkgname=livekit
+pkgver=1.9.0
+pkgrel=0
+pkgdesc="Scalable, multi-user conferencing based on WebRTC"
+url="https://github.com/livekit/livekit/"
+arch="all"
+license="Apache-2.0"
+makedepends="
+	go
+	mage
+	"
+checkdepends="
+	docker
+	valkey
+	"
+install="$pkgname.pre-install"
+subpackages="$pkgname-openrc"
+pkgusers="$pkgname"
+pkggroups="$pkgname"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/livekit/livekit/archive/refs/tags/v$pkgver.tar.gz
+	$pkgname.initd
+	$pkgname.confd
+	$pkgname.yaml
+	"
+# `net' is required to download go modules.
+# `!check' because test suite requires docker and redis.
+options="net !check"
+
+build() {
+	mage build
+}
+
+check() {
+	# NOTE: test suite requires Docker and Redis / Valkey to be started,
+	# as well as being able to communicate with docker using the current user.
+	mage testAll
+}
+
+package() {
+	install -Dm755 bin/livekit-server "$pkgdir"/usr/bin/livekit-server
+
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+	install -Dm644 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+
+	install -Dm640 -o $pkgusers -g $pkggroups config-sample.yaml \
+		"$pkgdir"/etc/$pkgname/$pkgname.example.yaml
+
+	install -Dm640 -o $pkgusers -g $pkggroups "$srcdir"/$pkgname.yaml \
+		"$pkgdir"/etc/$pkgname/$pkgname.yaml
+}
+
+sha512sums="
+4ba96e9efadf7bc5d1bc5edfa10c401179ade60f0192a8c385bf8cbb04dc9cadf3cafd1f7ff153e1ca72a3177b70a3d91fc7877953562d693bca58abff763d10  livekit-1.9.0.tar.gz
+3064101cfd0a5e2cba54030acbcef0a0532c49d571dc5e95dc0a29fdbaf75033638f0d5e6aadbb21322157550ece73adabc64418e0a8312ae44c78fa68c7d47d  livekit.initd
+592d6ffd6f830f4a247e8a4fab9f8dc312c85497654204fbd3af01a8005f32209223f197b89a0a0c2358642cd9995f7b2b890ee934ac8da846f56822a07e04e0  livekit.confd
+92ac856fd40537a4b4a3fd69e7e40179db0c018ffb1c1e275607e6a040f73dfb3453a308c9860d94a8f05a3b9f64d8cdd81efc93046daf246a3cff656094b43f  livekit.yaml
+"

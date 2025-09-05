@@ -1,0 +1,45 @@
+# Contributor: omni <omni+alpine@hack.org>
+# Maintainer: omni <omni+alpine@hack.org>
+pkgname=brother-label
+pkgver=2.0_alpha8
+pkgrel=0
+_pkgver=2.0a8
+pkgdesc="Brother label printer interface for QL and PT series printers"
+url="https://github.com/fuzeman/brother-label"
+arch="noarch"
+license="GPL-3.0-or-later"
+depends="
+	python3
+	py3-attrs
+	py3-click
+	py3-packbits
+	py3-pillow
+	py3-usb
+	"
+makedepends="py3-gpep517 py3-setuptools py3-wheel"
+checkdepends="py3-pytest"
+options="!check" # no tests
+subpackages="$pkgname-pyc"
+source="$pkgname-$_pkgver.tar.gz::https://github.com/fuzeman/brother-label/archive/refs/tags/$_pkgver.tar.gz
+	pyproject.toml.patch
+	"
+builddir="$srcdir/$pkgname-$_pkgver"
+
+build() {
+	gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" .dist/*.whl
+}
+
+sha512sums="
+28ae52bb6ac1bf3ec36024c2ff4437fca0691786d55b00b968f67c3dd8ac0fd83cd0237144ce54f948b19ccdeafd2a2d02d1816eaa298625334911cc88794a8e  brother-label-2.0a8.tar.gz
+7b6e262f0b84c40a5b9353c0bff661bb14b01366ee77840033d9978115f35548d33cda281fa8fd2e05cfe4ab0136005ab5ef9f562b78f9e1a022647bae58576e  pyproject.toml.patch
+"

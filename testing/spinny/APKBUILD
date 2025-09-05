@@ -1,0 +1,11 @@
+
+build() {
+	zip -9 -q -r boxclip.zip .
+	sed -i 's#^Exec=.*$#Exec=/usr/bin/love /usr/share/games/love/Boxclip/boxclip.love#' boxclip/boxclip.desktop
+}
+
+package() {
+	install -Dm644 boxclip.zip "$pkgdir"/usr/share/games/love/Boxclip/boxclip.love
+	install -Dm644 -t "$pkgdir"/usr/share/games/love/Boxclip/ boxclip/boxclip.png
+	install -Dm644 -t "$pkgdir"/usr/share/applications/ boxclip/boxclip.desktop
+}

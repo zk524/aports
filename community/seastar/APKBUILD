@@ -1,7 +1,7 @@
 # Maintainer: Duncan Bellamy <dunk@denkimushi.com>
 pkgname=seastar
 pkgver=25.05.0
-pkgrel=1
+pkgrel=2
 _commit="8df8212e53577e1d8477a5c901457cd61d88afc7"
 _ver="${_commit:=$pkgver}"
 pkgdesc="High performance server-side application framework"
@@ -73,7 +73,7 @@ build() {
 check() {
 	# rest: needs root (doesn't work in container) for hardware access
 	# see also: https://github.com/scylladb/seastar/issues/1826
-	local _tests="chunk_parsers|dns|httpd|request_parser|semaphore|stall_detector|tls|app-template"
+	local _tests="chunk_parsers|dns|httpd|request_parser|semaphore|stall_detector|tls|app-template|fair_queue"
 	# -j2: "Could not initialize seastar: std::runtime_error (Could not setup Async I/O:
 	# "Not enough request capacity in /proc/sys/fs/aio-max-nr. Try increasing that number
 	# "or reducing the amount of logical CPUs available for your application)"

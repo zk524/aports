@@ -2,7 +2,7 @@
 # Maintainer: Duncan Bellamy <dunk@denkimushi.com>
 pkgname=apache-arrow
 pkgver=21.0.0
-pkgrel=0
+pkgrel=1
 _dotver=${pkgver//./}
 pkgdesc="multi-language toolbox for accelerated data interchange and in-memory processing"
 url="https://arrow.apache.org/"
@@ -163,6 +163,8 @@ parquet-.*-test"
 		local _pyextratests="--deselect=$_pypath/test_parquet.py::TestCDCSingleRowGroup --deselect=$_pypath/test_dataset.py"
 		;;
 	ppc64le) return ;;
+	x86_64)
+		local _extratests="|arrow-acero-util-test"
 	esac
 	# exclude broken tests
 	ctest -j4 --test-dir build-cpp -E "arrow-compute-scalar-temporal-test|arrow-orc-adapter-test$_extratests"

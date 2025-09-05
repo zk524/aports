@@ -1,0 +1,33 @@
+# Maintainer: Holy-Elie Scaide <hey@hescaide.me>
+pkgname=loudgain
+pkgver=0.6.8
+pkgrel=0
+pkgdesc="A loudness normalizer according to the EBU R128 standard"
+url="https://github.com/Moonbase59/loudgain"
+arch="all"
+license="BSD-2-Clause"
+makedepends="cmake taglib-dev libebur128-dev ffmpeg-dev zlib-dev"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/Moonbase59/loudgain/archive/refs/tags/v$pkgver.tar.gz
+	av_register.patch
+	loudgain-0.6.8.patch
+	ffmpeg7.patch
+	taglib.patch
+	"
+
+build() {
+	cmake -B build -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+e41bb6ee3dd85728b8b59b84a1371a88a439a30166db628fae70abe5c20cf9b6c450ee5b1aaa61c971de124cd9be9dbacac4b50f232f64c076d45aafc79ed94c  loudgain-0.6.8.tar.gz
+233a0b671415fbf848e6d4e7f46ded6ef254e25fd11b36290d41f94703fc849e26e4b55ac6d02b607b2b15c4b4150519caee00ce7b3c9cf772d25c5c9edec619  av_register.patch
+6666a8cb3a74294b0825170c940090138ac4616e56c330836883187edf2c6b284ff5ede557206fc8e57111a23b7fd68d84922c5604cd065e25d3d5a54d224c77  loudgain-0.6.8.patch
+ecf37010f33490e6ba61a00bf2541b5ec1b87210af0c23f842148ad689605c0fcd15925d99b425329fbcbdb71498d82f149b177aa0f5ddb64bbc2924589396ee  ffmpeg7.patch
+b6046112bdb96a4e16edf0bbb6c75c73f3b4965f9e4ed5dfa321b78918b4f8af1aa813ab248824637638dc469074e84db364049d6dc23ce1bbed6bfc753da80b  taglib.patch
+"

@@ -2,10 +2,10 @@
 # Maintainer: Joshua Haase <hahj87@gmail.com>
 pkgname=9base
 pkgver=6
-pkgrel=2
+pkgrel=3
 pkgdesc="A port of various Plan 9 tools for Unix."
 url="https://tools.suckless.org/9base/"
-arch="all !armv7 !armhf !aarch64 !loongarch64" # Needs arch specific config.mk
+arch="all !armv7 !armhf !aarch64" # Needs arch specific config.mk
 license="MIT"
 makedepends="linux-headers"
 subpackages="$pkgname-doc $pkgname-troff"
@@ -16,9 +16,11 @@ source="https://dl.suckless.org/tools/9base-$pkgver.tar.gz
 	config.mk.s390x
 	config.mk.ppc64le
 	config.mk.riscv64
+	config.mk.loongarch64
 	dirread.patch
 	s390x.patch
 	riscv64.patch
+	loongarch64.patch
 	gcc14.patch"
 
 # Fix build with gcc >= 10, too many definitions affected.
@@ -59,8 +61,10 @@ sha512sums="
 61e67a22abf8f7d3dbfadda92cf0836e8726ae8225939318d0bf34dc05b47a12dd41de895f7b5df515ba5cd783dae368cce98706366cc28360a1987b4e7c652c  config.mk.s390x
 dd0f9ff55e103fd16f689f01e41769cf6bc6370201e790bf64236570cda2d0e6ef2954f1b5798feb4ebd65fc1a0563ce71c8a9b7fb05166a8ff28ac8be472dfe  config.mk.ppc64le
 d832d40601687068ac5c558db4e2d52cff25a0c7a04d0de0d2d4987015e60a0c3b9da8dc9f47e836ed2ee77fda991111a0a2039007d7803e85d6d62885d835c3  config.mk.riscv64
+bcc18fe3a848ca753258cae3ee866135964c90b658bc71289d1fc26bc19ea74b155d489103a25e2053cf09df26c228035bf1f20cdbd0dd7025ccbed6f84f9059  config.mk.loongarch64
 5b47647245366e786059a28747fe9a36fd87d9df2e1a7f68e9a41f4adb7ec96f230a9abe94acbe5f82d62f4f85b061ff7ab7356d32072dd9ef7f677379f456f5  dirread.patch
 f1f05e2a6081f2a451256de9af669e1ff1e82b6603b376677825421c11bd6ef22a8ab0eb89c15b0589252bada71b58214b6306127bdd379952203105f14e49e9  s390x.patch
 aec441bd768a969ff11774be6bf85413b61f45b9967f7720b7e8b5ef75ae6f834cf8f40177114c337c95e33f0b5a717685b54cd8a43b953cd2301616241abf33  riscv64.patch
+8400a7a56af05a1b8680cde07db4cbbd0323555aedb17375518b23085e275ab40768ca6793116db2a4ae4f0692d50e10cc0b9680e2f76bf84f4761585d33e510  loongarch64.patch
 27f66bd2372be83e249226e49d4076845421738e5c7081525248608767df6646b42cacde9a0d536c799e181d535ea362c3327d84744fd4e447d3de8ddee98966  gcc14.patch
 "

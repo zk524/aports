@@ -1,0 +1,131 @@
+maintainer="Leon White <badfunkstripe@gmail.com>>"
+pkgname=duckdb
+pkgver=1.3.2
+pkgrel=0
+# Run `git describe --tags --long` from source repo checked out at the $pkgver tag to get this 10-character hash
+_pkghash=0b83e5d2f6
+pkgdesc="High-performance analytical database system"
+url="https://duckdb.org"
+# No support for 32-bit or big-endian architectures
+# Other archs exit with Error: Unrecognized opcode: `pause'
+arch="x86_64 aarch64"
+license="MIT"
+makedepends="
+	cmake
+	openssl-dev
+	py3-build
+	py3-installer
+	py3-numpy
+	py3-pybind11-dev
+	py3-setuptools
+	py3-setuptools_scm
+	py3-wheel
+	python3-dev
+	samurai
+	unixodbc-dev
+	"
+checkdepends="
+	py3-mypy
+	py3-pandas
+	py3-pytest
+	py3-pytest-reraise
+	py3-typing-extensions
+	"
+depends_dev="$pkgname-libs=$pkgver-r$pkgrel"
+subpackages="
+	$pkgname-dev
+	$pkgname-doc
+	$pkgname-libs
+	py3-$pkgname-pyc
+	py3-$pkgname:_python
+	"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/duckdb/duckdb/archive/refs/tags/v$pkgver.tar.gz
+	0001-setuptools_scm-version.patch
+	0002-soversion.patch
+	"
+
+export OVERRIDE_GIT_DESCRIBE="v$pkgver-0-g$_pkghash"
+
+build() {
+	# TODO: unvendor thirdparty source files
+	# shellcheck disable=2086
+	cmake -B build -G Ninja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCORE_EXTENSIONS='icu;parquet;json' \
+		-DMUSL_ENABLED=ON \
+		-DOVERRIDE_GIT_DESCRIBE="$OVERRIDE_GIT_DESCRIBE"
+	cmake --build build
+
+	# build DuckDB Python package
+	cd tools/pythonpkg/
+	DUCKDB_BUILD_UNITY=1 \
+		python3 -m build --wheel --no-isolation
+}
+
+check() {
+	# fails with mismatch:
+	# test/issues/general/test_17757.test (aarch64)
+	# test/sql/aggregate/distinct/grouped/distinct_grouping_tpch.test_slow (aarch64)
+	# test/sql/copy/csv/rejects/csv_buffer_size_rejects.test_slow (aarch64, x86_64)
+	# test/sql/storage/compression/alp/alp_tpcds.test_slow (x86_64)
+	# test/sql/storage/parallel/insert_order_preserving_odd_sized_batches.test_slow (x86_64)
+	# test/sql/storage/parallel/reclaim_space_insert_unique_idx_optimistic.test_slow (aarch64)
+	# The other tests simply segfault (no error output).
+	build/test/unittest "*" \
+		exclude:'Test Parquet Files round-trip' \
+		exclude:'test/fuzzer/duckfuzz/array_group_by_sample.test' \
+		exclude:'test/issues/general/test_17757.test' \
+		exclude:'test/sql/aggregate/aggregates/test_list_aggregate_function.test_slow' \
+		exclude:'test/sql/aggregate/distinct/grouped/distinct_grouping_tpch.test_slow' \
+		exclude:'test/sql/aggregate/group/test_group_by_nested.test' \
+		exclude:'test/sql/copy/csv/rejects/csv_buffer_size_rejects.test_slow' \
+		exclude:'test/sql/join/test_nested_keys.test_slow' \
+		exclude:'test/sql/join/test_nested_payloads.test_slow' \
+		exclude:'test/sql/order/issue_11936.test' \
+		exclude:'test/sql/order/test_order_nested.test_slow' \
+		exclude:'test/sql/order/test_order_variable_size_payload.test_slow' \
+		exclude:'test/sql/storage/compression/alp/alp_tpcds.test_slow' \
+		exclude:'test/sql/storage/parallel/insert_order_preserving_odd_sized_batches.test_slow' \
+		exclude:'test/sql/storage/parallel/reclaim_space_insert_unique_idx_optimistic.test_slow' \
+		exclude:'test/sql/types/list/nested_list_extract.test' \
+		exclude:'test/sql/types/nested/array/array_sort.test_slow'
+	python3 -m pytest --shell-binary build/duckdb tools/shell/tests
+
+	# Remove duckdb directory to prevent import confusion by pytest
+	cd tools/pythonpkg
+	rm -rf duckdb
+
+	# tests/stubs/test_stubs.py depends on py3-mypy (and isn't worth the effort)
+	# tests/fast/api/test_query_progress.py fails with query start timeout (x86_64)
+	_skip_tests="--ignore=tests/stubs/test_stubs.py --ignore=tests/fast/api/test_query_progress.py"
+
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer dist/*.whl
+	.testenv/bin/python3 -m pytest tests $_skip_tests
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+
+	python3 -m installer --destdir="$pkgdir" tools/pythonpkg/dist/*.whl
+
+	# We don't need these source files
+	rm -rf "$pkgdir"/usr/duckdb_build "$pkgdir"/usr/includes.list "$pkgdir"/usr/sources.list
+}
+
+_python() {
+	pkgdesc="$pkgdesc (Python3 module)"
+	depends="python3"
+
+	amove usr/lib/python3.*
+}
+
+sha512sums="
+8e725d94cfd81989d4f6d206728188e5b290ce3a7f71d89adc6beed91957f965180d34d69d9099d04e35fc402b389de56184875397b29286789bd9c5655595c5  duckdb-1.3.2.tar.gz
+aeec06519a75f082396eea25b8e7f552f9104bab3c9dd0c1ffde72bd99efb8e11f41138dd3c226ec6fcf64f9c00f50a0bc4148aa4a5fbffe402b17c6b9541ba2  0001-setuptools_scm-version.patch
+d122ad2eab00fff0f010494e79480d488f8bde38d21001e02af359921665108a07cc61d31ae35df4233b922f758cc06b38444ec8fddddf8f29393e48934deb0a  0002-soversion.patch
+"

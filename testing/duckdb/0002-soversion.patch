@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8c5ecd0a4..7a9811a171 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -376,6 +376,8 @@ if (NOT DEFINED GIT_COMMIT_HASH)
+   string(REGEX REPLACE "v[0-9]+\.[0-9]+\.[0-9]+\-[0-9]+\-g([a-f0-9]+)" "\\1" GIT_COMMIT_HASH "${GIT_DESCRIBE}")
+ endif()
+ 
++set(DUCKDB_VERSION_NUMBER "${DUCKDB_MAJOR_VERSION}.${DUCKDB_MINOR_VERSION}.${DUCKDB_PATCH_VERSION}")
++
+ string(LENGTH "${GIT_COMMIT_HASH}" LENGTH_GIT_COMMIT_HASH)
+ if (NOT ${LENGTH_GIT_COMMIT_HASH} EQUAL 10)
+    message(STATUS "GIT_COMMIT_HASH has length ${LENGTH_GIT_COMMIT_HASH} different than the expected 10")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 56b6ef9536..1ae0739d5e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -60,6 +60,7 @@ endfunction()
+ if(AMALGAMATION_BUILD)
+ 
+   add_library(duckdb SHARED "${PROJECT_SOURCE_DIR}/src/amalgamation/duckdb.cpp")
++  set_target_properties(duckdb PROPERTIES VERSION ${DUCKDB_VERSION_NUMBER} SOVERSION ${DUCKDB_MAJOR_VERSION}.${DUCKDB_MINOR_VERSION})
+   target_link_libraries(duckdb ${DUCKDB_SYSTEM_LIBS})
+   link_threads(duckdb PUBLIC)
+   link_extension_libraries(duckdb PRIVATE)
+@@ -110,6 +111,7 @@ else()
+       duckdb_zstd)
+ 
+   add_library(duckdb SHARED ${ALL_OBJECT_FILES})
++  set_target_properties(duckdb PROPERTIES VERSION ${DUCKDB_VERSION_NUMBER} SOVERSION ${DUCKDB_MAJOR_VERSION}.${DUCKDB_MINOR_VERSION})
+ 
+   if(WIN32 AND NOT MINGW)
+     ensure_variable_is_number(DUCKDB_MAJOR_VERSION RC_MAJOR_VERSION)

@@ -1,0 +1,27 @@
+maintainer="ovf <ovf@mm.st>"
+pkgname=eduke32
+_ver=20250813-10626-126f35ca8
+pkgver=${_ver/-*}
+pkgrel=0
+pkgdesc="Advanced Duke Nukem 3D and Shadow Warrior (BUILD engine) source port"
+url="https://www.eduke32.com/"
+arch="aarch64 riscv64 x86_64"
+license="GPL-2.0-only"
+makedepends="sdl2-dev libvpx-dev alsa-lib-dev flac-dev"
+source="https://dukeworld.com/eduke32/synthesis/$_ver/eduke32_src_$_ver.tar.xz eduke32-no-execinfo.patch"
+options="!check"
+builddir="$srcdir/eduke32_$_ver"
+
+build() {
+	make duke3d sw
+}
+
+package() {
+	install -Dm 755 -t "$pkgdir"/usr/bin eduke32 mapster32 voidsw wangulator
+	install -Dm 644 -t "$pkgdir"/usr/share/licenses/$pkgname source/build/buildlic.txt
+}
+
+sha512sums="
+c60a3c5b3b74849966f3f276e1aacfeed52fecaaaacf9eaa43585c5bac774674c4a63d7d038efb3e27793c6b7372cc2e3503b95bb2b2ffb7e2bbe666b90e76e3  eduke32_src_20250813-10626-126f35ca8.tar.xz
+479ff1a883494819fa57f28f421cdae72ad0d7eb75b91bb62c45c3850816c2bacb30b9bbe7c1c28c6c289ed6b6e3343e04fe704d14ca16b0da8d2f444ee5f2c1  eduke32-no-execinfo.patch
+"

@@ -1,8 +1,8 @@
 # Contributor: Alex Yam <alex@alexyam.com>
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=wasi-libc
-pkgver=0.20250204
-_gitrev=e9524a0980b9bb6bb92e87a41ed1055bdda5bb86
+pkgver=0.20250827
+_gitrev=bbb0c01b112f8c3aaa1974407c5302a26b88babb
 pkgrel=0
 pkgdesc="WASI libc implementation for WebAssembly"
 url="https://github.com/WebAssembly/wasi-libc"
@@ -40,6 +40,6 @@ package() {
 }
 
 sha512sums="
-36a24e0237c82a3cd5077835306afe106df0a1fab12ecc617688c17a299a2b1c8ebcbcd0b8841a98c4e85e159bbd1bd7466c1853aa9d32351963ce1c0bbb38a5  wasi-libc-e9524a0980b9bb6bb92e87a41ed1055bdda5bb86.tar.gz
+5c91b2d2e896fb439b1975fe6809f77b92e7c4d7f900ff83a1f3149c9af6b75b8d49b794f6db811ade89f5a0113c75a58bc00267b980ec42e4d714726b5d4450  wasi-libc-bbb0c01b112f8c3aaa1974407c5302a26b88babb.tar.gz
 8241854f3331e4e22756f4414afcd6cd766d48e2a1a38ad6c95903f84b6f6b718b1ed0eae2ef0fe78f2ab5c87352ffb44f1eca3ea03983173b80f72af5948651  no-double-build.patch
 "

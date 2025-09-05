@@ -1,0 +1,32 @@
+# Contributor: fossdd <fossdd@pwned.life>
+# Maintainer: fossdd <fossdd@pwned.life>
+pkgname=kiesel
+pkgver=0_git20240706
+_commit=6d5d006ee2efbb4f71b072b902d69f145816640b
+pkgrel=0
+pkgdesc="JavaScript engine written in Zig"
+url="https://kiesel.dev/"
+arch="x86_64 aarch64" # zig
+license="MIT"
+makedepends="zig cargo"
+subpackages="$pkgname-doc"
+source="https://codeberg.org/kiesel-js/kiesel/archive/$_commit.tar.gz"
+builddir="$srcdir/kiesel"
+options="net" # zig deps
+
+build() {
+	zig build
+}
+
+check() {
+	zig build test
+}
+
+package() {
+	install -Dm755 zig-out/bin/kiesel -t "$pkgdir"/usr/bin/
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+87807b70c4640e6df832662932e6268f4d1e7bd85649114d02c91f2fb6e41bb457965527f2cf153a984f18ad39534890a70a00e8cf2808da3c317ddcdc2dca32  6d5d006ee2efbb4f71b072b902d69f145816640b.tar.gz
+"

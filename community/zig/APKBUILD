@@ -3,7 +3,7 @@
 # Maintainer: lauren n. liberda <lauren@selfisekai.rocks>
 pkgname=zig
 pkgver=0.14.1
-pkgrel=0
+pkgrel=1
 pkgdesc="General-purpose programming language designed for robustness, optimality, and maintainability"
 url="https://ziglang.org/"
 # arm*, loongarch64, ppc64le, riscv64: we don't build all LLVM targets, but zig requires all.
@@ -26,6 +26,7 @@ makedepends="
 provides="zig-dev=$pkgver-r$pkgrel"
 subpackages="$pkgname-doc"
 source="https://ziglang.org/download/$pkgver/zig-$pkgver.tar.xz
+	alpine-targets.patch
 	"
 
 build() {
@@ -70,4 +71,5 @@ package() {
 
 sha512sums="
 b2b96f241216a46503af95a1175c967ac869391cc87fcb42db2c29d9d513e7ab19c4f4ced2c078481c36aea95f412f3162a8b319aa86b5e2462af567554e8216  zig-0.14.1.tar.xz
+6d9373f5f31a204566c2c08b0094ad1d36e9ed7adfec564e3a9bf1cbd2642dd7423b0dfcec5e05854fdf4a737dbc1beec7d2f9bf558d4e956304c9dbd271d185  alpine-targets.patch
 "

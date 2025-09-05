@@ -2,7 +2,7 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=mycli
-pkgver=1.37.1
+pkgver=1.38.2
 pkgrel=0
 pkgdesc="MySQL CLI with autocompletion and syntax highlighting"
 url="https://www.mycli.net/"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-729550bef1534ee946acb5f99c5cbeeb14d6f38390aad2ce838d95fc9d0be07da99f86d486b855a45e9179b66cb9a7760da53e0a4421ffdc80744e3d89d23436  mycli-1.37.1.tar.gz
+d6d09d9dae5f51d9f38d84600611acb8f4ebe264e1708b35306da343346c1dfa72bd3e883aa279f2a930c643e5b0d51e5c5529700f1d2f954df58068df70fb27  mycli-1.38.2.tar.gz
 "

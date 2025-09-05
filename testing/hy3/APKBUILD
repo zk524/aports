@@ -1,0 +1,51 @@
+maintainer="Zach DeCook <zachdecook@librem.one>"
+pkgname=hy3
+pkgver=0.49.0
+_ver_suffix=
+pkgrel=0
+pkgdesc="Hyprland plugin for an i3 / sway like manual tiling layout"
+url="https://github.com/outfoxxed/hy3"
+arch="all"
+license="GPL-3.0-only"
+source="https://github.com/outfoxxed/hy3/archive/hl$pkgver$_ver_suffix/hy3-hl$pkgver$_ver_suffix.tar.gz"
+makedepends="
+	aquamarine-dev
+	cmake
+	samurai
+	hyprgraphics-dev
+	hyprlang-dev
+	hyprland-dev
+	hyprutils-dev
+	libdrm-dev
+	libinput-dev
+	libxkbcommon-dev
+	mesa-dev
+	pango-dev
+	pixman-dev
+	wayland-dev
+	"
+subpackages="$pkgname-doc"
+builddir="$srcdir/hy3-hl$pkgver$_ver_suffix"
+
+build() {
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_BUILD_TYPE=None \
+		-DHY3_NO_VERSION_CHECK=TRUE
+	cmake --build build
+}
+
+check() {
+	cd build
+	CTEST_OUTPUT_ON_FAILURE=TRUE ctest
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$builddir"/README.md "$pkgdir"/usr/share/doc/hy3/README.md
+}
+
+sha512sums="
+6bda36686409ebe3baf58f4981a04a273c3b3ba8575646c70bf6bc288cc6939b580f936e01a110db3ea5fd0b964f939bd88a96bbdcaa4974a2086a085709ac2c  hy3-hl0.49.0.tar.gz
+"

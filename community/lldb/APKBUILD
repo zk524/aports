@@ -34,13 +34,17 @@ makedepends="
 	swig
 	xz
 	"
+checkdepends="
+	py3-packaging
+	py3-pexpect
+	py3-psutil
+	"
 subpackages="$pkgname-dev $pkgname-doc py3-$pkgname-pyc py3-$pkgname:py3"
 source="https://github.com/llvm/llvm-project/releases/download/llvmorg-${pkgver//_/-}/lldb-${pkgver//_/}.src.tar.xz
 	https://github.com/llvm/llvm-project/releases/download/llvmorg-${pkgver//_/-}/cmake-${pkgver//_/}.src.tar.xz
 	llvm_slug.py
 	"
 builddir="$srcdir/$pkgname-${pkgver//_/}.src"
-options="!check"  # FIXME: enable tests
 
 prepare() {
 	default_prepare

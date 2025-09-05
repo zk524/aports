@@ -1,0 +1,20 @@
+Use system-provided tor binaries
+
+By default, tor-browser attempts to use vendored tor utilities. Use system ones
+instead.
+
+--- a/browser/app/profile/000-tor-browser.js
++++ b/browser/app/profile/000-tor-browser.js
+@@ -113,7 +113,10 @@
+ // The tor_path is relative to the application directory. On Linux and
+ // Windows this is the Browser/ directory that contains the firefox
+ // executables, and on Mac OS it is the TorBrowser.app directory.
+-pref("extensions.torlauncher.tor_path", "");
++pref("extensions.torlauncher.tor_path", "/usr/bin/tor");
++pref("extensions.torlauncher.torrc-defaults_path", "/usr/share/tor-browser/torrc-defaults");
++pref("extensions.torlauncher.geoip_path", "/usr/share/tor/geoip");
++pref("extensions.torlauncher.geoip6_path", "/usr/share/tor/geoip6");
+ 
+ // The torrc_path and tordatadir_path are relative to the data directory,
+ // which is TorBrowser-Data/ if it exists as a sibling of the application
+

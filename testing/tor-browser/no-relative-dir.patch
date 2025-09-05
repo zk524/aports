@@ -1,0 +1,39 @@
+Disable relative data dir
+
+Tor Browser uses a profile directory relative to the executable. For a system
+installation, this would write user data into /usr/lib/tor-browser.
+
+Disable relative data dirs, but also avoid using the same directory as regular
+Firefox.
+
+--- a/browser/config/mozconfigs/tor-browser
++++ b/browser/config/mozconfigs/tor-browser
+@@ -7,12 +7,11 @@
+ # like Firefox does.
+ # export MOZ_APP_REMOTINGNAME="Tor Browser"
+ 
+-ac_add_options --with-relative-data-dir=TorBrowser/Data/Browser
+ # This is not needed with the relative data directory, but it is when you
+ # disable it, otherwise it is "Mozilla" (on Windows and macOS) or ".mozilla" on
+ # Unix systems.
+ # It is used, for example, for GetProductDirectory.
+ # ac_add_options --with-user-appdir=TorProject
+ # ac_add_options --with-user-appdir=.torproject
+ 
+ ac_add_options --with-distribution-id=org.torproject
+--- a/xpcom/io/nsAppFileLocationProvider.cpp
++++ b/xpcom/io/nsAppFileLocationProvider.cpp
+@@ -338,6 +338,12 @@
+   if (NS_FAILED(rv)) {
+     return rv;
+   }
++  rv = localDir->AppendNative(".local"_ns);
++  NS_ENSURE_SUCCESS(rv, rv);
++  rv = localDir->AppendNative("share"_ns);
++  NS_ENSURE_SUCCESS(rv, rv);
++  rv = localDir->AppendNative("torbrowser"_ns);
++  NS_ENSURE_SUCCESS(rv, rv);
+ #else
+ #  error dont_know_how_to_get_product_dir_on_your_platform
+ #endif
+

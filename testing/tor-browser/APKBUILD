@@ -1,0 +1,182 @@
+# For referrence, upstream uses the following for official builds:
+# https://gitlab.torproject.org/tpo/applications/tor-browser-build/
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
+pkgname=tor-browser
+pkgver=14.5.5
+pkgrel=0
+pkgdesc="Modified Firefox ESR for browsing over Tor"
+url="https://www.torproject.org"
+# x86: error with libgkrust.a, needs research
+# armhf: build error in encoding_rs (unresolved import)
+# armv7: build fails
+# ppc64le: build fails
+# s390x: security/sandbox/linux/reporter/SandboxReporter.cpp: "unrecognized architecture"
+# riscv64: security/sandbox/chromium/sandbox/linux/system_headers/linux_signal.h: "Unsupported platform"
+# loongarch64: libc crate
+arch="all !x86 !armhf !armv7 !ppc64le !s390x !riscv64 !loongarch64"
+license="GPL-3.0-only AND LGPL-2.1-only AND LGPL-3.0-only AND MPL-2.0"
+depends="
+	tor
+	obfs4proxy
+	snowflake
+"
+_llvmver=20
+makedepends="
+	alsa-lib-dev
+	cargo
+	cbindgen
+	clang$_llvmver
+	clang$_llvmver-libclang
+	gtk+3.0-dev
+	jq
+	libice-dev
+	libsm-dev
+	lld
+	llvm$_llvmver-dev
+	m4
+	nasm
+	nodejs
+	pulseaudio-dev
+	py3-setuptools
+	wasi-sdk
+"
+# https://gitlab.torproject.org/tpo/applications/tor-browser/-/archive/base-browser-128.13.0esr-14.5-1-build2/tor-browser-base-browser-128.13.0esr-14.5-1-build2.tar.gz
+source="
+	https://dist.torproject.org/torbrowser/$pkgver/src-firefox-tor-browser-128.13.0esr-${pkgver%.*}-1-build2.tar.xz
+	https://dist.torproject.org/torbrowser/$pkgver/tor-browser-linux-x86_64-$pkgver.tar.xz
+	fix-rust-target.patch
+	rust-lto-thin.patch
+	force-can-use-pack-relative-relocs.patch
+	distribution.ini
+	system-tor.patch
+	no-relative-dir.patch
+	tor-browser.desktop
+"
+options="!check" # tests are not easily portable/adaptable
+builddir="$srcdir/firefox-tor-browser-128.13.0esr-${pkgver%.*}-1-build2/"
+sonameprefix="$pkgname:"
+
+case "$CARCH" in
+	armhf|armv7) makedepends="$makedepends perl";;
+esac
+
+# Define app prefix
+_appname="tor-browser"
+_prefix="/usr/lib/$_appname"
+
+prepare() {
+	default_prepare
+
+	case "$CARCH" in
+		aarch64|x86_64) _mozarch=$CARCH;;
+		armhf|armv7) _mozarch=arm;;
+		x86) _mozarch=i686;;
+		# Conservative/generic fallback:
+		*) _mozarch=aarch64;;
+	esac
+
+	cat mozconfig-linux-$_mozarch - <<-EOF > .mozconfig
+	mk_add_options RUSTFLAGS="$RUSTFLAGS"
+	mk_add_options MOZ_OBJDIR="$builddir/obj"
+
+	# disable unwanted things
+	ac_add_options --disable-bootstrap
+	ac_add_options --disable-cargo-incremental
+	ac_add_options --disable-debug
+	ac_add_options --disable-debug-symbols
+	ac_add_options --disable-install-strip
+	ac_add_options --disable-jemalloc
+	ac_add_options --disable-strip
+	ac_add_options --disable-tests
+	ac_add_options --disable-updater
+
+	# fingerprint convergence
+	ac_add_options --enable-system-pixman
+
+	# buildopts
+	ac_add_options --host=$CBUILD
+	ac_add_options --target=$CHOST
+	ac_add_options --enable-release
+	ac_add_options --enable-lto=thin
+	ac_add_options --enable-linker=lld
+	ac_add_options --enable-optimize="$CFLAGS"
+	ac_add_options --with-libclang-path=/usr/lib/llvm$_llvmver/lib
+
+	# misc
+	ac_add_options --prefix=/usr
+	ac_add_options --with-app-name=$_appname
+	ac_add_options --with-base-browser-version=$pkgver
+	ac_add_options --enable-update-channel=release
+	ac_add_options --with-branding=browser/branding/tb-release
+	ac_add_options --enable-release
+	ac_add_options --enable-sandbox
+	ac_add_options --enable-forkserver
+EOF
+}
+
+build() {
+	export MOZ_BUILD_DATE="$(date ${SOURCE_DATE_EPOCH:+ -d@${SOURCE_DATE_EPOCH}} "+%Y%m%d%H%M%S")"
+	export MOZBUILD_STATE_PATH="$srcdir"/mozbuild
+
+	export CC="clang-$_llvmver"
+	export CXX="clang++-$_llvmver"
+	export RUST_TARGET="$CTARGET"
+	export CFLAGS="${CFLAGS/-fstack-clash-protection/} -g0 -O2"
+	export CXXFLAGS="${CXXFLAGS/-fstack-clash-protection/} -g0 -O2 -Wno-deprecated-builtins -Wno-deprecated-declarations"
+	export LDFLAGS="$LDFLAGS -Wl,-rpath,$_prefix"
+
+	# build handles this already
+	unset CARGO_PROFILE_RELEASE_OPT_LEVEL
+	unset CARGO_PROFILE_RELEASE_LTO
+
+	# build fails when this is set
+	unset RUSTFLAGS
+
+	# Building in the source directory is disallowed.
+	cd "$srcdir"
+	python "$builddir/configure.py"
+	make
+}
+
+package() {
+	DESTDIR="$pkgdir" make -C "$srcdir" install
+
+	# Install icons
+	for size in 16 22 24 32 48 64 128 256; do
+		install -Dm644 "browser/branding/tb-release/default${size}.png" \
+			"$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$_appname.png"
+	done
+	install -Dm644 "browser/branding/tb-release/content/about-logo.svg" \
+		"$pkgdir/usr/share/icons/hicolor/scalable/apps/$_appname.svg"
+
+	install -Dm644 "$srcdir"/distribution.ini \
+		"$pkgdir"/$_prefix/distribution/distribution.ini
+
+	install -Dm 644 "$srcdir/dist/bin/browser/defaults/preferences/000-tor-browser.js" \
+		-t "$pkgdir/$_prefix/browser/defaults/preferences/"
+
+	install -Dm 644 "$srcdir/dist/bin/browser/chrome/browser/content/browser/default-bookmarks.html" \
+		-t "$pkgdir/$_prefix//browser/defaults/profile/"
+
+	install -Dm 644 "$srcdir/tor-browser/Browser/TorBrowser/Data/Tor/torrc-defaults" \
+		-t "$pkgdir/usr/share/tor-browser/"
+
+	install -Dm 644 "$srcdir/tor-browser.desktop" \
+		-t "$pkgdir/usr/share/applications/"
+
+	cd "$srcdir/tor-browser/Browser"
+	find fonts -type f -exec install -Dm644 {} "$pkgdir/$_prefix/{}" \;
+}
+
+
+sha512sums="
+42448b32d48622b5af32ef7fa6cd53065ae360773f473c80cf6e31dd5772e47bbf689a298f46854006cb4855e308d3c641058cb3745ef6d9518f6340871d3225  src-firefox-tor-browser-128.13.0esr-14.5-1-build2.tar.xz
+8e62be94cc3de846c50534747c25a0a2e89e0729c3261a23ed50293af4a2f6000ca77165c01ca957e3ec14021226de19430fb5d681160e53ed91375dc107014e  tor-browser-linux-x86_64-14.5.5.tar.xz
+7edd6a260dccaf7c5bd1304fc7595149cea26c10d4586ab6a60d82dd03506e4fb53423efdb1a205327fa4aeb7f08e4d64c065637c36574fd22826627ce50e82d  fix-rust-target.patch
+f2a3556ee0c4a873552d87b354e533367529e7993b3ab4c39c9703fda6fdada6c5ea8ce53a3247aac28c4d669934a93ee49920fe141ddec067ec57a401b03988  rust-lto-thin.patch
+b7a2beef126569d71242198f2503bb6a32acd1ea89080ef7bed6ba0f0d10819282c2c346c6f729d81cd90e328e607b88acaac8785ed057cc8cb562e315890334  force-can-use-pack-relative-relocs.patch
+f71a4057012e5708dc4fd935e6af0eb6cd8e69e2c3edf156bfa07044a993a7ccc8c50b1964c043b2c1ac6047b764f2d2ee66766404f2c46d712dff7205802c0c  distribution.ini
+e7bd9aac090f7f3f378cd0528246a0b14572ae9aca1542ebc8b82f1eccc0decb87f131e5fade5dd87221914cddf43165426200fd58138558c96c7a2f09971278  system-tor.patch
+753f6ad97a99428867f67a508db0883f470257778b104204c027f078244eae809269a925424e83e2420c506cc4c076c4f0ab70dd0c015619c3e7c1b4a19ddf94  no-relative-dir.patch
+a5cbd04b63dafdb1336df05e278a23751c124ee34e775eb55c1eab607b8648095408fa6f57e5c3c50c9f04f2cb2a0902161a1dccadc674366425b4ebd8ccc5ae  tor-browser.desktop
+"

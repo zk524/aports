@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# https://krill.docs.nlnetlabs.nl/en/stable/upgrade.html
+
+# TODO - Is it possible to use openrc variable with post-upgrade script?
+krillup -c /etc/krill/krill.conf

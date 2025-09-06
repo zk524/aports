@@ -1,0 +1,9 @@
+#!/bin/sh
+
+user=krill
+group=krill
+
+delgroup $group 2>/dev/null
+deluser $user 2>/dev/null
+
+exit 0

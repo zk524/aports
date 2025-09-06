@@ -60,16 +60,8 @@ build() {
 }
 
 check() {
-	case "$CARCH" in
-	aarch64|loongarch64|x86*)
-		# the only architectures supported by the criterion-cycles-per-byte
-		# crate, https://gitlab.torproject.org/tpo/core/arti/-/issues/2029
-		cargo test --frozen
-		;;
-	*)
-		./target/release/arti --version
-		;;
-	esac
+	cargo test --frozen
+
 }
 
 package() {

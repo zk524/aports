@@ -1,0 +1,47 @@
+#!/bin/sh
+set -e
+# $1 is $pkgver-r$pkgrel; removing -r$pkgrel
+release="${1%-r*}"
+
+# download script for Marathon data files distributed with source code
+# per https://github.com/Aleph-One-Marathon/data-marathon README:
+# "Bungie still holds the copyrights to these files"
+# and
+# "In 2021, Bungie granted the Aleph One project a limited license to distribute Marathon game content."
+# So these files should not be distributed, they have to be downloaded from the source at install time.
+
+echo "Downloading Marathon game data..."
+
+# ensure download directory exists and is clean
+mkdir -p /usr/share/AlephOne/download
+rm -rf /usr/share/AlephOne/download/*
+cd /usr/share/AlephOne/download
+
+# download game data zips
+wget -q https://github.com/Aleph-One-Marathon/alephone/releases/download/release-$release/Marathon-$release-Data.zip
+wget -q https://github.com/Aleph-One-Marathon/alephone/releases/download/release-$release/Marathon2-$release-Data.zip
+wget -q https://github.com/Aleph-One-Marathon/alephone/releases/download/release-$release/MarathonInfinity-$release-Data.zip
+
+# verify download integrity
+rel_url="https://api.github.com/repos/aleph-one-marathon/alephone/releases/tags/release-${release}"
+assets=$(curl -s $rel_url | jq -r '.assets')
+sum1=$(echo $assets | jq -r ".[] | select(.name == \"Marathon-${release}-Data.zip\") .digest" | cut -f2 -d ':')
+sum2=$(echo $assets | jq -r ".[] | select(.name == \"Marathon2-${release}-Data.zip\") .digest" | cut -f2 -d ':')
+sum3=$(echo $assets | jq -r ".[] | select(.name == \"MarathonInfinity-${release}-Data.zip\") .digest" | cut -f2 -d ':')
+
+sha256sum Marathon-$release-Data.zip | grep $sum1
+sha256sum Marathon2-$release-Data.zip | grep $sum2
+sha256sum MarathonInfinity-$release-Data.zip | grep $sum3
+
+# unzip game data zips in download directory
+unzip -q Marathon-$release-Data.zip
+unzip -q Marathon2-$release-Data.zip
+unzip -q MarathonInfinity-$release-Data.zip
+
+# remove old game data; move extracted folders to data directory
+rm -rf /usr/share/AlephOne/Marathon
+rm -rf /usr/share/AlephOne/Marathon\ 2
+rm -rf /usr/share/AlephOne/Marathon\ Infinity
+rm /usr/share/AlephOne/download/*.zip
+mv Marathon* /usr/share/AlephOne/
+

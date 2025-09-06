@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Marathon Infinity
+Exec=/usr/bin/alephone '/usr/share/AlephOne/Marathon Infinity'
+Terminal=false
+StartupNotify=false
+Categories=Game;

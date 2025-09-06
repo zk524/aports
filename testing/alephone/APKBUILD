@@ -1,0 +1,77 @@
+# Contributor: Adam Thiede <me@adamthiede.com>
+# Maintainer: Adam Thiede <me@adamthiede.com>
+pkgname=alephone
+pkgver=20250829
+pkgrel=0
+pkgdesc="3D first-person shooter game"
+url="https://alephone.lhowon.org/"
+arch="all"
+license="GPL-3.0-only"
+makedepends="
+	asio-dev
+	autoconf
+	autoconf-archive
+	automake
+	boost-dev
+	curl-dev
+	expat-dev
+	gawk
+	glu-dev
+	libpng-dev
+	libsndfile-dev
+	libvorbis-dev
+	openal-soft-dev
+	sdl2-dev
+	sdl2_image-dev
+	sdl2_mixer-dev
+	sdl2_net-dev
+	sdl2_ttf-dev
+	speex-dev
+	speexdsp-dev
+	zziplib-dev
+"
+subpackages="$pkgname-doc $pkgname-data"
+source="
+	marathon.desktop
+	marathon2.desktop
+	marathoninfinity.desktop
+	$pkgname-$pkgver.tar.gz::https://github.com/Aleph-One-Marathon/alephone/archive/release-$pkgver.tar.gz
+"
+# download/upgrade game data after install/upgrade
+install="
+	$pkgname-data.post-install
+	$pkgname-data.post-upgrade
+"
+builddir="$srcdir/$pkgname-release-$pkgver/"
+
+build() {
+	autoreconf -i
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	make check-recursive
+}
+
+package() {
+	DESTDIR="$pkgdir" make install
+}
+
+data() {
+	pkgdesc="Post-install script to install Marathon data files"
+	install -Dm644 "$srcdir"/marathon.desktop \
+		"$subpkgdir"/usr/share/applications/marathon.desktop
+	install -Dm644 "$srcdir"/marathon2.desktop \
+		"$subpkgdir"/usr/share/applications/marathon2.desktop
+	install -Dm644 "$srcdir"/marathoninfinity.desktop \
+		"$subpkgdir"/usr/share/applications/marathoninfinity.desktop
+}
+
+
+sha512sums="
+185841e768fae4e562f2da38a52fe1277be0f52ec613361ac455c3fe9f10cda892dfc7435207d6ae5aa90fb85b0266b6923044680f86cd572270d80dbbc3af49  marathon.desktop
+e7c602ae8a1f2af1af81dbc4c5d599c00e23bb76a577f81bee8dc38fe61962b31f70ddac11aeffaafc9ae5d7ba51b7e20811950d9a1d06876ebe8345051438b8  marathon2.desktop
+64979faf771cf119062754194e5d6050cb4242b6e50ab178b6d313e8ffb90229bc03ba910721394a41278ce9eb0ddcd1ddaf243675b338ec2e4319eb09270d5e  marathoninfinity.desktop
+f59540785f1a43d5da45d07fbda6e2cf12d87795209d6c9fc52555d8e1c1e264581da2639509e6344244fb67dd7752e14a9e6ef1454a0c203d5ccad4c71adcac  alephone-20250829.tar.gz
+"

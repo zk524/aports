@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Marathon
+Exec=/usr/bin/alephone /usr/share/AlephOne/Marathon
+Terminal=false
+StartupNotify=false
+Categories=Game;

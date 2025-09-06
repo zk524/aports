@@ -1,0 +1,48 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+maintainer="Angelo Verlain <hey@vixalien.com>"
+pkgname=elementary-files
+pkgver=7.1.1
+pkgrel=0
+pkgdesc="File browser designed for elementary OS"
+url="https://github.com/elementary/files"
+arch="all"
+license="GPL-3.0-or-later"
+depends="
+	tumbler
+	contractor
+"
+makedepends="
+	desktop-file-utils
+	granite-dev
+	gtk+3.0-dev
+	libcanberra-dev
+	libcloudproviders-dev
+	libgit2-glib-dev
+	libhandy1-dev
+	libportal-dev
+	meson
+	vala
+	zeitgeist-dev
+	"
+subpackages="$pkgname-lang $pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz"
+
+builddir="$srcdir/files-$pkgver"
+
+build() {
+	abuild-meson \
+		-Dsystemduserunitdir=no \
+	. output
+	meson compile -C output
+}
+
+check() {
+	meson test --no-rebuild --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+sha512sums="
+3ddde4c2423d4d8f7ac6b213013d396c4dcf6c4b6ca02768c57f434a3c85dadad8156716eed8451cab6b3223f7d50a6cf6a2534d65a9e5eb84c9ea9c3a328d2d  elementary-files-7.1.1.tar.gz
+"

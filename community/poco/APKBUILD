@@ -1,5 +1,4 @@
-# Contributor: Leonardo Arena <rnalrd@alpinelinux.org>
-# Maintainer: Bart Ribbers <bribbers@disroot.org>
+maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=poco
 pkgver=1.14.2
 pkgrel=0

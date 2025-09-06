@@ -1,4 +1,3 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=libnymphcast
 pkgver=0.2.1

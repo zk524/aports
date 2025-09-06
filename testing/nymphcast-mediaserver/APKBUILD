@@ -1,5 +1,4 @@
-# Contributor: Bart Ribbers <bribbers@disroot.org>
-# Maintainer: Bart Ribbers <bribbers@disroot.org>
+maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=nymphcast-mediaserver
 pkgver=0.1
 pkgrel=4

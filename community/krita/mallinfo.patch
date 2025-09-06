@@ -1,0 +1,13 @@
+mallinfo doesn't exist in musl libc
+
+--- a/libs/image/tests/kis_paint_device_test.cpp
++++ b/libs/image/tests/kis_paint_device_test.cpp
+@@ -2483,7 +2483,7 @@
+ 
+         qDebug() << "Iteration:" << i;
+ 
+-#ifdef Q_OS_LINUX
++#if defined(Q_OS_LINUX) && defined(__GLIBC__)
+         struct mallinfo info = mallinfo();
+         qDebug() << "Allocated on heap:" << (info.arena >> 20) << "MiB";
+         qDebug() << "Mmapped regions:" << info.hblks << (info.hblkhd >> 20) << "MiB";

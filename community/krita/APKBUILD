@@ -55,29 +55,29 @@ makedepends="
 	zlib-dev
 	zug
 	"
-checkdepends="xvfb-run"
+checkdepends="xvfb-run !krita"
 source="https://download.kde.org/stable/krita/$pkgver/krita-$pkgver.tar.xz
 	0001-fftw-use-pkgconfig.patch
 	20-sip-6.8.patch
+	mallinfo.patch
 	"
 # -python subpackage temporarily removed due to incompatibilities with Python 3.12
-subpackages="$pkgname-dev $pkgname-lang"
-options="!check" # Breaks compilation on Musl https://bugs.kde.org/show_bug.cgi?id=412058
+subpackages="$pkgname-dev $pkgname-lang $pkgname-dbg"
 
 build() {
 	GIT_DIR=. cmake -B build -G Ninja \
-		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+		-DCMAKE_BUILD_TYPE=Debug \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_KRITA_QT_DESIGNER_PLUGINS=ON \
-		-DBUILD_TESTING=OFF \
+		-DBUILD_TESTING=ON \
 		-DENABLE_UPDATERS=OFF \
 		-DKRITA_ENABLE_PCH=OFF
 	cmake --build build
 }
 
 check() {
-	ctest --test-dir build
+	xvfb-run -- ctest --test-dir build
 }
 
 package() {
@@ -99,4 +99,5 @@ sha512sums="
 fc4af177371afad307a77047ceff3fb793c76e6e8b64382acd950bd89d6fc12fb2c83d76d8e8d0482860add178b8fe70ac05b1db4bc0e17520be53b9190e4bfe  krita-5.2.9.tar.xz
 246d632e1afa28fbb1ef0abe1a62433694465e2f3918f8d110a7ad6ff99b27d94a7d91dbf061eccd6ecfa72d8dbff87c1b2696effcb482045aaf3f89169e9a0e  0001-fftw-use-pkgconfig.patch
 2c5635550a397b57b3fb1d009bee41af78a0ab1bc77acdd6339933f44f9da4eee7d657efb1ba253238ac94cad99330b245b03c90af9f46fc269c43cde0691b8a  20-sip-6.8.patch
+cb84828c94aff87ae30d85f43d8bcfac6e4eb5751b8695b23c53e672b8310a568be90c86bc05ab347f4985748951491ed000e3f1281ad9bccaa4f5c169bc5a68  mallinfo.patch
 "

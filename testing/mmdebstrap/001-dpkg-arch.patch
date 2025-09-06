@@ -1,0 +1,12 @@
+diff --git a/make_mirror.sh b/make_mirror.sh
+index 6c4be09..1aa4074 100755
+--- a/make_mirror.sh
++++ b/make_mirror.sh
+@@ -354,6 +354,7 @@ mkdir -p "$newcachedir"
+ touch "$newcachedir/mmdebstrapcache"
+ 
+ HOSTARCH=$(dpkg --print-architecture)
++HOSTARCH="${HOSTARCH#musl-linux-}"
+ arches="$HOSTARCH"
+ if [ "$HOSTARCH" = amd64 ]; then
+   arches="$arches arm64 i386"

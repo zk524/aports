@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index bedbed7..ac55fa7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -175,7 +175,7 @@ fi
+ 
+ AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${PACKAGE_DATA_DIR}")
+ 
+-PERL_MODULE_DIR="${datadir}/perl5"
++PERL_MODULE_DIR="${datadir}/perl5/vendor_perl"
+ AC_SUBST(PERL_MODULE_DIR)
+ 
+ dnl Set PACKAGE_LIB_DIR in config.h.

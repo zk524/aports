@@ -1,0 +1,54 @@
+maintainer="Sören Tempel <soeren+alpine@soeren-tempel.net>"
+pkgname=hoogle
+pkgver=5.0.18.4
+pkgrel=0
+pkgdesc="Command-line interface for the Haskell API search engine"
+url="https://github.com/ndmitchell/hoogle"
+arch="all"
+license="BSD-3-Clause"
+makedepends="ghc cabal zlib-dev"
+options="net"
+source="https://github.com/ndmitchell/hoogle/archive/v$pkgver/hoogle-$pkgver.tar.gz
+	cabal.project.freeze
+	0001-423-require-crypton-connection-0.4.1-and-fix-compile.patch"
+
+# Directory were cabal files are stored.
+export CABAL_DIR="$srcdir/dist"
+
+# Needed to fix build on aarch64.
+export PATH="$PATH:/usr/lib/llvm15/bin"
+
+cabal_update() {
+	cd $builddir
+	cabal v2-update
+	(
+		cabal v2-freeze --shadow-installed-packages
+		mv cabal.project.freeze "$startdir/"
+	)
+}
+
+prepare() {
+	default_prepare
+	ln -sf "$srcdir/cabal.project.freeze" \
+		"$builddir/cabal.project.freeze"
+}
+
+build() {
+	cabal v2-update
+	cabal v2-build $pkgname:exes \
+		--jobs=${JOBS:-1} \
+		--prefix=/usr \
+		--docdir=/usr/share/doc/$pkgname \
+		--sysconfdir=/etc
+}
+
+package() {
+	# See https://github.com/haskell/cabal/issues/6919#issuecomment-761563498
+	cabal list-bin $pkgname:exes | xargs install -Dm755 -t "$pkgdir"/usr/bin
+}
+
+sha512sums="
+3a98c3fc62a12083dd359683d7113f3a0f046f45cb2cdf31b28842c25043df16c07f026af04081ba8ea0fa58cc4e55a4a77df1df29c982b06821ddd4ccd4de81  hoogle-5.0.18.4.tar.gz
+f2b09b6914233c2acfeb06a6de8c8ed3b6cef2bc07d6dd28e1788c9702171080e945c270766b2c93517913581127f3aa744ed934010e73d3b018b67ea53c59aa  cabal.project.freeze
+9b9221ca318c2ee1efee24f35d635a537a3cba7b75798ea694780f4c73fdd804306a133a12b6d9ab6809b96589962f9f17e6ca6e54b6de63b3a2294adb23a9a5  0001-423-require-crypton-connection-0.4.1-and-fix-compile.patch
+"

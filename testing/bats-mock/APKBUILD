@@ -1,0 +1,22 @@
+# Contributor: Camelia Lavender <cam@camelia.dev>
+# Maintainer: Camelia Lavender <cam@camelia.dev>
+pkgname=bats-mock
+pkgver=1.2.5
+pkgrel=0
+pkgdesc="Mocking/stubbing library for Bats"
+url="https://github.com/jasonkarns/bats-mock"
+arch="noarch"
+license="MIT"
+depends="bats-core bash"
+source="$pkgname-$pkgver.tar.gz::https://github.com/jasonkarns/bats-mock/archive/refs/tags/v$pkgver.tar.gz"
+options="!check" # no tests available in source code repository
+
+package() {
+	install -Dm644 stub.bash -t "$pkgdir"/usr/lib/bats/$pkgname/
+	install -Dm755 binstub -t "$pkgdir"/usr/lib/bats/$pkgname/
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+86224972385c206a6bc2eb43ee6d120dfc733ff6727832f8a77abe1ed174b8b524077a2164b1a65d59a7c2a4321e36b24bd3510ba630cfa5903c0dc00a722087  bats-mock-1.2.5.tar.gz
+"

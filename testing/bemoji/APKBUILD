@@ -1,0 +1,29 @@
+# Maintainer: Camelia Lavender <cam@camelia.dev>
+pkgname=bemoji
+pkgver=0.4.0
+pkgrel=0
+pkgdesc="Emoji picker that remembers your favorites"
+url="https://github.com/marty-oehme/bemoji"
+arch="noarch"
+license="MIT"
+checkdepends="bats bats-mock"
+depends="bash curl"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/marty-oehme/bemoji/archive/v$pkgver.tar.gz
+	0001-do-not-load-testing-suite-from-git-submodules.patch
+	"
+
+check() {
+	bats test
+}
+
+package() {
+	install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+
+sha512sums="
+0a50a0383fb1fbe2bb22c59c9e2771384b27e887e6e6a7c37e209e1e1d17a1378e3bc5e86b50c743094209be6c772f230598864131b0924de3c58f2ef66e725c  bemoji-0.4.0.tar.gz
+ed28538c41c54b5d248897fd86ef0529b820df617d538b47b0d158e5b282239a22e195ecd8e97e039c12a52ba7982cc574e14c661b02a357e5df170d36665fac  0001-do-not-load-testing-suite-from-git-submodules.patch
+"

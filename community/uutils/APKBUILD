@@ -1,8 +1,8 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=uutils
-pkgver=0.1.0
-pkgrel=1
+pkgver=0.2.0
+pkgrel=0
 pkgdesc="Rust rewrite of the GNU coreutils"
 arch="all"
 url="https://uutils.github.io/coreutils/"
@@ -224,5 +224,5 @@ _uptime_doc() {
 }
 
 sha512sums="
-e9b3941573b2267e6a4b17c49a64d71234e4cbf067f1180fe14bfe48012c9d400741067f6231855a6132f93138eb4bbcb1e970e98c5f937f8d3a5e5bc019f03c  uutils-coreutils-0.1.0.tar.gz
+dea4029aff923dd7be1d75596062df3fcc0bec9e6eebaa25902eca8f3d52032858c111545e8a56c1ec4aeb30bd633a695ce8ff1a4da956ef19effe327b94649f  uutils-coreutils-0.2.0.tar.gz
 "

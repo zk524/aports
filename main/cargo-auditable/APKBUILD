@@ -1,7 +1,7 @@
 # Maintainer: team/rust <alpine@ptrcnull.me>
 pkgname=cargo-auditable
 pkgver=0.7.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Cargo wrapper for embedding auditing data"
 url="https://github.com/rust-secure-code/cargo-auditable"
 arch="all"
@@ -11,7 +11,9 @@ depends="cmd:cargo"
 # (not rust) to depend on lld to prevent lld-llvm version mismatch issues.
 checkdepends="lld rust-wasm"
 subpackages="$pkgname-doc"
-source="$pkgname-$pkgver.tar.gz::https://github.com/rust-secure-code/cargo-auditable/archive/refs/tags/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/rust-secure-code/cargo-auditable/archive/refs/tags/v$pkgver.tar.gz
+	wrapper.sh
+	"
 options="net"
 
 prepare() {
@@ -38,9 +40,11 @@ check() {
 
 package() {
 	install -Dm755 target/release/cargo-auditable -t "$pkgdir"/usr/bin/
+	install -Dm755 "$srcdir"/wrapper.sh "$pkgdir"/usr/libexec/cargo-auditable-wrapper
 	install -Dm644 cargo-auditable/cargo-auditable.1 -t "$pkgdir"/usr/share/man/man1/
 }
 
 sha512sums="
 6d1583eb1a1ad5c2b98b0fad69e32fc132fdce255fe4c416172d93ffe009694bcb79a01a8c03f0aaf606453116828a445d82550ad055e3b8151a74ed6e0952d3  cargo-auditable-0.7.0.tar.gz
+3ca3d18535a1dea98e156eaacab1fb5a6e52e5bfcd686f09c352192b9f0d920b5a5ae0fd41df14e0a28348e57af4288fc04b5a9af25314291e0a3898990c60c1  wrapper.sh
 "

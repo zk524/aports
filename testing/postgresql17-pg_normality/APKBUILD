@@ -1,0 +1,28 @@
+# Contributor: Elliot Sadlon <elliot@yieldsfalsehood.com>
+# Maintainer: Elliot Sadlon <elliot@yieldsfalsehood.com>
+_projname=pg_normality
+_pgver=17
+pkgname="postgresql$_pgver-$_projname"
+pkgver=1.0
+pkgrel=0
+pkgdesc="Statistical methods for normality testing in postgres"
+url="https://sr.ht/~yieldsfalsehood/pg_normality"
+arch="all"
+license="LGPL-3.0-only"
+makedepends="postgresql$_pgver-dev gsl-dev libcerf-dev"
+depends="gsl libcerf"
+source="$_projname-$pkgver.tar.gz::https://git.sr.ht/~yieldsfalsehood/pg_normality/archive/$pkgver.tar.gz"
+builddir="$srcdir/$_projname-$pkgver"
+options="!check"  # tests require running PostgreSQL
+
+build() {
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+22f243883eaa041c180a3230135548a30dcf88f4a939ce3caf60d44b2fd9705436760c8570d03d43f271eccfd4b3e48539b3cccb785cd630cfd6002da15b3b02 pg_normality-1.0.tar.gz
+"

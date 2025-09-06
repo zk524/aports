@@ -2,7 +2,7 @@
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=minijinja-cli
 pkgver=2.12.0
-pkgrel=0
+pkgrel=1
 pkgdesc="CLI using MiniJinja to render Jinja2 templates from the command line to stdout"
 _pkgname=minijinja
 url="https://docs.rs/minijinja/latest/minijinja/"
@@ -40,6 +40,7 @@ build() {
 		--all-features --package "$pkgname"
 
 	cd minijinja-py
+	CARGO=/usr/libexec/cargo-auditable-wrapper \
 	gpep517 build-wheel \
 		--wheel-dir .dist\
 		--config-json '{"build-args": "--locked", "build-option": "--target=$CTARGET --release --all-features --package minijinja-py"}' \

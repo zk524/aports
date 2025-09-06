@@ -1,6 +1,6 @@
 # Maintainer: Thomas Liske <thomas@fiasko-nw.net>
 pkgname=pypy
-pkgver=7.3.12
+pkgver=7.3.16
 _pkgver=${pkgver/_/}
 pkgrel=0
 pkgdesc="A fast, compliant alternative implementation of Python 2.7"
@@ -97,5 +97,5 @@ tkinter() {
 }
 
 sha512sums="
-35ec35376f1e7c1a5dea9dc5bce6819a94c2df2645806c83185487587470b47ab529c25ecb8ca200505319f40789859a2919c61902b693421e2001313b46e5f4  pypy2.7-v7.3.12-src.tar.bz2
+131635433e53d4d86730a3daf1ad81799a7dd1117511618cc2607ac7234ce3aa5c833400df09cbd3376a391e125d6d2ec3471f120f81a6d53700f5c3d087793c  pypy2.7-v7.3.16-src.tar.bz2
 "

@@ -5,9 +5,9 @@ pkgver=17.0.1
 pkgrel=0
 pkgdesc="Lightweight and cross-platform C++ IDE"
 url="https://qt-project.org/wiki/Category:Tools::QtCreator"
-# riscv64, s390x, ppc64le, armhf: qt6-qtwebengine
+# riscv64, s390x, ppc64le, armhf, x86: qt6-qtwebengine
 # armv7: clang++-20: error: unable to execute command: Segmentation fault
-arch="all !riscv64 !s390x !ppc64le !armhf !armv7"
+arch="all !riscv64 !s390x !ppc64le !armhf !armv7 !x86"
 license="GPL-3.0-only WITH Qt-GPL-exception-1.0"
 depends="
 	qt6-qtbase-sqlite

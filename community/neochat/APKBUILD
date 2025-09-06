@@ -6,9 +6,8 @@ pkgver=25.08.0
 pkgrel=0
 pkgdesc="A client for Matrix, the decentralized communication protocol"
 url="https://invent.kde.org/network/neochat/"
-# armhf blocked by qt6-qtdeclarative -> kirigami
-# riscv64, s390x and ppc64le blocked by qt6-qtwebengine -> qt6-qtwebview
-arch="all !armhf !riscv64 !s390x !ppc64le"
+# armhf, riscv64, s390x and ppc64le blocked by qt6-qtwebengine -> qt6-qtwebview
+arch="all !armhf !riscv64 !s390x !ppc64le !x86"
 license="GPL-2.0-or-later AND GPL-3.0-only AND GPL-3.0-or-later AND BSD-2-Clause"
 depends="
 	kirigami

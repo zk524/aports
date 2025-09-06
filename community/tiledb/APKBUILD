@@ -1,8 +1,8 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
-# Maintainer: Holger Jaekel <holger.jaekel@gmx.de>
+maintainer="Holger Jaekel <holger.jaekel@gmx.de>"
 pkgname=tiledb
-pkgver=2.27.0
-pkgrel=3
+pkgver=2.28.1
+pkgrel=0
 pkgdesc="Engine for storing and accessing dense and sparse multi-dimensional arrays"
 url="https://tiledb.com/"
 # Tests fail on s390x
@@ -10,19 +10,16 @@ url="https://tiledb.com/"
 arch="all !armhf !armv7 !x86 !s390x"
 license="MIT"
 makedepends="
-	abseil-cpp-dev
-	blosc-dev
 	bzip2-dev
 	capnproto-dev
 	catch2-3
-	clang
 	cmake
 	crc32c-dev
 	curl-dev
-	doxygen
 	file-dev
 	google-cloud-cpp-dev
 	libpng-dev
+	libwebp-dev
 	lz4-dev
 	nlohmann-json
 	openssl-dev
@@ -31,14 +28,20 @@ makedepends="
 	zlib-dev
 	zstd-dev
 	"
+checkdepends="
+	rapidcheck-dev
+	"
 subpackages="
 	$pkgname-dev
+	$pkgname-tools
 	"
 source="tiledb-$pkgver.tar.gz::https://github.com/TileDB-Inc/TileDB/archive/refs/tags/$pkgver.tar.gz
 	https://raw.githubusercontent.com/muellan/clipp/v1.2.3/include/clipp.h
-	10-compression.patch
-	70-avx2.patch
-	gcc-15.patch
+	10-avx2.patch
+	20-pkgconf.patch
+	30-catch.patch
+	40-clipp.patch
+	50-gcc-15.patch
 	"
 builddir="$srcdir/TileDB-$pkgver"
 
@@ -51,18 +54,20 @@ _with_s3="OFF"
 case "$CARCH" in
 arm*|s390x|ppc64le) ;;
 *)
-# S3 support presently fails to build from source with current AWS SDK.
-#	makedepends="$makedepends aws-crt-cpp-dev aws-sdk-cpp-dev"
-#	_with_s3="ON"
+	makedepends="$makedepends aws-crt-cpp-dev aws-sdk-cpp-dev"
+	_with_s3="ON"
 	;;
 esac
+
+prepare() {
+	default_prepare
+	cp $srcdir/clipp.h $builddir/tools/src/commands/clipp.h
+}
 
 build() {
 	if [ "$CBUILD" != "$CHOST" ]; then
 		local crossopts="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
 	fi
-	CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations" \
-	LDFLAGS="$LDFLAGS -Wl,--copy-dt-needed-entries" \
 	TILEDB_DISABLE_AUTO_VCPKG=OFF \
 	cmake -B build -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
@@ -70,19 +75,18 @@ build() {
 		-DBUILD_SHARED_LIBS=ON \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DTILEDB_VERBOSE=OFF \
-		-DTILEDB_HDFS=OFF \
 		-DTILEDB_S3=$_with_s3 \
 		-DTILEDB_AZURE=OFF \
 		-DTILEDB_GCS=ON \
 		-DTILEDB_SERIALIZATION=ON \
-		-DTILEDB_TOOLS=OFF \
+		-DTILEDB_TOOLS=ON \
 		-DTILEDB_WERROR=OFF \
 		-DTILEDB_CPP_API=ON \
 		-DTILEDB_STATS=ON \
 		-DTILEDB_TESTS="$(want_check && echo ON || echo OFF)" \
 		-DTILEDB_CCACHE=OFF \
 		-DTILEDB_ARROW_TESTS=OFF \
-		-DTILEDB_WEBP=OFF \
+		-DTILEDB_WEBP=ON \
 		$crossopts
 
 	# compile Cap’n Proto schema with the current version
@@ -98,17 +102,25 @@ build() {
 
 check() {
 	ctest --test-dir build \
-		-R '^unit_|test_assert' -E 'unit_capi_query_plan|unit_capi_query_aggregate|unit_capi_current_domain|unit_capi_vfs|unit_capi_ndrectangle|unit_array_schema|unit_run_filter_pipeline|unit_vfs'
+		-R '^unit_|test_assert' -E 'unit_capi_query_plan|unit_capi_query_aggregate|unit_vfs|unit_capi_vfs|unit_capi_current_domain|unit_capi_ndrectangle|unit_array_schema|unit_run_filter_pipeline'
 }
 
 package() {
 	DESTDIR="$pkgdir" cmake --install build
+	install -m755 -D $builddir/build/tools/tiledb $pkgdir/usr/bin/tiledb
+}
+
+tools() {
+	pkgdesc="$pkgdesc (command line utilities)"
+	amove usr/bin
 }
 
 sha512sums="
-bee0d660acb9953da223e0a52d139a0ca0b50786dfb677bc2b320d7d32135f928013d6405f7f971467764ec0f9bb181e45954ffc090fb7fa62af267a598fa7fb  tiledb-2.27.0.tar.gz
+ab71bb62f1eeb3cd023eb77decf7442ac86ffb2b56fc294aa27c49e7c9571f7e7ae7f5226d02366843e6e664741440e9c8353c42c6964e7a7f47bd849b559b50  tiledb-2.28.1.tar.gz
 0a801eff46581a96e571b41ce734d5a8e7f30333d46e3fb81c4c40fc44c18035d4b4597732221e37945ad23b94e53e496562ae4b24d358761dbf5ed803f66ff4  clipp.h
-df27399a1b0ee6822d2438c1a06f4633b49eaaae98635675e82da94e99736d3fbc0db4dd1238251ac5859f99e5d6fe3ef713f613b4215045b7b1f1acfb9f14d5  10-compression.patch
-86e5f9722e4ef8524b96d059ba434508cf03e3c264ec3bfcaf3585dae5584f4863e4bbc6f34be68e653df18cd7d827f8fc36b058acdc4636609412526bc95d5b  70-avx2.patch
-8d031f7fbcee0d569d43bf11c4b8ea15bd98d45cf01f07ff63312e91ee85712de9a60568e1543b1f9d1b13f38403d5ea9e543d6f6743b765019cd552494c9d5b  gcc-15.patch
+86e5f9722e4ef8524b96d059ba434508cf03e3c264ec3bfcaf3585dae5584f4863e4bbc6f34be68e653df18cd7d827f8fc36b058acdc4636609412526bc95d5b  10-avx2.patch
+4c3380100615d9872d14f31dae8c5a31816cfeacb89eebff9eb09194fbb54ccb10f4dda29113bb2acbec5fbe96ad46eac293dc0e85621a6f87045fc00816e660  20-pkgconf.patch
+6a301995491c0e5a60ee5cac5504fe05413d53c580a7afb04a497e9a3e4832940e3db5c07fea12c1dc5e253934df2dc6eddde36e88ca11d2f7452af9a5b5fa91  30-catch.patch
+92eefb53ff45df8a79c26d64e20ce7df7550291300f2b17e1d1d42ddf06f79f250b82762487cb21c7c4f8ac84f1f3661737cc975af6fa2f346affd10c8624399  40-clipp.patch
+8d031f7fbcee0d569d43bf11c4b8ea15bd98d45cf01f07ff63312e91ee85712de9a60568e1543b1f9d1b13f38403d5ea9e543d6f6743b765019cd552494c9d5b  50-gcc-15.patch
 "

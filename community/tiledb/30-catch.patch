@@ -1,0 +1,15 @@
+Author: Holger Jaekel <holger.jaekel@gmx.de>
+Summary: use catch2-3 header
+----
+
+--- a/tiledb/sm/misc/test/unit_parse_argument.cc
++++ b/tiledb/sm/misc/test/unit_parse_argument.cc
+@@ -30,7 +30,7 @@
+  * Tests for useful (global) functions.
+  */
+ 
+-#include "catch.hpp"
++#include <catch2/catch_all.hpp>
+ #include "tiledb/sm/enums/datatype.h"
+ #include "tiledb/sm/misc/parse_argument.h"
+ 

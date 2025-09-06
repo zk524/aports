@@ -9,6 +9,7 @@ description="Lightweight, powerful workflow engine with Web UI"
 : ${dagu_dags_dir:="/etc/dagu.d"}
 
 export DAGU_DATA_DIR="${dagu_data_dir:-/var/lib/dagu/data}"
+export DAGU_WORK_DIR="${dagu_work_dir:-/var/lib/dagu/work}"
 export DAGU_SUSPEND_FLAGS_DIR="${dagu_suspend_flags_dir:-/var/lib/dagu/suspend}"
 export DAGU_LOG_DIR="${dagu_log_dir:-/var/log/dagu}"
 export DAGU_ADMIN_LOG_DIR"=${dagu_admin_log_dir:-/var/log/dagu/admin}"

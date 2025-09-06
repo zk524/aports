@@ -15,6 +15,9 @@
 # Directory with application data.
 #dagu_data_dir="/var/lib/dagu/data"
 
+# Default working directory
+#dagu_work_dir="/var/lib/dagu/work"
+
 # Directory with suspend flags.
 #dagu_suspend_flags_dir="/var/lib/dagu/suspend"
 

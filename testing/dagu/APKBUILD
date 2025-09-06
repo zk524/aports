@@ -15,6 +15,7 @@ source="
 	$pkgname-$pkgver.tar.gz::https://github.com/dagu-org/dagu/archive/v$pkgver.tar.gz
 	dagu.initd
 	dagu.confd
+	dagu.yaml
 	example.yaml
 	README.txt
 	"
@@ -36,14 +37,16 @@ package() {
 	install -m755 -D bin/$pkgname "$pkgdir"/usr/bin/$pkgname 	
 	install -m755 -D "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
 	install -m644 -D "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.yaml -t "$pkgdir"/etc
 	install -m644 -D "$srcdir"/example.yaml "$pkgdir"/etc/$pkgname.d/example.yaml.disabled
 	install -m644 -D "$srcdir"/README.txt "$pkgdir"/etc/$pkgname.d/README
 }
 
 sha512sums="
 872458688f09e14a796642983a6ae2eca21f8916a94120706f77876198e2a7a71c66e4741b9f88f559643a10412de953b3aa1dc16633e811c0b01a4c682573ea  dagu-1.22.2.tar.gz
-8391635f6e868842a7a1afddca6be233c7dd4a24ed1fbcee1a6b9beda76cc5623476b24b7ffa51373996cda3b6df4bcbd3cf293285fae6b2aae4c7b380dfc1ce  dagu.initd
-9561e65a8f81a8d15c02a35cc00217bf41d25a09ec95cdf09087919c31e93f574ab2c2242b6156cbb8bfa34807645eeda7254337ed26d3901038e57e2c6a7457  dagu.confd
+15dfcd6309d6253b8957dc1ebdccb69daa0e108a0bb599db3367fbfbe7c15ba2d1e439d0b1e9d01886781c6795b6542e117c8ea6ce9b409d0ce7114a9bd0af00  dagu.initd
+8513f4cd8d6373cf762df47c832b00f5d662b631c955e22809feb61d713e9e886074a3dcee4661754124e1c58669959d51905e5160e129541be1a23a497fac58  dagu.confd
+c6eb7b35ec2cf57edea9da2af8c6eaf630d024ac33a0c91a9e883be99f9a6e848780e101eb495e82ce47ed15ed2029cd737d116fdd92a4f43cf829354dd609bb  dagu.yaml
 a321855475033752653bcc6723ee5da9db614e08816b79687225da73f3648bdb2704a3fdfc6483cbec06ef59e21cc8c9d828a7707f799419b94f92961c877491  example.yaml
 f70c804ff8189547abfc9c5fb62e27c43a33d828c73e1e9d1756f115639dc7a1383258f8baac6ee8cf55e3821d066c3e03b1770da23b337fafdf25bd188818d4  README.txt
 "

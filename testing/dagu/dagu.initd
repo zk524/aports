@@ -5,9 +5,16 @@ name="Dagu"
 description="Lightweight, powerful workflow engine with Web UI"
 
 : ${command_user:="dagu:dagu"}
+: ${dagu_config_file:="/etc/dagu.yaml"}
+: ${dagu_dags_dir:="/etc/dagu.d"}
+
+export DAGU_DATA_DIR="${dagu_data_dir:-/var/lib/dagu/data}"
+export DAGU_SUSPEND_FLAGS_DIR="${dagu_suspend_flags_dir:-/var/lib/dagu/suspend}"
+export DAGU_LOG_DIR="${dagu_log_dir:-/var/log/dagu}"
+export DAGU_ADMIN_LOG_DIR"=${dagu_admin_log_dir:-/var/log/dagu/admin}"
 
 command="/usr/bin/dagu"
-command_args="start-all"
+command_args="start-all --config $dagu_config_file --dags $dagu_dags_dir"
 
 depend() {
 	need net
@@ -15,7 +22,7 @@ depend() {
 }
 
 start_pre() {
-	checkpath -d -m 0755 -o $command_user /etc/dagu.d
-	checkpath -d -m 0755 -o $command_user /var/lib/dagu
-	checkpath -d -m 0755 -o $command_user /var/log/dagu
+	checkpath -d -m 0775 -o $command_user $dagu_dags_dir
+	checkpath -d -m 0775 -o $command_user /var/lib/dagu
+	checkpath -d -m 0775 -o $command_user /var/log/dagu
 }

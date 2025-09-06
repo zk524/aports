@@ -1,0 +1,34 @@
+.TH SETU-GLPIP 8 "August 2025" "GLPI 10.0.19" "System Administration Utilities"
+.SH NAME
+setup-glpi \- Interactive setup wizard for GLPI on Alpine Linux
+.SH SYNOPSIS
+.B setup-glpi
+.SH DESCRIPTION
+The \fBsetup-glpi\fR script provides an interactive wizard to help administrators configure a new GLPI installation on Alpine Linux. It guides the user through setting up directories, permissions, web server and PHP-FPM configuration, similar to the \fBalpine-setup\fR utility.
+
+.SH USAGE
+Run \fBsetup-glpi\fR as root after installing the GLPI package. The script will prompt for:
+.IP \[bu] 2
+GLPI web root directory (default: /var/www/glpi)
+.IP \[bu]
+GLPI data directory (default: /var/lib/glpi)
+.IP \[bu]
+User and group to run GLPI (default: glpi)
+.IP \[bu]
+Web server to use (apache2, nginx, or none)
+.IP \[bu]
+PHP version to use (default: php84)
+
+The script will then create the necessary directories, set permissions, and copy configuration files for the chosen web server and PHP-FPM.
+
+.SH FILES
+.TP
+\fI/usr/bin/setup-glpi\fR
+The GLPI setup wizard script.
+
+.SH SEE ALSO
+.BR glpi (8),
+.BR glpi-console (1)
+
+.SH AUTHOR
+Damien ABOS <damien.abos@gmail.com>

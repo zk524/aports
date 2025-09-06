@@ -1,0 +1,107 @@
+#!/bin/sh
+
+# Interactive GLPI setup script for Alpine Linux
+
+echo "Welcome to the GLPI setup wizard."
+echo "This script will help you configure your GLPI installation."
+echo
+
+# Ask for web root
+read -p "Enter the web root directory for GLPI [/var/www/glpi]: " GLPI_WEBROOT
+GLPI_WEBROOT=${GLPI_WEBROOT:-/var/www/glpi}
+
+# Ask for GLPI data directory
+read -p "Enter the data directory for GLPI files [/var/lib/glpi]: " GLPI_DATADIR
+GLPI_DATADIR=${GLPI_DATADIR:-/var/lib/glpi}
+
+# Ask for user and group
+read -p "Enter the user to run GLPI [glpi]: " GLPI_USER
+GLPI_USER=${GLPI_USER:-glpi}
+read -p "Enter the group to run GLPI [glpi]: " GLPI_GROUP
+GLPI_GROUP=${GLPI_GROUP:-glpi}
+
+# Ask for web server
+echo "Which web server do you want to use?"
+select WEBSERVER in "apache2" "nginx" "none"; do
+    case $WEBSERVER in
+        apache2|nginx|none) break;;
+        *) echo "Please select 1, 2, or 3.";;
+    esac
+done
+
+# Ask for PHP version
+read -p "Enter the PHP version to use [php84]: " PHP_VER
+PHP_VER=${PHP_VER:-php84}
+
+echo
+echo "Summary of your choices:"
+echo "  Web root:      $GLPI_WEBROOT"
+echo "  Data dir:      $GLPI_DATADIR"
+echo "  User:          $GLPI_USER"
+echo "  Group:         $GLPI_GROUP"
+echo "  Web server:    $WEBSERVER"
+echo "  PHP version:   $PHP_VER"
+echo
+
+read -p "Proceed with these settings? [Y/n]: " CONFIRM
+CONFIRM=${CONFIRM:-Y}
+if [ "$CONFIRM" != "Y" ] && [ "$CONFIRM" != "y" ]; then
+    echo "Setup aborted."
+    exit 1
+fi
+
+# Create directories
+echo "Creating directories..."
+install -d -o "$GLPI_USER" -g "$GLPI_GROUP" -m 775 "$GLPI_WEBROOT"
+install -d -o "$GLPI_USER" -g "$GLPI_GROUP" -m 775 "$GLPI_DATADIR"
+
+# Set permissions for important subdirs
+for d in files config plugins marketplace; do
+    install -d -o "$GLPI_USER" -g "$GLPI_GROUP" -m 775 "$GLPI_WEBROOT/$d"
+done
+
+
+# Install the appropriate GLPI subpackage for the selected web server
+if [ "$WEBSERVER" = "apache2" ]; then
+    echo "Installing glpi-apache2 subpackage..."
+    apk add --no-cache glpi-apache2
+elif [ "$WEBSERVER" = "nginx" ]; then
+    echo "Installing glpi-nginx subpackage..."
+    apk add --no-cache glpi-nginx
+else
+    echo "No web server selected. Installing glpi-fpm subpackage only..."
+    apk add --no-cache glpi-fpm
+fi
+
+# Web server configuration
+if [ "$WEBSERVER" = "apache2" ]; then
+    CONF_FILE="/etc/apache2/conf.d/glpi-apache2.conf"
+    if [ -f "$CONF_FILE" ]; then
+        echo "Apache2 configuration already exists: $CONF_FILE"
+    else
+        echo "Copying Apache2 configuration..."
+        cp /usr/share/doc/glpi/glpi-apache2.conf "$CONF_FILE"
+    fi
+elif [ "$WEBSERVER" = "nginx" ]; then
+    CONF_FILE="/etc/nginx/http.d/glpi-nginx.conf"
+    if [ -f "$CONF_FILE" ]; then
+        echo "Nginx configuration already exists: $CONF_FILE"
+    else
+        echo "Copying Nginx configuration..."
+        cp /usr/share/doc/glpi/glpi-nginx.conf "$CONF_FILE"
+    fi
+else
+    echo "Skipping web server configuration."
+fi
+
+# PHP-FPM configuration
+PHP_FPM_CONF="/etc/$PHP_VER/conf.d/02-glpi.ini"
+if [ ! -f "$PHP_FPM_CONF" ]; then
+    echo "Copying PHP-FPM configuration..."
+    cp /usr/share/doc/glpi/glpi-fpm.ini "$PHP_FPM_CONF"
+fi
+
+echo
+echo "GLPI setup is complete!"
+echo "You can now finish the installation by accessing GLPI in your web browser."
+echo

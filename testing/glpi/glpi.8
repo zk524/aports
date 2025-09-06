@@ -1,0 +1,48 @@
+.TH GLPI 8 "August 2025" "GLPI 10.0.19" "System Administrator's Manual"
+.SH NAME
+glpi \- Install and configure GLPI on Alpine Linux
+.SH SYNOPSIS
+.B glpi
+.SH DESCRIPTION
+GLPI (Free IT Asset Management) is a web application for IT asset management and helpdesk. This package installs GLPI into \fI/var/www/glpi\fR and prepares the environment required for its operation on Alpine Linux.
+
+.SH INSTALLATION
+Installing the GLPI package performs the following actions:
+.IP \[bu] 2
+Creates required directories (\fI/var/www/glpi\fR, \fI/var/lib/glpi\fR).
+.IP \[bu]
+Installs the GLPI application files.
+.IP \[bu]
+Deploys the \fIglpi-console\fR script to \fI/usr/bin\fR.
+.IP \[bu]
+Sets permissions to allow GLPI to write to the \fIfiles\fR, \fIconfig\fR, \fIplugins\fR, and \fImarketplace\fR directories.
+.IP \[bu]
+Removes the web installer script \fIinstall.php\fR for security reasons.
+
+.SH CONFIGURATION
+After installation, configure your web server (Apache or Nginx) and PHP-FPM using the configuration files provided in the \fIglpi-apache2\fR, \fIglpi-nginx\fR, and \fIglpi-fpm\fR subpackages.
+
+Then, access GLPI through your web browser to complete the setup via the web interface.
+
+.SH FILES
+.TP
+\fI/var/www/glpi\fR
+Main GLPI application directory.
+.TP
+\fI/usr/bin/glpi-console\fR
+GLPI CLI console.
+.TP
+\fI/etc/apache2/conf.d/glpi-apache2.conf\fR
+Apache2 configuration for GLPI.
+.TP
+\fI/etc/nginx/http.d/glpi-nginx.conf\fR
+Nginx configuration for GLPI.
+.TP
+\fI/etc/php84/conf.d/glpi-fpm.ini\fR
+PHP-FPM configuration for GLPI.
+
+.SH AUTHOR
+Damien ABOS <damien.abos@gmail.com>
+
+.SH SEE ALSO
+.BR glpi-console (1)

@@ -1,6 +1,7 @@
 # Contributor: Sergei Lukin <sergej.lukin@gmail.com>
 # Contributor: Łukasz Jendrysik <scadu@yandex.com>
 # Contributor: Jakub Skrzypnik <j.skrzypnik@openmailbox.org>
+# Contributor: Gil Pedersen <gpdev@gpost.dk>
 # Maintainer: FintasticMan <finlay.neon.kid@gmail.com>
 pkgname=jellyfin-ffmpeg
 pkgver=7.0.2_p7
@@ -16,10 +17,12 @@ makedepends="
 	chromaprint-dev
 	coreutils
 	dav1d-dev
+	fdk-aac-dev
 	fontconfig-dev
 	freetype-dev
 	fribidi-dev
 	gmp-dev
+	harfbuzz-dev
 	imlib2-dev
 	lame-dev
 	libass-dev
@@ -32,6 +35,7 @@ makedepends="
 	libvorbis-dev
 	libvpx-dev
 	libwebp-dev
+	libxml2-dev
 	nasm
 	opencl-dev
 	openssl-dev
@@ -55,8 +59,8 @@ builddir="$srcdir/$pkgname-$_pkgver"
 
 case "$CARCH" in
 x86_64)
-	makedepends="$makedepends onevpl-dev"
-	_onevpl="--enable-libvpl"
+	makedepends="$makedepends onevpl-dev svt-av1-dev"
+	_arch_config="--enable-libvpl --enable-libsvtav1"
 	;;
 esac
 
@@ -77,45 +81,50 @@ build() {
 		--prefix="/usr/lib/$pkgname" \
 		--target-os=linux \
 		--extra-version=Jellyfin \
+		--enable-rpath \
 		--disable-doc \
 		--disable-ffplay \
-		--disable-librtmp \
+		--disable-ptx-compression \
+		--disable-static \
 		--disable-libxcb \
 		--disable-sdl2 \
-		--disable-shared \
 		--disable-xlib \
-		--enable-chromaprint \
-		--enable-gmp \
+		--enable-lto=auto \
 		--enable-gpl \
-		--enable-libass \
-		--enable-libbluray \
-		--enable-libdav1d \
+		--enable-version3 \
+		--enable-shared \
+		--enable-gmp \
+		--enable-openssl \
+		--enable-chromaprint \
+		--enable-opencl \
 		--enable-libdrm \
-		--enable-libfontconfig \
+		--enable-libxml2 \
+		--enable-libass \
 		--enable-libfreetype \
 		--enable-libfribidi \
+		--enable-libfontconfig \
+		--enable-libharfbuzz \
+		--enable-libbluray \
 		--enable-libmp3lame \
-		--enable-libopenmpt \
 		--enable-libopus \
-		--enable-libplacebo \
-		--enable-libshaderc \
 		--enable-libtheora \
 		--enable-libvorbis \
-		--enable-libvpx \
+		--enable-libopenmpt \
+		--enable-libdav1d \
 		--enable-libwebp \
+		--enable-libvpx \
 		--enable-libx264 \
 		--enable-libx265 \
 		--enable-libzimg \
-		--enable-opencl \
-		--enable-openssl \
+		--enable-libfdk-aac \
+		--enable-libshaderc \
+		--enable-libplacebo \
+		--enable-vulkan \
+		--enable-vaapi \
 		--enable-pic \
 		--enable-pthreads \
-		--enable-static \
-		--enable-vaapi \
-		--enable-version3 \
-		--enable-vulkan \
 		$asm \
-		$_onevpl
+		$_arch_config
 	make
 }
 
@@ -129,7 +138,22 @@ check() {
 }
 
 package() {
+	local internal
+
 	install -Dm755 -t "$pkgdir/usr/lib/$pkgname" ffmpeg ffprobe
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libavcodec/libavcodec.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libavdevice/libavdevice.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libavfilter/libavfilter.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libavformat/libavformat.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libavutil/libavutil.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libpostproc/libpostproc.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libswresample/libswresample.so.*
+	install -Dm644 -t "$pkgdir/usr/lib/$pkgname/lib" libswscale/libswscale.so.*
+
+	# Hide internal libs
+
+	internal=$(find "$pkgdir/usr/lib/$pkgname/lib" -type f -exec basename {} \;)
+	somask="$somask $internal"
 }
 
 sha512sums="

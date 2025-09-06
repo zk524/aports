@@ -1,7 +1,7 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=krita
-pkgver=5.2.9
-pkgrel=3
+pkgver=5.2.11
+pkgrel=0
 # armhf blocked by qt5-qtdeclarative -> ki18n
 # s390x blocked by libjxl
 arch="all !armhf !s390x"
@@ -96,7 +96,7 @@ python() {
 }
 
 sha512sums="
-fc4af177371afad307a77047ceff3fb793c76e6e8b64382acd950bd89d6fc12fb2c83d76d8e8d0482860add178b8fe70ac05b1db4bc0e17520be53b9190e4bfe  krita-5.2.9.tar.xz
+1c388380f366118452f33ca028b4fb9ea134d8cd519f7878cc61d4f4fbd1d0fe51894fee9be8d4bed864d5d0df546986fae05812c9e25011516ce1000dd221de  krita-5.2.11.tar.xz
 246d632e1afa28fbb1ef0abe1a62433694465e2f3918f8d110a7ad6ff99b27d94a7d91dbf061eccd6ecfa72d8dbff87c1b2696effcb482045aaf3f89169e9a0e  0001-fftw-use-pkgconfig.patch
 2c5635550a397b57b3fb1d009bee41af78a0ab1bc77acdd6339933f44f9da4eee7d657efb1ba253238ac94cad99330b245b03c90af9f46fc269c43cde0691b8a  20-sip-6.8.patch
 "

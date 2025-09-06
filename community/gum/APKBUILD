@@ -1,8 +1,8 @@
 # Contributor: Grigory Kirillov <txgk@bk.ru>
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=gum
-pkgver=0.16.2
-pkgrel=3
+pkgver=0.17.0
+pkgrel=0
 pkgdesc="Highly configurable utilities for writing interactive shell scripts"
 url="https://github.com/charmbracelet/gum"
 arch="all"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-6067d1a332acd98372e4669c633b64f3c4f1b8e76232c737353eed9dc7210c535f182990050b365f6caae008857ceb29ddd5b22fc26c31670cadf7aabae5f82b  gum-0.16.2.tar.gz
+6c0697d42a6335f18ec0a6305d6d544b5b99f2b2239dfb8daff1eb18589d55a48d68dfe085642112349187d4464eb9d33f5517179c2cfb4469343272bc4874a7  gum-0.17.0.tar.gz
 "

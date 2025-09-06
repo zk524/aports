@@ -1,0 +1,30 @@
+# Contributor: Kurt H Maier <khm@sciops.net>
+# Maintainer: Kurt H Maier <khm@sciops.net>
+pkgname=wlock
+pkgver=1.0
+pkgrel=0
+pkgdesc="Itsy-bitsy session locker"
+url="https://codeberg.org/sewn/wlock"
+arch="all"
+pkggroups="shadow"
+license="GPL-3.0-or-later"
+makedepends="wayland-protocols wayland-dev libxkbcommon-dev"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/sewn/wlock/archive/$pkgver.tar.gz"
+builddir="$srcdir/$pkgname"
+options="suid !check"
+	# uses sgid instead of PAM to validate passwd
+	# no tests in source, so no check phase in packaging
+
+build() {
+	make
+}
+
+package() {
+	install -D -m2755 -g shadow "$builddir"/wlock "$pkgdir"/usr/bin/wlock
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+4517bf46e90e0f92e1357a3b4d8d92a42519ec32622244e0574825c18069710808c487e351ff742bc2ce6ae30bae9535babe19bd6b8657d636331121a5ec12e7  wlock-1.0.tar.gz
+"

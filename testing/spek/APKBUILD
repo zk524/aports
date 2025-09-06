@@ -1,0 +1,34 @@
+# Contributor: Tuan Anh Tran <me@tuananh.org>
+# Maintainer: Tuan Anh Tran <me@tuananh.org>
+pkgname=spek
+pkgver=0.8.5
+pkgrel=0
+pkgdesc="Acoustic spectrum analyser"
+url="https://github.com/alexkay/spek"
+arch="all"
+license="GPL-3.0-only"
+makedepends="
+	autoconf
+	automake
+	ffmpeg-dev
+	gettext-dev
+	libtool
+	wxwidgets-dev
+	xz
+"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/alexkay/spek/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/spek-$pkgver/"
+
+build() {
+	./autogen.sh --with-wx-config=/usr/bin/wx-config --prefix=/usr
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+5bfad61cbf3d1d520575971c52ed12b9fcb34469a3dee342ed5b45129b9378a2d4f64bbb75d23422e8792f4527388b79652145a9e11bd1110b16a657bf2c7959  spek-0.8.5.tar.gz
+"

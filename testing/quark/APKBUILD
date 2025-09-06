@@ -23,10 +23,8 @@ build() {
 }
 
 package() {
-	install -c -m 555 -D quark-mon -t "$pkgdir"/usr/bin
-	install -c -m 555 -D quark-test -t "$pkgdir"/usr/bin
-	install -c -m 444 -D quark-mon.8 -t "$pkgdir"/usr/share/man/man8
-	install -c -m 444 -D quark-test.8 -t "$pkgdir"/usr/share/man/man8
+	install -c -m 755 -D quark-mon quark-test -t "$pkgdir"/usr/bin
+	install -c -m 644 -D quark-mon.8 quark-test.8 -t "$pkgdir"/usr/share/man/man8
 }
 
 sha512sums="

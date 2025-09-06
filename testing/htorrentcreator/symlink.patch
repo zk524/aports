@@ -1,0 +1,11 @@
+--- a/Makefile
++++ b/Makefile
+@@ -17,7 +17,7 @@ run: $(OUTPUT)
+ install: $(OUTPUT)
+ 	mkdir -p $(BINDIR)
+ 	cp hTorrentCreator $(BINDIR)
+-	ln -snf $(BINDIR)/hTorrentCreator $(BINDIR)/htc
++	ln -snf hTorrentCreator $(BINDIR)/htc
+ 
+ uninstall: $(OUTPUT)
+ 	rm -f $(BINDIR)/hTorrentCreator

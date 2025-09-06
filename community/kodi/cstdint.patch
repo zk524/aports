@@ -1,0 +1,44 @@
+Patch-Source: https://github.com/xbmc/xbmc/pull/27127
+---
+From c3bd35a00b6d4798e0a0ada14c69a0cb431254b0 Mon Sep 17 00:00:00 2001
+From: Achill Gilgenast <achill@achill.org>
+Date: Tue, 19 Aug 2025 10:17:33 +0200
+Subject: [PATCH] [dbwrappers] Add missing include <cstdint>
+
+Build fails with Kodi 22.0a1 on Alpine Linux edge (musl, gcc 15.2.0)
+because it is missing the cstdint header for int64_t.
+
+	In file included from /builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/utils/DatabaseUtils.cpp:11:
+	In file included from /builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/dbwrappers/dataset.h:15:
+	/builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/dbwrappers/qry_dat.h:62:5: error: unknown type name 'int64_t'
+	   62 |     int64_t int64_value;
+	      |     ^
+	/builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/dbwrappers/qry_dat.h:79:30: error: unknown type name 'int64_t'
+	   79 |   explicit field_value(const int64_t i);
+	      |                              ^
+	/builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/dbwrappers/qry_dat.h:97:3: error: unknown type name 'int64_t'
+	   97 |   int64_t get_asInt64() const;
+	      |   ^
+	/builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/dbwrappers/qry_dat.h:149:32: error: unknown type name 'int64_t'
+	  149 |   field_value& operator=(const int64_t i)
+	      |                                ^
+	/builds/alpine/aports/community/kodi/src/xbmc-22.0a1-Piers/xbmc/dbwrappers/qry_dat.h:234:26: error: unknown type name 'int64_t'
+	  234 |   void set_asInt64(const int64_t i);
+	      |                          ^
+	5 errors generated.
+---
+ xbmc/dbwrappers/qry_dat.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/xbmc/dbwrappers/qry_dat.h b/xbmc/dbwrappers/qry_dat.h
+index 50a8777e96810..08144a20219c1 100644
+--- a/xbmc/dbwrappers/qry_dat.h
++++ b/xbmc/dbwrappers/qry_dat.h
+@@ -12,6 +12,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <ostream>
+ #include <string>
+ #include <string_view>

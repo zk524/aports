@@ -11,21 +11,21 @@ makedepends="openssl-dev cargo cargo-auditable"
 source="$pkgname-$pkgver.tar.gz::https://github.com/michalszmidt/hctl/archive/refs/tags/$pkgver.tar.gz"
 
 prepare() {
-	default_prepare
+        default_prepare
 
-	cargo fetch --target="$CTARGET" --locked
+        cargo fetch --target="$CTARGET" --locked
 }
 
 build() {
-	cargo auditable build -p hctl --frozen --release
+        cargo auditable build -p hctl --frozen --release
 }
 
 check() {
-	cargo test --release --frozen
+        cargo test --release --frozen
 }
 
 package() {
-	install -Dm755 target/release/hctl -t "$pkgdir"/usr/bin/
+        install -Dm755 target/release/hctl -t "$pkgdir"/usr/bin/
 }
 
 sha512sums="

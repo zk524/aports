@@ -1,14 +1,151 @@
 # Configuration for /etc/init.d/dagu
 
-# User (and group) to run dagu as.
+# User (and group) to run dagu as
 #command_user="<USER>[:<GROUP>]"
 
-# File with dagu configuration.
-#dagu_config="/etc/dagu/dagu.yaml"
-
-# Directory with DAGs.
-#dagu_dags="/etc/dagu/dags"
-
-# Comment out to bind port below 1024
-# with non-root user.
+# Comment out to bind port below 1024 with non-root user
 #capabilities="^cap_net_bind_service"
+
+# Server host (default: 127.0.0.1)
+DAGU_HOST=127.0.0.1
+
+# Server port (default: 8080)
+DAGU_PORT=8080
+
+# Base path for reverse proxy
+#DAGU_BASE_PATH=
+
+# Server timezone
+#DAGU_TZ=
+
+# Enable debug mode
+DAGU_DEBUG=false
+
+# Log format (text/json)
+DAGU_LOG_FORMAT=text
+
+# Run without UI
+DAGU_HEADLESS=false
+
+# Show only today's status
+DAGU_LATEST_STATUS_TODAY=false
+
+# Skip automatic creation of example DAGs (default: false)
+DAGU_SKIP_EXAMPLES=true
+
+# Set all directories to this path
+#DAGU_HOME=
+
+# DAG definitions
+DAGU_DAGS_DIR=/etc/dagu.d
+
+# Default working directory
+#DAGU_WORK_DIR=
+
+# Log files
+DAGU_LOG_DIR=/var/log/dagu
+
+# Application data
+DAGU_DATA_DIR=/var/lib/dagu/data
+
+# Suspend flags
+DAGU_SUSPEND_FLAGS_DIR=/var/lib/dagu/suspend
+
+# Admin logs
+DAGU_ADMIN_LOG_DIR=/var/log/dagu/admin
+
+# Base configuration
+DAGU_BASE_CONFIG=/etc/dagu/base.yaml
+
+# DAG run data directory
+#DAGU_DAG_RUNS_DIR=
+
+# Queue data directory
+#DAGU_QUEUE_DIR=
+
+# Process data directory
+#DAGU_PROC_DIR=
+
+# Service registry data directory
+#DAGU_SERVICE_REGISTRY_DIR=
+
+# Path to Dagu executable
+#DAGU_EXECUTABLE=
+
+# Basic auth username
+#DAGU_AUTH_BASIC_USERNAME=
+
+# Basic auth password
+#DAGU_AUTH_BASIC_PASSWORD=
+
+# API token for token authentication
+#DAGU_AUTH_TOKEN=
+
+# SSL certificate
+#DAGU_CERT_FILE=
+
+# SSL key
+#DAGU_KEY_FILE=
+
+# Nav bar color
+#DAGU_UI_NAVBAR_COLOR=
+
+# Nav bar title
+#DAGU_UI_NAVBAR_TITLE=
+
+# Log encoding
+#DAGU_UI_LOG_ENCODING_CHARSET=
+
+# Dashboard limit
+#DAGU_UI_MAX_DASHBOARD_PAGE_LIMIT=
+
+# Default DAGs page sort field
+#DAGU_UI_DAGS_SORT_FIELD=
+
+# Default DAGs page sort order
+#DAGU_UI_DAGS_SORT_ORDER=
+
+# Enable queue system (default: true)
+#DAGU_QUEUE_ENABLED=
+
+# Coordinator bind address (default: 127.0.0.1)
+#DAGU_COORDINATOR_HOST=
+
+# Coordinator gRPC port (default: 50055)
+#DAGU_COORDINATOR_PORT=
+
+# Worker instance ID (default: hostname@PID)
+#DAGU_WORKER_ID=
+
+# Max concurrent task executions (default: 100)
+#DAGU_WORKER_MAX_ACTIVE_RUNS=
+
+# Worker labels (format: key1=value1,key2=value2)
+#DAGU_WORKER_LABELS=
+
+# Use insecure connection (default: true)
+#DAGU_PEER_INSECURE=
+
+# TLS certificate for peer connections
+#DAGU_PEER_CERT_FILE=
+
+# TLS key for peer connections
+#DAGU_PEER_KEY_FILE=
+
+# CA certificate for peer verification (mTLS)
+#DAGU_PEER_CLIENT_CA_FILE=
+
+# Skip TLS certificate verification
+#DAGU_PEER_SKIP_TLS_VERIFY=
+
+# Health check server port (default: 8090)
+#DAGU_SCHEDULER_PORT=
+
+# Time after which a scheduler lock is considered stale (default: 30s)
+#DAGU_SCHEDULER_LOCK_STALE_THRESHOLD=
+
+# Interval between lock acquisition attempts (default: 5s)
+#DAGU_SCHEDULER_LOCK_RETRY_INTERVAL=
+
+# Interval for detecting zombie DAG runs (default: 45s, 0 to disable)
+#DAGU_SCHEDULER_ZOMBIE_DETECTION_INTERVAL=

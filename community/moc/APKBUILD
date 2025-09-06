@@ -2,7 +2,7 @@
 # Maintainer: ScrumpyJack <scrumpyjack@st.ilet.to>
 pkgname=moc
 pkgver=2.5.2
-pkgrel=4
+pkgrel=5
 pkgdesc="MOC is a console audio player"
 url="http://moc.daper.net/"
 arch="all"
@@ -12,7 +12,7 @@ makedepends="
 	autoconf
 	curl-dev
 	faad2-dev
-	ffmpeg4-dev
+	ffmpeg-dev
 	file
 	jack-dev
 	libmad-dev

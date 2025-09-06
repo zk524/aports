@@ -1,7 +1,8 @@
 # Maintainer: Hoang Nguyen <folliekazetani@protonmail.com>
 pkgname=vector
-pkgver=0.49.0
-pkgrel=1
+pkgver=0.49.0_git20250903
+_gitrev=06f2f59c2dd836c3de98ba22181cd2eb1c0a70bd # vdev-v0.1.0
+pkgrel=0
 pkgdesc="High-performance observability data pipeline"
 url="https://vector.dev/"
 # loongarch64: blocked by nix
@@ -25,13 +26,16 @@ makedepends="
 checkdepends="bash cargo-nextest tzdata"
 subpackages="$pkgname-doc $pkgname-openrc"
 install="$pkgname.pre-install"
+# source="
+# 	$pkgname-$pkgver.tar.gz::https://github.com/vectordotdev/vector/archive/refs/tags/v$pkgver.tar.gz
 source="
-	$pkgname-$pkgver.tar.gz::https://github.com/vectordotdev/vector/archive/refs/tags/v$pkgver.tar.gz
+	$pkgname-$pkgver.tar.gz::https://github.com/vectordotdev/vector/archive/$_gitrev.tar.gz
 	use-system-libs.patch
 	vector.initd
 	vector.confd
 	logrotate
 	"
+builddir="$srcdir"/vector-$_gitrev
 
 export OPENSSL_NO_VENDOR=1
 
@@ -88,8 +92,8 @@ package() {
 }
 
 sha512sums="
-3bbf3c899c2b9f5604a0a094b7ac4d74ece3bba7309b1c4ada319220e15103a90490389d76c395bdbad850017d6765d8c0651da7eecd38f3e430c66e37d1fb07  vector-0.49.0.tar.gz
-15d8868bf7f7194a2b4cce4a31eeac0015e72efcd7bb3ef22b54c9e9525d4d3dce8e72945bea00c6269b2c3f9d22ef6327785c7671e5d5ef44c9a0b39a33b636  use-system-libs.patch
+f3fba2abfa960b4464370d8bfacdd3dc1e066348ad46651299b8df3b0b7ef15f752f266766e869d5a1ea85cc3c08f0664cd4670da20d25cacd55dae1b8df4054  vector-0.49.0_git20250903.tar.gz
+beb50e5cf7e16a14662129820059baa054e2a686ec1a42a984f494fae449757b80cfc09b64668e02271015a31253d6b95f97140c949762c3d710824f27da3f98  use-system-libs.patch
 806c2594d9d7b4bf1c24436a3982801a37ec3d8784acb97266eb7111fe35d8d05a64ef981100bd8aa35a71ad9c7c98de634428f696bded31993143ca572b6757  vector.initd
 313f79e65e61754e8a611f8221d7c0cf36ee5af6f30aeff720924e64bb03d7f44c54fc31ae20926c354905f61df347830a7cba0c37afd41c1f59a25c52fa6f06  vector.confd
 62db792de321655558bdb23ab9b3a7b35b84de445657011d88e8205cce4a926ff7b20f5304ec48fa646f1f259ad2136eceb5a377c4520071799da502eeff7592  logrotate

@@ -71,12 +71,6 @@ tools() {
 	mv "$pkgdir"/usr/bin "$subpkgdir"/usr/
 }
 
-static() {
-	pkgdesc="Static libraries for ldns"
-	mkdir -p "$subpkgdir"/usr/lib
-	mv "$pkgdir"/usr/lib/*.a "$subpkgdir"/usr/lib/
-}
-
 sha512sums="
 3ee26289bfe587fb19b7441412917d7f7197e385cc1329847c1ae707650709a1ccef7d4a645bd85da89effad95715ec868ef312e5f336d3fe2e408e8109439fc  ldns-1.8.4.tar.gz
 "

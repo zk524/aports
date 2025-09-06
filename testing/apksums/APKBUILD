@@ -1,0 +1,41 @@
+# Contributor: Jonathan Styles <github@jontyms.com>
+# Maintainer: Jonathan Styles <github@jontyms.com>
+pkgname=apksums
+pkgver=0.1.2
+pkgrel=0
+#_pkgreal is used by apkbuild-pypi to find modules at PyPI
+_pkgreal=apksums
+pkgdesc="Verify checksums of installed APK package files"
+url="https://pypi.org/project/apksums/"
+arch="noarch"
+license="MIT"
+depends="python3"
+makedepends="py3-gpep517 py3-setuptools py3-wheel py3-hatchling"
+checkdepends="py3-pytest"
+source="https://files.pythonhosted.org/packages/source/a/apksums/apksums-$pkgver.tar.gz"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+	python3 -m venv --clear --without-pip --system-site-packages venv
+	./venv/bin/python3 -m installer \
+		.dist/*.whl
+
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages venv
+	./venv/bin/python3 -m installer \
+		.dist/*.whl
+	./venv/bin/python3 -m pytest
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+}
+
+sha512sums="
+97c8d1bfe420064c3b12bb3878eb25d62ba52685f3db0177771d050ce4a00ef638b4cd1b60642363252aa6cb9903f685cb5d01bbbaff7418009ca57d6c973957  apksums-0.1.2.tar.gz
+"

@@ -1,0 +1,242 @@
+From ae84b81bfaa40dfd241e25d5dc8fae6cf9585c68 Mon Sep 17 00:00:00 2001
+From: Michael Orlitzky <michael@orlitzky.com>
+Date: Mon, 15 Jul 2024 07:16:25 -0400
+Subject: [PATCH] Backport GH-14962 to stable versions
+
+Alpine CI regularly fails because of the sorting order of these tests.
+See https://github.com/php/php-src/pull/14962#issuecomment-2498799881
+
+Closes GH-16950.
+---
+ ext/dba/tests/dba_flatfile.phpt         |  4 ++--
+ ext/dba/tests/dba_gdbm.phpt             | 12 ++++++------
+ ext/dba/tests/dba_inifile.phpt          |  8 ++++----
+ ext/dba/tests/dba_ndbm.phpt             | 12 ++++++------
+ ext/dba/tests/dba_qdbm.phpt             |  8 ++++----
+ ext/dba/tests/dba_tcadb.phpt            |  4 ++--
+ ext/dba/tests/setup/setup_dba_tests.inc | 19 +++++++++++++++++--
+ ext/pgsql/tests/80_bug14383.phpt        |  4 ++--
+ 8 files changed, 43 insertions(+), 28 deletions(-)
+
+diff --git a/ext/dba/tests/dba_flatfile.phpt b/ext/dba/tests/dba_flatfile.phpt
+index 9d989e9069b8d..1061e0a00e704 100644
+--- a/ext/dba/tests/dba_flatfile.phpt
++++ b/ext/dba/tests/dba_flatfile.phpt
+@@ -29,12 +29,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
+ key4: Another Content String
+ key5: The last content string
+ name9: Content String 9
+-[key10]name10: Content String 10
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+diff --git a/ext/dba/tests/dba_gdbm.phpt b/ext/dba/tests/dba_gdbm.phpt
+index 480e6063b5212..7e3d43a4f1709 100644
+--- a/ext/dba/tests/dba_gdbm.phpt
++++ b/ext/dba/tests/dba_gdbm.phpt
+@@ -35,12 +35,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
+-key4: Another Content String
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
++key4: Another Content String
+ key5: The last content string
+-[key10]name10: Content String 10
+ name9: Content String 9
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+@@ -81,12 +81,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
+-key4: Another Content String
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
++key4: Another Content String
+ key5: The last content string
+-[key10]name10: Content String 10
+ name9: Content String 9
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+diff --git a/ext/dba/tests/dba_inifile.phpt b/ext/dba/tests/dba_inifile.phpt
+index 06be22c085ff6..c2d638a747581 100644
+--- a/ext/dba/tests/dba_inifile.phpt
++++ b/ext/dba/tests/dba_inifile.phpt
+@@ -30,14 +30,14 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
+-key2: Content String 2
+-key4: Another Content String
+-key5: The last content string
+-name9: Content String 9
+ [key10]: 
+ [key10]name10: Content String 10
+ [key30]: 
+ [key30]name30: Content String 30
++key2: Content String 2
++key4: Another Content String
++key5: The last content string
++name9: Content String 9
+ Total keys: 8
+ Key 1 exists? N
+ Key 2 exists? Y
+diff --git a/ext/dba/tests/dba_ndbm.phpt b/ext/dba/tests/dba_ndbm.phpt
+index dcf368ff1a36f..730932966cfef 100644
+--- a/ext/dba/tests/dba_ndbm.phpt
++++ b/ext/dba/tests/dba_ndbm.phpt
+@@ -36,12 +36,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
+-key4: Another Content String
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
++key4: Another Content String
+ key5: The last content string
+-[key10]name10: Content String 10
+ name9: Content String 9
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+@@ -82,12 +82,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
+-key4: Another Content String
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
++key4: Another Content String
+ key5: The last content string
+-[key10]name10: Content String 10
+ name9: Content String 9
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+diff --git a/ext/dba/tests/dba_qdbm.phpt b/ext/dba/tests/dba_qdbm.phpt
+index e4321e7dc3750..fad229c368ee4 100644
+--- a/ext/dba/tests/dba_qdbm.phpt
++++ b/ext/dba/tests/dba_qdbm.phpt
+@@ -35,12 +35,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
+ key4: Another Content String
+ key5: The last content string
+ name9: Content String 9
+-[key10]name10: Content String 10
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+@@ -81,12 +81,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
+ key4: Another Content String
+ key5: The last content string
+ name9: Content String 9
+-[key10]name10: Content String 10
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+diff --git a/ext/dba/tests/dba_tcadb.phpt b/ext/dba/tests/dba_tcadb.phpt
+index 6459c5b372ea7..24900073c9cc8 100644
+--- a/ext/dba/tests/dba_tcadb.phpt
++++ b/ext/dba/tests/dba_tcadb.phpt
+@@ -30,12 +30,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
+ key4: Another Content String
+ key5: The last content string
+ name9: Content String 9
+-[key10]name10: Content String 10
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y
+diff --git a/ext/dba/tests/setup/setup_dba_tests.inc b/ext/dba/tests/setup/setup_dba_tests.inc
+index 3e79ed3d54ce1..2ffac29e69782 100644
+--- a/ext/dba/tests/setup/setup_dba_tests.inc
++++ b/ext/dba/tests/setup/setup_dba_tests.inc
+@@ -102,14 +102,29 @@ function run_standard_tests_ex(string $handler, string $name, LockFlag $lock, bo
+     echo 'Try to remove key 1 again', \PHP_EOL;
+     var_dump(dba_delete("key1", $db_writer));
+ 
+-    // Fetch data
++    // Fetch and sort data. We sort to guarantee that the output is
++    // consistent across invocations and architectures. When iterating
++    // with firstkey() and nextkey(), several engines (GDBM, LMDB,
++    // QDBM) make no promise about the iteration order. Others (TCADB,
++    // DBM) explicitly state that the order is arbitrary. With GDBM at
++    // least, the order appears platform-dependent -- we have a report
++    // in Github issue 14786. GDBM's own test suite sorts this output,
++    // suggesting that sorting is a reasonable workaround for the issue.
++    $output = [];
++
+     $key = dba_firstkey($db_writer);
+     $total_keys = 0;
+     while ($key) {
+-        echo $key, ': ', dba_fetch($key, $db_writer), \PHP_EOL;
++        $output[] = $key . ': ' . dba_fetch($key, $db_writer) . \PHP_EOL;
+         $key = dba_nextkey($db_writer);
+         $total_keys++;
+     }
++
++    sort($output, SORT_STRING);
++    foreach ($output as $line) {
++        echo $line;
++    }
++
+     echo 'Total keys: ', $total_keys, \PHP_EOL;
+     for ($i = 1; $i < 6; $i++) {
+         echo "Key $i exists? ", dba_exists("key$i", $db_writer) ? 'Y' : 'N', \PHP_EOL;
+diff --git a/ext/pgsql/tests/80_bug14383.phpt b/ext/pgsql/tests/80_bug14383.phpt
+index f17af830d7041..c14b2f414d9bd 100644
+--- a/ext/pgsql/tests/80_bug14383.phpt
++++ b/ext/pgsql/tests/80_bug14383.phpt
+@@ -39,12 +39,12 @@ bool(true)
+ bool(true)
+ Try to remove key 1 again
+ bool(false)
++[key10]name10: Content String 10
++[key30]name30: Content String 30
+ key2: Content String 2
+ key4: Another Content String
+ key5: The last content string
+ name9: Content String 9
+-[key10]name10: Content String 10
+-[key30]name30: Content String 30
+ Total keys: 6
+ Key 1 exists? N
+ Key 2 exists? Y

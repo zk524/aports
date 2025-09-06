@@ -1,6 +1,6 @@
 # Maintainer: Hoang Nguyen <folliekazetani@protonmail.com>
 pkgname=litecli
-pkgver=1.15.0
+pkgver=1.16.0
 pkgrel=0
 pkgdesc="CLI for SQLite Databases with auto-completion and syntax highlighting"
 url="https://litecli.com/"
@@ -36,5 +36,5 @@ package() {
 }
 
 sha512sums="
-246457b522b00e8b33a88297a35e4bd5c8860363cc8b3faaf380e9c91dd07ff2fcf49f8de1efb7cabe211717ae78d1833022580cac1caa3658351866fdc94f2a  litecli-1.15.0.tar.gz
+c6427e82d96d458f6e67d2735af0599af26f8000fb3b72f56438f7d0b66781dcb8a930a54e74ded40a5eabce35b387e8f801fd81a046e5896a6997d9161c3c79  litecli-1.16.0.tar.gz
 "

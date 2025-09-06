@@ -1,0 +1,52 @@
+# Contributor: Kévin Guignard <alpinelinux@melua.fr>
+# Maintainer: Kévin Guignard <alpinelinux@melua.fr>
+pkgname=dagu
+pkgver=1.22.2
+pkgrel=0
+pkgdesc="Lightweight, powerful workflow engine with Web UI"
+url="https://dagu.cloud"
+arch="all"
+license="GPL-3.0-only"
+makedepends="go"
+install="$pkgname.pre-install"
+subpackages="$pkgname-openrc"
+options="net"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/dagu-org/dagu/archive/v$pkgver.tar.gz
+	dagu.initd
+	dagu.confd
+	dagu.yaml
+	base.yaml
+	example.yaml
+	"
+
+export BUILDVER="$pkgver ($CBUILD)"
+
+build() {
+	go build -v -ldflags="-X 'main.version=$BUILDVER'" -o bin/$pkgname ./cmd	
+}
+
+check() {
+	if [ "$(./bin/$pkgname version 2>&1)" != "$BUILDVER" ]; then
+		error "$pkgname built with invalid version"
+		return 1
+	fi
+}
+
+package() {
+	install -m755 -D bin/$pkgname "$pkgdir"/usr/bin/$pkgname 	
+	install -m755 -D "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.yaml -t "$pkgdir"/etc/$pkgname
+	install -m644 -D "$srcdir"/base.yaml -t "$pkgdir"/etc/$pkgname
+	install -m644 -D "$srcdir"/example.yaml -t "$pkgdir"/etc/$pkgname/dags
+}
+
+sha512sums="
+872458688f09e14a796642983a6ae2eca21f8916a94120706f77876198e2a7a71c66e4741b9f88f559643a10412de953b3aa1dc16633e811c0b01a4c682573ea  dagu-1.22.2.tar.gz
+6c960d81d4dc148ea317bdd3ea4314da596392b49c5cd7a1dd4ae1aa28e3c773f3aabc2632aa50af2bc0dce8627ee514c1d7f274c76bba2a4dbb2374195daaee  dagu.initd
+a3a74034c4dbe568bb3062c905e9c2fa8572a59352cd060b680231cc4c8dd2ac8f7f0120492172f51a957edcd86cd68899cb3f537d71a035e846ccf45e168e50  dagu.confd
+5fd118270e419e82e96c45b887cf6a7e16d796af9c004478e1bcc586b1af7f8d09c41457837b133df26e17c30ff393f79a332db4939c4d595a98ee287e32252d  dagu.yaml
+51f568adf6d0ec820654cd19ef6bfa63a71e209ae55b7d00d326b473dac6c2d2813a43f392f102de51a26ac45ed8f5bf6b5f608c05f93ee82633974e772c461b  base.yaml
+a321855475033752653bcc6723ee5da9db614e08816b79687225da73f3648bdb2704a3fdfc6483cbec06ef59e21cc8c9d828a7707f799419b94f92961c877491  example.yaml
+"

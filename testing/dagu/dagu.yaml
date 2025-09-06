@@ -1,0 +1,13 @@
+# Server
+host: "127.0.0.1"
+port: 8080
+debug: false
+logFormat: "text"
+
+# Directories
+paths:
+  baseConfig: "/etc/dagu/base.yaml"
+  dataDir: "/var/lib/dagu/data"
+  suspendFlagsDir: "/var/lib/dagu/suspend"
+  logDir: "/var/log/dagu"
+  adminLogsDir: "/var/log/dagu/admin"

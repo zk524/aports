@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name="Dagu"
+description="Lightweight, powerful workflow engine with Web UI"
+
+: ${dagu_config:="/etc/dagu/dagu.yaml"}
+: ${dagu_dags:="/etc/dagu/dags"}
+: ${command_user:="dagu:dagu"}
+
+command="/usr/bin/dagu"
+command_args="start-all --config $dagu_config --dags $dagu_dags"
+
+depend() {
+	need net
+	after firewall
+}
+
+start_pre() {
+	checkpath -d -m 0775 -o $command_user $dagu_dags
+	checkpath -d -m 0775 -o $command_user /var/lib/dagu
+	checkpath -d -m 0775 -o $command_user /var/log/dagu
+}

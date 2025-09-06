@@ -1,0 +1,14 @@
+# Configuration for /etc/init.d/dagu
+
+# User (and group) to run dagu as.
+#command_user="<USER>[:<GROUP>]"
+
+# File with dagu configuration.
+#dagu_config="/etc/dagu/dagu.yaml"
+
+# Directory with DAGs.
+#dagu_dags="/etc/dagu/dags"
+
+# Comment out to bind port below 1024
+# with non-root user.
+#capabilities="^cap_net_bind_service"

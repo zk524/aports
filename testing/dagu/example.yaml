@@ -1,0 +1,3 @@
+steps:
+  - echo "Hello from Dagu!"
+  - echo "Running step 2"

@@ -1,0 +1,13 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 2014952..ef680ce 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -675,7 +675,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "mdbook-i18n-helpers"
+-version = "0.3.4"
++version = "0.3.5"
+ dependencies = [
+  "anyhow",
+  "chrono",

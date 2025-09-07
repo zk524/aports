@@ -1,0 +1,46 @@
+# Maintainer: crapStone <me@crapstone.dev>
+pkgname=mdbook-i18n-helpers
+pkgver=0.3.5
+pkgrel=0
+pkgdesc="Plugins for a mdbook translation workflow based on Gettext."
+url="https://github.com/google/mdbook-i18n-helpers"
+arch="all"
+license="Apache-2.0"
+depends="mdbook"
+makedepends="cargo cargo-auditable"
+options="net" # cargo fetch
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/google/mdbook-i18n-helpers/archive/refs/tags/mdbook-i18n-helpers-$pkgver.tar.gz
+	update-lock.patch
+"
+
+# yes that's correct
+builddir="$srcdir/$pkgname-$pkgname-$pkgver"
+
+prepare() {
+	default_prepare
+
+	cd i18n-helpers
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cd i18n-helpers
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cd i18n-helpers
+	cargo test --frozen
+}
+
+package() {
+	install -D -m755 target/release/mdbook-xgettext -t "$pkgdir"/usr/bin/
+	install -D -m755 target/release/mdbook-gettext -t "$pkgdir"/usr/bin/
+	install -D -m755 target/release/mdbook-i18n-normalize -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+14b82c1fabe1c3029d9702009a59795c8993217a75b206d28eb2e948ef1c3876f3269e0cfd57a34a99e4dd67667b315e929edde614deacae0939787e5e7b903f  mdbook-i18n-helpers-0.3.5.tar.gz
+b72eb959bbf806ee411b76504d2ee18a30db18dc5d233f3770618c9593b2c1748a602e70bb5032d6ec8a4493a3a86f1c28902458432df5d88680585a3fb8dd5e  update-lock.patch
+"

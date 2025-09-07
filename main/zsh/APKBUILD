@@ -13,7 +13,7 @@
 #
 pkgname=zsh
 pkgver=5.9
-pkgrel=5
+pkgrel=6
 pkgdesc="Very advanced and programmable command interpreter (shell)"
 url="https://www.zsh.org/"
 arch="all"
@@ -119,6 +119,7 @@ build() {
 		--enable-cap \
 		--enable-multibyte \
 		--enable-function-subdirs \
+		--enable-fndir=/usr/share/zsh/functions \
 		--enable-zsh-secure-free \
 		--sysconfdir=/etc \
 		--with-tcsetpgrp \

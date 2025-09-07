@@ -1,7 +1,7 @@
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=onevpl
-pkgver=2023.3.1
-pkgrel=2
+pkgver=2.15.0
+pkgrel=0
 pkgdesc="oneAPI Video Processing Library"
 url="https://github.com/oneapi-src/oneVPL"
 arch="x86_64" # only x86_64 supported
@@ -35,12 +35,6 @@ package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
 
-dev() {
-	default_dev
-
-	amove usr/share
-}
-
 sha512sums="
-a555a7c589e22fdf6c52a33ef524864f26d7d21548b03c2c6199cfab8e5ab565f84567348bb3fe50392354677e020429712351e8595c2e610d0e0c403851b8dc  onevpl-2023.3.1.tar.gz
+daf7c3d5722515ed2346e252b39f117c0c3f24f6c80ab3492bd7107b2207c49c0d2247cc2d043298f43045884247024a109c698751fcbd88eb5ab54a4122c26d  onevpl-2.15.0.tar.gz
 "

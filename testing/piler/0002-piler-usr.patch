@@ -1,0 +1,29 @@
+diff --git a/contrib/webserver/piler-apache-2.x.conf b/contrib/webserver/piler-apache-2.x.conf
+index 62f061a..a77112f 100644
+--- a/contrib/webserver/piler-apache-2.x.conf
++++ b/contrib/webserver/piler-apache-2.x.conf
+@@ -1,9 +1,9 @@
+ <VirtualHost *:80>
+     ServerName HOSTNAME
+ 
+-    DocumentRoot "/var/piler/www"
++    DocumentRoot "/usr/share/webapps/piler"
+ 
+-    <Directory /var/piler/www>
++    <Directory /usr/share/webapps/piler>
+        Require all granted
+ 
+        AllowOverride all
+diff --git a/contrib/webserver/piler-nginx.conf b/contrib/webserver/piler-nginx.conf
+index 84b1708..7e72452 100644
+--- a/contrib/webserver/piler-nginx.conf
++++ b/contrib/webserver/piler-nginx.conf
+@@ -2,7 +2,7 @@
+ server {
+         server_name PILER_HOST;
+ 
+-        root /var/piler/www;
++        root /usr/share/webapps/piler;
+ 
+         server_tokens off;
+ 

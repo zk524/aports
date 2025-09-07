@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qxmpp
-pkgver=1.10.4
+pkgver=1.11.2
 pkgrel=0
 pkgdesc="Cross-platform C++ XMPP client and server library"
 arch="all"
@@ -41,5 +41,5 @@ package() {
 }
 
 sha512sums="
-7d6511b24fb5f05c3853f5419ed6c36fea8a7089675999c95cefd970af42a3e251f1c95428b857c6fc630ee017095ebf1c6ac21641559b847aa303896f748294  qxmpp-v1.10.4.tar.gz
+7496342789084f853c4ce7dc5757bedb9f18f356083e3169463dd8abe4dc6418a191b6077152c0c6d03c61a3d557b171106d9892494294e9e4a9c47e2d9df2ee  qxmpp-v1.11.2.tar.gz
 "

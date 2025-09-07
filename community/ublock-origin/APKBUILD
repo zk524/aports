@@ -1,7 +1,7 @@
 # Contributor: Hugo Osvaldo Barrera <hugo@whynothugo.nl>
 maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
 pkgname=ublock-origin
-pkgver=1.65.0
+pkgver=1.66.0
 pkgrel=0
 # to update asset commits, run `abuild _update_assets`
 pkgdesc="Efficient blocker add-on for Firefox"
@@ -12,8 +12,8 @@ makedepends="git python3 zip bash strip-nondeterminism"
 # Upstream's build script pulls latest master for uAssets.
 # Pin the versions we use so we don't need network at built-time and the package
 # sources are deterministic.
-_uassets_master=f8123e2b06c29665c21a409f203cbbf5b649b041
-_uassets_ghpages=d2e0281a27ff1188ad04be341e946fb487a58ef3
+_uassets_master=c2754425a2e61cf729c4cfa8acde91a1640faf40
+_uassets_ghpages=d904dc962440edae0bf37f51149af3f37eb6cb03
 source="ublock-origin-$pkgver.tar.gz::https://github.com/gorhill/uBlock/archive/refs/tags/$pkgver.tar.gz
 	uAssets-$_uassets_master.tar.gz::https://github.com/uBlockOrigin/uAssets/archive/$_uassets_master.tar.gz
 	uAssets-$_uassets_ghpages.tar.gz::https://github.com/uBlockOrigin/uAssets/archive/$_uassets_ghpages.tar.gz
@@ -51,7 +51,7 @@ package() {
 }
 
 sha512sums="
-61c80541eb646872ce3e70228134ccc3e33bea433f1005c43e3d2ccd26377a539f593ab244437f4679baace0482b975e626c0649f5fbdec80df6045a88fc3d7d  ublock-origin-1.65.0.tar.gz
-0b5dd15807f4fe216616b9e2f9b18bd60025c640fbbbe66c2c46ae60bcba628c3f94ce0aacd8367883f82e0ba1e41c8e285c832372cf47948b7cf9adc1cf4b6c  uAssets-f8123e2b06c29665c21a409f203cbbf5b649b041.tar.gz
-77de8f00702938ec30c0d8a9d4d821c240a44ac1159c2b0262c2f827ae03f3a912025fe8233318a47cee159a01f49f2976fe3598938935f21facf99700185b19  uAssets-d2e0281a27ff1188ad04be341e946fb487a58ef3.tar.gz
+7259b3ba55a74bfa7e70edeb584e84d0bdd15574fd8a66443b219d43ebe216acb3c0dc90543c5e0a31f19d187e7b5e7b42ddf1111b43f2707081b5e69935f95d  ublock-origin-1.66.0.tar.gz
+c54d7826037e99bdd69dafc80b03e363d5536d7946ddb738eefd71f4ba9d2def322c7ec7e1802ccef7beba89dab64cbfd7511a83d20c4065a56074321c7f92f0  uAssets-c2754425a2e61cf729c4cfa8acde91a1640faf40.tar.gz
+182a5a63a475af20f65fbfebf63797c657f6165b402c7e2a507cbd20bcd5ab486213f5bdf0bcf3f579e902ea423bcbe6857bb6a0a66106f85787834d2869880f  uAssets-d904dc962440edae0bf37f51149af3f37eb6cb03.tar.gz
 "

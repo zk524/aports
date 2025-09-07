@@ -3,7 +3,7 @@
 # Maintainer: Mark Riedesel <mark+alpine@klowner.com>
 pkgname=openexr
 pkgver=3.3.2
-pkgrel=0
+pkgrel=1
 _commit_images=d45a2d5a890d6963b94479c7a644440068c37dd2
 pkgdesc="High dynamic-range image file format library"
 url="https://www.openexr.com/"

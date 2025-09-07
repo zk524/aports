@@ -1,7 +1,7 @@
 # Contributor: Alex Yam <alex@alexyam.com>
 maintainer="Krassy Boykinov <kboykinov@teamcentrixx.com>"
 pkgname=imath
-pkgver=3.1.12
+pkgver=3.2.1
 pkgrel=0
 pkgdesc="C++ and python library of 2D and 3D vector, matrix, and math operations for computer graphics"
 url="https://github.com/AcademySoftwareFoundation/Imath"
@@ -24,13 +24,6 @@ builddir=$srcdir/Imath-$pkgver
 # openexr used to vendor an imath that was system installed
 replaces="openexr"
 
-case "$CARCH" in
-x86)
-	options="$options !check"
-	# fails a bunch of tests
-	;;
-esac
-
 build() {
 	CFLAGS="$CFLAGS -O2 -flto=auto" \
 	CXXFLAGS="$CXXFLAGS -O2 -flto=auto" \
@@ -44,7 +37,11 @@ build() {
 }
 
 check() {
-	cd build && ctest
+	case "$CARCH" in
+	# FIXME https://github.com/AcademySoftwareFoundation/Imath/issues/515
+	aarch64|loongarch64|ppc64le|riscv64|s390x) ctest --test-dir build -E PyImath.PyImathTest ;;
+	*) ctest --test-dir build ;;
+	esac
 }
 
 package() {
@@ -59,5 +56,5 @@ _py() {
 }
 
 sha512sums="
-32628dfcacb610310b81ffe017a66215cf5fb84c2e0a6ac8c94a68c048be3d2b97eb57965dd253770184d5824cce1e5440b8eefb2834666b273b3193ff108343  imath-3.1.12.tar.gz
+907e9f8bec38695c44c713b507aa321989635d39c0be7a611ce914f72ec334b3a5cb794f2f7dcca058f47e636d8b20ec3506f4d246cac2ef3461ca8e1a47a292  imath-3.2.1.tar.gz
 "

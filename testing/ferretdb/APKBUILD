@@ -1,0 +1,33 @@
+# Contributor: zhenruyan <admin@pkold.com>
+# Maintainer: zhenruyan <admin@pkold.com>
+pkgname=ferretdb
+pkgver=2.5.0
+pkgrel=1
+pkgdesc="A truly Open Source MongoDB alternative"
+url="https://github.com/FerretDB/FerretDB"
+license="Apache License 2.0"
+arch="all"
+options="!check chmod-clean"
+makedepends="go"
+source="$pkgname-$pkgver.tar.gz::https://github.com/FerretDB/FerretDB/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/FerretDB-2.5.0"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+export GO111MODULE=on
+export GOPROXY=https://goproxy.cn
+export GOTOOLCHAIN=auto
+
+
+build() {
+	go build -trimpath -o dist/ferretdb cmd/ferretdb/main.go cmd/ferretdb/gomaxprocs.go cmd/ferretdb/readyz.go
+}
+
+package() {
+	install -Dm755 dist/ferretdb "$pkgdir"/usr/bin/ferretdb
+}
+
+sha512sums="
+4084e4943d9a769f57d3797267efd145cdddb58bd82af5e42d03527c5e3896cc638bfe45f5502488ce405d7a1d4fecd980625b680f7dc1a4a08dc390cfd79e53  ferretdb-2.5.0.tar.gz
+"

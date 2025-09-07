@@ -33,13 +33,10 @@ prepare() {
 
 	default_prepare
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided zstd.
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		zstd = { rustc-link-lib = ["zstd"] }
 	EOF
 

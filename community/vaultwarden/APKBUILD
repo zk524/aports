@@ -45,11 +45,9 @@ prepare() {
 
 	mkdir -p .cargo
 
-	local target="$(rustc -vV | sed -n 's/host: //p')"
-
 	# Build against system-provided mimalloc.
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		mimalloc = { rustc-link-lib = ["mimalloc"] }
 	EOF
 

@@ -24,13 +24,10 @@ prepare() {
 
 	cargo fetch --target="$CTARGET" --locked
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided libs
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		bzip2 = { rustc-link-lib = ["bz2"] }
 		zstd = { rustc-link-lib = ["zstd"] }
 	EOF

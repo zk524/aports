@@ -188,13 +188,10 @@ prepare() {
 		v8 = { path = "vendor/v8" }
 	EOF
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# NOTE: zstd "pkg-config" feature doesn't work, so we have to do this.
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		z-ng = { rustc-link-lib = ["z-ng"], rustc-cfg = ["zng"] }
 		zstd = { rustc-link-lib = ["zstd"] }
 	EOF

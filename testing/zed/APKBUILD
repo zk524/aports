@@ -62,13 +62,10 @@ export ZED_UPDATE_EXPLANATION="Please use apk to update zed"
 prepare() {
 	default_prepare
 
-	# Rust target triple.
-	local target="$(rustc -vV | sed -n 's/host: //p')"
-
 	# Build against system-provided libs.
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		git2 = { rustc-link-lib = ["git2"] }
 		mimalloc = { rustc-link-lib = ["mimalloc"] }
 		zstd = { rustc-link-lib = ["zstd"] }

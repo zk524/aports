@@ -28,13 +28,10 @@ export RUSTONIG_DYNAMIC_LIBONIG=1
 prepare() {
 	default_prepare
 
-	# Rust target triple.
-	local target=$(rustc -vV | sed -n 's/host: //p')
-
 	# Build against system-provided libs
 	mkdir -p .cargo
 	cat >> .cargo/config.toml <<-EOF
-		[target.$target]
+		[target.$CHOST]
 		git2 = { rustc-link-lib = ["git2"] }
 		z-ng = { rustc-link-lib = ["z-ng"], rustc-cfg = ["zng"] }
 	EOF

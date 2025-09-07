@@ -1,0 +1,6 @@
+#!/bin/sh
+
+addgroup -S tomcat10 2>/dev/null
+adduser -S -D -H -h /usr/share/tomcat10 -s /sbin/nologin -G tomcat10 -g tomcat10 tomcat10 2>/dev/null
+
+exit 0

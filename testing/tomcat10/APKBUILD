@@ -1,0 +1,109 @@
+# Contributor: Dario Caroprese <dario.caroprese@protonmail.com>
+# Maintainer: Dario Caroprese <dario.caroprese@protonmail.com>
+pkgname=tomcat10
+pkgver=10.1.44
+pkgrel=0
+pkgdesc="Apache Tomcat Servlet/JSP container"
+url="https://tomcat.apache.org/"
+arch="all !x86 !armv7 !armhf !riscv64"
+license="Apache-2.0"
+pkgusers="tomcat10"
+pkggroups="tomcat10"
+makedepends="openjdk17 apache-ant"
+checkdepends="openjdk17-jre-headless"
+install="$pkgname.pre-install"
+subpackages="$pkgname-doc $pkgname-examples $pkgname-admin $pkgname-openrc"
+source=" https://dlcdn.apache.org/tomcat/tomcat-10/v$pkgver/src/apache-tomcat-$pkgver-src.tar.gz tomcat10.initd"
+builddir="$srcdir/apache-tomcat-$pkgver-src"
+
+# Build Tomcat using Ant
+build() {
+	ant
+}
+
+check() {
+	# Make scripts executable
+	chmod +x "$builddir"/output/build/bin/*.sh
+	# Run the config test
+	"$builddir"/output/build/bin/configtest.sh
+}
+
+# Package main files
+package() {
+	# Create main directories
+	install -dm 755 "$pkgdir"/usr/share/$pkgname
+	install -dm 755 "$pkgdir"/usr/share/java/$pkgname
+
+	# Copy binaries
+	cp -dr "$builddir"/output/build/bin "$pkgdir"/usr/share/$pkgname
+	chmod 644 "$pkgdir"/usr/share/$pkgname/bin/*.jar
+	chmod 755 "$pkgdir"/usr/share/$pkgname/bin/*.sh
+	rm -f "$pkgdir"/usr/share/$pkgname/bin/*.bat
+
+	# Copy libraries
+	cp -dr "$builddir"/output/build/lib/* "$pkgdir"/usr/share/java/$pkgname
+	ln -s /usr/share/java/$pkgname "$pkgdir"/usr/share/$pkgname/lib
+
+	# Logs
+	install -dm 775 -o $pkgusers -g $pkggroups "$pkgdir"/var/log/$pkgname
+	ln -s /var/log/$pkgname "$pkgdir"/usr/share/$pkgname/logs
+
+	# Configuration
+	install -dm 755 "$pkgdir"/etc/$pkgname
+	cp -dr "$builddir"/output/build/conf/* "$pkgdir"/etc/$pkgname
+	chmod 640 "$pkgdir"/etc/$pkgname/*
+	chown root:$pkggroups "$pkgdir"/etc/$pkgname/*
+	install -dm 755 "$pkgdir"/etc/$pkgname/Catalina
+	ln -s /etc/$pkgname "$pkgdir"/usr/share/$pkgname/conf
+
+	# Webapps
+	install -dm 755 "$pkgdir"/var/lib/$pkgname
+	cp -dr "$builddir"/output/build/webapps "$pkgdir"/var/lib/$pkgname
+	chown -R $pkgusers:$pkggroups "$pkgdir"/var/lib/$pkgname
+	chmod 775 "$pkgdir"/var/lib/$pkgname/webapps
+	ln -s /var/lib/$pkgname/webapps "$pkgdir"/usr/share/$pkgname/webapps
+
+	# Work and Temp directories
+	install -dm 755 -o $pkgusers -g $pkggroups "$pkgdir"/var/cache/$pkgname
+	ln -s /tmp "$pkgdir"/usr/share/$pkgname/temp
+	ln -s /var/cache/$pkgname "$pkgdir"/usr/share/$pkgname/work
+
+	# OpenRC
+	install -d "$pkgdir"/etc/init.d
+	install -m 755 "$srcdir"/tomcat10.initd "$pkgdir"/etc/init.d/tomcat10
+}
+
+# Subpackage: Documentation
+doc() {
+	pkgdesc="$pkgdesc (documentation)"
+	depends="$pkgname"
+	_copy_webapp docs
+}
+
+# Examples webapp
+examples() {
+	pkgdesc="$pkgdesc (example web applications)"
+	depends="$pkgname"
+	_copy_webapp examples
+}
+
+# Admin webapps: manager + host-manager
+admin() {
+	pkgdesc="$pkgdesc (admin web applications)"
+	depends="$pkgname"
+	_copy_webapp manager
+	_copy_webapp host-manager
+}
+
+_copy_webapp() {
+	mkdir -p "$subpkgdir"/var/lib/$pkgname/webapps
+	mv "$pkgdir"/var/lib/$pkgname/webapps/$1 "$subpkgdir"/var/lib/$pkgname/webapps/
+	chown -R $pkgusers:$pkggroups "$subpkgdir"/var/lib/$pkgname/webapps/$1
+	chmod -R 775 "$subpkgdir"/var/lib/$pkgname/webapps/$1
+}
+
+# Checksum for source archive
+sha512sums="
+0d2ce14aa7547696c3b05fbb9d8aeef91f10b607c466bdaa6c785203170ac90589ebb8e4f021a16d2041866e74e33bfd83a3e34ded27888e7ffc08379bded624  apache-tomcat-10.1.44-src.tar.gz
+546e4123e64686ed81107bd7618f72ba6dd0ca731d1bc9449de2b4b53e5c85742656f5d7f9c831d065d48da7f31710640cea236d0e814a4358f10c36d19ab7ad  tomcat10.initd
+"

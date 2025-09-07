@@ -1,0 +1,67 @@
+# Contributor: Robert Eckelmann <longnoserob@gmail.com>
+# Maintainer: Robert Eckelmann <longnoserob@gmail.com>
+pkgname=linux-gpib
+pkgver=4.3.6
+pkgrel=0
+pkgdesc="Linux GPIB userland applications"
+url="https://sourceforge.net/projects/linux-gpib"
+arch="all"
+license="GPL-2.0-only"
+depends="fxload
+	python3
+	py3-setuptools"
+makedepends="docbook-xml linux-headers pkgconf python3-dev py3-setuptools"
+subpackages="$pkgname-dev $pkgname-doc"
+source="https://downloads.sourceforge.net/linux-gpib/linux-gpib-$pkgver.tar.gz
+	0000-ptread.patch
+	0001-libgpib-pc.patch
+	0002-usb-fxloader.patch
+	linux-gpib.post-install
+	linux-gpib.post-upgrade"
+
+# We are only-interested in the user part, as kernels >6.13 have the GPIB drivers included
+builddir="$srcdir/$pkgname-user-$pkgver"
+
+# As the source archive contains two sub-archives, we need to over-ride the defaul unpack() here:
+unpack() {
+	default_unpack
+	tar -xzf "$srcdir/$pkgname-$pkgver/$pkgname-user-$pkgver".tar.gz -C "$srcdir"
+}
+
+
+build() {
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--datadir=/lib/firmware \
+		--localstatedir=/var \
+		--disable-guile-binding \
+		--disable-perl-binding \
+		--disable-php-binding \
+		--disable-tcl-binding \
+		--enable-documentation
+
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	install -Dm644 doc/gpib_version.txt doc/linux-gpib.pdf \
+		doc/linux-gpib.sgml -t "$pkgdir"/usr/share/doc/$pkgname/
+}
+
+sha512sums="
+a8005c71bfddb854ecbe4df0a81530e44378150242508b10df58c61d039c6d329020407608e31f1ef360de0c83169e76b793c032256e732d229bfd2da4cbaa35  linux-gpib-4.3.6.tar.gz
+cf5425194921ecd12c19d8774a2d5b058e4e467dea77f569fcec3b655be27efeb4dad776926e56c6caefca24b245224d2567e9b0c89a618ffd312b7779da0f26  0000-ptread.patch
+de365fa798f3d4661297ebec66a0a89b402031430fc32992a5d5f5d583096e724d7d9a250d1c2877d188220515afa35bb1b2f55051c1c07426027f00e65ea17f  0001-libgpib-pc.patch
+12413895ba25b222cbaa3ea44c28be9830c3b6961754df00b303d5b691b826c4ad78c2cabcf89f31fc3e795f5748b8e679dcc1cb88e924d914483a6aad80611a  0002-usb-fxloader.patch
+89fe8ae9e43d5264f45965b7d5431abe0a80f39661e77cb5808054454402cb496c48611d0a26b270bef61542785a4463b54d7e87a15a85c4ef595de9d01e2068  linux-gpib.post-install
+89fe8ae9e43d5264f45965b7d5431abe0a80f39661e77cb5808054454402cb496c48611d0a26b270bef61542785a4463b54d7e87a15a85c4ef595de9d01e2068  linux-gpib.post-upgrade
+"

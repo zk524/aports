@@ -1,0 +1,33 @@
+#!/sbin/openrc-run
+
+name="tomcat10"
+description="Apache Tomcat Servlet/JSP container"
+command="/usr/share/tomcat10/bin/catalina.sh"
+command_args="run"
+command_background="yes"
+pidfile="/var/run/$name.pid"
+user="tomcat10"
+group="tomcat10"
+
+# Environment variables
+export CATALINA_HOME="/usr/share/tomcat10"
+export CATALINA_BASE="/usr/share/tomcat10"
+
+depend() {
+    need net
+    use logger
+}
+
+start() {
+    ebegin "Starting $name"
+    start-stop-daemon --start --user "$user:$group" \
+        --make-pidfile --pidfile "$pidfile" \
+        --background --exec $command -- $command_args
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping $name"
+    start-stop-daemon --stop --pidfile "$pidfile" --retry 20
+    eend $?
+}

@@ -1,0 +1,28 @@
+# Configuration for /etc/init.d/dagu
+
+# User (and group) to run dagu as.
+#command_user="<USER>[:<GROUP>]"
+
+# Comment out to bind port below 1024 with non-root user.
+#capabilities="^cap_net_bind_service"
+
+# File with dagu configuration.
+#dagu_config_file="/etc/dagu.yaml"
+
+# Directory with DAGs.
+#dagu_dags_dir="/etc/conf.d"
+
+# Directory with application data.
+#dagu_data_dir="/var/lib/dagu/data"
+
+# Default working directory
+#dagu_work_dir="/var/lib/dagu/work"
+
+# Directory with suspend flags.
+#dagu_suspend_flags_dir="/var/lib/dagu/suspend"
+
+# Directory with log files.
+#dagu_log_dir="/var/log/dagu"
+
+# Directory with admin logs.
+#dagu_admin_log_dir="/var/log/dagu/admin"

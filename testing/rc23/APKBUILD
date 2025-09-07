@@ -1,0 +1,33 @@
+# Maintainer: Mira Lubberink <m@lubberink.net>
+pkgname=rc23
+pkgver=2.0.4
+pkgrel=0
+pkgdesc="A reimplementation of the Plan 9 rc shell"
+url="https://codeberg.org/rc23/rc23"
+arch="all"
+license="Zlib"
+install="$pkgname.post-install $pkgname.post-upgrade $pkgname.pre-deinstall"
+depends="readline"
+makedepends="readline-dev"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/rc23/rc23/archive/v$pkgver.tar.gz"
+builddir="$srcdir/rc23/"
+
+build() {
+	mkdir .git
+	touch .git/index	
+
+	make EDIT="readline" RC_ADDON=1
+}
+
+check() {
+	make check
+}
+
+package() {
+	make PREFIX="$pkgdir/usr" install
+}
+
+sha512sums="
+7761608520f7fe4c3e759a8a6a409675647428576811f5403bfd5fb76a343d330d13987ad7e144e7bd73befa1fc83905c2686136385e302e851ba2e91a6f97dd  rc23-2.0.4.tar.gz
+"

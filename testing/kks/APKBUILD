@@ -1,0 +1,34 @@
+# Maintainer: Willow Barraco <contact@willowbarraco.fr>
+pkgname=kks
+pkgver=0.3.8
+pkgrel=0
+pkgdesc="Handy Kakoune companion"
+url="https://github.com/kkga/kks"
+arch="all"
+license="Unlicence"
+makedepends="go"
+subpackages="$pkgname-scripts"
+options="net !check" # no testsuite
+source="$pkgname-$pkgver.tar.gz::https://github.com/kkga/kks/archive/refs/tags/v$pkgver.tar.gz"
+
+export GOCACHE="${GOCACHE:-"$srcdir/go-cache"}"
+export GOTMPDIR="${GOTMPDIR:-"$srcdir"}"
+export GOMODCACHE="${GOMODCACHE:-"$srcdir/go"}"
+
+build() {
+	go build -v .
+}
+
+package() {
+	install -D -m755 kks "$pkgdir"/usr/bin/kks
+	install -D -m755 -t "$pkgdir"/usr/bin scripts/*
+}
+
+scripts() {
+	depends="fd fzf ripgrep"
+	amove /usr/bin/kks-*
+}
+
+sha512sums="
+e8699542cf767a30681a3fcb33b1581d858eeb838930ae833e27302fa4b15689c7cbb9a2236903abf782c20124e51728847a904cb747b9ac10805f5e521289eb  kks-0.3.8.tar.gz
+"

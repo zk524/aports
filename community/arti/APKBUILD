@@ -2,21 +2,24 @@
 # Maintainer: omni <omni+alpine@hack.org>
 pkgname=arti
 pkgver=1.4.5
-pkgrel=0
+pkgrel=1
 pkgdesc="An implementation of Tor, in Rust"
 url="https://tpo.pages.torproject.net/core/arti/"
 license="GPL-3.0-or-later"
 # s390x: merlin crate doesn't support big-endian targets
 arch="all !s390x"
 makedepends="cargo openssl-dev>3 sqlite-dev zstd-dev xz-dev cargo-auditable"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc $pkgname-openrc"
 source="$pkgname-$pkgver.tar.gz::https://gitlab.torproject.org/tpo/core/arti/-/archive/arti-v$pkgver/arti-arti-v$pkgver.tar.gz
 	32b_arti_example_config_patch
 	disable_system_time_conversion_patch
 	disable-access_symlink-test.patch
 	no-journald-build.patch
+	arti.initd
 	"
 builddir="$srcdir/$pkgname-$pkgname-v$pkgver"
+install="$pkgname.pre-install"
+pkgusers="arti"
 
 case "$CARCH" in
 arm*|loongarch64|ppc64le|riscv64|x86)
@@ -76,6 +79,10 @@ package() {
 		doc/SupportPolicy.md \
 		CHANGELOG.md README.md \
 		crates/arti/src/arti-example-config.toml
+	install -dm755 -o "$pkgusers" \
+		"$pkgdir"/var/lib/"$pkgname"
+	install -Dm755 "$srcdir"/"$pkgname".initd \
+		"$pkgdir"/etc/init.d/"$pkgname"
 }
 
 sha512sums="
@@ -84,4 +91,5 @@ ab76f0d4f293fa31db368d32a2f72a7cdc1b9180b28dc998690246c385f3416e76af6139113f7fb4
 a68d7c99b1d1d73b4c8c725d7c69486bb732b3b2c28df339f2e56f842c17417aa89fe8ba41f1017bd4c7e550e1e8a2b886071b8f96c0e2863855698cb8767810  disable_system_time_conversion_patch
 a95b255dfd3624d4d543def7da88c266b2451dd78290bfd02f6ec7bc125c2aef17f89f8dc20b93b630cb886b8397d3c6980704a93efe5697381f0c6c6ac7d47c  disable-access_symlink-test.patch
 beb28ae96d01978c26112cd72d745fb146daeca73183350530e7bbd2a8c7bbc7ca89ca8c31e37fad2e6ac41043fe6524ac6c860e2bea3beaa90265daf3c0f8b1  no-journald-build.patch
+2987215713e813b8e9ae3b3155a40d59ea15e695ffc147addf1d011434182c03e18aee4de5ec0986fbf379df5548571f3bfd768d8b61eaf1417686d9c619d90c  arti.initd
 "

@@ -1,0 +1,41 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+maintainer="Angelo Verlain <hey@vixalien.com>"
+pkgname=rescrobbled
+pkgver=0.8.0
+pkgrel=0
+pkgdesc="MPRIS music scrobbler daemon"
+url="https://github.com/InputUsername/rescrobbled"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="cargo cargo-auditable"
+subpackages="$pkgname-openrc"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/InputUsername/rescrobbled/archive/refs/tags/v$pkgver.tar.gz
+	rescrobbled.initd
+	"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dvm755 target/release/rescrobbled \
+		-t "$pkgdir"/usr/bin/
+
+	install -m755 -D "$srcdir"/$pkgname.initd "$pkgdir"/etc/user/init.d/$pkgname
+}
+
+sha512sums="
+2e54180b6a29266878109aaff77e0266973aa5c68f186864aeaeae6fe7b870867204d1efeaf28726c3aee53dc4841c1917cc2552d80facd82ac680302cffc4ae  rescrobbled-0.8.0.tar.gz
+a4264dfdeafafcf5c16f3decedc31d617c4e7ef047afbddddd45f204964d5490212f9e467b8e36ff85955489ec75a480aed415576211e2db4f6932e7b2b20944  rescrobbled.initd
+"

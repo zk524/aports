@@ -1,0 +1,10 @@
+#!/sbin/openrc-run
+
+name="rescrobbled"
+supervisor="supervise-daemon"
+command="/usr/bin/rescrobbled"
+
+depend() {
+	need dbus
+	after firewall
+}

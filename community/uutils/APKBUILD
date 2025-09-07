@@ -23,14 +23,25 @@ subpackages="$pkgname-doc
 	$pkgname-coreutils-uptime:_uptime
 	$pkgname-coreutils-uptime-doc:_uptime_doc
 	"
-source="$pkgname-coreutils-$pkgver.tar.gz::https://github.com/uutils/coreutils/archive/$pkgver.tar.gz"
+source="$pkgname-coreutils-$pkgver.tar.gz::https://github.com/uutils/coreutils/archive/$pkgver.tar.gz
+	downgrade-libc_patch
+	"
 builddir="$srcdir/coreutils-$pkgver"
-options="!check" # package builder file descriptor issues
+options="net !check" # package builder file descriptor issues
 
 export RUSTONIG_DYNAMIC_LIBONIG=1
 
 prepare() {
 	default_prepare
+
+	case "$CARCH" in
+	loongarch64)
+		# until a new rustix is tagged
+		# https://github.com/bytecodealliance/rustix/issues/1496
+		# https://github.com/bytecodealliance/rustix/pull/1503
+		patch Cargo.lock "$srcdir"/downgrade-libc_patch
+		;;
+	esac
 
 	cargo fetch --target="$CTARGET" --locked
 }
@@ -225,4 +236,5 @@ _uptime_doc() {
 
 sha512sums="
 dea4029aff923dd7be1d75596062df3fcc0bec9e6eebaa25902eca8f3d52032858c111545e8a56c1ec4aeb30bd633a695ce8ff1a4da956ef19effe327b94649f  uutils-coreutils-0.2.0.tar.gz
+90c752c09075299d0408735726acd105167f86b7cd3c9766d5dd27ac7de42c1c7c4394892b7e1606084d381b5b23b9e4a81487a7dfceda0917dd468a0266791f  downgrade-libc_patch
 "

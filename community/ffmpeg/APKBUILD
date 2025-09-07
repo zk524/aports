@@ -4,7 +4,7 @@
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=ffmpeg
 pkgver=7.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Complete and free Internet live audio and video broadcasting solution for Linux/Unix"
 url="https://ffmpeg.org/"
 arch="all"
@@ -75,6 +75,7 @@ subpackages="
 	"
 source="https://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz
 	add-av_stream_get_first_dts-for-chromium.patch
+	handbrake-Expose-the-unmodified-Dolby-Vision-RPU-T35-buffers.patch
 	"
 options="!check" # tests/data/hls-lists.append.m3u8 fails
 
@@ -376,4 +377,5 @@ ffplay() {
 sha512sums="
 42486e485c8fc6f3ec61598a1a7cb40360535762b3fcf28c10d7c6840bc55afe3334434912746e69eef862d3cedf45a02953bde73d38547d2d9a7a38a65e123a  ffmpeg-7.1.1.tar.xz
 0c2284bc053c92478ce6e3665e03273cb93926534c6f927eb60e060c7770c68dca12724853adbcac03c4a58df81f2de938d54e82f43c7e789d345bed872ffc69  add-av_stream_get_first_dts-for-chromium.patch
+83a69540889173eac71585a2b5eb64f5bea335d032c550dd6cfa5c8a31632d5c079ab2474ee4f45793535dfc9e34545898fbbaadc56315466ec428fc8e8211a9  handbrake-Expose-the-unmodified-Dolby-Vision-RPU-T35-buffers.patch
 "

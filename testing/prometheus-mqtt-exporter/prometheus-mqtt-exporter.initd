@@ -1,0 +1,24 @@
+#!/sbin/openrc-run
+
+name="mqtt-exporter"
+description="MQTT exporter for the prometheus monitoring system"
+
+command_user:="prometheus:prometheus"
+
+command="/usr/bin/mqtt-exporter"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+
+supervisor=supervise-daemon
+
+depend() {
+	need net
+	after firewall
+}
+
+start_pre() {
+	[ -n "$output_log" ] && checkpath -f "$output_log" \
+		-m 644 -o prometheus:prometheus
+	[ -n "$error_log" ] && checkpath -f "$error_log" \
+		-m 644 -o prometheus:prometheus
+}

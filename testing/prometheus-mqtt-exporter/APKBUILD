@@ -1,0 +1,49 @@
+# Contributor: Guy Godfroy <guy.godfroy@gugod.fr>
+# Maintainer: Guy Godfroy <guy.godfroy@gugod.fr>
+pkgname=prometheus-mqtt-exporter
+_pkgname=mqtt-exporter
+pkgver=1.6.1
+pkgrel=0
+pkgdesc="generic MQTT Prometheus exporter"
+url="https://github.com/kpetremann/mqtt-exporter"
+arch="noarch"
+license="MIT"
+depends="py3-paho-mqtt py3-prometheus-client"
+makedepends="py3-gpep517 py3-setuptools py3-wheel"
+checkdepends="py3-pytest py3-pytest-mock py3-pytest-asyncio"
+install="$pkgname.pre-install"
+subpackages="$pkgname-pyc $pkgname-openrc"
+source="$_pkgname-$pkgver.tar.gz::https://github.com/kpetremann/mqtt-exporter/archive/refs/tags/v$pkgver.tar.gz
+	prometheus-mqtt-exporter.initd
+	prometheus-mqtt-exporter.confd
+	"
+builddir="$srcdir/$_pkgname-$pkgver"
+
+build() {
+	gpep517 build-wheel \
+		--wheel-dir .dist \
+		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest
+
+}
+
+package() {
+	python3 -m installer -d "$pkgdir" \
+		.dist/*.whl
+
+	install -m755 -D "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/init.d/$pkgname
+	install -m644 -D "$srcdir"/$pkgname.confd \
+		"$pkgdir"/etc/conf.d/$pkgname
+}
+
+sha512sums="
+cd9476a0120af0320a699d48e7a3498f3eae2c0b05c87e82e882a9fbd1f8b61d77561695e3a730df7e0ebdc899f8854557ee4f2b6e4dfe92b7413dfa56023cff  mqtt-exporter-1.6.1.tar.gz
+fc360d6ca211c1dc29d9edf636ce71002d9279dcbb773b628d3659e6d2c59991bd4c2be64003e769d53dfc65ff0e7dd6ddc45b2ac38ab2755731baf04680a363  prometheus-mqtt-exporter.initd
+f2ee72441b4df13df3f0d2ca94e334b23dd53dc70b43e4afd312301b51485e972a02c1cea31d5e10a2e8c085252b7ac9b69efc4bc1c44b456537d0357b9a465a  prometheus-mqtt-exporter.confd
+"

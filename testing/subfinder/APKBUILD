@@ -1,0 +1,31 @@
+# Contributor: Jonas <3426-spameier@users.gitlab.alpinelinux.org>
+# Maintainer: Jonas <3426-spameier@users.gitlab.alpinelinux.org>
+pkgname=subfinder
+pkgver=2.8.0
+pkgrel=0
+pkgdesc="Fast passive subdomain enumeration tool."
+url="https://docs.projectdiscovery.io/tools/subfinder"
+arch="all"
+license="MIT"
+makedepends="go"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/projectdiscovery/subfinder/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-$pkgver/v2"
+options="net"
+
+build() {
+	make build
+}
+
+check() {
+	make test
+}
+
+package() {
+	install -Dm755 "$builddir/subfinder" -t "$pkgdir/usr/bin/"
+	install -Dm644 ../LICENSE.md "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+99c65958a04ae7260313692efd9f7f9515db6d051579101ce48f9d483c3b559799c38929cae94a0cc0b54bcaff851929f4f59f8c7f3602dbeab54f34478f2908  subfinder-2.8.0.tar.gz
+"

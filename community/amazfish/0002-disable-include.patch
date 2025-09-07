@@ -1,0 +1,32 @@
+From 62b3f22b62c12919a501ec41a76685ff212b74d5 Mon Sep 17 00:00:00 2001
+From: Jozef Mlich <jozef.mlich@greycortex.com>
+Date: Sun, 7 Sep 2025 13:23:02 +0200
+Subject: [PATCH] disable include
+
+---
+ daemon/Qt-AES/qaesencryption.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/daemon/Qt-AES/qaesencryption.h b/daemon/Qt-AES/qaesencryption.h
+index e76eeb8..ed07464 100644
+--- a/daemon/Qt-AES/qaesencryption.h
++++ b/daemon/Qt-AES/qaesencryption.h
+@@ -1,11 +1,11 @@
+ #ifndef QAESENCRYPTION_H
+ #define QAESENCRYPTION_H
+ 
+-#ifdef QtAES_EXPORTS
+-#include "qtaes_export.h"
+-#else
++//#ifdef QtAES_EXPORTS
++//#include "qtaes_export.h"
++//#else
+ #define QTAESSHARED_EXPORT
+-#endif
++//#endif
+ 
+ #include <QObject>
+ #include <QByteArray>
+-- 
+2.50.0
+

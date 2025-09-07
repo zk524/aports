@@ -1,0 +1,42 @@
+# Contributor: Angelo Verlain <hey@vixalien.com>
+maintainer="Angelo Verlain <hey@vixalien.com>"
+pkgname=gala
+pkgver=8.1.0
+pkgrel=0
+pkgdesc="Gala Window Manager for elementary OS and Pantheon"
+url="https://github.com/elementary/gala"
+arch="all"
+license="GPL-3.0-or-later"
+makedepends="
+	desktop-file-utils
+	gnome-desktop-dev
+	granite-dev
+	granite7-dev
+	gtk+3.0-dev
+	libcanberra-dev
+	libhandy1-dev
+	meson
+	mutter47-dev
+	vala
+	"
+subpackages="$pkgname-lang $pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/elementary/gala/archive/refs/tags/$pkgver.tar.gz"
+
+build() {
+	abuild-meson . \
+		-Dsystemd=false \
+		output
+	meson compile -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+e1c20bbc892729677d5e0c17410f8a1d83df0e6ac8098f9a9f719510565e6aa10703ff92f4b0fdef05187bb096583c571eff597479227cf4713162292c65fc1b  gala-8.1.0.tar.gz
+"

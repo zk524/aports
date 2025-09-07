@@ -1,0 +1,22 @@
+diff --git a/session/meson.build b/session/meson.build
+index 501e836..1adcb0a 100644
+--- a/session/meson.build
++++ b/session/meson.build
+@@ -79,7 +79,7 @@ if get_option('detect-program-prefixes') == true
+   autostarts = {
+     'gnome-keyring-pkcs11': join_paths(gnome_keyring_prefix, 'etc/xdg/autostart', 'gnome-keyring-pkcs11.desktop'),
+     'gnome-keyring-secrets': join_paths(gnome_keyring_prefix, 'etc/xdg/autostart', 'gnome-keyring-secrets.desktop'),
+-    'gnome-keyring-ssh': join_paths(gnome_keyring_prefix, 'etc/xdg/autostart', 'gnome-keyring-ssh.desktop'),
++    'gcr-ssh-agent': join_paths(gnome_keyring_prefix, 'etc/xdg/autostart', 'gcr-ssh-agent.desktop'),
+     'onboard-autostart': join_paths(onboard_prefix, 'etc/xdg/autostart', 'onboard-autostart.desktop'),
+     'orca-autostart': join_paths(orca_prefix, 'etc/xdg/autostart', 'orca-autostart.desktop'),
+   }
+@@ -87,7 +87,7 @@ else
+   autostarts = {
+     'gnome-keyring-pkcs11': join_paths(autostartdir, 'gnome-keyring-pkcs11.desktop'),
+     'gnome-keyring-secrets': join_paths(autostartdir, 'gnome-keyring-secrets.desktop'),
+-    'gnome-keyring-ssh': join_paths(autostartdir, 'gnome-keyring-ssh.desktop'),
++    'gcr-ssh-agent': join_paths(autostartdir, 'gcr-ssh-agent.desktop'),
+     'onboard-autostart': join_paths(autostartdir, 'onboard-autostart.desktop'),
+     'orca-autostart': join_paths(autostartdir, 'orca-autostart.desktop'),
+   }

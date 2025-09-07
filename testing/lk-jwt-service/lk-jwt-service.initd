@@ -1,0 +1,18 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+name="lk-jwt-service"
+description="Minimal service to issue LiveKit JWTs for MatrixRTC"
+
+command="/usr/bin/lk-jwt-service"
+command_user="lk-jwt-service:lk-jwt-service"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.info"
+
+depend() {
+        need net
+        use logger livekit
+        after firewall
+}

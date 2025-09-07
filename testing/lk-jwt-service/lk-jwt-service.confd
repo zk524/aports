@@ -1,0 +1,9 @@
+# Configuration for /etc/init.d/lk-jwt-service
+
+# See <https://github.com/element-hq/lk-jwt-service> for all available
+# configuration options. Don't forget to export them!
+
+#export LIVEKIT_URL="..."
+#export LIVEKIT_KEY="..."
+#export LIVEKIT_SECRET="..."
+#export LIVEKIT_FULL_ACCESS_HOMESERVERS="*"

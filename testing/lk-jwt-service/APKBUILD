@@ -1,0 +1,41 @@
+# Contributor: Tom MTT. <tom@baboum.org>
+# Maintainer: Tom MTT. <tom@baboum.org>
+pkgname=lk-jwt-service
+pkgver=0.3.0
+pkgrel=0
+pkgdesc="Minimal service to issue LiveKit JWTs for MatrixRTC"
+url="https://github.com/element-hq/lk-jwt-service"
+arch="all"
+license="AGPL-3.0-or-later"
+makedepends="go"
+install="$pkgname.pre-install $pkgname.post-install"
+subpackages="$pkgname-openrc"
+pkgusers="$pkgname"
+pkggroups="$pkgname"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/element-hq/lk-jwt-service/archive/refs/tags/v$pkgver.tar.gz
+	$pkgname.initd
+	$pkgname.confd
+	"
+options="net" # `net' is required to download go modules.
+
+build() {
+	go build -o lk-jwt-service .
+}
+
+check() {
+	go test
+}
+
+package() {
+	install -Dm755 lk-jwt-service "$pkgdir"/usr/bin/lk-jwt-service
+
+	install -Dm755 "$srcdir"/$pkgname.initd "$pkgdir"/etc/init.d/$pkgname
+	install -Dm640 "$srcdir"/$pkgname.confd "$pkgdir"/etc/conf.d/$pkgname
+}
+
+sha512sums="
+89dc981df1281f30fcea8f20c8eaf1d79f8968fa67362d4b1310e63225adf2fbcd23ef0ecc660f229614fbb738779c27207f416f8e8cfdcc5880cd9caca61b66  lk-jwt-service-0.3.0.tar.gz
+03f96a943ac04dfaf5f58a75e85c6beb8ca262c3d0e746512414d476c498f15e0bc7ff22ad8105e1a90599368aee663c059aae12942de7e955b8705b38526161  lk-jwt-service.initd
+1e60c44fb5464b0fa4297f3f17a790e093fe5da0152b1b16c8ce567cd7613c8863bb24c8eeedf0db66152330fd62def631b3528665c67e2ace1d4e000ec9baa2  lk-jwt-service.confd
+"

@@ -7,7 +7,7 @@ pkgname=mauikit
 pkgver=4.0.0
 pkgrel=0
 pkgdesc="Kit for developing MAUI Apps"
-# armhf blocked by qt5-qtdeclarative
+# armhf blocked by qt6-qtdeclarative
 arch="all !armhf"
 url="https://mauikit.org/"
 license="GPL-2.0-or-later"

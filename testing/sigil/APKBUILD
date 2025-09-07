@@ -5,7 +5,7 @@ pkgver=2.1.0
 pkgrel=0
 pkgdesc="EPUB editor"
 url="https://sigil-ebook.com/sigil"
-# qt6-qtwebengine (XXX: momentarily qt5 for aarch64)
+# qt6-qtwebengine
 arch="aarch64 x86_64"
 license="GPL-3.0-or-later AND Apache-2.0 AND MIT"
 depends="

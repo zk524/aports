@@ -1,22 +1,22 @@
 # Maintainer: kpcyrd <git@rxv.cc>
 pkgname=wasm-bindgen
 pkgver=0.2.100
-pkgrel=0
+pkgrel=1
 pkgdesc="Interoperating JS and Rust code"
-url="https://github.com/rustwasm/wasm-bindgen"
+url="https://github.com/wasm-bindgen/wasm-bindgen"
 arch="all"
 license="Apache-2.0"
 depends="cargo nodejs rust-wasm"
 makedepends="
 	cargo-auditable
 	"
-source="https://github.com/rustwasm/wasm-bindgen/archive/refs/tags/$pkgver/wasm-bindgen-$pkgver.tar.gz
+source="https://github.com/wasm-bindgen/wasm-bindgen/archive/refs/tags/$pkgver/wasm-bindgen-$pkgver.tar.gz
 	Cargo-$pkgver.lock::https://gitlab.archlinux.org/archlinux/packaging/packages/wasm-bindgen/-/raw/$pkgver-1/Cargo.lock
 	"
 options="net !check" # most tests fail outside of x86_64
 
 prepare() {
-	# https://github.com/rustwasm/wasm-bindgen/issues/1819
+	# https://github.com/wasm-bindgen/wasm-bindgen/issues/1819
 	cp "$srcdir/Cargo-$pkgver.lock" Cargo.lock
 
 	default_prepare

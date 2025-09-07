@@ -1,9 +1,9 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=wasm-pack
 pkgver=0.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc="rust to wasm build tool"
-url="https://github.com/rustwasm/wasm-pack"
+url="https://github.com/drager/wasm-pack"
 # s390x: limited by lld & rust-wasm
 arch="all !s390x"
 license="Apache-2.0"
@@ -16,12 +16,13 @@ makedepends="
 	bzip2-dev
 	cargo-auditable
 	cmake
+	samurai
 	curl-dev
 	openssl-dev>3
 	wasi-sdk
 	zstd-dev
 	"
-source="https://github.com/rustwasm/wasm-pack/archive/refs/tags/v$pkgver/wasm-pack-v$pkgver.tar.gz"
+source="https://github.com/drager/wasm-pack/archive/refs/tags/v$pkgver/wasm-pack-v$pkgver.tar.gz"
 options="net !check" # most tests fail outside of x86_64
 
 export OPENSSL_NO_VENDOR=1

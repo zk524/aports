@@ -14,6 +14,7 @@ subpackages="$pkgname-dev $pkgname-doc"
 source="https://www.freedesktop.org/software/farstream/releases/farstream/farstream-$pkgver.tar.gz
 	fix-gst-glib-gen_mak.patch
 	"
+options="!check" # FIXME tests fail
 
 prepare() {
 	default_prepare
@@ -27,6 +28,10 @@ build() {
 		--prefix=/usr \
 		--disable-static
 	make
+}
+
+check() {
+	make check
 }
 
 package() {

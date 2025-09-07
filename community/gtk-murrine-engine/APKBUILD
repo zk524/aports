@@ -9,7 +9,7 @@ license="LGPL-3.0-or-later"
 makedepends="gtk+2.0-dev cairo-dev intltool"
 source="https://download.gnome.org/sources/murrine/${pkgver%.*}/murrine-$pkgver.tar.xz
 	add-missing-function-declarations.patch"
-
+options="!check" # No tests
 builddir="$srcdir/murrine-$pkgver"
 
 prepare() {

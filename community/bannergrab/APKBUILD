@@ -10,6 +10,7 @@ license="GPL-3.0-or-later"
 makedepends="openssl-dev>3"
 subpackages="$pkgname-doc"
 source="https://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tgz"
+options="!check" # No tests
 
 build() {
 	make CFLAGS="-lcrypto -lssl"

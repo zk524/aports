@@ -13,6 +13,7 @@ source="https://github.com/rafael2k/darkice/releases/download/v$pkgver/darkice-$
 	darkice.initd
 	darkice.confd
 	stdint-include.patch"
+options="!check" # No tests
 
 build() {
 	./configure \

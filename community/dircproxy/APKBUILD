@@ -17,6 +17,7 @@ source="$pkgname-$_ver.tar.gz::https://github.com/w8tvi/dircproxy/archive/RELEAS
 	fix-issue54-2.patch
 	fix-gcc14-issue.patch
 	"
+options="!check" # No tests
 
 builddir="$srcdir/$pkgname-RELEASE-$_ver"
 prepare() {

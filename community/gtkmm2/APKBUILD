@@ -28,6 +28,10 @@ build() {
 	make
 }
 
+check() {
+	make check
+}
+
 package() {
 	make install DESTDIR="$pkgdir"
 }

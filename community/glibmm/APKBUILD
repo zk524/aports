@@ -12,6 +12,7 @@ makedepends="glib-dev libsigc++3-dev perl meson m4"
 checkdepends="glib-networking"
 subpackages="$pkgname-dev"
 source="https://download.gnome.org/sources/glibmm/${pkgver%.*}/glibmm-$pkgver.tar.xz"
+options="net" # tests connect to www.gnome.org
 
 build() {
 	abuild-meson \

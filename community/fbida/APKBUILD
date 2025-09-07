@@ -22,6 +22,7 @@ source="https://www.kraxel.org/releases/fbida/fbida-$pkgver.tar.gz
 	ida-desktop.patch
 	gcc-10.patch
 	"
+options="!check" # No tests
 
 prepare() {
 	default_prepare

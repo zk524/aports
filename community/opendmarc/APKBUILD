@@ -2,7 +2,7 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=opendmarc
 pkgver=1.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A free open source implementation of the DMARC specification"
 url="https://github.com/trusteddomainproject/OpenDMARC"
 arch="all"

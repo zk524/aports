@@ -1,0 +1,38 @@
+# Contributor: Li Junhao <l@x-cmd.com>
+# Maintainer: zhengqiakai <zhengqiakai@x-cmd.com>
+pkgname=x-cmd
+pkgver=0.5.5
+_pkgsum=.369a6a4b
+pkgrel=0
+pkgdesc="Bootstrap 1000+ command line tools in seconds"
+url="https://www.x-cmd.com"
+arch="noarch"
+license="AGPL-3.0-only AND MIT AND BSD-3-Clause"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tgz::https://raw.githubusercontent.com/x-cmd/release/main/dist/v$pkgver/allinone.tgz"
+options="!check" # upstream does not provide test
+
+package() {
+	install -Dm644 "$srcdir/$pkgname-$pkgver.tgz" "$pkgdir/usr/share/$pkgname/v/$_pkgsum.tgz"
+
+	local _pkgdir="$pkgdir/usr/share/x-cmd/v/$_pkgsum"
+	local _pkgfile="$pkgdir/usr/share/x-cmd/v/$_pkgsum.tgz"
+	printf "%s\n" "- I|x: Unpacking $_pkgfile to $_pkgdir" >&2
+	mkdir -p "$_pkgdir"
+	tar -xzf "$_pkgfile" -C "$_pkgdir"
+
+	printf "%s\n" "- I|x: Preparing license-files" >&2
+	mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
+	cp -rf "$_pkgdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/"
+
+	printf "%s\n" "- I|x: Creating /usr/bin/x-cmd" >&2
+	install -Dm755 "$_pkgdir/mod/x-cmd/lib/bin/x-cmd" "$pkgdir/usr/bin/x-cmd"
+
+	printf "%s\n" "- I|x: Linking $_pkgsum to /usr/share/x-cmd/v/latest" >&2
+	cd "$pkgdir/usr/share/x-cmd/v"
+	ln -s "$_pkgsum" "$pkgdir/usr/share/x-cmd/v/latest"
+}
+
+sha512sums="
+97186f820be557ed7b7e21b19a5aee183c21f5122739971137703c8c9cd266c296cc0143eb0db434e5fe1069bdc5481bc441b0ef1ed489c7bd9172f60d94f5b9  x-cmd-0.5.5.tgz
+"

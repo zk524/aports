@@ -2,14 +2,17 @@
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=cjson
 pkgver=1.7.18
-pkgrel=1
+pkgrel=2
 pkgdesc="Lighweight JSON parser in C"
 url="https://github.com/DaveGamble/cJSON"
 arch="all"
 license="MIT"
 makedepends="cmake samurai"
 subpackages="$pkgname-static $pkgname-dev"
-source="$pkgname-$pkgver.tar.gz::https://github.com/DaveGamble/cJSON/archive/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/DaveGamble/cJSON/archive/v$pkgver.tar.gz
+	cjson-shared-minsizerel.cmake
+	cjson-static-minsizerel.cmake
+	"
 builddir="$srcdir/cJSON-$pkgver"
 
 # secfixes:
@@ -37,8 +40,21 @@ check() {
 
 package() {
 	DESTDIR="$pkgdir" cmake --build build --target install
+
+	rm "$pkgdir"/usr/lib/cmake/cJSON/cjson-minsizerel.cmake
+	install -Dm644 -t "$pkgdir"/usr/lib/cmake/cJSON/ \
+		"$srcdir"/cjson-static-minsizerel.cmake \
+		"$srcdir"/cjson-shared-minsizerel.cmake
+}
+
+static() {
+	default_static
+
+	amove usr/lib/cmake/cJSON/cjson-static-minsizerel.cmake
 }
 
 sha512sums="
 2accb507c6b97222eb5f0232c015b356cf6d248d1247049928731aa8e897378245e62395c232b1ec57d28d1e53ac72c849be85e59c33616a382d40473649f66b  cjson-1.7.18.tar.gz
+9d9ac45a82914930122ebdacef87e71cba5cb8bb5e24f64328d8c39ae6648b0f53ec82fd1bf1a3fd7d729e6ea19d10f62aeb510142e6e20ba543ab3c549afbc0  cjson-shared-minsizerel.cmake
+587f1b157e060ba2d58327e8e9af2846ea2ce79117367431dba9a84ef483424d32977de95988a2d576409cb21ccbeac6fbfb2b5c798f255f3ec81fe3518a5b9d  cjson-static-minsizerel.cmake
 "

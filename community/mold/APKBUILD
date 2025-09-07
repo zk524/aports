@@ -1,6 +1,6 @@
 # Maintainer: Simon Zeni <simon@bl4ckb0ne.ca>
 pkgname=mold
-pkgver=2.39.1
+pkgver=2.40.2
 pkgrel=0
 pkgdesc="fast modern linker"
 url="https://github.com/rui314/mold"
@@ -50,5 +50,5 @@ package() {
 }
 
 sha512sums="
-2d6d3d892d0dc6b256fbb2a1bbe7519948c2cd683549d23727da9cbccf1dad80a3af2826bf96b9d02ed56a765fa46ffc8fcd23168bb5624a1fa4b9dd21606005  mold-2.39.1.tar.gz
+706c042b8bb6cddb8a6c1b808b638e11f462034341b1b80fcf102a2f30d15e78f37e60c7e7eb901c0eaa99039b57c2d5ea4402680dbeb1e09ac35209026cbf31  mold-2.40.2.tar.gz
 "

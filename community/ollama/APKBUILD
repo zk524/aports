@@ -1,6 +1,6 @@
 # Maintainer: Miles Alan <m@milesalan.com>
 pkgname=ollama
-pkgver=0.11.7
+pkgver=0.11.10
 pkgrel=0
 pkgdesc="Download and run large language models locally (CPU)"
 options="chmod-clean net"
@@ -57,5 +57,5 @@ package() {
 }
 
 sha512sums="
-1040cddf433321eed5d565e08e49dd3ad4aa4c42592089bccf47fc3518a406dd655133fcae8ff8ef690303f69afb6cb9a014b43a51e1b2d9c4c9f6dd59a0bc54  ollama-0.11.7.tar.gz
+e3f03c0d3c989c71e30c634de2a21bcd4b4ea8708be26b34620f6a23e2f4011487e1b5dda0fea0a0fc46ff2d6b27d42a8851bc894fca177ad15eb4d9636d0125  ollama-0.11.10.tar.gz
 "

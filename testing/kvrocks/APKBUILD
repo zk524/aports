@@ -1,0 +1,71 @@
+# Contributor: Minoru Maekawa <dlrmp47285@yahoo.co.jp>
+# Maintainer: Minoru Maekawa <dlrmp47285@yahoo.co.jp>
+pkgname=kvrocks
+pkgver=2.12.1
+pkgrel=0
+pkgdesc="NoSQL which is based on RocksDB and compatible with the Redis protocol"
+url="https://github.com/apache/kvrocks"
+arch="x86_64 aarch64" # arch: only x86_64 and aarch64 build verified; others unsupported.
+license="Apache-2.0"
+pkgusers="kvrocks"
+pkggroups="kvrocks"
+makedepends="
+	autoconf
+	automake
+	cmake
+	libtool
+	linux-headers
+	openssl-dev
+	python3
+	samurai
+	"
+install="$pkgname.pre-install $pkgname.post-install"
+subpackages="$pkgname-doc $pkgname-openrc kvrocks2redis"
+source="$pkgname-$pkgver.tar.gz::https://github.com/apache/kvrocks/archive/refs/tags/v$pkgver.tar.gz
+	kvrocks.conf.patch
+	kvrocks.initd
+	kvrocks.confd
+	"
+
+build() {
+	./x.py build --unittest --ninja \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DDISABLE_JEMALLOC=ON \
+		-DENABLE_OPENSSL=ON
+}
+
+check() {
+	./x.py test cpp
+	# x.py test go is no valkey-cil support
+}
+
+package() {
+	install -Dm755 -s build/kvrocks \
+		"$pkgdir"/usr/bin/kvrocks
+	install -Dm755 -s build/kvrocks2redis \
+		"$pkgdir"/usr/bin/kvrocks2redis
+
+	install -Dm644 kvrocks.conf "$pkgdir"/etc/kvrocks.conf
+
+	install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname \
+		LICENSE \
+		NOTICE
+
+	install -Dm755 "$srcdir"/$pkgname.initd \
+		"$pkgdir"/etc/init.d/$pkgname
+	install -Dm644 "$srcdir"/$pkgname.confd \
+		"$pkgdir"/etc/conf.d/$pkgname
+}
+
+kvrocks2redis() {
+	pkgdesc="Migrates data from Kvrocks to Redis"
+
+	amove usr/bin/kvrocks2redis
+}
+
+sha512sums="
+1ed76d085b7728150accf42cdb15d2bd5ff29826521ccbf520b5b68c46a791b860d1bfaeba59a1582d2c68ac5a1a190bd57292e3f96dc56c651b61b827d913ac  kvrocks-2.12.1.tar.gz
+4a91593247414e7e37da1ec3926c3794c2890e0cd25da6bd905ad2c2496b7fb58953657fa3f5cfd0252ef2f06d2183b1ecb8fcae380673a23e96d5c3d39db742  kvrocks.conf.patch
+27098a879a8c2f5116a047d9fb68ccbaec1f4e197aaf3d1483b549d30160b3eff0c79851db1e44272390ddfd279fca041b4d3a263e1dbec623ca4901cc0f302a  kvrocks.initd
+bb54d3861d3d3084b8db3f32f8c3abb2f86f1882a77fa8c4f0c11fd48875eba6fb3d324da9f8ce5ddacebbc9aeea951f3de06573be0de1a1238b13d40ac03e90  kvrocks.confd
+"

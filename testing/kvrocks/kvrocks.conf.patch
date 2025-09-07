@@ -1,0 +1,22 @@
+diff --git a/kvrocks.conf b/kvrocks.conf
+index 2d230b9f..6342ce4f 100644
+--- a/kvrocks.conf
++++ b/kvrocks.conf
+@@ -125,7 +125,7 @@ db-name change.me.db
+ #
+ # The DB will be written inside this directory
+ # Note that you must specify a directory here, not a file name.
+-dir /tmp/kvrocks
++dir /var/lib/kvrocks
+ 
+ # You can configure where to store your server logs by the log-dir.
+ # If you don't specify one, we will use the above `dir` as our default log directory.
+@@ -136,7 +136,7 @@ log-dir stdout
+ # Log level
+ # Possible values: info, warning, error, fatal
+ # Default: info
+-log-level info
++log-level error
+ 
+ # You can configure log-retention-days to control whether to enable the log cleaner
+ # and the maximum retention days that the INFO level logs will be kept.

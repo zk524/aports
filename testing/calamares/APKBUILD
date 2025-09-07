@@ -1,0 +1,181 @@
+maintainer="Achill Gilgenast <achill@achill.org>"
+pkgname=calamares
+pkgver=3.4.0
+pkgrel=0
+# armhf: qt6-qtdeclarative, qt6-qtwebengine,..
+# ppc64le, riscv64: qt6-qtwebengine
+# s390x: qt6-qtwebengine, os-prober
+arch="all !armhf !ppc64le !riscv64 !s390x"
+url="https://calamares.io/"
+pkgdesc="Distribution-independent installer framework"
+license="GPL-3.0-or-later AND LGPL-2.1-only"
+depends="
+	ckbcomp
+	musl-locales
+	os-prober
+	"
+depends_dev="
+	extra-cmake-modules
+	kcoreaddons-dev
+	qt6-qttools-dev
+	yaml-cpp-dev
+	"
+makedepends="$depends_dev
+	kconfig-dev
+	kcrash-dev
+	ki18n-dev
+	kpackage-dev
+	kparts-dev
+	kpmcore-dev
+	kservice-dev
+	kwidgetsaddons-dev
+	libatasmart-dev
+	libpwquality-dev
+	ninja
+	polkit-qt-dev
+	qt6-qtbase-dev
+	qt6-qtdeclarative-dev
+	qt6-qtsvg-dev
+	qt6-qtwebengine-dev
+	"
+# required for several modules
+makedepends="$makedepends
+	boost-dev
+	boost-python3
+	parted-dev
+	python3-dev
+	"
+checkdepends="
+	py3-toml
+	tzdata
+	xwayland-run
+	"
+install="$pkgname-mod-unpackfs.post-install"
+source="https://codeberg.org/Calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz
+	modules-load.conf
+	"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-lang"
+
+# Modules to build:
+# https://github.com/calamares/calamares/tree/master/src/modules
+_modules="
+	bootloader
+	displaymanager
+	finished
+	fsresizer
+	fstab
+	grubcfg
+	hostinfo
+	hwclock
+	interactiveterminal
+	keyboard
+	keyboardq
+	locale
+	localeq
+	luksbootkeyfile
+	luksopenswaphookcfg
+	machineid
+	mkinitfs
+	mount
+	netinstall
+	networkcfg
+	notesqml
+	oemid
+	packagechooser
+	packages
+	partition
+	plymouthcfg
+	preservefiles
+	rawfs
+	removeuser
+	services-openrc
+	shellprocess
+	summary
+	umount
+	unpackfs
+	users
+	welcome
+	welcomeq
+	"
+
+for i in $_modules; do
+	subpackages="$pkgname-mod-$i:_module $subpackages"
+done
+
+# Check if $1 is in $_modules
+is_module_enabled() {
+	local i
+	for i in $_modules; do
+		[ "$i" = "$1" ] && return 0
+	done
+	return 1
+}
+
+build() {
+	local i
+	cd src/modules
+
+	# Fill $_skip_modules, list disabled modules
+	msg "Disabled modules:"
+	for i in *; do
+		if ! [ -d "$i" ] || is_module_enabled "$i"; then
+			continue
+		fi
+		_skip_modules="$_skip_modules $i"
+		echo " - $i"
+	done
+
+	# List enabled modules
+	msg "Enabled modules:"
+	for i in $_modules; do
+		echo " - $i"
+	done
+
+	cmake -B build \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DINSTALL_CONFIG=ON \
+		-DSKIP_MODULES="$_skip_modules"
+	cmake --build build
+}
+
+check() {
+	cd build
+	# libcalamaresnetworktest requires network access
+	# machineidtest fails to detect random poolsize
+	# userstest always expects "x8664X" cpu name
+	wlheadless-run -- ctest -E "libcalamaresnetworktest|machineidtest|userstest" -j1
+}
+
+_module() {
+	local module=${subpkgname##calamares-mod-}
+	amove usr/lib/calamares/modules/$module
+
+	# Module-specific dependencies
+	case "$module" in
+		displaymanager)
+			depends="$depends py3-toml"
+			;;
+		unpackfs)
+			depends="$depends rsync"
+			install -Dm644 "$srcdir"/modules-load.conf \
+				"$subpkgdir"/usr/lib/modules-load.d/calamares.conf
+			;;
+		mkinitfs)
+			depends="$depends mkinitfs"
+			;;
+		locale)
+			depends="$depends tzdata"
+			;;
+	esac
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+35332f9515a63baa9be58dea9310c28b72d8f7a16bdcdee2b5dbcaf0af55388a57ba485edbcf7b4f303975d17ae6e364ffd526dea4309d552830f21b57b2e0c4  calamares-3.4.0.tar.gz
+c56ad3b92901abdb41cffaeceeff9a6c8dae3882aacf9a4b654a8898f1e26eeadda3ac3ac799b127b176cc31d397652f27a07bcdfbf7f4ede3c6826d08f7bd7d  modules-load.conf
+"
